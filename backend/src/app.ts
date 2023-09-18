@@ -23,7 +23,7 @@ app.use(bodyParser.json())
 app.use('/', indexRoutes)
 
 
-console.log('sds');
+
 
 
 

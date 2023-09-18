@@ -34,6 +34,20 @@ const CarModel = sequelize.define('Car', {
 
 
 class Car {
+
+    constructor(private id: number | null, private brand: string, private model: string, private registrationNumber: string, private isTaken: boolean ) {}
+
+    async addCar() {
+        await CarModel.create({
+            id: this.id,
+            brand: this.brand,
+            model: this.model,
+            registrationNumber: this.registrationNumber,
+            isTaken: this.isTaken
+
+        })
+    }
+
     static async showAllCars() {
         const allCars = await CarModel.findAll()
         return allCars;
