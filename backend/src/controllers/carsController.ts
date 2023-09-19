@@ -18,3 +18,20 @@ export const fetchAllCars = async (req: Request, res: Response, next: NextFuncti
 }
 
 
+export const fetchOneCar = async (req: Request, res: Response, next: NextFunction) => { 
+    let dbResponse;
+    try {
+        dbResponse = await Car.fetchOne(Number(req.params.id));
+    }
+    catch(err) {
+        dbResponse = err;
+    }
+    // if(dbResponse.results.length === 1) {
+        res.json({results: dbResponse})
+    // }
+    // else {
+    //     res.json({error: 'car of specified id is not found'})
+    // }
+    
+}
+

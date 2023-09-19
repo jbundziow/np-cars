@@ -48,7 +48,11 @@ class Car {
     }
 
     static async fetchAll() {
-            return await CarModel.findAll()
+        return await CarModel.findAll()
+    }
+
+    static async fetchOne(id: number) {
+        return await CarModel.findOne({ where: { id: id } })
     }
 }
 
