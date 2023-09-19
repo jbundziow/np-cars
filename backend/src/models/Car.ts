@@ -37,20 +37,18 @@ class Car {
 
     constructor(private id: number | null, private brand: string, private model: string, private registrationNumber: string, private isTaken: boolean ) {}
 
-    async addCar() {
+    async addOneCar() {
         await CarModel.create({
             id: this.id,
             brand: this.brand,
             model: this.model,
             registrationNumber: this.registrationNumber,
             isTaken: this.isTaken
-
         })
     }
 
-    static async showAllCars() {
-        const allCars = await CarModel.findAll()
-        return allCars;
+    static async fetchAll() {
+            return await CarModel.findAll()
     }
 }
 

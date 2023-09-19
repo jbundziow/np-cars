@@ -1,7 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { dummyFn } from '../controllers/dummyController';
+import { fetchAllCars } from '../controllers/carsController';
 const app = express.Router();
 
-app.get('/', dummyFn)
+app.get('/', fetchAllCars)
 
 export default app;

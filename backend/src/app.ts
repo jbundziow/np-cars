@@ -1,10 +1,8 @@
 import express from 'express'
 import bodyParser from 'body-parser'
 
-import indexRoutes from './routes/index'
+import carsRoutes from './routes/cars'
 
-// import db from './database/database'
-const db = require('./database/database')
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,7 +18,7 @@ app.listen(PORT, () => {
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.use('/', indexRoutes)
+app.use('/cars', carsRoutes)
 
 
 
