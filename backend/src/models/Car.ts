@@ -91,24 +91,40 @@ class Car {
         private nextInspectionDate: string,
         private nextInsuranceDate: string,
         private isAvailable: boolean,
-        private availabilityStatus: 'onService' | 'damaged' | 'other',
-        private availabilityDescription: string,
+        private availabilityStatus: 'onService' | 'damaged' | 'other' | null,
+        private availabilityDescription: string | null,
         ) {}
 
     async addOneCar() {
-        // await CarModel.create({
-        //     id: this.id,
-        // })
+        await CarModel.create({
+          id: this.id,
+          brand: this.brand,
+          model: this.model,
+          type: this.type,
+          imgPath: this.imgPath,
+          plateNumber: this.plateNumber,
+          hasFuelCard: this.hasFuelCard,
+          fuelCardPIN: this.fuelCardPIN,
+          fuelType: this.fuelType,
+          tankCapacity: this.tankCapacity,
+          loadCapacity: this.loadCapacity,
+          nextInspectionDate: this.nextInspectionDate,
+          nextInsuranceDate: this.nextInsuranceDate,
+          isAvailable: this.isAvailable,
+          availabilityStatus: this.availabilityStatus,
+          availabilityDescription: this.availabilityDescription,
+        })
     }
 
     static async fetchAll() {
-        // return await CarModel.findAll()
+        return await CarModel.findAll()
     }
 
     static async fetchOne(id: number) {
-        // return await CarModel.findOne({ where: { id: id } })
+        return await CarModel.findOne({ where: { id: id } })
     }
 }
+
 
 
 export default Car
