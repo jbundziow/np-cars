@@ -10,49 +10,103 @@ const CarModel = sequelize.define('Car', {
         primaryKey: true,
         autoIncrement: true,
         unique: true
-    },
-    brand: {
+      },
+      brand: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    model: {
+      },
+      model: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    registrationNumber: {
+      },
+      type: {
+        type: DataTypes.ENUM('passengerCar', 'bus', 'truck'),
+        allowNull: false,
+      },
+      imgPath: {
         type: DataTypes.STRING,
         allowNull: false,
-    },
-    isTaken: {
+      },
+      plateNumber: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      hasFuelCard: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
-    }
+      },
+      fuelCardPIN: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      fuelType: {
+        type: DataTypes.ENUM('diesel', 'petrol', 'lpg', 'hybrid'),
+        allowNull: false,
+      },
+      tankCapacity: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      loadCapacity: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      nextInspectionDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      nextInsuranceDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
+      isAvailable: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      availabilityStatus: {
+        type: DataTypes.ENUM('onService', 'damaged', 'other'),
+        allowNull: true,
+      },
+      availabilityDescription: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
 })
 
 
 
-
-
 class Car {
-
-    constructor(private id: number | null, private brand: string, private model: string, private registrationNumber: string, private isTaken: boolean ) {}
+    constructor(
+        private id: number | null,
+        private brand: string,
+        private model: string,
+        private type: 'passengerCar' | 'bus' | 'truck',
+        private imgPath: string,
+        private plateNumber: string,
+        private hasFuelCard: boolean,
+        private fuelCardPIN: number,
+        private fuelType: 'diesel' | 'petrol' | 'lpg' | 'hybrid',
+        private tankCapacity: number, //liters
+        private loadCapacity: number, //kilograms
+        private nextInspectionDate: string,
+        private nextInsuranceDate: string,
+        private isAvailable: boolean,
+        private availabilityStatus: 'onService' | 'damaged' | 'other',
+        private availabilityDescription: string,
+        ) {}
 
     async addOneCar() {
-        await CarModel.create({
-            id: this.id,
-            brand: this.brand,
-            model: this.model,
-            registrationNumber: this.registrationNumber,
-            isTaken: this.isTaken
-        })
+        // await CarModel.create({
+        //     id: this.id,
+        // })
     }
 
     static async fetchAll() {
-        return await CarModel.findAll()
+        // return await CarModel.findAll()
     }
 
     static async fetchOne(id: number) {
-        return await CarModel.findOne({ where: { id: id } })
+        // return await CarModel.findOne({ where: { id: id } })
     }
 }
 
