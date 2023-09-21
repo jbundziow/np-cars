@@ -1,5 +1,5 @@
 import { lazy } from 'react';
-
+const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
 const FormElements = lazy(() => import('../pages/Form/FormElements'));
@@ -11,6 +11,11 @@ const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 
 const coreRoutes = [
+  {
+    path: '/dashboard',
+    title: 'Dashboard',
+    component: ECommerce,
+  },
   {
     path: '/calendar',
     title: 'Calender',
