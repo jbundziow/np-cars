@@ -18,6 +18,8 @@ function App() {
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
+  const websiteTitle: string = ' | NP-CARS'
+
   return loading ? (
     <Loader />
   ) : (
@@ -28,13 +30,13 @@ function App() {
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} />
         <Route element={<DefaultLayout />}>
-          <Route index element={<Homepage />} />
-          {routes.map(({ path, component: Component }) => (
+          <Route index element={<Homepage documentTitle={'Strona główna' + websiteTitle} />} />
+          {routes.map(({ path, component: Component, title }) => (
             <Route
               path={path}
               element={
                 <Suspense fallback={<Loader />}>
-                  <Component />
+                  <Component documentTitle={title + websiteTitle}/>
                 </Suspense>
               }
             />

@@ -1,4 +1,6 @@
 import { lazy } from 'react';
+const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'));
+const MyRentals = lazy(() => import('../new_pages/wypozyczenia/moje-wypozyczenia'));
 const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
@@ -11,6 +13,16 @@ const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 
 const coreRoutes = [
+  {
+    path: '/wypozyczenia/wypozycz-samochod',
+    title: 'Wypożycz samochód',
+    component: RentACar,
+  },
+  {
+    path: '/wypozyczenia/moje-wypozyczenia',
+    title: 'Moje wypożyczenia',
+    component: MyRentals,
+  },
   {
     path: '/dashboard',
     title: 'Dashboard',
