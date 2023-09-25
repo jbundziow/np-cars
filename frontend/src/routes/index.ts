@@ -1,4 +1,16 @@
 import { lazy } from 'react';
+const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod'));
+const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
+const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje'));
+const MakeAReservation = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji'));
+const MyReservations = lazy(() => import('../new_pages/rezerwacje/moje-rezerwacje'));
+const ReservationArchive = lazy(() => import('../new_pages/rezerwacje/archiwum'));
+const RefuelingOverview = lazy(() => import('../new_pages/tankowania'));
+const ReportRefueling = lazy(() => import('../new_pages/tankowania/zglos-tankowanie'));
+const RefuelingArchive = lazy(() => import('../new_pages/tankowania/archiwum'));
+const FaultsArchive = lazy(() => import('../new_pages/usterki/archiwum'));
+const RepairsStatus = lazy(() => import('../new_pages/usterki/status-napraw'));
+const ReportFault = lazy(() => import('../new_pages/usterki/zglos'));
 const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'));
 const MyRentals = lazy(() => import('../new_pages/wypozyczenia/moje-wypozyczenia'));
 const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
@@ -13,16 +25,88 @@ const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
 const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 
 const coreRoutes = [
+  // wypozyczenia
   {
     path: '/wypozyczenia/wypozycz-samochod',
     title: 'Wypożycz samochód',
     component: RentACar,
   },
   {
+    path: '/wypozyczenia/oddaj-samochod',
+    title: 'Oddaj auto',
+    component: ReturnACar,
+  },
+  {
     path: '/wypozyczenia/moje-wypozyczenia',
     title: 'Moje wypożyczenia',
     component: MyRentals,
   },
+  {
+    path: '/wypozyczenia/archiwum',
+    title: 'Archiwum wypożyczeń',
+    component: RentalsArchive,
+  },
+
+
+  //rezerwacje
+  {
+    path: '/rezerwacje',
+    title: 'Przegląd rezerwacji',
+    component: ReservationsOverview,
+  },
+  {
+    path: '/rezerwacje/dokonaj-rezerwacji',
+    title: 'Dokonaj rezerwacji',
+    component: MakeAReservation,
+  },
+  {
+    path: '/rezerwacje/moje-rezerwacje',
+    title: 'Moje rezerwacje',
+    component: MyReservations,
+  },
+  {
+    path: '/rezerwacje/archiwum',
+    title: 'Archiwum rezerwacji',
+    component: ReservationArchive,
+  },
+
+
+  //tankowania
+  {
+    path: '/tankowania',
+    title: 'Przegląd zatankowanych aut',
+    component: RefuelingOverview,
+  },
+  {
+    path: '/tankowania/zglos-tankowanie',
+    title: 'Zgłoś tankowanie',
+    component: ReportRefueling,
+  },
+  {
+    path: '/tankowania/archiwum',
+    title: 'Archiwum tankowań',
+    component: RefuelingArchive,
+  },
+
+  //usterki
+  {
+    path: '/usterki/zglos',
+    title: 'Zgłoś usterkę',
+    component: ReportFault,
+  },
+  {
+    path: '/usterki/status-napraw',
+    title: 'Status napraw',
+    component: RepairsStatus,
+  },
+  {
+    path: '/usterki/archiwum',
+    title: 'Archiwum napraw',
+    component: FaultsArchive,
+  },
+
+
+  // @@@ TEMPLATE TO DELETE BELOW @@@
   {
     path: '/dashboard',
     title: 'Dashboard',
