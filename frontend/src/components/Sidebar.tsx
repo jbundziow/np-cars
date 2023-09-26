@@ -154,8 +154,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === '/forms' ||
-                            pathname.includes('forms')) &&
+                          (pathname === '/wypozyczenia' ||
+                            pathname.includes('wypozyczenia')) &&
                           'bg-graydark dark:bg-meta-4'
                         }`}
                         onClick={(e) => {
@@ -233,6 +233,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                           </li>
                           <li>
                             <NavLink
+                              to="/wypozyczenia/oddaj-samochod"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Oddaj samochód
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
                               to="/wypozyczenia/moje-wypozyczenia"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
@@ -240,6 +251,17 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               }
                             >
                               Moje wypożyczenia
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/wypozyczenia/archiwum"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Archiwum wypożyczeń
                             </NavLink>
                           </li>
                         </ul>
@@ -254,7 +276,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Rezerwacje --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/wypozyczenia' || pathname.includes('wypozyczenia')
+                  pathname === '/rezerwacje' || pathname.includes('rezerwacje')
                 }
               >
                 {(handleClick, open) => {
@@ -263,8 +285,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === '/forms' ||
-                            pathname.includes('forms')) &&
+                          (pathname === '/rezerwacje' ||
+                            pathname.includes('rezerwacje')) &&
                           'bg-graydark dark:bg-meta-4'
                         }`}
                         onClick={(e) => {
@@ -303,7 +325,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             fill="white"
                           />
                         </svg>
-                        Wypożyczenia
+                        Rezerwacje
                         <svg
                           className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
                             open && 'rotate-180'
@@ -331,24 +353,46 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/wypozyczenia/wypozycz-samochod"
+                              to="/rezerwacje/"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Wypożycz samochód
+                              Przegląd rezerwacji
                             </NavLink>
                           </li>
                           <li>
                             <NavLink
-                              to="/wypozyczenia/moje-wypozyczenia"
+                              to="/rezerwacje/dokonaj-rezerwacji"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Moje wypożyczenia
+                              Dokonaj rezerwacji
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/rezerwacje/moje-rezerwacje"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Moje rezerwacje
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/rezerwacje/archiwum"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Archiwum rezerwacji
                             </NavLink>
                           </li>
                         </ul>
@@ -363,7 +407,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Tankowania --> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/wypozyczenia' || pathname.includes('wypozyczenia')
+                  pathname === '/tankowania' || pathname.includes('tankowania')
                 }
               >
                 {(handleClick, open) => {
@@ -372,8 +416,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === '/forms' ||
-                            pathname.includes('forms')) &&
+                          (pathname === '/tankowania' ||
+                            pathname.includes('tankowania')) &&
                           'bg-graydark dark:bg-meta-4'
                         }`}
                         onClick={(e) => {
@@ -412,7 +456,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             fill="white"
                           />
                         </svg>
-                        Wypożyczenia
+                        Tankowania
                         <svg
                           className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
                             open && 'rotate-180'
@@ -440,26 +484,38 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/wypozyczenia/wypozycz-samochod"
+                              to="/tankowania/"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Wypożycz samochód
+                              Przegląd aut
                             </NavLink>
                           </li>
                           <li>
                             <NavLink
-                              to="/wypozyczenia/moje-wypozyczenia"
+                              to="/tankowania/zglos-tankowanie"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Moje wypożyczenia
+                              Zgłoś tankowanie
                             </NavLink>
                           </li>
+                          <li>
+                            <NavLink
+                              to="/tankowania/archiwum"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Archiwum
+                            </NavLink>
+                          </li>
+
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
@@ -472,7 +528,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
               {/* <!-- Menu Item Usterki--> */}
               <SidebarLinkGroup
                 activeCondition={
-                  pathname === '/wypozyczenia' || pathname.includes('wypozyczenia')
+                  pathname === '/usterki' || pathname.includes('usterki')
                 }
               >
                 {(handleClick, open) => {
@@ -481,8 +537,8 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                       <NavLink
                         to="#"
                         className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-bodydark1 duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                          (pathname === '/forms' ||
-                            pathname.includes('forms')) &&
+                          (pathname === '/usterki' ||
+                            pathname.includes('usterki')) &&
                           'bg-graydark dark:bg-meta-4'
                         }`}
                         onClick={(e) => {
@@ -521,7 +577,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                             fill="white"
                           />
                         </svg>
-                        Wypożyczenia
+                        Usterki
                         <svg
                           className={`absolute right-4 top-1/2 -translate-y-1/2 fill-current ${
                             open && 'rotate-180'
@@ -549,26 +605,38 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                         <ul className="mt-4 mb-5.5 flex flex-col gap-2.5 pl-6">
                           <li>
                             <NavLink
-                              to="/wypozyczenia/wypozycz-samochod"
+                              to="/usterki/zglos"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Wypożycz samochód
+                              Zgłoś usterkę
                             </NavLink>
                           </li>
                           <li>
                             <NavLink
-                              to="/wypozyczenia/moje-wypozyczenia"
+                              to="/usterki/status-napraw"
                               className={({ isActive }) =>
                                 'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
                                 (isActive && '!text-white')
                               }
                             >
-                              Moje wypożyczenia
+                              Status napraw
                             </NavLink>
                           </li>
+                          <li>
+                            <NavLink
+                              to="/usterki/archiwum"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Archiwum usterek
+                            </NavLink>
+                          </li>
+
                         </ul>
                       </div>
                       {/* <!-- Dropdown Menu End --> */}
