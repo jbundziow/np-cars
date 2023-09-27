@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 
 const TableThree = () => {
     return (
-      <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+      <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -10,13 +10,13 @@ const TableThree = () => {
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white xl:pl-11">
                   Samochód
                 </th>
-                <th className="min-w-[150px] py-4 px-4 flex justify-center font-medium text-black dark:text-white">
+                <th className="hidden min-w-[150px] py-4 px-4 flex justify-center font-medium text-black dark:text-white">
                   Ilość zaplanowanych rezerwacji
                 </th>
                 <th className="min-w-[120px] py-4 px-4 font-medium text-black dark:text-white">
                   Status
                 </th>
-                <th className="py-4 px-4 font-medium text-black dark:text-white">
+                <th className="py-4 px-4 font-medium text-xs md:text-base text-black dark:text-white">
                   Działania
                 </th>
               </tr>
@@ -29,7 +29,7 @@ const TableThree = () => {
                     <div className="flex flex-col gap-4 xl:flex-row xl:items-center">
                         <div className=" w-32 rounded-md">
                         <img 
-                        className="rounded-md"
+                        className="rounded-md hidden md:block"
                         src={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} alt="Zdjęcie samochodu" />
                         </div>
                         <h5 className="font-medium text-black dark:text-white">
@@ -38,7 +38,7 @@ const TableThree = () => {
                     </div>
                     </div>
                 </td>
-                <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+                <td className="hidden border-b border-[#eee] py-5 px-2 dark:border-strokedark">
                     <div className="flex justify-center">
                     <p className="inline-flex rounded-md bg-danger py-2 px-4 text-md text-md font-bold text-white cursor-default">1</p>
                     </div>
@@ -60,7 +60,7 @@ const TableThree = () => {
                 </td>
               </tr>
               {/* TODO: move this to another component */}
-              <tr>
+              {/* <tr>
                 <td className="border-b border-[#eee] py-5 px-4 pl-9 dark:border-strokedark xl:pl-11">
                   <h5 className="font-medium text-black dark:text-white">
                     Standard Package
@@ -314,7 +314,7 @@ const TableThree = () => {
                     </button>
                   </div>
                 </td>
-              </tr>
+              </tr> */}
             </tbody>
           </table>
         </div>
