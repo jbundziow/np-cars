@@ -1,4 +1,5 @@
 import { useEffect} from 'react';
+import Breadcrumb from '../../components/Breadcrumb';
 
 interface Props {
     documentTitle: string;
@@ -9,9 +10,7 @@ const MyRentals = (props: Props) => {
 
   return (
     <>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        <h1>Moje wypożyczenia</h1>
-      </div>
+    <Breadcrumb pageName="Moje wypożyczenia" />
     </>
   );
 };

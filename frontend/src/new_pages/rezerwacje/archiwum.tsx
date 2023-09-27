@@ -1,4 +1,5 @@
 import { useEffect} from 'react';
+import Breadcrumb from '../../components/Breadcrumb';
 
 interface Props {
     documentTitle: string;
@@ -8,7 +9,8 @@ const ReservationArchive = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
     return (
       <>
-          <h1>Archiwum rezerwacji</h1>
+      <Breadcrumb pageName="Archiwum rezerwacji" />
+      <p>Archiwum rezerwacji</p>
       </>
     );
   };
