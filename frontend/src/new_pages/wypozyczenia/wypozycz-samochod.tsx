@@ -1,5 +1,6 @@
 import { useEffect} from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
+import RentalsTable from '../../components/rentals/RentalsTable'
 
 interface Props {
     documentTitle: string;
@@ -10,6 +11,7 @@ const RentACar = (props: Props) => {
     return (
       <>
       <Breadcrumb pageName="Wypożycz samochód" />
+      <RentalsTable/>
       </>
     );
   };

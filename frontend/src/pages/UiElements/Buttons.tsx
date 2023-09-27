@@ -21,28 +21,28 @@ const Buttons = () => {
               to="#"
               className="inline-flex items-center justify-center bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             >
-              Button
+              Button 1
             </Link>
 
             <Link
               to="#"
               className="inline-flex items-center justify-center rounded-md bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             >
-              Button
+              Button 2
             </Link>
 
             <Link
               to="#"
               className="inline-flex items-center justify-center rounded-full bg-primary py-4 px-10 text-center font-medium text-white hover:bg-opacity-90 lg:px-8 xl:px-10"
             >
-              Button
+              Button 3
             </Link>
 
             <Link
               to="#"
               className="inline-flex items-center justify-center rounded-md border border-primary py-4 px-10 text-center font-medium text-primary hover:bg-opacity-90 lg:px-8 xl:px-10"
             >
-              Button
+              Button 4
             </Link>
           </div>
 
