@@ -1,8 +1,33 @@
 import { Link } from 'react-router-dom';
 
-const RentalsTableRow = () => {
+
+interface RentalsTableRowProps {
+    carID: number;
+    carBrand: string;
+    carModel: string;
+    carStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged';
+    carImg: string;
+    amountOfReservations: number;
+  }
+
+const RentalsTableRow = (props: RentalsTableRowProps) => {
+
+    const transformReservations = (count: RentalsTableRowProps["amountOfReservations"]):{x: number, y:string} => {
+        const obj = {
+            x: count,
+            y: 'test'
+        }
+        return obj;
+    }
+
+
+    const reservationsJSX = (count: RentalsTableRowProps["amountOfReservations"]):JSX.Element => {
+        return <h1>Hello</h1>
+    }
     return (
     <>
+    <p>{transformReservations(props.amountOfReservations).x} {transformReservations(2).y}</p>
+    {reservationsJSX(2)}
     <tr>
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
         <div className="col-span-3 flex items-center">
@@ -10,10 +35,10 @@ const RentalsTableRow = () => {
             <div className=" w-22 sm:w-32 rounded-md">
             <img 
             className="rounded-md block"
-            src={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} alt="Zdjęcie samochodu" />
+            src={props.carImg} alt="Zdjęcie samochodu" />
             </div>
             <h5 className="font-medium text-xs sm:text-base text-black dark:text-white">
-            Renault Megane
+            {`${props.carBrand} ${props.carModel}`}
             </h5>
         </div>
         </div>

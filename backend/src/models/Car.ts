@@ -40,7 +40,7 @@ const CarModel = sequelize.define('Car', {
         allowNull: true,
       },
       fuelType: {
-        type: DataTypes.ENUM('diesel', 'petrol', 'lpg', 'hybrid'),
+        type: DataTypes.ENUM('diesel', 'petrol'),
         allowNull: false,
       },
       tankCapacity: {
@@ -64,7 +64,7 @@ const CarModel = sequelize.define('Car', {
         allowNull: false,
       },
       availabilityStatus: {
-        type: DataTypes.ENUM('onService', 'damaged', 'other'),
+        type: DataTypes.ENUM('available', 'notAvailable', 'rented', 'onService', 'damaged'),
         allowNull: true,
       },
       availabilityDescription: {
@@ -85,13 +85,13 @@ class Car {
         private plateNumber: string,
         private hasFuelCard: boolean,
         private fuelCardPIN: number,
-        private fuelType: 'diesel' | 'petrol' | 'lpg' | 'hybrid',
+        private fuelType: 'diesel' | 'petrol',
         private tankCapacity: number, //liters
         private loadCapacity: number, //kilograms
         private nextInspectionDate: string,
         private nextInsuranceDate: string,
         private isAvailable: boolean,
-        private availabilityStatus: 'onService' | 'damaged' | 'other' | null,
+        private availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
         private availabilityDescription: string | null,
         ) {}
 
