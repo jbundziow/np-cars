@@ -12,22 +12,33 @@ interface RentalsTableRowProps {
 
 const RentalsTableRow = (props: RentalsTableRowProps) => {
 
-    const transformReservations = (count: RentalsTableRowProps["amountOfReservations"]):{x: number, y:string} => {
-        const obj = {
-            x: count,
-            y: 'test'
+    const carStatusJSX = (status: RentalsTableRowProps["carStatus"]):JSX.Element => {
+
+        let result:JSX.Element = <p>Błąd</p>;
+        switch (status) {
+            case 'available':
+                result = <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-success cursor-default">Dostępny</p>
+                break;
+            case 'notAvailable':
+                result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Niedostępny</p>
+                break;
+            case 'rented':
+                result = <p className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-warning cursor-default">Wypożyczony</p>
+                break;
+            case 'onService':
+                result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">W serwisie</p>
+                break;
+            case 'damaged':
+                result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Awaria</p>
+                break;
         }
-        return obj;
+        return result;
     }
 
 
-    const reservationsJSX = (count: RentalsTableRowProps["amountOfReservations"]):JSX.Element => {
-        return <h1>Hello</h1>
-    }
+
     return (
     <>
-    {/* <p>{transformReservations(props.amountOfReservations).x} {transformReservations(2).y}</p> */}
-    {/* {reservationsJSX(2)} */}
     <tr className="hover:bg-gray-2 dark:hover:bg-meta-4">
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
         <div className="col-span-3 flex items-center">
@@ -45,19 +56,17 @@ const RentalsTableRow = (props: RentalsTableRowProps) => {
     </td>
     <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className="inline-flex rounded-md bg-danger py-2 px-4 text-md text-md font-bold text-white cursor-default">{props.amountOfReservations}</p>
+        <p className={`inline-flex rounded-md  py-2 px-4 text-md text-md font-bold text-white cursor-default ${props.amountOfReservations === 0 ? 'bg-success' : 'bg-danger'}`}>{props.amountOfReservations}</p>
         </div>
     </td>
     <td className=" border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <p className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-success">
-        Dostępny
-        </p>
+        {carStatusJSX(props.carStatus)}
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex items-center space-x-3.5">
         <Link
-        to="#"
-        className="inline-flex items-center justify-center rounded-full bg-primary py-1 sm:py-2 px-4 sm:px-7 text-center text-xs sm:text-base font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8"
+        to={(props.carStatus === 'available' || props.carStatus === 'rented') ? '/link-to-route' : '#'}
+        className={`inline-flex items-center justify-center rounded-full bg-primary py-1 sm:py-2 px-4 sm:px-7 text-center text-xs sm:text-base font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8 ${(props.carStatus === 'available' || props.carStatus === 'rented') ? 'cursor-pointer' : 'cursor-not-allowed bg-opacity-20 dark:text-opacity-20 hover:bg-opacity-30'}`}
         >
         Wypożycz
         </Link>

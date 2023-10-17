@@ -26,7 +26,11 @@ const RentalsTable = () => {
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
     
-               <RentalsTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carStatus={'available'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={0}/>
+               <RentalsTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carStatus={'available'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={1}/>
+               <RentalsTableRow carID={2} carBrand={'Renault'} carModel={'Megane'} carStatus={'notAvailable'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={0}/>
+               <RentalsTableRow carID={3} carBrand={'Renault'} carModel={'Megane'} carStatus={'rented'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={2}/>
+               <RentalsTableRow carID={4} carBrand={'Renault'} carModel={'Megane'} carStatus={'onService'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={0}/>
+               <RentalsTableRow carID={5} carBrand={'Renault'} carModel={'Megane'} carStatus={'damaged'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={3}/>
             </tbody>
           </table>
         </div>
