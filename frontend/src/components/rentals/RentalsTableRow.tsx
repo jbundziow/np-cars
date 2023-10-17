@@ -26,9 +26,9 @@ const RentalsTableRow = (props: RentalsTableRowProps) => {
     }
     return (
     <>
-    <p>{transformReservations(props.amountOfReservations).x} {transformReservations(2).y}</p>
-    {reservationsJSX(2)}
-    <tr>
+    {/* <p>{transformReservations(props.amountOfReservations).x} {transformReservations(2).y}</p> */}
+    {/* {reservationsJSX(2)} */}
+    <tr className="hover:bg-gray-2 dark:hover:bg-meta-4">
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
         <div className="col-span-3 flex items-center">
         <div className="flex flex-col sm:gap-4 xl:flex-row xl:items-center">
@@ -45,7 +45,7 @@ const RentalsTableRow = (props: RentalsTableRowProps) => {
     </td>
     <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className="inline-flex rounded-md bg-danger py-2 px-4 text-md text-md font-bold text-white cursor-default">1</p>
+        <p className="inline-flex rounded-md bg-danger py-2 px-4 text-md text-md font-bold text-white cursor-default">{props.amountOfReservations}</p>
         </div>
     </td>
     <td className=" border-b border-[#eee] py-5 px-2 dark:border-strokedark">

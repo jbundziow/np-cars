@@ -23,6 +23,7 @@ const RentalsTable = () => {
               </tr>
             </thead>
             <tbody>
+            <div className='py-2' />
                {/* INSERT ROWS HERE */}
     
                <RentalsTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carStatus={'available'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={0}/>
