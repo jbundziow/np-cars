@@ -29,7 +29,7 @@ const FuelLevelBar = (props: FuelLevelProps) => {
     <>
         <div className="w-full bg-neutral-200 dark:bg-neutral-600">
           <div
-          className={`p-0.5 text-center text-xs font-medium leading-none text-black `}
+          className={`p-1 text-center text-xs font-medium leading-none text-black `}
           style={{ width: `${props.level}%`, backgroundColor: `${perc2color(props.level)}` }}
           >
           <p>{props.level}%</p>
