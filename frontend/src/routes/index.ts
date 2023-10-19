@@ -7,6 +7,7 @@ const MyReservations = lazy(() => import('../new_pages/rezerwacje/moje-rezerwacj
 const ReservationArchive = lazy(() => import('../new_pages/rezerwacje/archiwum'));
 const RefuelingOverview = lazy(() => import('../new_pages/tankowania'));
 const ReportRefueling = lazy(() => import('../new_pages/tankowania/zglos-tankowanie'));
+const ReportRefuelingForm = lazy(() => import('../new_pages/tankowania/zglos-tankowanie-form'));
 const RefuelingArchive = lazy(() => import('../new_pages/tankowania/archiwum'));
 const FaultsArchive = lazy(() => import('../new_pages/usterki/archiwum'));
 const RepairsStatus = lazy(() => import('../new_pages/usterki/status-napraw'));
@@ -84,8 +85,8 @@ const coreRoutes = [
   },
   {
     path: '/tankowania/zglos-tankowanie/:id',
-    title: 'Zgłoś tankowanie id',
-    component: ReportRefueling,
+    title: 'Zgłoś zatankowanie samochodu',
+    component: ReportRefuelingForm,
   },
   {
     path: '/tankowania/archiwum',
