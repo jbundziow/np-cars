@@ -1,19 +1,14 @@
-import FuelLevelBar from './FuelLevelBar';
+import { Link } from "react-router-dom";
 
 
-interface RefuelingsOverviewTableRowProps {
+interface RefuelingsReportTableRowProps {
     carID: number;
     carBrand: string;
     carModel: string;
     carImg: string;
-    lastRefueling: number;
-    predictedFuelLevel: number;
   }
 
-const RefuelingsOverviewTableRow = (props: RefuelingsOverviewTableRowProps) => {
-
-
-
+const RefuelingsReportTableRow = (props: RefuelingsReportTableRowProps) => {
 
 
     return (
@@ -33,17 +28,19 @@ const RefuelingsOverviewTableRow = (props: RefuelingsOverviewTableRowProps) => {
         </div>
         </div>
     </td>
-    <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <div className="flex justify-center">
-        <p>{props.lastRefueling}km temu</p>
-        </div>
-    </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-          <FuelLevelBar level={props.predictedFuelLevel}/>
+        <div className="flex items-center space-x-3.5">
+        <Link
+        to='#'
+        className='inline-flex items-center justify-center rounded-full bg-primary py-1 sm:py-2 px-4 sm:px-7 text-center text-xs sm:text-base font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
+        >
+        Zgłoś tankowanie samochodu
+        </Link>
+        </div>
     </td>
     </tr>
     </>
     );
   };
   
-  export default RefuelingsOverviewTableRow;
+  export default RefuelingsReportTableRow;

@@ -83,6 +83,11 @@ const coreRoutes = [
     component: ReportRefueling,
   },
   {
+    path: '/tankowania/zglos-tankowanie/:id',
+    title: 'Zgłoś tankowanie id',
+    component: ReportRefueling,
+  },
+  {
     path: '/tankowania/archiwum',
     title: 'Archiwum tankowań',
     component: RefuelingArchive,
