@@ -10,6 +10,7 @@ const RepairsStatus = (props: Props) => {
     return (
       <>
       <Breadcrumb pageName="Status napraw" />
+      <p>Auto // 2 zgłoszonych, 1 w trakcie, 6 rozwiązanych, BTN szczegóły</p>
       </>
     );
   };
