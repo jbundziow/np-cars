@@ -1,14 +1,18 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 
-interface RefuelingsReportTableRowProps {
+interface FaultsReportTableRowProps {
     carID: number;
     carBrand: string;
     carModel: string;
     carImg: string;
+    amountOfFaults: number;
   }
 
-const RefuelingsReportTableRow = (props: RefuelingsReportTableRowProps) => {
+const FaultsReportTableRow = (props: FaultsReportTableRowProps) => {
+
+
+
 
 
     return (
@@ -28,13 +32,18 @@ const RefuelingsReportTableRow = (props: RefuelingsReportTableRowProps) => {
         </div>
         </div>
     </td>
+    <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+        <div className="flex justify-center">
+        <p className={`inline-flex rounded-md  py-2 px-4 text-md text-md font-bold text-white cursor-default ${props.amountOfFaults === 0 ? 'bg-success' : 'bg-danger'}`}>{props.amountOfFaults}</p>
+        </div>
+    </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex items-center space-x-3.5">
         <Link
         to={`./${props.carID}`}
-        className='inline-flex items-center justify-center rounded-full bg-primary py-1 sm:py-2 px-4 sm:px-7 text-center text-xs sm:text-base font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
+        className={`inline-flex items-center justify-center rounded-full bg-primary py-1 sm:py-2 px-4 sm:px-7 text-center text-xs sm:text-base font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8`}
         >
-        Zgłoś tankowanie samochodu
+        Zgłoś usterkę
         </Link>
         </div>
     </td>
@@ -43,4 +52,4 @@ const RefuelingsReportTableRow = (props: RefuelingsReportTableRowProps) => {
     );
   };
   
-  export default RefuelingsReportTableRow;
+  export default FaultsReportTableRow;
