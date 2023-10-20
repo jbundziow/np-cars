@@ -1,5 +1,6 @@
 import { useEffect} from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
+import FaultsStatusContainer from '../../components/faults/status/FaultsStatusContainer';
 
 interface Props {
     documentTitle: string;
@@ -10,7 +11,7 @@ const RepairsStatus = (props: Props) => {
     return (
       <>
       <Breadcrumb pageName="Status napraw" />
-      <p>Auto // 2 zgłoszonych, 1 w trakcie, 6 rozwiązanych, BTN szczegóły</p>
+      <FaultsStatusContainer/>
       </>
     );
   };
