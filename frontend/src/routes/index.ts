@@ -11,6 +11,7 @@ const ReportRefuelingForm = lazy(() => import('../new_pages/tankowania/zglos-tan
 const RefuelingArchive = lazy(() => import('../new_pages/tankowania/archiwum'));
 const FaultsArchive = lazy(() => import('../new_pages/usterki/archiwum'));
 const RepairsStatus = lazy(() => import('../new_pages/usterki/status-napraw'));
+const RepairsStatusDetails = lazy(() => import('../new_pages/usterki/status-napraw-details'));
 const ReportFault = lazy(() => import('../new_pages/usterki/zglos'));
 const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'));
 const MyRentals = lazy(() => import('../new_pages/wypozyczenia/moje-wypozyczenia'));
@@ -104,6 +105,11 @@ const coreRoutes = [
     path: '/usterki/status-napraw',
     title: 'Status napraw',
     component: RepairsStatus,
+  },
+  {
+    path: '/usterki/status-napraw/:id',
+    title: 'Status napraw',
+    component: RepairsStatusDetails,
   },
   {
     path: '/usterki/archiwum',

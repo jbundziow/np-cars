@@ -24,9 +24,9 @@ const FaultsStatusContainer = () => {
           />
           <FaultsStatusCard
           carID={3}
-          carBrand={'Renault'}
-          carModel={'Megane RS'}
-          carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}
+          carBrand={'Mercedes'}
+          carModel={'Sprinter'}
+          carImg={'https://upload.wikimedia.org/wikipedia/commons/2/2f/Mercedes_sprinter_1_v_sst.jpg'}
           numberOfPendingFaults={4}
           numberOfFaultsInProgress={1}
           numberOfClosedFaults={2}
@@ -34,8 +34,8 @@ const FaultsStatusContainer = () => {
           <FaultsStatusCard
           carID={4}
           carBrand={'Renault'}
-          carModel={'Megane RS'}
-          carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}
+          carModel={'Traffic'}
+          carImg={'https://image.ceneostatic.pl/data/products/140258533/i-renault-trafic-exclusive-2-0-115-km-2-x-klima.jpg'}
           numberOfPendingFaults={12}
           numberOfFaultsInProgress={33}
           numberOfClosedFaults={96}
