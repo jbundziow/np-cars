@@ -57,10 +57,10 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
             className="!mt-0 !rounded-b-none !shadow-none"
           >
             <div className="flex flex-col items-start px-5 py-4 text-black dark:text-white">
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Wycieraczki do wymiany</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Porysowany zderzak</Link>
+              <Link to='/usterki/1' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
+              <Link to='/usterki/2' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
+              <Link to='/usterki/3' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Wycieraczki do wymiany</Link>
+              <Link to='/usterki/4' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Porysowany zderzak</Link>
             </div>
           </TECollapse>
         </div>
@@ -107,10 +107,8 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
           className="!mt-0 !rounded-b-none !shadow-none"
         >
           <div className="flex flex-col items-start px-5 py-4 text-black dark:text-white">
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Wycieraczki do wymiany</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Porysowany zderzak</Link>
+              <Link to='/usterki/1' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
+              <Link to='/usterki/2' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
             </div>
         </TECollapse>
       </div>
@@ -156,10 +154,10 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
           className="!mt-0 !shadow-none"
         >
           <div className="flex flex-col items-start px-5 py-4 text-black dark:text-white">
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Wycieraczki do wymiany</Link>
-              <Link to='#' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Porysowany zderzak</Link>
+              <Link to='/usterki/1' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
+              <Link to='/usterki/2' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
+              <Link to='/usterki/3' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Wycieraczki do wymiany</Link>
+              <Link to='/usterki/4' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Porysowany zderzak</Link>
             </div>
         </TECollapse>
       </div>
