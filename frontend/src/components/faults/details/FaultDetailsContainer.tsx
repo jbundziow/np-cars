@@ -1,6 +1,33 @@
 import { Link } from "react-router-dom";
 
+interface FaultDetailsContainerProps {
+  status: 'pending' | 'accepted' | 'finished' | 'cancelled'
+}
+
 const FaultDetailsContainer = () => {
+  
+
+  const faultStatusJSX = (status: FaultDetailsContainerProps["status"]):JSX.Element => {
+
+    let result:JSX.Element = <span>Błąd</span>;
+    switch (status) {
+        case 'pending':
+            result = <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-success cursor-default">Dostępny</span>
+            break;
+        case 'accepted':
+            result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Niedostępny</span>
+            break;
+        case 'finished':
+            result = <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-warning cursor-default">Wypożyczony</span>
+            break;
+        case 'cancelled':
+            result = <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-warning cursor-default">Wypożyczony</span>
+            break;
+    }
+    return result;
+  }
+
+
     return (
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
 
@@ -17,11 +44,11 @@ const FaultDetailsContainer = () => {
 
         <div className='col-span-3'>
         <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
-            <h1>Porysowany zderzak</h1>
-            <p>Status: W trakcie</p>
+            <h1 className="text-3xl font-bold mb-3">Porysowany zderzak</h1>
+            <p className="mb-2">Status: {faultStatusJSX('pending')}</p>
             <p>Usterka zgłoszona przez: Andrzej Nowak</p>
             <p>Data zgłoszenia usterki: 27.10.2023 11:32</p>
-            <p>Usterka zaakceptowana przez moderatora: Szymon Radziszewski</p>
+            <p>Usterka zaakceptowana przez moderatora: Szymon Szymonowski</p>
             <p>Data ostatniej zmiany statusu: 28.10.2023 19:44</p>
             <p>Szczegółowy opis problemu: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dicta inventore quia numquam obcaecati nemo quaerat id aut, nobis animi possimus eum iure necessitatibus voluptate voluptatibus placeat beatae, nam, nulla quos.</p>
             <p>Komentarz moderatora: Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius beatae magnam error veritatis ducimus earum veniam quis ad quod aperiam? Ex voluptate dolore, accusamus est iste facere ut similique molestias!</p>
