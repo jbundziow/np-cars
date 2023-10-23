@@ -24,7 +24,7 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
                   <form>
                     <div className='mb-5'>
                       <label className="mb-3 block text-black dark:text-white">
-                        Tytuł usterki
+                        Tytuł usterki:
                       </label>
                       <input
                         required
@@ -36,7 +36,7 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
 
                     <div className='mb-5'>
                       <label className="mb-3 block text-black dark:text-white">
-                        Szczegółowy opis usterki
+                        Szczegółowy opis usterki:
                       </label>
                       <textarea
                         required

@@ -1,4 +1,6 @@
 
+import SwitcherThree from "../../SwitcherThree";
+
 
 
 interface RefuelingReportFormProps {
@@ -24,12 +26,45 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
                   <form>
                     <div className='mb-5'>
                       <label className="mb-3 block text-black dark:text-white">
-                        Tytuł usterki
+                        Przebieg podczas tankowania [km]:
                       </label>
                       <input
                         required
-                        type="text"
-                        placeholder="Wpisz krótki tytuł usterki"
+                        type="number"
+                        placeholder=""
+                        min='0'
+                        max='999999'
+                        step='1'
+                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      />
+                    </div>
+
+                    <div className='mb-5'>
+                      <label className="mb-3 block text-black dark:text-white">
+                        Ilość zatankowanego paliwa [litry]:
+                      </label>
+                      <input
+                        required
+                        type="number"
+                        placeholder=""
+                        min='0'
+                        max='200'
+                        step='0.01'
+                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      />
+                    </div>
+
+                    <div className='mb-5'>
+                      <label className="mb-3 block text-black dark:text-white">
+                        Zapłacona kwota brutto [zł]:
+                      </label>
+                      <input
+                        required
+                        type="number"
+                        placeholder=""
+                        min='0'
+                        max='2000'
+                        step='0.01'
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       />
                     </div>
@@ -45,6 +80,9 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       ></textarea>
                     </div>
+
+                    <p>Czy użyto karty Orlen Mikroflota?</p>
+                    <SwitcherThree/>
 
                     <div className='flex justify-center mb-2'>
                     <button className="flex w-90 justify-center rounded bg-primary p-3 font-medium text-gray hover:opacity-90" type='submit'>
