@@ -1,13 +1,13 @@
 
 
 
-interface ReportFaultFormContainerProps {
+interface RefuelingReportFormProps {
     carID: number;
     carFullname: string;
     carImg: string;
 }
 
-const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
+const RefuelingReportForm = (props: RefuelingReportFormProps) => {
     return (
         <>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
@@ -62,4 +62,4 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
     );
   };
   
-  export default ReportFaultFormContainer;
+  export default RefuelingReportForm;

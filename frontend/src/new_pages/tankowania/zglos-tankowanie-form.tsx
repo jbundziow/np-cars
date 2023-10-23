@@ -1,7 +1,7 @@
 import { useEffect} from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
-import RefuelingsReportTable from '../../components/refuelings/report/RefuelingsReportTable';
 import {useParams} from "react-router-dom";
+import RefuelingReportForm from '../../components/refuelings/report/RefuelingReportForm';
           
 
 interface Props {
@@ -16,8 +16,7 @@ const ReportRefueling = (props: Props) => {
     return (
       <>
       <Breadcrumb pageName="Zgłoś zatankowanie samochodu" />
-      <RefuelingsReportTable/>
-      <p>Chcesz zgłosić zatankowania auta o id: {id}</p>
+      <RefuelingReportForm carID={2} carFullname='Skoda Fabia' carImg='https://www.autocentrum.pl/MjAwNy5qYgsgFThKGgpvH2NNbFZUEmAMKBsrVlQDOQMiGytWAEl0WXJDfhsASX8JdhMvSFdDLF4lRHpMGh0oGjINL1RbGDdHLA49FVwCN0cyHCEdVFwrCyMeL1QESHRTbEV-SQJfJxomVTM'/>
       </>
     );
   };

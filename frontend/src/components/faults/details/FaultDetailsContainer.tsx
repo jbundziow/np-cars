@@ -50,7 +50,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
         <img src={props.carImg} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
         <p className='text-black dark:text-white pb-2 text-lg'>{props.carFullname}</p>
         <Link
-        to={`#`}
+        to={`/usterki/zglos/2`}
         className={`inline-flex items-center justify-center rounded-full bg-primary py-2 px-7 text-center text-base font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8 mt-2`}
         >
         Zgłoś nową usterkę
@@ -67,12 +67,12 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
             <p className="mb-6"><h5 className="font-bold inline-block">Data ostatniej zmiany statusu:&nbsp;</h5>{props.lastChangeAt}</p>
 
             <p className="mb-1"><h5 className="font-bold inline-block">Szczegółowy opis problemu:&nbsp;</h5></p>
-            <div className="mb-6 border rounded-md p-2 w-[100%] md:w-[70%] dark:bg-graydark">
+            <div className="mb-6 border rounded-md p-2 w-full md:w-[90%] dark:bg-form-input">
             <p>{props.description}</p>
             </div>
 
             <p className="mb-1"><h5 className="font-bold inline-block">Komentarz moderatora:&nbsp;</h5></p>
-            <div className="mb-1 border rounded-md p-2 w-[100%] md:w-[70%]">
+            <div className="mb-1 border rounded-md p-2 w-full md:w-[90%] dark:bg-form-input">
             <p>{props.resultDesctiption}</p>
             </div>
         </div>
