@@ -12,16 +12,16 @@ const FaultDetailsContainer = () => {
     let result:JSX.Element = <span>Błąd</span>;
     switch (status) {
         case 'pending':
-            result = <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-success cursor-default">Dostępny</span>
+            result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Do akceptacji</span>
             break;
         case 'accepted':
-            result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Niedostępny</span>
+            result = <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-warning cursor-default">W trakcie</span>
             break;
         case 'finished':
-            result = <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-warning cursor-default">Wypożyczony</span>
+            result = <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-success cursor-default">Rozwiązana</span>
             break;
         case 'cancelled':
-            result = <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-warning cursor-default">Wypożyczony</span>
+            result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Anulowana</span>
             break;
     }
     return result;
@@ -45,13 +45,21 @@ const FaultDetailsContainer = () => {
         <div className='col-span-3'>
         <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
             <h1 className="text-3xl font-bold mb-3">Porysowany zderzak</h1>
-            <p className="mb-2">Status: {faultStatusJSX('pending')}</p>
-            <p>Usterka zgłoszona przez: Andrzej Nowak</p>
-            <p>Data zgłoszenia usterki: 27.10.2023 11:32</p>
-            <p>Usterka zaakceptowana przez moderatora: Szymon Szymonowski</p>
-            <p>Data ostatniej zmiany statusu: 28.10.2023 19:44</p>
-            <p>Szczegółowy opis problemu: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dicta inventore quia numquam obcaecati nemo quaerat id aut, nobis animi possimus eum iure necessitatibus voluptate voluptatibus placeat beatae, nam, nulla quos.</p>
-            <p>Komentarz moderatora: Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius beatae magnam error veritatis ducimus earum veniam quis ad quod aperiam? Ex voluptate dolore, accusamus est iste facere ut similique molestias!</p>
+            <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5>{faultStatusJSX('pending')}</p>
+            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zgłoszona przez:&nbsp;</h5>Andrzej Nowak</p>
+            <p className="mb-2"><h5 className="font-bold inline-block">Data zgłoszenia usterki:&nbsp;</h5>27.10.2023 11:32</p>
+            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zaakceptowana przez moderatora:&nbsp;</h5>Szymon Szymonowski</p>
+            <p className="mb-6"><h5 className="font-bold inline-block">Data ostatniej zmiany statusu:&nbsp;</h5>28.10.2023 19:44</p>
+
+            <p className="mb-1"><h5 className="font-bold inline-block">Szczegółowy opis problemu:&nbsp;</h5></p>
+            <div className="mb-6 border rounded-md p-2 w-[100%] md:w-[70%] dark:bg-graydark">
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dicta inventore quia numquam obcaecati nemo quaerat id aut, nobis animi possimus eum iure necessitatibus voluptate voluptatibus placeat beatae, nam, nulla quos.</p>
+            </div>
+
+            <p className="mb-1"><h5 className="font-bold inline-block">Komentarz moderatora:&nbsp;</h5></p>
+            <div className="mb-1 border rounded-md p-2 w-[100%] md:w-[70%]">
+            <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Dicta inventore quia numquam obcaecati nemo quaerat id aut, nobis animi possimus eum iure necessitatibus voluptate voluptatibus placeat beatae, nam, nulla quos.</p>
+            </div>
         </div>
         </div>
       </div>
