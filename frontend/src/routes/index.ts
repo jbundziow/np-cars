@@ -14,6 +14,7 @@ const RepairsStatus = lazy(() => import('../new_pages/usterki/status-napraw'));
 const RepairsStatusDetails = lazy(() => import('../new_pages/usterki/status-napraw-details'));
 const FaultDetails = lazy(() => import('../new_pages/usterki/status-usterki'));
 const ReportFault = lazy(() => import('../new_pages/usterki/zglos'));
+const ReportFaultForm = lazy(() => import('../new_pages/usterki/zglos-form'));
 const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'));
 const MyRentals = lazy(() => import('../new_pages/wypozyczenia/moje-wypozyczenia'));
 const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
@@ -86,7 +87,7 @@ const coreRoutes = [
     component: ReportRefueling,
   },
   {
-    path: '/tankowania/zglos-tankowanie/:id',
+    path: '/tankowania/zglos-tankowanie/:carID',
     title: 'Zgłoś zatankowanie samochodu',
     component: ReportRefuelingForm,
   },
@@ -103,17 +104,22 @@ const coreRoutes = [
     component: ReportFault,
   },
   {
+    path: '/usterki/zglos/:carID',
+    title: 'Zgłoś usterkę',
+    component: ReportFaultForm,
+  },
+  {
     path: '/usterki/status-napraw',
     title: 'Status napraw',
     component: RepairsStatus,
   },
   {
-    path: '/usterki/status-napraw/:id',
+    path: '/usterki/status-napraw/:carID',
     title: 'Status napraw',
     component: RepairsStatusDetails,
   },
   {
-    path: '/usterki/:id',
+    path: '/usterki/:faultID',
     title: 'Szczegóły dotyczące usterki',
     component: FaultDetails,
   },
