@@ -1,6 +1,6 @@
 import { useEffect} from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
-import RentalsTable from '../../components/rentals/RentalsTable'
+import RentalsTable from '../../components/rentals/rent/RentalsTable'
 
 interface Props {
     documentTitle: string;

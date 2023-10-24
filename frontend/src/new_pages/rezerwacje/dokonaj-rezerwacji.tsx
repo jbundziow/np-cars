@@ -1,5 +1,6 @@
 import { useEffect} from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
+import MakeAReservationTable from '../../components/reservations/make/MakeAReservationTable';
 
 interface Props {
     documentTitle: string;
@@ -10,6 +11,7 @@ const MakeAReservation = (props: Props) => {
     return (
       <>
       <Breadcrumb pageName="Dokonaj rezerwacji" />
+      <MakeAReservationTable/>
       </>
     );
   };
