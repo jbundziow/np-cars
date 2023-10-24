@@ -1,5 +1,6 @@
 import { useEffect} from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
+import ReservationsOverviewTable from '../../components/reservations/overview/ReservationsOverviewTable';
 
 interface Props {
     documentTitle: string;
@@ -10,6 +11,7 @@ const ReservationsOverview = (props: Props) => {
     return (
       <>
       <Breadcrumb pageName="Przegląd rezerwacji" />
+      <ReservationsOverviewTable/>
       </>
     );
   };
