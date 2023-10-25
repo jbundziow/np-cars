@@ -43,7 +43,8 @@ const ReportFault = (props: Props) => {
     return (
       <>
       <Breadcrumb pageName="Zgłoś usterkę" />
-      {loading === true ? <p>Ładowanie zawartości...</p> : <FaultsReportTable data={data}/>}
+
+      {loading === true ? <p>Ładowanie zawartości...</p> : error === null ? <FaultsReportTable data={data}/> : <p>Wystąpił błąd podczas ładowania zawartości...</p>}
       
       </>
     );
