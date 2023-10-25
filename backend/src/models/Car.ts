@@ -59,10 +59,6 @@ const CarModel = sequelize.define('Car', {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      isAvailable: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-      },
       availabilityStatus: {
         type: DataTypes.ENUM('available', 'notAvailable', 'rented', 'onService', 'damaged'),
         allowNull: true,
@@ -90,7 +86,6 @@ class Car {
         private loadCapacity: number, //kilograms
         private nextInspectionDate: string,
         private nextInsuranceDate: string,
-        private isAvailable: boolean,
         private availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
         private availabilityDescription: string | null,
         ) {}
@@ -110,7 +105,6 @@ class Car {
           loadCapacity: this.loadCapacity,
           nextInspectionDate: this.nextInspectionDate,
           nextInsuranceDate: this.nextInsuranceDate,
-          isAvailable: this.isAvailable,
           availabilityStatus: this.availabilityStatus,
           availabilityDescription: this.availabilityDescription,
         })
@@ -119,6 +113,9 @@ class Car {
     static async fetchAll() {
         return await CarModel.findAll()
     }
+    static async fetchAllBasicData() {
+      return await CarModel.findAll({attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
+  }
 
     static async fetchOne(id: number) {
         return await CarModel.findOne({ where: { id: id } })
