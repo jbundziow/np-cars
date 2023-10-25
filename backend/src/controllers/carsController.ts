@@ -8,7 +8,7 @@ import Car from '../models/Car'
 export const fetchAllCars = async (req: Request, res: Response, next: NextFunction) => {
     let dbResponse;
     try {
-        const newcar = new Car(null,'citroen','c4','passengerCar','1.jpg','DW22212',true,2137,'lpg',60,700,new Date().toISOString(),new Date("2022-12-01").toISOString(),true,null,null);
+        const newcar = new Car(null,'citroen','c4','passengerCar','1.jpg','DW22212',true,2137,'diesel',60,700,new Date().toISOString(),new Date("2022-12-01").toISOString(),true,'available',null);
         newcar.addOneCar()
         dbResponse = await Car.fetchAll();
     }
