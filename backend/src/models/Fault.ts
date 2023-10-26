@@ -60,7 +60,7 @@ const FaultModel = sequelize.define('Fault', {
         allowNull: true,
       },
       repairCost: {
-        type: DataTypes.number,
+        type: DataTypes.REAL,
         allowNull: true,
       },
 

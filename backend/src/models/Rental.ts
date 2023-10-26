@@ -3,7 +3,7 @@ const {DataTypes} = require('sequelize');
 
 
 import sequelize from "../database/database";
-const ReservationModel = sequelize.define('Reservation', {
+const RentalModel = sequelize.define('Rental', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -23,6 +23,22 @@ const ReservationModel = sequelize.define('Reservation', {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      carMileageBefore: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      carMileageAfter: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      travelDestinationAUTO: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      travelDestinationMAN: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
       dateFrom: {
         type: DataTypes.DATE,
         allowNull: false,
@@ -31,31 +47,28 @@ const ReservationModel = sequelize.define('Reservation', {
         type: DataTypes.DATE,
         allowNull: false,
       },
-      travelDestination: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
+      
 })
 
 
 
-class Reservation {
+class Rental {
     constructor(
         private id: number | null,
         private carID: number,
         private userID: number,
-        private lastEditedByModeratorOfID: number | null,
+        pri//TODO: FINISH HERE
         private dateFrom: string,
         private dateTo: string,
         private travelDestination: string
         ) {}
 
-    async addOneReservation() {
-        await ReservationModel.create({
+    async addOneRental() {
+        await RentalModel.create({
           id: this.id,
           carID: this.carID,
           userID: this.userID,
-          lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+          ...SS//TODO: FINISH HERE
           dateFrom: this.dateFrom,
           dateTo: this.dateTo,
           travelDestination: this.travelDestination,
@@ -63,14 +76,14 @@ class Reservation {
     }
 
     static async fetchAll() {
-        return await ReservationModel.findAll()
+        return await RentalModel.findAll()
     }
 
     static async fetchOne(id: number) {
-        return await ReservationModel.findOne({ where: { id: id } })
+        return await RentalModel.findOne({ where: { id: id } })
     }
 }
 
 
 
-export default Reservation;
+export default Rental;

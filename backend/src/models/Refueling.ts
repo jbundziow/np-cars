@@ -19,16 +19,20 @@ const RefuelingModel = sequelize.define('Refueling', {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      lastEditedByModeratorOfID: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       carMileage: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
       numberOfLiters: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.REAL,
         allowNull: false,
       },
       costBrutto: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.REAL,
         allowNull: true,
       },
       isFuelCardUsed: {
@@ -46,6 +50,7 @@ class Refueling {
         private id: number | null,
         private carID: number,
         private userID: number,
+        private lastEditedByModeratorOfID: number | null,
         private carMileage: number,
         private numberOfLiters: number,
         private costBrutto: number | null,
@@ -57,6 +62,7 @@ class Refueling {
           id: this.id,
           carID: this.carID,
           userID: this.userID,
+          lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
           carMileage: this.carMileage,
           numberOfLiters: this.numberOfLiters,
           costBrutto: this.costBrutto,
