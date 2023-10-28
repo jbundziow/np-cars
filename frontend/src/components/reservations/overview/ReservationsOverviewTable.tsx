@@ -1,6 +1,8 @@
 import ReservationsOverviewTableRow from "./ReservationsOverviewTableRow";
 
 
+
+
 const ReservationsOverviewTable = () => {
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
@@ -12,7 +14,7 @@ const ReservationsOverviewTable = () => {
                   Samochód
                 </th>
                 <th className="py-4 px-4 font-medium text-xs sm:text-base text-black dark:text-white">
-                  Rezerwacje na najbliższe 14 dni
+                  Rezerwacje na najbliższe 2 tygodnie
                 </th>
               </tr>
             </thead>
@@ -20,8 +22,72 @@ const ReservationsOverviewTable = () => {
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
     
-               <ReservationsOverviewTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}/>
-
+               <ReservationsOverviewTableRow
+               carID={1} 
+               carBrand={'Renault'}
+               carModel={'Megane'}
+               carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}
+               twoWeeksData={[
+                  { day: 'czw.', isBooked: true, name: 'Hubert Łoś'},
+                  { day: 'pt.', isBooked: false, name: ''},
+                  { day: 'sob.', isBooked: false, name: ''},
+                  { day: 'ndz.', isBooked: true, name: 'Grzegorz Brzęczyszczykiewicz'},
+                  { day: 'pon.', isBooked: false, name: ''},
+                  { day: 'wt.', isBooked: false, name: ''},
+                  { day: 'śr.', isBooked: true, name: 'Jan Kowalski'},
+                  { day: 'czw.', isBooked: false, name: ''},
+                  { day: 'pt.', isBooked: false, name: ''},
+                  { day: 'sob.', isBooked: false, name: ''},
+                  { day: 'ndz.', isBooked: false, name: ''},
+                  { day: 'pon.', isBooked: true, name: 'Kinga Jońska'},
+                  { day: 'wt.', isBooked: false, name: ''},
+                  { day: 'śr.', isBooked: false, name: ''},
+                  { day: 'czw.', isBooked: true, name: 'Andrzej Kuś'}
+              ]}/>
+              <ReservationsOverviewTableRow
+               carID={2} 
+               carBrand={'Mercedes'}
+               carModel={'Sprinter'}
+               carImg={'https://upload.wikimedia.org/wikipedia/commons/2/2f/Mercedes_sprinter_1_v_sst.jpg'}
+               twoWeeksData={[
+                  { day: 'czw.', isBooked: false, name: ''},
+                  { day: 'pt.', isBooked: false, name: ''},
+                  { day: 'sob.', isBooked: false, name: ''},
+                  { day: 'ndz.', isBooked: false, name: ''},
+                  { day: 'pon.', isBooked: false, name: ''},
+                  { day: 'wt.', isBooked: false, name: ''},
+                  { day: 'śr.', isBooked: true, name: 'Jan Kowalski'},
+                  { day: 'czw.', isBooked: false, name: ''},
+                  { day: 'pt.', isBooked: false, name: ''},
+                  { day: 'sob.', isBooked: false, name: ''},
+                  { day: 'ndz.', isBooked: false, name: ''},
+                  { day: 'pon.', isBooked: true, name: 'Michał Jach'},
+                  { day: 'wt.', isBooked: true, name: 'Michał Jach'},
+                  { day: 'śr.', isBooked: true, name: 'Michał Jach'},
+                  { day: 'czw.', isBooked: false, name: ''}
+              ]}/>
+              <ReservationsOverviewTableRow
+               carID={3} 
+               carBrand={'Renault'}
+               carModel={'Traffic'}
+               carImg={'https://image.ceneostatic.pl/data/products/140258533/i-renault-trafic-exclusive-2-0-115-km-2-x-klima.jpg'}
+               twoWeeksData={[
+                  { day: 'czw.', isBooked: false, name: ''},
+                  { day: 'pt.', isBooked: false, name: ''},
+                  { day: 'sob.', isBooked: false, name: ''},
+                  { day: 'ndz.', isBooked: false, name: ''},
+                  { day: 'pon.', isBooked: true, name: 'Tomasz Kloc'},
+                  { day: 'wt.', isBooked: true, name: 'Tomasz Kloc'},
+                  { day: 'śr.', isBooked: false, name: ''},
+                  { day: 'czw.', isBooked: true, name: 'Sandra Lewandowska'},
+                  { day: 'pt.', isBooked: true, name: 'Sandra Lewandowska'},
+                  { day: 'sob.', isBooked: false, name: ''},
+                  { day: 'ndz.', isBooked: false, name: ''},
+                  { day: 'pon.', isBooked: false, name: ''},
+                  { day: 'wt.', isBooked: false, name: ''},
+                  { day: 'śr.', isBooked: false, name: ''},
+                  { day: 'czw.', isBooked: false, name: ''}
+              ]}/>
 
             </tbody>
           </table>

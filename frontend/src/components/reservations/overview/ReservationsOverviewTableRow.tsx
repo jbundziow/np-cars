@@ -1,13 +1,20 @@
 import TwoWeeksReservations from "./TwoWeeksReservations";
 
-
+type twoWeeksDataArrType = {
+    day: 'pon.' | 'wt.' | 'śr.' | 'czw.' | 'pt.' | 'sob.' | 'ndz.',
+    isBooked: boolean,
+    name: string,
+}
 
 interface ReservationsOverviewTableRowProps {
     carID: number;
     carBrand: string;
     carModel: string;
     carImg: string;
+    twoWeeksData: twoWeeksDataArrType[];
   }
+
+  
 
 const ReservationsOverviewTableRow = (props: ReservationsOverviewTableRowProps) => {
 
@@ -30,49 +37,7 @@ const ReservationsOverviewTableRow = (props: ReservationsOverviewTableRowProps) 
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        
-            {/* <div className='flex flex-row gap-1 flex-wrap'>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>czw.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>pt.</div>
-                <div className="flex flex-row gap-1">
-                <div className='w-0.5 h-10 bg-warning'></div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>sob.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>ndz.</div>
-                <div className='w-0.5 h-10 bg-warning'></div>
-                </div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>pon.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>wt.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-danger flex justify-center items-center cursor-default'>śr.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>czw.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>pt.</div>
-                <div className="flex flex-row gap-1">
-                <div className='w-0.5 h-10 bg-warning'></div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>sob.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>ndz.</div>
-                <div className='w-0.5 h-10 bg-warning'></div>
-                </div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>pon.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>wt.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>śr.</div>
-                <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>czw.</div>
-            </div> */}
-        <TwoWeeksReservations reservationsArr ={[
-            { day: 'czw.', isBooked: false, name: ''},
-            { day: 'pt.', isBooked: false, name: ''},
-            { day: 'sob.', isBooked: false, name: ''},
-            { day: 'ndz.', isBooked: true, name: 'Grzegorz Brzęczyszczykiewicz'},
-            { day: 'pon.', isBooked: false, name: ''},
-            { day: 'wt.', isBooked: false, name: ''},
-            { day: 'śr.', isBooked: true, name: 'Jan Kowalski'},
-            { day: 'czw.', isBooked: false, name: ''},
-            { day: 'pt.', isBooked: false, name: ''},
-            { day: 'sob.', isBooked: false, name: ''},
-            { day: 'ndz.', isBooked: false, name: ''},
-            { day: 'pon.', isBooked: true, name: 'Kinga Jońska'},
-            { day: 'wt.', isBooked: false, name: ''},
-            { day: 'śr.', isBooked: false, name: ''},
-            { day: 'czw.', isBooked: false, name: ''}
-        ]}/>
+        <TwoWeeksReservations twoWeeksData ={props.twoWeeksData}/>
     </td>
     </tr>
     </>

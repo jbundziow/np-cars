@@ -1,12 +1,13 @@
+import TwoWeeksReservationsCell from "./TwoWeeksReservationsCell";
 
-type reservationsArrType = {
-  day: string,
+type twoWeeksDataArrType = {
+  day: 'pon.' | 'wt.' | 'śr.' | 'czw.' | 'pt.' | 'sob.' | 'ndz.',
   isBooked: boolean,
   name: string,
 }
 
 interface TwoWeeksReservationsProps {
-    reservationsArr:reservationsArrType[]
+    twoWeeksData:twoWeeksDataArrType[]
   }
 
 const TwoWeeksReservations = (props: TwoWeeksReservationsProps) => {
@@ -29,38 +30,27 @@ const TwoWeeksReservations = (props: TwoWeeksReservationsProps) => {
     //   console.log(daysOfWeek);
 
 
-    console.log(props.reservationsArr);
+   
     return (
     <>
         <div className='flex flex-row gap-1 flex-wrap'>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>czw.</div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>pt.</div>
-            <div className="flex flex-row gap-1">
-            <div className='w-0.5 h-10 bg-warning'></div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>sob.</div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>ndz.</div>
-            <div className='w-0.5 h-10 bg-warning'></div>
-            </div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>pon.</div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>wt.</div>
-            <div className="group relative flex justify-center cursor-default">
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-danger flex justify-center items-center cursor-default'>śr.</div>
-            <span className="absolute -top-13 md:-top-15 scale-0 transition-all rounded bg-gray-800 p-2 text-xs md:text-sm font-bold text-center text-white group-hover:scale-100 bg-danger w-auto">🙋🏼‍♂️ Grzegorz Brzęczyszczykiewicz</span>
-            </div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>czw.</div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>pt.</div>
-            <div className="flex flex-row gap-1">
-            <div className='w-0.5 h-10 bg-warning'></div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>sob.</div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>ndz.</div>
-            <div className='w-0.5 h-10 bg-warning'></div>
-            </div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>pon.</div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>wt.</div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>śr.</div>
-            <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>czw.</div>
-            
-              {/* https://ahmadrosid.com/blog/react-tailwind-tooltip */}
+            {props.twoWeeksData.map(item => {
+              if(item.day === 'sob.') {
+                return <div className="flex flex-row gap-1">
+                       <div className='w-0.5 h-10 bg-warning'></div>
+                       <TwoWeeksReservationsCell day={item.day} isBooked={item.isBooked} name={item.name}/>
+                       </div>
+              }
+              else if(item.day === 'ndz.') {
+                return <div className="flex flex-row gap-1">
+                       <TwoWeeksReservationsCell day={item.day} isBooked={item.isBooked} name={item.name}/>
+                       <div className='w-0.5 h-10 bg-warning'></div>
+                       </div>
+              }
+              else {
+                return <TwoWeeksReservationsCell day={item.day} isBooked={item.isBooked} name={item.name}/>
+              }
+            })}
             
         </div>
     </>
