@@ -56,7 +56,23 @@ const ReservationsOverviewTableRow = (props: ReservationsOverviewTableRowProps) 
                 <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>śr.</div>
                 <div className='w-8 md:w-10 h-8 md:h-10 text-xs md:text-base rounded-xl text-white bg-success flex justify-center items-center cursor-default'>czw.</div>
             </div> */}
-        <TwoWeeksReservations reservationsArr={[1,2,3]}/>
+        <TwoWeeksReservations reservationsArr ={[
+            { day: 'czw.', isBooked: false, name: ''},
+            { day: 'pt.', isBooked: false, name: ''},
+            { day: 'sob.', isBooked: false, name: ''},
+            { day: 'ndz.', isBooked: true, name: 'Grzegorz Brzęczyszczykiewicz'},
+            { day: 'pon.', isBooked: false, name: ''},
+            { day: 'wt.', isBooked: false, name: ''},
+            { day: 'śr.', isBooked: true, name: 'Jan Kowalski'},
+            { day: 'czw.', isBooked: false, name: ''},
+            { day: 'pt.', isBooked: false, name: ''},
+            { day: 'sob.', isBooked: false, name: ''},
+            { day: 'ndz.', isBooked: false, name: ''},
+            { day: 'pon.', isBooked: true, name: 'Kinga Jońska'},
+            { day: 'wt.', isBooked: false, name: ''},
+            { day: 'śr.', isBooked: false, name: ''},
+            { day: 'czw.', isBooked: false, name: ''}
+        ]}/>
     </td>
     </tr>
     </>
