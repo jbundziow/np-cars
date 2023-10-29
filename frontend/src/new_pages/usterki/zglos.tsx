@@ -1,17 +1,24 @@
 import { useState, useEffect } from "react";
-import Breadcrumb from '../../components/Breadcrumb';
-import FaultsReportTable from '../../components/faults/report/FaultsReportTable';
 import Loader from "../../common/Loader";
 import OperationResult from "../../components/general/OperationResult";
+import Breadcrumb from '../../components/Breadcrumb';
+
+import FaultsReportTable from '../../components/faults/report/FaultsReportTable';
 
 interface Props {
     documentTitle: string;
   }
 
+interface ApiResponse {
+  status: 'success' | 'fail' | 'error',
+  data?: any,
+  message?: any,
+}
+
 const ReportFault = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
-    const [data, setData] = useState<{ result: any } | null>(null);
+    const [data, setData] = useState<ApiResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
   
@@ -41,12 +48,11 @@ const ReportFault = (props: Props) => {
     }, [])
 
 
-
     return (
       <>
       <Breadcrumb pageName="Zgłoś usterkę" />
 
-      {loading === true ? <Loader/> : error === null ? <FaultsReportTable data={data}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (error === null && data?.status==='success' && data?.data !== null) ? <FaultsReportTable data={data.data}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       
       </>
     );

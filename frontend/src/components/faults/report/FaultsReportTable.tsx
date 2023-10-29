@@ -1,13 +1,18 @@
 import FaultsReportTableRow from "./FaultsReportTableRow";
 
+type dataSchema = {
+  id: number,
+  brand: string,
+  model: string,
+  imgPath: string,
+  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
+}
+interface FaultsReportTableProps {
+  data:dataSchema[];
+}
 
-const FaultsReportTable = (props: any) => {
-  try {
-console.log(props.data.result);
-  }
-  catch(e) {
-    console.log(e);
-  }
+const FaultsReportTable = (props: FaultsReportTableProps) => {
+
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         <div className="max-w-full overflow-x-auto">
@@ -28,12 +33,8 @@ console.log(props.data.result);
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-
-               <FaultsReportTableRow carID={props.data.result[0].id} carBrand={props.data.result[0].brand} carModel={props.data.result[0].model} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfFaults={1}/>
-               <FaultsReportTableRow carID={2} carBrand={'Mercedes'} carModel={'Sprinter'} carImg={'https://upload.wikimedia.org/wikipedia/commons/2/2f/Mercedes_sprinter_1_v_sst.jpg'} amountOfFaults={0}/>
-               <FaultsReportTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfFaults={3}/>
-               <FaultsReportTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfFaults={0}/>
-               <FaultsReportTableRow carID={1} carBrand={'Renault'} carModel={'Traffic'} carImg={'https://image.ceneostatic.pl/data/products/140258533/i-renault-trafic-exclusive-2-0-115-km-2-x-klima.jpg'} amountOfFaults={10}/>
+                {props.data.map(item => <FaultsReportTableRow carID={item.id} carBrand={item.brand} carModel={item.model} carImg={item.imgPath} amountOfFaults={0}/>)}
+               
 
             </tbody>
           </table>

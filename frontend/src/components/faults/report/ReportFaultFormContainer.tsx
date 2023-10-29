@@ -1,10 +1,14 @@
 
-
+type dataSchema = {
+  id: number,
+  brand: string,
+  model: string,
+  imgPath: string,
+  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
+}
 
 interface ReportFaultFormContainerProps {
-    carID: number;
-    carFullname: string;
-    carImg: string;
+    data: dataSchema;
 }
 
 const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
@@ -13,8 +17,8 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
   
           <div className='p-5 pt-0'>
-          <img src={props.carImg} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-          <p className='text-black dark:text-white pb-2 text-lg'>{props.carFullname}</p>
+          <img src={props.data.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
+          <p className='text-black dark:text-white pb-2 text-lg'>{props.data.brand}&nbsp;{props.data.model}</p>
           </div>
 
           
