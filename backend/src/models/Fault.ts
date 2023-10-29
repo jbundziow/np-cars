@@ -15,30 +15,14 @@ const FaultModel = sequelize.define('Fault', {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      // carFullname: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      // },
-      // carImg: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      // },
       userID: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      // userFullname: {
-      //   type: DataTypes.STRING,
-      //   allowNull: false,
-      // },
       moderatorID: {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      // moderatorFullname: {
-      //   type: DataTypes.STRING,
-      //   allowNull: true,
-      // },
       lastChangeAt: {
         type: DataTypes.DATE,
         allowNull: true,
@@ -66,19 +50,17 @@ const FaultModel = sequelize.define('Fault', {
 
 })
 
-
+const syncModel = async () => {
+  await FaultModel.sync({ force: true });
+}
+syncModel();
 
 class Fault {
     constructor(
         private id: number | null,
         private carID: number,
-        // private carFullname: string,
-        // private carImg: string,
         private userID: number,
-        // private userFullname: string,
         private moderatorID: number | null,
-        // private moderatorFullname: string,
-        //private createdAt: string,
         private lastChangeAt: string | null,
         private title: string,
         private description: string,  
@@ -91,13 +73,8 @@ class Fault {
         await FaultModel.create({
           id: this.id,
           carID: this.carID,
-          // carFullname: this.carFullname,
-          // carImg: this.carImg,
           userID: this.userID,
-          // userFullname: this.userFullname,
           moderatorID: this.moderatorID,
-          // moderatorFullname: this.moderatorFullname,
-          //createdAt: this.createdAt,
           lastChangeAt: this.lastChangeAt,
           title: this.title,
           description: this.description,
