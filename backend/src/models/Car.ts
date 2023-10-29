@@ -69,6 +69,10 @@ const CarModel = sequelize.define('Car', {
       },
 })
 
+// const syncModel = async () => {
+//   await CarModel.sync({ force: true });
+// }
+// syncModel();
 
 
 class Car {
