@@ -1,3 +1,4 @@
+import { useState } from "react";
 
 type dataSchema = {
   id: number,
@@ -12,6 +13,17 @@ interface ReportFaultFormContainerProps {
 }
 
 const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
+  const [title, setTitle] = useState('');
+  const [desctiption, setDescription] = useState('')
+
+  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    console.log(title);
+    console.log(desctiption);
+    // TODO: send data to backend
+  };
+
     return (
         <>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
@@ -25,7 +37,7 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
             <div className='col-span-3'>
             
               <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
-                  <form>
+                  <form onSubmit={submitHandler}>
                     <div className='mb-5'>
                       <label className="mb-3 block text-black dark:text-white">
                         Tytuł usterki:
@@ -35,6 +47,8 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
                         type="text"
                         placeholder="Wpisz krótki tytuł usterki"
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        value={title}
+                        onChange={e => setTitle(e.target.value)}
                       />
                     </div>
 
@@ -45,8 +59,11 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
                       <textarea
                         required
                         rows={6}
+                        name="desctiption"
                         placeholder="Opisz szczegółowo na czym polega problem"
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        value={desctiption}
+                        onChange={e => setDescription(e.target.value)}
                       ></textarea>
                     </div>
 
