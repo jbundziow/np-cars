@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import Breadcrumb from '../../components/Breadcrumb';
 import FaultsReportTable from '../../components/faults/report/FaultsReportTable';
+import Loader from "../../common/Loader";
+import OperationResult from "../../components/general/OperationResult";
 
 interface Props {
     documentTitle: string;
@@ -44,7 +46,7 @@ const ReportFault = (props: Props) => {
       <>
       <Breadcrumb pageName="Zgłoś usterkę" />
 
-      {loading === true ? <p>Ładowanie zawartości...</p> : error === null ? <FaultsReportTable data={data}/> : <p>Wystąpił błąd podczas ładowania zawartości...</p>}
+      {loading === true ? <Loader/> : error === null ? <FaultsReportTable data={data}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       
       </>
     );
