@@ -10,7 +10,17 @@ res.json('ok')
 }
 
 export const addOneFault = async (req: Request, res: Response, next: NextFunction) => {
-    res.json({body: req.body})
+    // TODO: VALIDATE DATA BEFORE ADDING RECORD TO DB
+    //TODO: PASS CORRECT USER ID
+    const data = req.body;
+    try {
+    const newFault = new Fault(null, Number(req.params.id), 1, null, null, data.title, data.description, 'pending', null, null);
+    await newFault.addOneFault();
+    res.json({status: 'success', data: req.body});
+    }
+    catch (err) {
+        res.json({status: 'error', message: err})
+    }
     }
 
 
