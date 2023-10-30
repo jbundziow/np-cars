@@ -50,10 +50,10 @@ const FaultModel = sequelize.define('Fault', {
 
 })
 
-const syncModel = async () => {
-  await FaultModel.sync({ force: true });
-}
-syncModel();
+// const syncModel = async () => {
+//   await FaultModel.sync({ force: true });
+// }
+// syncModel();
 
 class Fault {
     constructor(
@@ -91,6 +91,11 @@ class Fault {
     static async fetchOne(id: number) {
         return await FaultModel.findOne({ where: { id: id } })
     }
+
+    static async fetchAllByCarIdAndStatus(carID: number, status: 'pending' | 'accepted' | 'finished' | 'cancelled') {
+      return await FaultModel.findAll({ where: { carID: carID, status: status } })
+    }
+
 }
 
 

@@ -8,7 +8,7 @@ import Car from '../models/Car'
 export const fetchAllCars = async (req: Request, res: Response, next: NextFunction) => {
     let dbResponse;
     try {
-        if(req.query.basicdata) {
+        if(req.query.basicdata && req.query.basicdata === 'true') {
             dbResponse = await Car.fetchAllBasicData();
         }
         else {
@@ -25,7 +25,7 @@ export const fetchAllCars = async (req: Request, res: Response, next: NextFuncti
 export const fetchOneCar = async (req: Request, res: Response, next: NextFunction) => { 
     let dbResponse;
     try {
-        if(req.query.basicdata) {
+        if(req.query.basicdata && req.query.basicdata === 'true') {
             dbResponse = await Car.fetchOneBasicData(Number(req.params.id));
         }
         else {
@@ -36,6 +36,5 @@ export const fetchOneCar = async (req: Request, res: Response, next: NextFunctio
     catch(err) {
         res.json({status: 'error', message: err})
     }
-    
 }
 

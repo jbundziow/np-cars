@@ -2,6 +2,7 @@
 import { NextFunction, Request, Response, response } from 'express'
 
 import Fault from '../models/Fault'
+import Car from '../models/Car'
 
 
 
@@ -23,6 +24,25 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
+
+export const getAllFaultsOfACar = async (req: Request, res: Response, next: NextFunction) => {
+    if (!isNaN(Number(req.params.carid))) {
+        try {
+            const carData = await Car.fetchOneBasicData(Number(req.params.carid))
+            const pending = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'pending');
+            const accepted = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'accepted');
+            const finished = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'finished');
+            const cancelled = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'cancelled');
+            res.json({status: 'success', data: {carData, pending, accepted, finished, cancelled}})
+        }
+        catch(e) {
+            res.json({status: 'error', message: e})
+        }
+    }
+    else {
+        res.json({status: 'fail', data: ['You have passed a wrong car ID.']})
+    }
+}
 
 //TODO: update fault by admin
 //TODO: edit/delete my own fault
