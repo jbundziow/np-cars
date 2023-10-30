@@ -33,15 +33,11 @@ const RentalModel = sequelize.define('Rental', {
       },
       travelDestinationAUTO: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
       },
       travelDestinationMAN: {
         type: DataTypes.STRING,
         allowNull: true,
-      },
-      dateFrom: {
-        type: DataTypes.DATE,
-        allowNull: false,
       },
       dateTo: {
         type: DataTypes.DATE,
@@ -57,10 +53,12 @@ class Rental {
         private id: number | null,
         private carID: number,
         private userID: number,
-        pri//TODO: FINISH HERE
-        private dateFrom: string,
-        private dateTo: string,
-        private travelDestination: string
+        private lastEditedByModeratorOfID: number | null,
+        private carMileageBefore: number,
+        private carMileageAfter: number | null,
+        private travelDestinationAUTO: string | null,
+        private travelDestinationMAN: string | null,
+        private dateTo: string | null,
         ) {}
 
     async addOneRental() {
@@ -68,10 +66,12 @@ class Rental {
           id: this.id,
           carID: this.carID,
           userID: this.userID,
-          ...SS//TODO: FINISH HERE
-          dateFrom: this.dateFrom,
+          lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+          carMileageBefore: this.carMileageBefore,
+          carMileageAfter: this.carMileageAfter,
+          travelDestinationAUTO: this.travelDestinationAUTO,
+          travelDestinationMAN: this.travelDestinationMAN,
           dateTo: this.dateTo,
-          travelDestination: this.travelDestination,
         })
     }
 
@@ -80,7 +80,7 @@ class Rental {
     }
 
     static async fetchOne(id: number) {
-        return await RentalModel.findOne({ where: { id: id } })
+        return await RentalModel.findOne({ where: {id: id} })
     }
 }
 

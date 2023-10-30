@@ -21,7 +21,13 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
     catch (err) {
         res.json({status: 'error', message: err})
     }
-    }
+}
 
+
+//TODO: update fault by admin
+//TODO: edit/delete my own fault
+//TODO: get faults of car + carIMG etc.
+//TODO: get amount of pending/accepted/solved/cancelled faults of car + carIMG etc.
+//TODO: get faults of user
 
 
