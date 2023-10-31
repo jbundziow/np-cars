@@ -25,7 +25,7 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
 }
 
 
-export const getAllFaultsOfACar = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {
         try {
             const carData = await Car.fetchOneBasicData(Number(req.params.carid))
@@ -42,6 +42,30 @@ export const getAllFaultsOfACar = async (req: Request, res: Response, next: Next
     else {
         res.json({status: 'fail', data: ['You have passed a wrong car ID.']})
     }
+}
+
+export const fetchAllCarsWithNumberOfFaults = async (req: Request, res: Response, next: NextFunction) => {
+    
+        try {
+            const carsData = await Car.fetchAllBasicData();
+            //get in array only ids of car
+            const carsIDs = [1,2,3,4];
+            let pending:number[] = [];
+            let accepted = [];
+            let finished = [];
+            let cancelled = [];
+            carsIDs.forEach(id => {
+                pending.push = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('pending', id);
+                accepted.push = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('accepted', id);
+                finished.push = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('finished', id);
+                cancelled.push = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('cancelled', id);
+            })
+            res.json({status: 'success', data: {carIDs, pending, accepted, finished}})
+        }
+        catch(e) {
+            res.json({status: 'error', message: e})
+        }
+   
 }
 
 //TODO: update fault by admin
