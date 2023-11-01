@@ -95,6 +95,9 @@ class Fault {
     static async fetchAllByCarIdAndStatus(carID: number, status: 'pending' | 'accepted' | 'finished' | 'cancelled') {
       return await FaultModel.findAll({ where: { carID: carID, status: status } })
     }
+    static async fetchAllByCarIdAndStatusBasic(carID: number, status: 'pending' | 'accepted' | 'finished' | 'cancelled') {
+      return await FaultModel.findAll({ where: { carID: carID, status: status }, attributes: ['id', 'title'] })
+    }
 
     static async fetchNumberOfRecordsOfCarThatHaveStatus(status: 'pending' | 'accepted' | 'finished' | 'cancelled', carID: number) {
       return await FaultModel.count({ where: { status: status, carID: carID } })

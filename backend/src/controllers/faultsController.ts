@@ -6,9 +6,6 @@ import Car from '../models/Car'
 
 
 
-// export const fetchAllFaults = async (req: Request, res: Response, next: NextFunction) => {
-// res.json('ok')
-// }
 
 export const addOneFault = async (req: Request, res: Response, next: NextFunction) => {
     // TODO: VALIDATE DATA BEFORE ADDING RECORD TO DB
@@ -29,11 +26,26 @@ export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: Ne
     if (!isNaN(Number(req.params.carid))) {
         try {
             const carData = await Car.fetchOneBasicData(Number(req.params.carid))
-            const pending = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'pending');
-            const accepted = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'accepted');
-            const finished = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'finished');
-            const cancelled = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'cancelled');
-            res.json({status: 'success', data: {carData, pending, accepted, finished, cancelled}})
+
+            if(carData !== null) {
+                let pending, accepted, finished, cancelled;
+                if(req.query.basicdata && req.query.basicdata === 'true') {
+                    pending = await Fault.fetchAllByCarIdAndStatusBasic(Number(req.params.carid), 'pending');
+                    accepted = await Fault.fetchAllByCarIdAndStatusBasic(Number(req.params.carid), 'accepted');
+                    finished = await Fault.fetchAllByCarIdAndStatusBasic(Number(req.params.carid), 'finished');
+                    cancelled = await Fault.fetchAllByCarIdAndStatusBasic(Number(req.params.carid), 'cancelled');
+                }
+                else {
+                    pending = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'pending');
+                    accepted = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'accepted');
+                    finished = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'finished');
+                    cancelled = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'cancelled');
+                }
+                res.json({status: 'success', data: {carData, pending, accepted, finished, cancelled}})
+            }
+            else {
+                res.json({status: 'fail', data: [`Car of ID: ${req.params.carid} does not exist.`]})
+            }
         }
         catch(e) {
             res.json({status: 'error', message: e})
