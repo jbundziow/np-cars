@@ -21,6 +21,33 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
+export const fetchOneFault = async (req: Request, res: Response, next: NextFunction) => {
+    if (!isNaN(Number(req.params.faultid))) {
+        try {
+            const faultData = await Fault.fetchOne(Number(req.params.faultid));
+
+            if(faultData) {
+                const carID = faultData.dataValues.carID;
+                const carData = await Car.fetchOneBasicData(carID);
+                if(carData) {
+                    res.json({status: 'success', data: {carData, faultData}})
+                }
+                else {
+                    res.json({status: 'fail', data: [`Cannot get car data of this fault. Trying to fetch car of ID: ${carID}.`]})
+                }
+            }
+            else {
+                res.json({status: 'fail', data: [`Fault of ID: ${req.params.faultid} does not exist.`]})
+            }
+        }
+        catch(e) {
+            res.json({status: 'error', message: e})
+        }
+    }
+    else {
+        res.json({status: 'fail', data: ['You have passed a wrong fault ID.']})
+    }
+}
 
 export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {

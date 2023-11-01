@@ -50,7 +50,7 @@ const RepairsStatus = (props: Props) => {
 
     return (
       <>
-      <Breadcrumb pageName="Zgłoś usterkę" />
+      <Breadcrumb pageName="Status napraw" />
 
       {loading === true ? <Loader/> : (error === null && data?.status==='success' && data?.data !== null) ? <FaultsStatusContainer data={data.data}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       
