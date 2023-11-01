@@ -2,7 +2,19 @@ import { useState } from "react";
 import { TECollapse } from "tw-elements-react";
 import { Link } from "react-router-dom";
 
-export default function FaultsStatusDetailsAccordion(): JSX.Element {
+type faultsDataArr = {
+  id: number,
+  title: string,
+}
+
+interface FaultsStatusDetailsAccordionProps {
+  pending: faultsDataArr[],
+  accepted: faultsDataArr[],
+  finished: faultsDataArr[],
+  cancelled: faultsDataArr[]
+}
+
+export default function FaultsStatusDetailsAccordion(props: FaultsStatusDetailsAccordionProps): JSX.Element {
   const [activeElement, setActiveElement] = useState("");
 
   const handleClick = (value: string) => {
@@ -27,7 +39,7 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
               aria-expanded="true"
               aria-controls="collapseOne"
             >
-              <span className='border py-1 px-2 mr-2 text-md font-bold rounded-lg'>6</span>&nbsp;Usterki oczekujące na akceptację przez moderatora
+              <span className='border py-1 px-2 mr-2 text-md font-bold rounded-lg'>{props.pending.length}</span>&nbsp;Usterki oczekujące na akceptację przez moderatora
               <span
                 className={`${
                   activeElement === "element1"
@@ -57,10 +69,11 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
             className="!mt-0 !rounded-b-none !shadow-none"
           >
             <div className="flex flex-col items-start px-5 py-4 text-black dark:text-white">
-              <Link to='/usterki/1' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
-              <Link to='/usterki/2' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
-              <Link to='/usterki/3' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Wycieraczki do wymiany</Link>
-              <Link to='/usterki/4' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Porysowany zderzak</Link>
+              {props.pending.length > 0 ?
+              props.pending.map(fault => <Link to={`/usterki/${fault.id}`} className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>{fault.title}</Link>)
+              :
+              <p className='py-2 md:py-4'>Brak usterek do wyświetlenia. 🤔</p>
+              }
             </div>
           </TECollapse>
         </div>
@@ -77,7 +90,7 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
             aria-expanded="true"
             aria-controls="collapseOne"
           >
-            <span className='border py-1 px-2 mr-2 text-md font-bold rounded-lg'>2</span>&nbsp;Usterki zaakceptowane przez moderatora
+            <span className='border py-1 px-2 mr-2 text-md font-bold rounded-lg'>{props.accepted.length}</span>&nbsp;Usterki zaakceptowane przez moderatora
             <span
               className={`${
                 activeElement === "element2"
@@ -107,8 +120,11 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
           className="!mt-0 !rounded-b-none !shadow-none"
         >
           <div className="flex flex-col items-start px-5 py-4 text-black dark:text-white">
-              <Link to='/usterki/1' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
-              <Link to='/usterki/2' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
+            {props.accepted.length > 0 ?
+            props.accepted.map(fault => <Link to={`/usterki/${fault.id}`} className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>{fault.title}</Link>)
+            :
+            <p className='py-2 md:py-4'>Brak usterek do wyświetlenia. 🤔</p>
+            }
             </div>
         </TECollapse>
       </div>
@@ -124,7 +140,7 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
             aria-expanded="true"
             aria-controls="collapseOne"
           >
-            <span className='border py-1 px-2 mr-2 text-md font-bold rounded-lg'>13</span>&nbsp;Rozwiązane usterki
+            <span className='border py-1 px-2 mr-2 text-md font-bold rounded-lg'>{props.finished.length}</span>&nbsp;Rozwiązane usterki
             <span
               className={`${
                 activeElement === "element3"
@@ -154,10 +170,11 @@ export default function FaultsStatusDetailsAccordion(): JSX.Element {
           className="!mt-0 !shadow-none"
         >
           <div className="flex flex-col items-start px-5 py-4 text-black dark:text-white">
-              <Link to='/usterki/1' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Hałas przy hamowaniu</Link>
-              <Link to='/usterki/2' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Łyse opony</Link>
-              <Link to='/usterki/3' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Wycieraczki do wymiany</Link>
-              <Link to='/usterki/4' className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>Porysowany zderzak</Link>
+              {props.finished.length > 0 ?
+              props.finished.map(fault => <Link to={`/usterki/${fault.id}`} className='underline decoration-[0.5px] text-md sm:text-lg pl-0 p-1 my-1 hover:text-primary transition ease-in-out delay-100'>{fault.title}</Link>)
+              :
+              <p className='py-2 md:py-4'>Brak usterek do wyświetlenia. 🤔</p>
+              }
             </div>
         </TECollapse>
       </div>

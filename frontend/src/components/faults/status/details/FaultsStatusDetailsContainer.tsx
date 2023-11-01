@@ -42,7 +42,7 @@ const FaultsStatusDetailsContainer = (props: FaultsStatusDetailsContainerProps) 
         </div>
 
         <div className='col-span-3'>
-        <FaultsStatusDetailsAccordion/>
+        <FaultsStatusDetailsAccordion pending={props.data.pending} accepted={props.data.accepted} finished={props.data.finished} cancelled={props.data.cancelled}/>
         </div>
 
       </div>
