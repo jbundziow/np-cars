@@ -1,4 +1,11 @@
 import { useState } from "react";
+import OperationResult from "../../general/OperationResult";
+
+enum PageStatus {
+  FillingTheForm,
+  FormWasSentCorrectly,
+  ErrorWithSendingForm
+}
 
 type dataSchema = {
   id: number,
@@ -13,15 +20,31 @@ interface ReportFaultFormContainerProps {
 }
 
 const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
+  const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
   const [title, setTitle] = useState('');
-  const [desctiption, setDescription] = useState('')
+  const [description, setDescription] = useState('')
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    console.log(title);
-    console.log(desctiption);
-    // TODO: send data to backend
+    try {
+      const response = await fetch(`http://127.0.0.1:3000/faults/report/${props.data.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        body: JSON.stringify({title, description}),
+      });
+
+      if (response.ok) {
+        setPageState(PageStatus.FormWasSentCorrectly);
+      } else {
+        setPageState(PageStatus.ErrorWithSendingForm);
+      }
+    }
+    catch (error) {
+      setPageState(PageStatus.ErrorWithSendingForm);
+    }
   };
 
     return (
@@ -37,42 +60,52 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
             <div className='col-span-3'>
             
               <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
-                  <form onSubmit={submitHandler}>
-                    <div className='mb-5'>
-                      <label className="mb-3 block text-black dark:text-white">
-                        Tytuł usterki:
-                      </label>
-                      <input
-                        required
-                        type="text"
-                        placeholder="Wpisz krótki tytuł usterki"
-                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                        value={title}
-                        onChange={e => setTitle(e.target.value)}
-                      />
-                    </div>
+                  {pageState === PageStatus.FillingTheForm ?
+                    <form onSubmit={submitHandler}>
+                      <div className='mb-5'>
+                        <label className="mb-3 block text-black dark:text-white">
+                          Tytuł usterki:
+                        </label>
+                        <input
+                          required
+                          type="text"
+                          placeholder="Wpisz krótki tytuł usterki"
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                          value={title}
+                          onChange={e => setTitle(e.target.value)}
+                        />
+                      </div>
 
-                    <div className='mb-5'>
-                      <label className="mb-3 block text-black dark:text-white">
-                        Szczegółowy opis usterki:
-                      </label>
-                      <textarea
-                        required
-                        rows={6}
-                        name="desctiption"
-                        placeholder="Opisz szczegółowo na czym polega problem"
-                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                        value={desctiption}
-                        onChange={e => setDescription(e.target.value)}
-                      ></textarea>
-                    </div>
+                      <div className='mb-5'>
+                        <label className="mb-3 block text-black dark:text-white">
+                          Szczegółowy opis usterki:
+                        </label>
+                        <textarea
+                          required
+                          rows={6}
+                          name="desctiption"
+                          placeholder="Opisz szczegółowo na czym polega problem"
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                          value={description}
+                          onChange={e => setDescription(e.target.value)}
+                        ></textarea>
+                      </div>
 
-                    <div className='flex justify-center mb-2'>
-                    <button className="flex w-90 justify-center rounded bg-primary p-3 font-medium text-gray hover:opacity-90" type='submit'>
-                        Dodaj nową usterkę
-                      </button>
-                    </div>
-                  </form>
+                      <div className='flex justify-center mb-2'>
+                      <button className="flex w-90 justify-center rounded bg-primary p-3 font-medium text-gray hover:opacity-90" type='submit'>
+                          Dodaj nową usterkę
+                        </button>
+                      </div>
+                    </form>
+                  :
+                  pageState === PageStatus.FormWasSentCorrectly ?
+                    <OperationResult status={'success'} title={'Usterka została zgłoszona pomyślnie 👍'} description={'Zostanie teraz rozpatrzona przez moderatora.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/usterki/status-napraw/${props.data.id}`}/>
+                  :
+                  pageState === PageStatus.ErrorWithSendingForm ?
+                  <OperationResult status={'error'} title={'Wystąpił błąd podczas dodawania usterki 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  :
+                  ''
+                  }
               </div>
               
             </div>

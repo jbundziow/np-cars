@@ -10,14 +10,26 @@ import Car from '../models/Car'
 export const addOneFault = async (req: Request, res: Response, next: NextFunction) => {
     // TODO: VALIDATE DATA BEFORE ADDING RECORD TO DB
     //TODO: PASS CORRECT USER ID
+
     const data = req.body;
-    try {
-    const newFault = new Fault(null, Number(req.params.id), 1, null, null, data.title, data.description, 'pending', null, null);
-    await newFault.addOneFault();
-    res.json({status: 'success', data: req.body});
+    if (!isNaN(Number(req.params.carid))) {
+        try {
+        const isCarExist = await Car.fetchOne(Number(req.params.carid))
+        if(isCarExist) {
+        const newFault = new Fault(null, Number(req.params.carid), 1, null, null, data.title, data.description, 'pending', null, null);
+        await newFault.addOneFault();
+        res.json({status: 'success', data: req.body});
+        }
+        else {
+            res.status(400).json({status: 'fail', data: [`The car of id: ${req.params.carid} does not exist in the database.`]})
+        }
+        }
+        catch (err) {
+            res.status(500).json({status: 'error', message: err})
+        }
     }
-    catch (err) {
-        res.json({status: 'error', message: err})
+    else {
+        res.status(400).json({status: 'fail', data: ['You have passed a wrong car ID.']})
     }
 }
 

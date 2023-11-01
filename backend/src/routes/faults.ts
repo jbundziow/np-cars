@@ -3,7 +3,7 @@ import {addOneFault, fetchAllFaultsOfACar, fetchAllCarsWithNumberOfFaults, fetch
 const app = express.Router();
 
 
-app.post('/report/:id', addOneFault);
+app.post('/report/:carid', addOneFault);
 
 app.get('/fetchone/:faultid', fetchOneFault);
 app.get('/getall/:carid', fetchAllFaultsOfACar);
