@@ -6,9 +6,9 @@ import Car from '../models/Car'
 
 
 
-export const fetchAllFaults = async (req: Request, res: Response, next: NextFunction) => {
-res.json('ok')
-}
+// export const fetchAllFaults = async (req: Request, res: Response, next: NextFunction) => {
+// res.json('ok')
+// }
 
 export const addOneFault = async (req: Request, res: Response, next: NextFunction) => {
     // TODO: VALIDATE DATA BEFORE ADDING RECORD TO DB
@@ -45,56 +45,38 @@ export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: Ne
 }
 
 export const fetchAllCarsWithNumberOfFaults = async (req: Request, res: Response, next: NextFunction) => {
-
         try {
             const carsData = await Car.fetchAllBasicData();
             let carsIDs:number[] = []
+            let pending:number[] = [];
+            let accepted:number[] = [];
+            let finished:number[] = [];
+            let cancelled:number[] = [];
+
             carsData.forEach(item => carsIDs.push(item.dataValues.id))
 
-            let pending: any = [];
-            let accepted:any = [];
-            let finished:any = [];
-            let cancelled:any = [];
-            carsIDs.forEach(async (id) => {
-                
-                pending.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('pending', id));
-                accepted.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('accepted', id));
-                finished.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('finished', id));
-                cancelled.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('cancelled', id));
+            for await (const id of carsIDs) {
+            pending.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('pending', id));
+            accepted.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('accepted', id));
+            finished.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('finished', id));
+            cancelled.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('cancelled', id));
+            }
+
+            carsData.map((carData, index) => {
+                carData.dataValues.pending = pending[index];
+                carData.dataValues.accepted = accepted[index];
+                carData.dataValues.finished = finished[index];
+                carData.dataValues.cancelled = cancelled[index];
             })
-            setTimeout(()=> {res.json({status: 'success', data: {carsData, pending, accepted, finished, cancelled}})}, 3000)
-            
+            res.json({status: 'success', data: carsData})
         }
         catch(e) {
             res.json({status: 'error', message: e})
         }
-        // try {
-        //     const carsData = await Car.fetchAllBasicData();
-        //     //get in array only ids of car
-        //     const carsIDs = [1,2,3,4];
-        //     let pending:number[] = [];
-        //     let accepted = [];
-        //     let finished = [];
-        //     let cancelled = [];
-        //     carsIDs.forEach(id => {
-        //         pending.push = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('pending', id);
-        //         accepted.push = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('accepted', id);
-        //         finished.push = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('finished', id);
-        //         cancelled.push = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('cancelled', id);
-        //     })
-        //     res.json({status: 'success', data: {carIDs, pending, accepted, finished}})
-        // }
-        // catch(e) {
-        //     res.json({status: 'error', message: e})
-        // }
-//    res.end('ok')
 }
 
 
-export const test = async (req: Request, res: Response, next: NextFunction) => {
-    const xx = await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('pending', 1);
-    res.json(xx)
-}
+
 //TODO: update fault by admin
 //TODO: edit/delete my own fault
 //TODO: get faults of car + carIMG etc.
