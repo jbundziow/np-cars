@@ -1,17 +1,40 @@
 import { Link } from "react-router-dom";
 import FaultsStatusDetailsAccordion from "./FaultsStatusDetailsAccordion";
 
+type faultsDataArr = {
+  id: number,
+  title: string,
+}
 
+type carDataObj = {
+  id: number,
+  brand: string,
+  model: string,
+  imgPath: string,
+  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
+}
 
-const FaultsStatusDetailsContainer = () => {
+type dataSchema = {
+  carData: carDataObj,
+  pending: faultsDataArr[],
+  accepted: faultsDataArr[],
+  finished: faultsDataArr[],
+  cancelled: faultsDataArr[]
+}
+
+interface FaultsStatusDetailsContainerProps {
+  data: dataSchema;
+}
+
+const FaultsStatusDetailsContainer = (props: FaultsStatusDetailsContainerProps) => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
 
         <div className='p-5 pt-0'>
-        <img src={'https://upload.wikimedia.org/wikipedia/commons/2/2f/Mercedes_sprinter_1_v_sst.jpg'} alt="Product" className='w-full border-2 rounded-md'/>
-        <p className='text-black dark:text-white pb-2 text-lg'>{'Mercedes'} {'Sprinter'}</p>
+        <img src={props.data.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
+        <p className='text-black dark:text-white pb-2 text-lg'>{props.data.carData.brand} {props.data.carData.model}</p>
         <Link
-        to={`/usterki/zglos/3`}
+        to={`/usterki/zglos/${props.data.carData.id}`}
         className={`inline-flex items-center justify-center rounded-full bg-primary py-2 px-7 text-center text-base font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8 mt-2`}
         >
         Zgłoś nową usterkę
