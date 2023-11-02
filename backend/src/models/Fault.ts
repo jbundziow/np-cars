@@ -103,6 +103,13 @@ class Fault {
       return await FaultModel.count({ where: { status: status, carID: carID } })
     }
 
+    static async fetchAllOfUser(userID: number) {
+      return await FaultModel.findAll({ where: { userID: userID } })
+    }
+    static async fetchAllOfUserBasic(userID: number) {
+      return await FaultModel.findAll({ where: { userID: userID }, attributes: ['id', 'carID', 'title', 'status'] })
+    }
+
 }
 
 

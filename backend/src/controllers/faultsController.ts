@@ -127,10 +127,30 @@ export const fetchAllCarsWithNumberOfFaults = async (req: Request, res: Response
 }
 
 
+export const fetchAllFaultsOfUser = async (req: Request, res: Response, next: NextFunction) => {
+    if (!isNaN(Number(req.params.userid))) {
+        try {
+            let faultsOfUser;
+            if(req.query.basicdata && req.query.basicdata === 'true') {
+                faultsOfUser = await Fault.fetchAllOfUserBasic(Number(req.params.userid));
+            }
+            else {
+                faultsOfUser = await Fault.fetchAllOfUser(Number(req.params.userid));
+            }
+            
+            res.status(200).json({status: 'success', data: faultsOfUser})
+        }
+        catch(e) {
+            res.status(500).json({status: 'error', message: e})
+        }
+    }
+    else {
+        res.status(400).json({status: 'fail', data: ['You have passed a wrong user ID.']})
+    }   
+}
+
 
 //TODO: update fault by admin
 //TODO: edit/delete my own fault
-//TODO: get faults of user
-//TODO: get one specific fault
 
 
