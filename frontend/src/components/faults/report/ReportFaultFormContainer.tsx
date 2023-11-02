@@ -1,5 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
+import DOMAIN_NAME from "../../../utilities/domainName";
 
 enum PageStatus {
   FillingTheForm,
@@ -28,7 +29,7 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`http://127.0.0.1:3000/faults/report/${props.data.id}`, {
+      const response = await fetch(`${DOMAIN_NAME}/faults/report/${props.data.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -38,6 +39,8 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
 
       if (response.ok) {
         setPageState(PageStatus.FormWasSentCorrectly);
+        setTitle('');
+        setDescription('');
       } else {
         setPageState(PageStatus.ErrorWithSendingForm);
       }

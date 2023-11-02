@@ -14,10 +14,10 @@ export const fetchAllCars = async (req: Request, res: Response, next: NextFuncti
         else {
             dbResponse = await Car.fetchAll();
         }
-        res.json({status: 'success', data: dbResponse})
+        res.status(200).json({status: 'success', data: dbResponse})
     }
     catch(err) {
-        res.json({status: 'error', message: err})
+        res.status(500).json({status: 'error', message: err})
     }
 }
 
@@ -31,10 +31,10 @@ export const fetchOneCar = async (req: Request, res: Response, next: NextFunctio
         else {
             dbResponse = await Car.fetchOne(Number(req.params.id)); 
         }
-        res.json({status: 'success', data: dbResponse})
+        res.status(200).json({status: 'success', data: dbResponse})
     }
     catch(err) {
-        res.json({status: 'error', message: err})
+        res.status(500).json({status: 'error', message: err})
     }
 }
 

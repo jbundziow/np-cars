@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import Loader from "../../common/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
+import DOMAIN_NAME from "../../utilities/domainName";
 
 import FaultsStatusDetailsContainer from '../../components/faults/status/details/FaultsStatusDetailsContainer'
 
@@ -29,7 +30,7 @@ const RepairsStatusDetails = (props: Props) => {
       const getData = async () => {
         try {
           const response = await fetch(
-            `http://127.0.0.1:3000/faults/getall/${params.carID}?basicdata=true`
+            `${DOMAIN_NAME}/faults/getall/${params.carID}?basicdata=true`
           );
           if (!response.ok) {
             throw new Error(

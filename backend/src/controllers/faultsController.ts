@@ -18,7 +18,7 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
         if(isCarExist) {
         const newFault = new Fault(null, Number(req.params.carid), 1, null, null, data.title, data.description, 'pending', null, null);
         await newFault.addOneFault();
-        res.json({status: 'success', data: req.body});
+        res.status(200).json({status: 'success', data: req.body});
         }
         else {
             res.status(400).json({status: 'fail', data: [`The car of id: ${req.params.carid} does not exist in the database.`]})
@@ -42,22 +42,22 @@ export const fetchOneFault = async (req: Request, res: Response, next: NextFunct
                 const carID = faultData.dataValues.carID;
                 const carData = await Car.fetchOneBasicData(carID);
                 if(carData) {
-                    res.json({status: 'success', data: {carData, faultData}})
+                    res.status(200).json({status: 'success', data: {carData, faultData}})
                 }
                 else {
-                    res.json({status: 'fail', data: [`Cannot get car data of this fault. Trying to fetch car of ID: ${carID}.`]})
+                    res.status(400).json({status: 'fail', data: [`Cannot get car data of this fault. Trying to fetch car of ID: ${carID}.`]})
                 }
             }
             else {
-                res.json({status: 'fail', data: [`Fault of ID: ${req.params.faultid} does not exist.`]})
+                res.status(400).json({status: 'fail', data: [`Fault of ID: ${req.params.faultid} does not exist.`]})
             }
         }
         catch(e) {
-            res.json({status: 'error', message: e})
+            res.status(500).json({status: 'error', message: e})
         }
     }
     else {
-        res.json({status: 'fail', data: ['You have passed a wrong fault ID.']})
+        res.status(400).json({status: 'fail', data: ['You have passed a wrong fault ID.']})
     }
 }
 
@@ -80,18 +80,18 @@ export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: Ne
                     finished = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'finished');
                     cancelled = await Fault.fetchAllByCarIdAndStatus(Number(req.params.carid), 'cancelled');
                 }
-                res.json({status: 'success', data: {carData, pending, accepted, finished, cancelled}})
+                res.status(200).json({status: 'success', data: {carData, pending, accepted, finished, cancelled}})
             }
             else {
-                res.json({status: 'fail', data: [`Car of ID: ${req.params.carid} does not exist.`]})
+                res.status(400).json({status: 'fail', data: [`Car of ID: ${req.params.carid} does not exist.`]})
             }
         }
         catch(e) {
-            res.json({status: 'error', message: e})
+            res.status(500).json({status: 'error', message: e})
         }
     }
     else {
-        res.json({status: 'fail', data: ['You have passed a wrong car ID.']})
+        res.status(400).json({status: 'fail', data: ['You have passed a wrong car ID.']})
     }
 }
 
@@ -119,10 +119,10 @@ export const fetchAllCarsWithNumberOfFaults = async (req: Request, res: Response
                 carData.dataValues.finished = finished[index];
                 carData.dataValues.cancelled = cancelled[index];
             })
-            res.json({status: 'success', data: carsData})
+            res.status(200).json({status: 'success', data: carsData})
         }
         catch(e) {
-            res.json({status: 'error', message: e})
+            res.status(500).json({status: 'error', message: e})
         }
 }
 

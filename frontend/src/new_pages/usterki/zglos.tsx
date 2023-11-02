@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../common/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
+import DOMAIN_NAME from "../../utilities/domainName";
 
 import FaultsReportTable from '../../components/faults/report/FaultsReportTable';
 
@@ -26,7 +27,7 @@ const ReportFault = (props: Props) => {
       const getData = async () => {
         try {
           const response = await fetch(
-            `http://127.0.0.1:3000/cars/?basicdata=true`
+            `${DOMAIN_NAME}/cars/?basicdata=true`
           );
           if (!response.ok) {
             throw new Error(
