@@ -34,7 +34,7 @@ const FaultsReportTableRow = (props: FaultsReportTableRowProps) => {
     </td>
     <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className={`inline-flex rounded-md  py-2 px-4 text-md text-md font-bold text-white cursor-default ${props.amountOfFaults === 0 ? 'bg-success' : 'bg-danger'}`}>{props.amountOfFaults}</p>
+        <p className={`inline-flex rounded-md  py-2 px-4 text-md text-md font-bold text-white cursor-default ${props.amountOfFaults === 0 ? 'bg-success' : props.amountOfFaults <= 2 ? 'bg-warning' : 'bg-danger'}`}>{props.amountOfFaults}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">

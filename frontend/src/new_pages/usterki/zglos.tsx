@@ -27,7 +27,7 @@ const ReportFault = (props: Props) => {
       const getData = async () => {
         try {
           const response = await fetch(
-            `${DOMAIN_NAME}/cars/?basicdata=true`
+            `${DOMAIN_NAME}/faults/getnumbers`
           );
           if (!response.ok) {
             throw new Error(

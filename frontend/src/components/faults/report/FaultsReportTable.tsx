@@ -6,6 +6,10 @@ type dataSchema = {
   model: string,
   imgPath: string,
   availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
+  pending: number,
+  accepted: number,
+  finished: number,
+  cancelled: number,
 }
 interface FaultsReportTableProps {
   data:dataSchema[];
@@ -33,7 +37,7 @@ const FaultsReportTable = (props: FaultsReportTableProps) => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-                {props.data.map(item => <FaultsReportTableRow carID={item.id} carBrand={item.brand} carModel={item.model} carImg={item.imgPath} amountOfFaults={0}/>)}
+                {props.data.map(item => <FaultsReportTableRow carID={item.id} carBrand={item.brand} carModel={item.model} carImg={item.imgPath} amountOfFaults={item.pending+item.accepted}/>)}
                
 
             </tbody>
