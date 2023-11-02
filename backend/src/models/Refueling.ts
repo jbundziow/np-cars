@@ -39,9 +39,13 @@ const RefuelingModel = sequelize.define('Refueling', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-
-
 })
+
+
+// const syncModel = async () => {
+//   await RefuelingModel.sync({ force: true });
+// }
+// syncModel();
 
 
 

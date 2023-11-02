@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 import carsRoutes from './routes/cars'
 import adminRoutes from './routes/admin'
 import faultsRoutes from './routes/faults'
+import refuelingRoutes from './routes/refueling'
 
 
 const app = express();
@@ -23,6 +24,7 @@ app.use(bodyParser.json())
 app.use('/cars', carsRoutes)
 app.use('/admin', adminRoutes)
 app.use('/faults', faultsRoutes)
+app.use('/refuelings', refuelingRoutes)
 
 
 

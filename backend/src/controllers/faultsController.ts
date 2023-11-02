@@ -18,7 +18,7 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
         if(isCarExist) {
         const newFault = new Fault(null, Number(req.params.carid), 1, null, null, data.title, data.description, 'pending', null, null);
         await newFault.addOneFault();
-        res.status(200).json({status: 'success', data: req.body});
+        res.status(200).json({status: 'success', data: data});
         }
         else {
             res.status(400).json({status: 'fail', data: [`The car of id: ${req.params.carid} does not exist in the database.`]})
