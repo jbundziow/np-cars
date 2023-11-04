@@ -7,6 +7,7 @@ import Car from '../../models/Car'
 
 export const addOneCar = async (req: Request, res: Response, next: NextFunction) => {
     // TODO: VALIDATE DATA BEFORE ADDING RECORD TO DB
+    //TODO: ONLY ADMIN CAN ADD CAR!!!
     const data = req.body;
     try {
     const newCar = new Car(null, data.brand, data.model, data.type, data.imgPath, data.plateNumber, data.hasFuelCard, data.fuelCardPIN, data.fuelType, data.tankCapacity, data.loadCapacity, new Date(data.nextInspectionDate).toISOString(), new Date(data.nextInsuranceDate).toISOString(), data.availabilityStatus, data.availabilityDescription);

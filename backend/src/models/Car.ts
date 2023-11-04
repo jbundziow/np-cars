@@ -121,8 +121,8 @@ class Car {
       return await CarModel.findAll({attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
     }
 
-    static async fetchOne(id: number) {
-        return await CarModel.findOne({ where: {id: id} })
+    static async fetchOne(carid: number) {
+        return await CarModel.findOne({ where: {id: carid} })
     }
     static async fetchOneBasicData(id: number) {
       return await CarModel.findOne({ where: {id: id}, attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})

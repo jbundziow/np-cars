@@ -5,6 +5,7 @@ import carsRoutes from './routes/cars'
 import adminRoutes from './routes/admin'
 import faultsRoutes from './routes/faults'
 import refuelingRoutes from './routes/refueling'
+import usersRoutes from './routes/users'
 
 
 const app = express();
@@ -25,6 +26,7 @@ app.use('/cars', carsRoutes)
 app.use('/admin', adminRoutes)
 app.use('/faults', faultsRoutes)
 app.use('/refuelings', refuelingRoutes)
+app.use('/users', usersRoutes)
 
 
 

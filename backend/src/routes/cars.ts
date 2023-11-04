@@ -3,6 +3,6 @@ import { fetchAllCars, fetchOneCar } from '../controllers/carsController';
 const app = express.Router();
 
 app.get('/', fetchAllCars)
-app.get('/:id', fetchOneCar)
+app.get('/:carid', fetchOneCar)
 
 export default app;
