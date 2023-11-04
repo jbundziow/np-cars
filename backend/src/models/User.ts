@@ -38,10 +38,10 @@ const UserModel = sequelize.define('User', {
 })
 
 
-const syncModel = async () => {
-  await UserModel.sync({ force: true });
-}
-syncModel();
+// const syncModel = async () => {
+//   await UserModel.sync({ force: true });
+// }
+// syncModel();
 
 
 

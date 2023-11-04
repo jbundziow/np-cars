@@ -17,9 +17,10 @@ export const fetchAllUsers = async (req: Request, res: Response, next: NextFunct
 }
 
 export const fetchOneUser = async (req: Request, res: Response, next: NextFunction) => {
+    console.log(req.params.userid);
     if (!isNaN(Number(req.params.userid))) {
         try {
-            const data = await User.fetchOne(Number(req.params.carid));
+            const data = await User.fetchOne(Number(req.params.userid));
             res.status(200).json({status: 'success', data: data})
         }
         catch(err) {
