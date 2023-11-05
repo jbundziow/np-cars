@@ -90,6 +90,7 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
                         <label className="mb-3 block text-black dark:text-white">
                           Wybierz zakres dat, w którym chcesz dokonać rezerwacji:
                         </label>
+                        {/* DOCS: https://react-tailwindcss-datepicker.vercel.app/install */}
                         <Datepicker
                         i18n={"pl"}
                         separator={"do"}
