@@ -3,6 +3,7 @@ const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod')
 const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
 const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje'));
 const MakeAReservation = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji'));
+const MakeAReservationForm = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji-form'));
 const MyReservations = lazy(() => import('../new_pages/rezerwacje/moje-rezerwacje'));
 const ReservationArchive = lazy(() => import('../new_pages/rezerwacje/archiwum'));
 const RefuelingOverview = lazy(() => import('../new_pages/tankowania'));
@@ -62,6 +63,11 @@ const coreRoutes = [
     path: '/rezerwacje/dokonaj-rezerwacji',
     title: 'Dokonaj rezerwacji',
     component: MakeAReservation,
+  },
+  {
+    path: '/rezerwacje/dokonaj-rezerwacji/:carid',
+    title: 'Dokonaj rezerwacji',
+    component: MakeAReservationForm,
   },
   {
     path: '/rezerwacje/moje-rezerwacje',
