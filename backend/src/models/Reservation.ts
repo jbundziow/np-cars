@@ -38,6 +38,11 @@ const ReservationModel = sequelize.define('Reservation', {
 })
 
 
+// const syncModel = async () => {
+//   await ReservationModel.sync({ force: true });
+// }
+// syncModel();
+
 
 class Reservation {
     constructor(

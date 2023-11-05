@@ -6,7 +6,7 @@ import adminRoutes from './routes/admin'
 import faultsRoutes from './routes/faults'
 import refuelingRoutes from './routes/refueling'
 import usersRoutes from './routes/users'
-
+import reservationsRoutes from './routes/reservations'
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,6 +27,7 @@ app.use('/admin', adminRoutes)
 app.use('/faults', faultsRoutes)
 app.use('/refuelings', refuelingRoutes)
 app.use('/users', usersRoutes)
+app.use('/reservations', reservationsRoutes)
 
 
 
