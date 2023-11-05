@@ -3,6 +3,7 @@ import Joi from 'joi';
 const addOneUserSchema = Joi.object({
     id: Joi.number()
         .integer()
+        .positive()
         .allow(null)
         .optional(),
 
@@ -11,20 +12,17 @@ const addOneUserSchema = Joi.object({
         .required(),
 
     name: Joi.string()
-        .alphanum()
-        .min(2)
-        .max(30)
+        .min(1)
+        .max(50)
         .required(),
 
     surname: Joi.string()
-        .alphanum()
-        .min(2)
-        .max(30)
+        .min(1)
+        .max(50)
         .required(),
     
     employedAs: Joi.string()
-        .alphanum()
-        .min(2)
+        .min(1)
         .max(50)
         .required(),
     

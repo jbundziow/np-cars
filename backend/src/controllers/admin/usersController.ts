@@ -6,10 +6,7 @@ import { addOneUserSchema } from '../../models/validation/UserSchemas';
 
 
 
-
-
 export const addOneUser = async (req: Request, res: Response, next: NextFunction) => {
-    // TODO: VALIDATE DATA BEFORE ADDING RECORD TO DB
     //TODO: ONLY ADMIN CAN ADD USER!!!
     const data = req.body;
     try {

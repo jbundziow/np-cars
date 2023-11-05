@@ -36,7 +36,7 @@ const CarModel = sequelize.define('Car', {
         allowNull: false,
       },
       fuelCardPIN: {
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
         allowNull: true,
       },
       fuelType: {
@@ -84,7 +84,7 @@ class Car {
         private imgPath: string,
         private plateNumber: string,
         private hasFuelCard: boolean,
-        private fuelCardPIN: number,
+        private fuelCardPIN: string | null,
         private fuelType: 'diesel' | 'petrol',
         private tankCapacity: number, //liters
         private loadCapacity: number, //kilograms
