@@ -59,7 +59,17 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
 
 export const test = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const response = await Reservation.test(new Date('2023-11-12'));
+        const response = await Reservation.test(1, new Date('2023-11-12'));
+        res.status(200).json({status: 'success', data: response});
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
+}
+
+export const test2 = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const response = await Reservation.checkReservationsBetweenDates(1, new Date('2023-11-26'), new Date('2023-11-30'));
         res.status(200).json({status: 'success', data: response});
     }
     catch (err) {
