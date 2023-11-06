@@ -63,7 +63,7 @@ class Rental {
         private carMileageAfter: number | null,
         private travelDestination: string | null,
         private placeID: number | null,
-        private dateTo: string | null,
+        private dateTo: Date | null,
         ) {}
 
     async addOneRental() {

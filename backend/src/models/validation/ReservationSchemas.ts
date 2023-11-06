@@ -28,7 +28,7 @@ const addOneReservationSchema = Joi.object({
         .required(),
 
     dateTo: Joi.date()
-        .min(new Date().setUTCHours(0, 0, 0, 0).valueOf()) //today
+        .min(Joi.ref('dateFrom'))
         .required(),
     
     travelDestination: Joi.string()
@@ -38,5 +38,12 @@ const addOneReservationSchema = Joi.object({
 
 })
 
-export { addOneReservationSchema };
+//checks if string is in format 'YYYY-MM-DD'
+const dateOnlyValidator = (date: string) :boolean => {
+    const regex = new RegExp(/^(\d{4})-(\d{2})-(\d{2})$/);
+    const result = regex.test(date)
+    return result;
+}
+
+export { addOneReservationSchema, dateOnlyValidator };
 

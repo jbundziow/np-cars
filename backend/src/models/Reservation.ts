@@ -1,7 +1,8 @@
-const {DataTypes} = require('sequelize');
+const {DataTypes, Op} = require('sequelize');
 
 
 
+import { AnySchema } from "joi";
 import sequelize from "../database/database";
 const ReservationModel = sequelize.define('Reservation', {
     id: {
@@ -50,8 +51,8 @@ class Reservation {
         private carID: number,
         private userID: number,
         private lastEditedByModeratorOfID: number | null,
-        private dateFrom: string,
-        private dateTo: string,
+        private dateFrom: Date,
+        private dateTo: Date,
         private travelDestination: string
         ) {}
 
@@ -73,6 +74,17 @@ class Reservation {
 
     static async fetchOne(id: number) {
         return await ReservationModel.findOne({ where: { id: id } })
+    }
+
+    static async test (desiredDate: Date) {
+      return await ReservationModel.findAll({
+        where: {
+          [Op.and]: [
+            { DateFrom: { [Op.lte]: desiredDate } },
+            { DateTo: { [Op.gte]: desiredDate } },
+          ],
+        },
+      });
     }
     
 }

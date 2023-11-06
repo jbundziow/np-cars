@@ -88,8 +88,8 @@ class Car {
         private fuelType: 'diesel' | 'petrol',
         private tankCapacity: number, //liters
         private loadCapacity: number, //kilograms
-        private nextInspectionDate: string,
-        private nextInsuranceDate: string,
+        private nextInspectionDate: Date,
+        private nextInsuranceDate: Date,
         private availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
         private availabilityDescription: string | null,
         ) {}

@@ -61,7 +61,7 @@ class Fault {
         private carID: number,
         private userID: number,
         private moderatorID: number | null,
-        private lastChangeAt: string | null,
+        private lastChangeAt: Date | null,
         private title: string,
         private description: string,  
         private status: 'pending' | 'accepted' | 'finished' | 'cancelled',
