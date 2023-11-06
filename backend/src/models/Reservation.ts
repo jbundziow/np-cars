@@ -74,6 +74,7 @@ class Reservation {
     static async fetchOne(id: number) {
         return await ReservationModel.findOne({ where: { id: id } })
     }
+    
 }
 
 

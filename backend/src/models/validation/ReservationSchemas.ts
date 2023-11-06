@@ -24,11 +24,11 @@ const addOneReservationSchema = Joi.object({
         .optional(),
         
     dateFrom: Joi.date()
-        .min(new Date().setHours(0, 0, 0, 0).valueOf()) //today
+        .min(new Date().setUTCHours(0, 0, 0, 0).valueOf()) //today
         .required(),
 
     dateTo: Joi.date()
-        .min(new Date().setHours(0, 0, 0, 0).valueOf()) //today
+        .min(new Date().setUTCHours(0, 0, 0, 0).valueOf()) //today
         .required(),
     
     travelDestination: Joi.string()
