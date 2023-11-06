@@ -4,6 +4,7 @@ import { NextFunction, Request, Response, response } from 'express'
 import Reservation from '../models/Reservation';
 import Car from '../models/Car';
 import User from '../models/User';
+import { addOneReservationSchema } from '../models/validation/ReservationSchemas';
 
 
 
@@ -25,8 +26,9 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
     const isUserExist = await User.fetchOne(Number(data.userID))
         if(isCarExist && isUserExist) {
             const newReservation = new Reservation(null, data.carID, data.userID, data.lastEditedByModeratorOfID, data.dateFrom, data.dateTo, data.travelDestination);
-            //TODO: VALIDATION!!!
-            // await addOneCarSchema.validateAsync(newCar);
+            
+            await addOneReservationSchema.validateAsync(newReservation);
+
             await newReservation.addOneReservation()
             res.status(200).json({status: 'success', data: req.body});
             }
