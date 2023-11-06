@@ -31,12 +31,12 @@ const RentalModel = sequelize.define('Rental', {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
-      travelDestinationAUTO: {
+      travelDestination: {
         type: DataTypes.STRING,
         allowNull: true,
       },
-      travelDestinationMAN: {
-        type: DataTypes.STRING,
+      placeID: {
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
       dateTo: {
@@ -47,6 +47,11 @@ const RentalModel = sequelize.define('Rental', {
 })
 
 
+// const syncModel = async () => {
+//   await RentalModel.sync({ force: true });
+// }
+// syncModel();
+
 
 class Rental {
     constructor(
@@ -56,8 +61,8 @@ class Rental {
         private lastEditedByModeratorOfID: number | null,
         private carMileageBefore: number,
         private carMileageAfter: number | null,
-        private travelDestinationAUTO: string | null,
-        private travelDestinationMAN: string | null,
+        private travelDestination: string | null,
+        private placeID: number | null,
         private dateTo: string | null,
         ) {}
 
@@ -69,8 +74,8 @@ class Rental {
           lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
           carMileageBefore: this.carMileageBefore,
           carMileageAfter: this.carMileageAfter,
-          travelDestinationAUTO: this.travelDestinationAUTO,
-          travelDestinationMAN: this.travelDestinationMAN,
+          travelDestination: this.travelDestination,
+          placeID: this.placeID,
           dateTo: this.dateTo,
         })
     }
