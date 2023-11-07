@@ -124,3 +124,15 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
 export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
 
 }
+
+//req.query to find past/future/all
+//carbasicdata + reservations data to display in table
+export const findAllReservationsOfUser = async (req: Request, res: Response, next: NextFunction) => {
+
+}
+
+//req.query to find past/future/all
+//carbasicdata + reservations data to display in table
+export const findAllReservationsOfCar = async (req: Request, res: Response, next: NextFunction) => {
+
+}
