@@ -65,20 +65,14 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
 
 export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
 
-    interface responseObject {
-        dates: string[],
-        reservations: boolean[],
-        usersIDs: (number | null)[],
-        userNames: (string | null)[]
+    type oneDayObjectType = {
+        date: string,
+        reservation: boolean,
+        userID: (number | null),
+        userName: (string | null)
     }
-    let responseObj: responseObject = {
-        dates: [],
-        reservations: [],
-        usersIDs: [],
-        userNames: [],
-    }
+    let responseObj: oneDayObjectType[] = [];
 
-    const data = req.body;
     try {
         if(!req.params.carid || isNaN(Number(req.params.carid))) {
             res.status(400).json({status: 'fail', data: [`You have passed a wrong carID.`]});
@@ -89,32 +83,30 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
         if (isCarExist) {
             const nextTwoWeeks: string[] = getNextTwoWeeksDatesArr();
 
+
+            
             for await (const date of nextTwoWeeks) {
+                let oneDayObject: oneDayObjectType = {
+                    date: "",
+                    reservation: false,
+                    userID: null,
+                    userName: null
+                };
                 const reservation = await Reservation.checkReservationAtDesiredDay(Number(req.params.carid), new Date(date));
                 if(reservation) {
-                    responseObj.reservations.push(true);
-                    responseObj.usersIDs.push(reservation.dataValues.userID);
+                    oneDayObject = {...oneDayObject, reservation: true}
+                    oneDayObject = {... oneDayObject, userID: reservation.dataValues.userID}
+                    
+                        const userData = await User.fetchOne(oneDayObject.userID!)
+                        if(userData) {
+                            oneDayObject = {...oneDayObject, userName: `${userData.dataValues.name} ${userData.dataValues.surname}`}
+                        }
+                        else {
+                            oneDayObject = {...oneDayObject, userName: 'Użytkownik nieznaleziony'}
+                        }
                 }
-                else {
-                    responseObj.reservations.push(false);
-                    responseObj.usersIDs.push(null);
-                }
-                responseObj.dates.push(date);
-            }
-
-            for await (const userID of responseObj.usersIDs) {
-                if(userID !== null) {
-                const user = await User.fetchOne(userID)
-                if(user) {
-                    responseObj.userNames.push(`${user.dataValues.name} ${user.dataValues.surname}`);
-                }
-                else {
-                    responseObj.userNames.push('Użytkownik nieznaleziony');
-                }
-                }
-                else {
-                    responseObj.userNames.push(null);
-                }
+                oneDayObject = {... oneDayObject, date: date}
+                responseObj.push(oneDayObject)
             }
 
             res.status(200).json({status: 'success', data: responseObj})
@@ -128,7 +120,7 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
     }
 }
 
-
+//[{car basic data + reservation data}, ....]
 export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
 
 }
