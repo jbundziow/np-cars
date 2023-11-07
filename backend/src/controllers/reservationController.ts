@@ -66,11 +66,13 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
 export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
 
     interface responseObject {
+        dates: string[],
         reservations: boolean[],
         usersIDs: (number | null)[],
         userNames: (string | null)[]
     }
     let responseObj: responseObject = {
+        dates: [],
         reservations: [],
         usersIDs: [],
         userNames: [],
@@ -78,21 +80,17 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
 
     const data = req.body;
     try {
-        if(!data.carID || isNaN(Number(data.carID))) {
+        if(!req.params.carid || isNaN(Number(req.params.carid))) {
             res.status(400).json({status: 'fail', data: [`You have passed a wrong carID.`]});
             return;
         }
-        else if(!data.date || !dateOnlyValidator(data.date)) {
-            res.status(400).json({status: 'fail', data: [`You have passed a wrong 'date' format. It should be 'YYYY-MM-DD'.`]});
-            return;
-        }
     
-        const isCarExist = await Car.fetchOne(Number(data.carID))
+        const isCarExist = await Car.fetchOne(Number(req.params.carid))
         if (isCarExist) {
             const nextTwoWeeks: string[] = getNextTwoWeeksDatesArr();
 
             for await (const date of nextTwoWeeks) {
-                const reservation = await Reservation.checkReservationAtDesiredDay(data.carID, new Date(date));
+                const reservation = await Reservation.checkReservationAtDesiredDay(Number(req.params.carid), new Date(date));
                 if(reservation) {
                     responseObj.reservations.push(true);
                     responseObj.usersIDs.push(reservation.dataValues.userID);
@@ -101,6 +99,7 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
                     responseObj.reservations.push(false);
                     responseObj.usersIDs.push(null);
                 }
+                responseObj.dates.push(date);
             }
 
             for await (const userID of responseObj.usersIDs) {
@@ -121,7 +120,7 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
             res.status(200).json({status: 'success', data: responseObj})
         }
         else {
-            res.status(400).json({status: 'fail', data: [`The car of id: ${data.carID} does not exist in the database.`]})
+            res.status(400).json({status: 'fail', data: [`The car of id: ${req.params.carid} does not exist in the database.`]})
         }
     }
     catch (err) {
