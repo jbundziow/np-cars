@@ -64,6 +64,18 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
 
 
 export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
+
+    interface responseObject {
+        reservations: boolean[],
+        usersIDs: (number | null)[],
+        userNames: (string | null)[]
+    }
+    let responseObj: responseObject = {
+        reservations: [],
+        usersIDs: [],
+        userNames: [],
+    }
+
     const data = req.body;
     try {
         if(!data.carID || isNaN(Number(data.carID))) {
@@ -74,20 +86,43 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
             res.status(400).json({status: 'fail', data: [`You have passed a wrong 'date' format. It should be 'YYYY-MM-DD'.`]});
             return;
         }
-        //TODO: CHECK IF CAR EXIST IN DB
+    
         const isCarExist = await Car.fetchOne(Number(data.carID))
         if (isCarExist) {
-            //TODO: GET NEXT 14 DAYS IN ARRAY
-            const nextTwoWeeks:string[] = getNextTwoWeeksDatesArr()
-            //TODO: CHECK IF RESERVATION IN THAT DAYS EXIST IN ARRAY
-            //TODO: RETURN THAT ARRAY
+            const nextTwoWeeks: string[] = getNextTwoWeeksDatesArr();
+
+            for await (const date of nextTwoWeeks) {
+                const reservation = await Reservation.checkReservationAtDesiredDay(data.carID, new Date(date));
+                if(reservation) {
+                    responseObj.reservations.push(true);
+                    responseObj.usersIDs.push(reservation.dataValues.userID);
+                }
+                else {
+                    responseObj.reservations.push(false);
+                    responseObj.usersIDs.push(null);
+                }
+            }
+
+            for await (const userID of responseObj.usersIDs) {
+                if(userID !== null) {
+                const user = await User.fetchOne(userID)
+                if(user) {
+                    responseObj.userNames.push(`${user.dataValues.name} ${user.dataValues.surname}`);
+                }
+                else {
+                    responseObj.userNames.push('Użytkownik nieznaleziony');
+                }
+                }
+                else {
+                    responseObj.userNames.push(null);
+                }
+            }
+
+            res.status(200).json({status: 'success', data: responseObj})
         }
         else {
             res.status(400).json({status: 'fail', data: [`The car of id: ${data.carID} does not exist in the database.`]})
         }
-        
-        // const dbResponse = await Reservation.checkReservationAtDesiredDay(data.carID, new Date(data.data));
-        // res.status(200).json({status: 'success', data: dbResponse});
     }
     catch (err) {
         res.status(500).json({status: 'error', message: err})
