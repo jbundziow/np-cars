@@ -5,6 +5,7 @@ import Reservation from '../models/Reservation';
 import Car from '../models/Car';
 import User from '../models/User';
 import { addOneReservationSchema, dateOnlyValidator } from '../models/validation/ReservationSchemas';
+import { getNextTwoWeeksDatesArr } from '../utilities/functions/getNextTwoWeeksDatesArr';
 
 
 
@@ -13,11 +14,11 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
     //TODO: ONLY LOGGED USER CAN ADD RESERVATION!!!
     const data = req.body;
     if (!data.carID || isNaN(Number(data.carID))) {
-        res.status(400).json({status: 'fail', data: [`You have passed a wrong car ID.`]});
+        res.status(400).json({status: 'fail', data: [`You have passed a wrong carID.`]});
         return;
     }
     else if (!data.userID || isNaN(Number(data.userID))) {
-        res.status(400).json({status: 'fail', data: [`You have passed a wrong user ID.`]});
+        res.status(400).json({status: 'fail', data: [`You have passed a wrong userID.`]});
         return;
     }
     else if(!data.dateFrom || !dateOnlyValidator(data.dateFrom)) {
@@ -37,7 +38,12 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
             
             await addOneReservationSchema.validateAsync(newReservation);
 
-            //TODO: CHCECK IF RESERVATION IN THAT PERIOD FOR THAT CAR DOES NOT EXIST
+            const isReservationAlreadyExist = await Reservation.checkReservationsBetweenDates(data.carID, new Date(data.dateFrom), new Date(data.dateTo));
+            if (isReservationAlreadyExist && isReservationAlreadyExist.length > 0) {
+                res.status(400).json({status: 'fail', data: [`Reservation for that car is already exist in that period.`]})
+                return;
+            }
+
             await newReservation.addOneReservation()
             res.status(200).json({status: 'success', data: req.body});
             }
@@ -57,22 +63,38 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
 
 
 
-export const test = async (req: Request, res: Response, next: NextFunction) => {
+export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
     try {
-        const response = await Reservation.test(1, new Date('2023-11-12'));
-        res.status(200).json({status: 'success', data: response});
+        if(!data.carID || isNaN(Number(data.carID))) {
+            res.status(400).json({status: 'fail', data: [`You have passed a wrong carID.`]});
+            return;
+        }
+        else if(!data.date || !dateOnlyValidator(data.date)) {
+            res.status(400).json({status: 'fail', data: [`You have passed a wrong 'date' format. It should be 'YYYY-MM-DD'.`]});
+            return;
+        }
+        //TODO: CHECK IF CAR EXIST IN DB
+        const isCarExist = await Car.fetchOne(Number(data.carID))
+        if (isCarExist) {
+            //TODO: GET NEXT 14 DAYS IN ARRAY
+            const nextTwoWeeks:string[] = getNextTwoWeeksDatesArr()
+            //TODO: CHECK IF RESERVATION IN THAT DAYS EXIST IN ARRAY
+            //TODO: RETURN THAT ARRAY
+        }
+        else {
+            res.status(400).json({status: 'fail', data: [`The car of id: ${data.carID} does not exist in the database.`]})
+        }
+        
+        // const dbResponse = await Reservation.checkReservationAtDesiredDay(data.carID, new Date(data.data));
+        // res.status(200).json({status: 'success', data: dbResponse});
     }
     catch (err) {
         res.status(500).json({status: 'error', message: err})
     }
 }
 
-export const test2 = async (req: Request, res: Response, next: NextFunction) => {
-    try {
-        const response = await Reservation.checkReservationsBetweenDates(1, new Date('2023-11-26'), new Date('2023-11-30'));
-        res.status(200).json({status: 'success', data: response});
-    }
-    catch (err) {
-        res.status(500).json({status: 'error', message: err})
-    }
+
+export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
+
 }

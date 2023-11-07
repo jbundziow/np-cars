@@ -61,7 +61,7 @@ const addOneCarSchema = Joi.object({
         .required(),
 
         availabilityStatus: Joi.string()
-        .valid('available', 'notAvailable', 'rented', 'onService', 'damaged')
+        .valid('available', 'notAvailable', 'rented', 'onService', 'damaged', 'banned')
         .required(),
 
         availabilityDescription: Joi.string()

@@ -1,4 +1,4 @@
-const {DataTypes} = require('sequelize');
+const {DataTypes, Op} = require('sequelize');
 
 
 
@@ -60,7 +60,7 @@ const CarModel = sequelize.define('Car', {
         allowNull: false,
       },
       availabilityStatus: {
-        type: DataTypes.ENUM('available', 'notAvailable', 'rented', 'onService', 'damaged'),
+        type: DataTypes.ENUM('available', 'notAvailable', 'rented', 'onService', 'damaged', 'banned'),
         allowNull: true,
       },
       availabilityDescription: {
@@ -90,7 +90,7 @@ class Car {
         private loadCapacity: number, //kilograms
         private nextInspectionDate: Date,
         private nextInsuranceDate: Date,
-        private availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
+        private availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
         private availabilityDescription: string | null,
         ) {}
 
@@ -114,19 +114,32 @@ class Car {
         })
     }
 
+    //NOT BANNED CARS
     static async fetchAll() {
-        return await CarModel.findAll()
+        return await CarModel.findAll({where: {availabilityStatus: { [Op.ne]: 'banned' }}})
     }
     static async fetchAllBasicData() {
-      return await CarModel.findAll({attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
+      return await CarModel.findAll({attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus'], where: {availabilityStatus: { [Op.ne]: 'banned' }}})
     }
 
     static async fetchOne(carid: number) {
-        return await CarModel.findOne({ where: {id: carid} })
+        return await CarModel.findOne({ where: {id: carid, availabilityStatus: { [Op.ne]: 'banned' }} })
     }
-    static async fetchOneBasicData(id: number) {
-      return await CarModel.findOne({ where: {id: id}, attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
+    static async fetchOneBasicData(carid: number) {
+      return await CarModel.findOne({ where: {id: carid, availabilityStatus: { [Op.ne]: 'banned' }}, attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
     }
+    //END NOT BANNED CARS
+
+
+
+    //FOR ADMIN ALSO WITH BANNED CARS
+    static async fetchAllAlsoBanned() {
+      return await CarModel.findAll()
+    }
+    static async fetchOneAlsoBanned(carid: number) {
+      return await CarModel.findOne({ where: {id: carid} })
+    }
+    //END FOR ADMIN ALSO WITH BANNED CARS
 }
 
 

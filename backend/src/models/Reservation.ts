@@ -76,12 +76,12 @@ class Reservation {
         return await ReservationModel.findOne({ where: { id: id } })
     }
 
-    static async test (carID: number, desiredDate: Date) {
+    static async checkReservationAtDesiredDay (carID: number, date: Date) {
       return await ReservationModel.findAll({
         where: {
           [Op.and]: [
-            { DateFrom: { [Op.lte]: desiredDate } },
-            { DateTo: { [Op.gte]: desiredDate } },
+            { DateFrom: { [Op.lte]: date } },
+            { DateTo: { [Op.gte]: date } },
             { carID: carID }
           ],
         },
