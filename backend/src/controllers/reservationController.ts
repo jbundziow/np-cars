@@ -189,11 +189,44 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request
 //req.query to find past/future/all
 //carbasicdata + reservations data to display in table
 export const findAllReservationsOfUser = async (req: Request, res: Response, next: NextFunction) => {
-
+    try {
+        if(!req.params.userid || isNaN(Number(req.params.userid))) {
+            res.status(400).json({status: 'fail', data: [`You have passed a wrong userID.`]});
+            return;
+        }
+        
+        if(!req.query.time || (req.query.time !== 'past' && req.query.time !== 'future' && req.query.time !== 'all')) {
+            res.status(400).json({status: 'fail', data: [`You have passed a wrong "time" parameter in URL. It should be 'past', 'future' or 'all'.`]});
+            return;
+        }
+        //TODO: PAGINATION
+        else {
+            res.status(400).json({status: 'fail', data: [`The user of id: ${req.params.userid} does not exist in the database.`]})
+        }
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
 }
 
 //req.query to find past/future/all
 //carbasicdata + reservations data to display in table
 export const findAllReservationsOfCar = async (req: Request, res: Response, next: NextFunction) => {
-
+    try {
+        if(!req.params.carid || isNaN(Number(req.params.carid))) {
+            res.status(400).json({status: 'fail', data: [`You have passed a wrong carID.`]});
+            return;
+        }
+        if(!req.query.time || (req.query.time !== 'past' && req.query.time !== 'future' && req.query.time !== 'all')) {
+            res.status(400).json({status: 'fail', data: [`You have passed a wrong "time" parameter in URL. It should be 'past', 'future' or 'all'.`]});
+            return;
+        }
+        //TODO: PAGINATIOn
+        else {
+            res.status(400).json({status: 'fail', data: [`The car of id: ${req.params.carid} does not exist in the database.`]})
+        }
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
 }
