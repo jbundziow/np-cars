@@ -120,33 +120,36 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
     }
 }
 
-//[{car basic data + reservation data}, ....]
+
 export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
+
+    type reservationsType = {
+        date: string,
+        reservation: boolean,
+        userID: (number | null),
+        userName: (string | null)
+    }
     type oneCarObjectType = {
         id: number,
         brand: string,
         model: string,
         imgPath: string,
         availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-        reservations: {
-        date: string,
-        reservation: boolean,
-        userID: (number | null),
-        userName: (string | null)
-        }
+        reservations: reservationsType[],
     }
-    let responseObj: oneCarObjectType[] = [];
 
+
+    let responseObj: oneCarObjectType[] = [];
     try {
         
-    
         const allCarsBasicData = await Car.fetchAllBasicData();
         if (allCarsBasicData) {
 
             for await (const carObj of allCarsBasicData) {
+                let reservationsArr: reservationsType[] = [];
                 const nextTwoWeeks: string[] = getNextTwoWeeksDatesArr();
                 for await (const date of nextTwoWeeks) {
-                    let oneDayObject: oneDayObjectType = {
+                    let oneDayObject: any = {
                         date: "",
                         reservation: false,
                         userID: null,
@@ -166,8 +169,9 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request
                             }
                     }
                     oneDayObject = {... oneDayObject, date: date}
-                    responseObj.push(...carObj, reservations:{...oneDayObject})
+                    reservationsArr.push(oneDayObject)
                 }
+                responseObj.push({...carObj.dataValues, reservations: reservationsArr})
             }
             
 
