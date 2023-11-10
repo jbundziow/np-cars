@@ -122,7 +122,64 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
 
 //[{car basic data + reservation data}, ....]
 export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
+    type oneCarObjectType = {
+        id: number,
+        brand: string,
+        model: string,
+        imgPath: string,
+        availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
+        reservations: {
+        date: string,
+        reservation: boolean,
+        userID: (number | null),
+        userName: (string | null)
+        }
+    }
+    let responseObj: oneCarObjectType[] = [];
 
+    try {
+        
+    
+        const allCarsBasicData = await Car.fetchAllBasicData();
+        if (allCarsBasicData) {
+
+            for await (const carObj of allCarsBasicData) {
+                const nextTwoWeeks: string[] = getNextTwoWeeksDatesArr();
+                for await (const date of nextTwoWeeks) {
+                    let oneDayObject: oneDayObjectType = {
+                        date: "",
+                        reservation: false,
+                        userID: null,
+                        userName: null
+                    };
+                    const reservation = await Reservation.checkReservationAtDesiredDay(Number(carObj.dataValues.id), new Date(date));
+                    if(reservation) {
+                        oneDayObject = {...oneDayObject, reservation: true}
+                        oneDayObject = {... oneDayObject, userID: reservation.dataValues.userID}
+                        
+                            const userData = await User.fetchOne(oneDayObject.userID!)
+                            if(userData) {
+                                oneDayObject = {...oneDayObject, userName: `${userData.dataValues.name} ${userData.dataValues.surname}`}
+                            }
+                            else {
+                                oneDayObject = {...oneDayObject, userName: 'Użytkownik nieznaleziony'}
+                            }
+                    }
+                    oneDayObject = {... oneDayObject, date: date}
+                    responseObj.push(...carObj, reservations:{...oneDayObject})
+                }
+            }
+            
+
+            res.status(200).json({status: 'success', data: responseObj})
+        }
+        else {
+            res.status(400).json({status: 'fail', data: [`Not found any car in the database.`]})
+        }
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
 }
 
 //req.query to find past/future/all
