@@ -99,6 +99,20 @@ class Reservation {
         },
       });
     }
+
+    static async fetchAllReservationsOfUser (userID: number, time: 'past' | 'all' | 'future') {
+      return await ReservationModel.findAll({
+        where: { id: userID},
+        // TODO: show past/all/future
+      });
+    }
+
+    static async fetchAllReservationsOfCar (carID: number, time: 'past' | 'all' | 'future') {
+      return await ReservationModel.findAll({
+        where: { id: carID},
+        // TODO: show past/all/future
+      });
+    }
     
 }
 
