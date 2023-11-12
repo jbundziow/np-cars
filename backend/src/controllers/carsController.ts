@@ -39,7 +39,7 @@ export const fetchOneCar = async (req: Request, res: Response, next: NextFunctio
         }
     }
     else {
-        res.status(400).json({status: 'fail', data: ['You have passed a wrong car ID.']})
+        res.status(400).json({status: 'fail', data: {en: 'You have passed a wrong car ID.', pl: 'Podano zły ID samochodu.'}});
     }   
 }
 
