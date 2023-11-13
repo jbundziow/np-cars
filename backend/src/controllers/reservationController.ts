@@ -197,13 +197,22 @@ export const findAllReservationsOfUser = async (req: Request, res: Response, nex
         }
         
         if(!req.query.time || (req.query.time !== 'past' && req.query.time !== 'future' && req.query.time !== 'all')) {
-            res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong "time" parameter in URL. It should be 'past', 'future' or 'all'.`, pl: `Podano złą wartość parametru "time" w URL. Dostępne wartości to: 'past', 'future' lub 'all.`}]})
+            res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong 'time' parameter in URL. It should be 'past', 'future' or 'all'.`, pl: `Podano złą wartość parametru 'time' w URL. Dostępne wartości to: 'past', 'future' lub 'all.`}]})
             return;
         }
-        //TODO: PAGINATION
+
+        const isUserExist = await User.fetchOne(Number(req.params.userid))
+        if(isUserExist) {
+            //TODO: PAGINATION
+            const reservations = await Reservation.fetchAllReservationsOfUser(Number(req.params.userid), req.query.time);
+            const allCars = await Car.fetchAllBasicData();
+            res.status(200).json({status: 'success', data: {reservations, allCarsData: allCars}});
+        }
         else {
             res.status(400).json({status: 'fail', data: [{en: `The user of id: ${req.params.userid} does not exist in the database.`, pl: `Użytkownik o ID: ${req.params.userid} nie istnieje w bazie danych.`}]})
+            return;
         }
+        
     }
     catch (err) {
         res.status(500).json({status: 'error', message: err})
@@ -219,13 +228,22 @@ export const findAllReservationsOfCar = async (req: Request, res: Response, next
             return;
         }
         if(!req.query.time || (req.query.time !== 'past' && req.query.time !== 'future' && req.query.time !== 'all')) {
-            res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong "time" parameter in URL. It should be 'past', 'future' or 'all'.`, pl: `Podano złą wartość parametru "time" w URL. Dostępne wartości to: 'past', 'future' lub 'all.`}]})
+            res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong 'time' parameter in URL. It should be 'past', 'future' or 'all'.`, pl: `Podano złą wartość parametru 'time' w URL. Dostępne wartości to: 'past', 'future' lub 'all.`}]})
             return;
         }
-        //TODO: PAGINATIOn
+
+        const carData = await Car.fetchOneBasicData(Number(req.params.carid))
+        if(carData) {
+            //TODO: PAGINATION
+            
+            const dbResponse = await Reservation.fetchAllReservationsOfCar(Number(req.params.carid), req.query.time);
+            res.status(200).json({status: 'success', data: {carData, reservations: dbResponse}});
+        }
         else {
             res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carid} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carid} nie istnieje w bazie danych.`}]})
+            return;
         }
+        
     }
     catch (err) {
         res.status(500).json({status: 'error', message: err})

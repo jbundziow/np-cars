@@ -1,9 +1,8 @@
 const {DataTypes, Op} = require('sequelize');
 
 
-
-import { AnySchema } from "joi";
 import sequelize from "../database/database";
+import { getFormattedDate } from "../utilities/functions/getFormattedDate";
 const ReservationModel = sequelize.define('Reservation', {
     id: {
         type: DataTypes.INTEGER,
@@ -101,17 +100,65 @@ class Reservation {
     }
 
     static async fetchAllReservationsOfUser (userID: number, time: 'past' | 'all' | 'future') {
-      return await ReservationModel.findAll({
-        where: { id: userID},
-        // TODO: show past/all/future
-      });
+
+      if (time === 'past') {
+        return await ReservationModel.findAll({
+          where: {
+            [Op.and]: [
+              { DateFrom: { [Op.lt]: getFormattedDate(new Date()) } },
+              { userID: userID }
+            ],
+          },
+          order: [['DateFrom', 'DESC']],
+        });
+      }
+      else if (time === 'future') {
+        return await ReservationModel.findAll({
+          where: {
+            [Op.and]: [
+              { DateFrom: { [Op.gte]: getFormattedDate(new Date()) } },
+              { userID: userID }
+            ],
+          },
+          order: [['DateFrom', 'ASC']],
+        });
+      }
+      else {
+        return await ReservationModel.findAll({
+          where: {userID: userID}
+        });
+      }
     }
 
     static async fetchAllReservationsOfCar (carID: number, time: 'past' | 'all' | 'future') {
+   
+    if (time === 'past') {
       return await ReservationModel.findAll({
-        where: { id: carID},
-        // TODO: show past/all/future
+        where: {
+          [Op.and]: [
+            { DateFrom: { [Op.lt]: getFormattedDate(new Date()) } },
+            { carID: carID }
+          ],
+        },
+        order: [['DateFrom', 'DESC']],
       });
+    }
+    else if (time === 'future') {
+      return await ReservationModel.findAll({
+        where: {
+          [Op.and]: [
+            { DateFrom: { [Op.gte]: getFormattedDate(new Date()) } },
+            { carID: carID }
+          ],
+        },
+        order: [['DateFrom', 'ASC']],
+      });
+    }
+    else {
+      return await ReservationModel.findAll({
+        where: {carID: carID}
+      });
+    }
     }
     
 }
