@@ -28,7 +28,7 @@ export const fetchOneUser = async (req: Request, res: Response, next: NextFuncti
         }
     }
     else {
-        res.status(400).json({status: 'fail', data: ['You have passed a wrong user ID.']})
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
     }   
 
 }

@@ -14,19 +14,20 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
     //TODO: ONLY LOGGED USER CAN ADD RESERVATION!!!
     const data = req.body;
     if (!data.carID || isNaN(Number(data.carID))) {
-        res.status(400).json({status: 'fail', data: [`You have passed a wrong carID.`]});
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
         return;
     }
     else if (!data.userID || isNaN(Number(data.userID))) {
-        res.status(400).json({status: 'fail', data: [`You have passed a wrong userID.`]});
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
         return;
     }
     else if(!data.dateFrom || !dateOnlyValidator(data.dateFrom)) {
         res.status(400).json({status: 'fail', data: [`You have passed a wrong 'dateFrom' format. It should be 'YYYY-MM-DD'.`]});
+        res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong 'dateFrom' format. It should be 'YYYY-MM-DD'.`, pl: `Podano zły format daty w zmiennej 'dateFrom'. Prawidłowy format to 'YYYY-MM-DD'.`}]})
         return;
     }
     else if(!data.dateTo || !dateOnlyValidator(data.dateTo)) {
-        res.status(400).json({status: 'fail', data: [`You have passed a wrong 'dateTo' format. It should be 'YYYY-MM-DD'.`]});
+        res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong 'dateTo' format. It should be 'YYYY-MM-DD'.`, pl: `Podano zły format daty w zmiennej 'dateTo'. Prawidłowy format to 'YYYY-MM-DD'.`}]})
         return;
     }
 
@@ -40,7 +41,7 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
 
             const isReservationAlreadyExist = await Reservation.checkReservationsBetweenDates(data.carID, new Date(data.dateFrom), new Date(data.dateTo));
             if (isReservationAlreadyExist && isReservationAlreadyExist.length > 0) {
-                res.status(400).json({status: 'fail', data: [`Reservation for that car is already exist in that period.`]})
+                res.status(400).json({status: 'fail', data: [{en: `Reservation for that car is already exist in that period.`, pl: `Rezerwacja dla tego samochodu już istnieje w tym terminie.`}]})
                 return;
             }
 
@@ -49,10 +50,10 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
             }
         else {
             if(!isCarExist) {
-                res.status(400).json({status: 'fail', data: [`The car of id: ${data.carID} does not exist in the database.`]})
+                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carID} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carID} nie istnieje w bazie danych.`}]})
             }
             else if (!isUserExist) {
-                res.status(400).json({status: 'fail', data: [`The user of id: ${data.userID} does not exist in the database.`]})
+                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${req.params.userID} does not exist in the database.`, pl: `Użytkownik o ID: ${req.params.userID} nie istnieje w bazie danych.`}]})
             }
         }
     }
@@ -75,7 +76,7 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
 
     try {
         if(!req.params.carid || isNaN(Number(req.params.carid))) {
-            res.status(400).json({status: 'fail', data: [`You have passed a wrong carID.`]});
+            res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
             return;
         }
     
@@ -112,7 +113,7 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
             res.status(200).json({status: 'success', data: responseObj})
         }
         else {
-            res.status(400).json({status: 'fail', data: [`The car of id: ${req.params.carid} does not exist in the database.`]})
+            res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carid} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carid} nie istnieje w bazie danych.`}]})
         }
     }
     catch (err) {
@@ -178,7 +179,7 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request
             res.status(200).json({status: 'success', data: responseObj})
         }
         else {
-            res.status(400).json({status: 'fail', data: [`Not found any car in the database.`]})
+            res.status(400).json({status: 'fail', data: [{en: `Not found any car in the database.`, pl: `Nie znaleziono żadnego samochodu w bazie danych.`}]})
         }
     }
     catch (err) {
@@ -191,17 +192,17 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request
 export const findAllReservationsOfUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.userid || isNaN(Number(req.params.userid))) {
-            res.status(400).json({status: 'fail', data: [`You have passed a wrong userID.`]});
+            res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
             return;
         }
         
         if(!req.query.time || (req.query.time !== 'past' && req.query.time !== 'future' && req.query.time !== 'all')) {
-            res.status(400).json({status: 'fail', data: [`You have passed a wrong "time" parameter in URL. It should be 'past', 'future' or 'all'.`]});
+            res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong "time" parameter in URL. It should be 'past', 'future' or 'all'.`, pl: `Podano złą wartość parametru "time" w URL. Dostępne wartości to: 'past', 'future' lub 'all.`}]})
             return;
         }
         //TODO: PAGINATION
         else {
-            res.status(400).json({status: 'fail', data: [`The user of id: ${req.params.userid} does not exist in the database.`]})
+            res.status(400).json({status: 'fail', data: [{en: `The user of id: ${req.params.userid} does not exist in the database.`, pl: `Użytkownik o ID: ${req.params.userid} nie istnieje w bazie danych.`}]})
         }
     }
     catch (err) {
@@ -214,16 +215,16 @@ export const findAllReservationsOfUser = async (req: Request, res: Response, nex
 export const findAllReservationsOfCar = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.carid || isNaN(Number(req.params.carid))) {
-            res.status(400).json({status: 'fail', data: [`You have passed a wrong carID.`]});
+            res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
             return;
         }
         if(!req.query.time || (req.query.time !== 'past' && req.query.time !== 'future' && req.query.time !== 'all')) {
-            res.status(400).json({status: 'fail', data: [`You have passed a wrong "time" parameter in URL. It should be 'past', 'future' or 'all'.`]});
+            res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong "time" parameter in URL. It should be 'past', 'future' or 'all'.`, pl: `Podano złą wartość parametru "time" w URL. Dostępne wartości to: 'past', 'future' lub 'all.`}]})
             return;
         }
         //TODO: PAGINATIOn
         else {
-            res.status(400).json({status: 'fail', data: [`The car of id: ${req.params.carid} does not exist in the database.`]})
+            res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carid} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carid} nie istnieje w bazie danych.`}]})
         }
     }
     catch (err) {

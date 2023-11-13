@@ -21,7 +21,7 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
         res.status(200).json({status: 'success', data: data});
         }
         else {
-            res.status(400).json({status: 'fail', data: {en: `The car of id: ${req.params.carid} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carid} nie istnieje w bazie danych.`}})
+            res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carid} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carid} nie istnieje w bazie danych.`}]})
         }
         }
         catch (err) {
@@ -29,7 +29,7 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
         }
     }
     else {
-        res.status(400).json({status: 'fail', data: {en: 'You have passed a wrong car ID.', pl: 'Podano zły ID samochodu.'}});
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano zły ID samochodu.'}]});
     }
 }
 
@@ -45,11 +45,11 @@ export const fetchOneFault = async (req: Request, res: Response, next: NextFunct
                     res.status(200).json({status: 'success', data: {carData, faultData}})
                 }
                 else {
-                    res.status(400).json({status: 'fail', data: [`Cannot get car data of this fault. Trying to fetch car of ID: ${carID}.`]})
+                    res.status(400).json({status: 'fail', data: [{en: `Cannot get car data of this fault.`, pl: `Nie można pobrać danych dotyczących samochodu powiązanego z tą usterką.`}]})
                 }
             }
             else {
-                res.status(400).json({status: 'fail', data: {en: `Fault of ID: ${req.params.faultid} does not exist.`, pl: `Usterka o ID: ${req.params.faultid} nie istnieje.`}})
+                res.status(400).json({status: 'fail', data: [{en: `Fault of ID: ${req.params.faultid} does not exist.`, pl: `Usterka o ID: ${req.params.faultid} nie istnieje.`}]})
             }
         }
         catch(e) {
@@ -57,7 +57,7 @@ export const fetchOneFault = async (req: Request, res: Response, next: NextFunct
         }
     }
     else {
-        res.status(400).json({status: 'fail', data: {en: 'You have passed a wrong fault ID.', pl: 'Podano zły ID usterki.'}});
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong fault ID.', pl: 'Podano złe ID usterki.'}]});
     }
 }
 
@@ -83,7 +83,7 @@ export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: Ne
                 res.status(200).json({status: 'success', data: {carData, pending, accepted, finished, cancelled}})
             }
             else {
-                res.status(400).json({status: 'fail', data: {en: `Car of ID: ${req.params.carid} does not exist.`, pl: `Samochód o ID: ${req.params.caird} nie istnieje.`}})
+                res.status(400).json({status: 'fail', data: [{en: `Car of ID: ${req.params.carid} does not exist w bazie danych.`, pl: `Samochód o ID: ${req.params.caird} nie istnieje w bazie danych.`}]})
             }
         }
         catch(e) {
@@ -91,7 +91,7 @@ export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: Ne
         }
     }
     else {
-        res.status(400).json({status: 'fail', data: {en: 'You have passed a wrong car ID.', pl: 'Podano zły ID samochodu.'}});
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano zły ID samochodu.'}]});
     }
 }
 
@@ -145,7 +145,7 @@ export const fetchAllFaultsOfUser = async (req: Request, res: Response, next: Ne
         }
     }
     else {
-        res.status(400).json({status: 'fail', data: {en: 'You have passed a wrong user ID.', pl: 'Podano zły ID użytkownika.'}});
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]});
     }   
 }
 

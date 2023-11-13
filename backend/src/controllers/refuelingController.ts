@@ -23,7 +23,7 @@ export const addOneRefueling = async (req: Request, res: Response, next: NextFun
             res.status(200).json({status: 'success', data: data})
         }
         else {
-            res.status(400).json({status: 'fail', data: [`The car of id: ${req.params.carid} does not exist in the database.`]})
+            res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carid} does not exist in the database.`, pl: `Samochód o ID: ${req.params.caird} nie istnieje w bazie danych.`}]})
         }
         }
         catch (err) {
@@ -31,6 +31,6 @@ export const addOneRefueling = async (req: Request, res: Response, next: NextFun
         }
     }
     else {
-        res.status(400).json({status: 'fail', data: ['You have passed a wrong car ID.']})
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
     }
 }
