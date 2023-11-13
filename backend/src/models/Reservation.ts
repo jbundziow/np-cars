@@ -55,6 +55,8 @@ class Reservation {
         private travelDestination: string
         ) {}
 
+
+        
     async addOneReservation() {
         await ReservationModel.create({
           id: this.id,
@@ -67,9 +69,14 @@ class Reservation {
         })
     }
 
+
+
     static async fetchAll() {
         return await ReservationModel.findAll()
     }
+
+
+
 
     static async fetchOne(id: number) {
         return await ReservationModel.findOne({ where: { id: id } })
@@ -87,6 +94,9 @@ class Reservation {
       });
     }
 
+
+
+
     static async checkReservationsBetweenDates (carID: number, dateFrom: Date, dateTo: Date) {
       return await ReservationModel.findAll({
         where: {
@@ -98,6 +108,8 @@ class Reservation {
         },
       });
     }
+
+
 
     static async fetchAllReservationsOfUser (userID: number, time: 'past' | 'all' | 'future') {
 
@@ -129,6 +141,9 @@ class Reservation {
         });
       }
     }
+
+
+
 
     static async fetchAllReservationsOfCar (carID: number, time: 'past' | 'all' | 'future') {
    

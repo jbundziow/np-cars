@@ -187,8 +187,6 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request
     }
 }
 
-//req.query to find past/future/all
-//carbasicdata + reservations data to display in table
 export const findAllReservationsOfUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.userid || isNaN(Number(req.params.userid))) {
@@ -219,8 +217,6 @@ export const findAllReservationsOfUser = async (req: Request, res: Response, nex
     }
 }
 
-//req.query to find past/future/all
-//carbasicdata + reservations data to display in table
 export const findAllReservationsOfCar = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.carid || isNaN(Number(req.params.carid))) {
