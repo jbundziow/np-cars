@@ -1,9 +1,26 @@
 import ReservationsOverviewTableRow from "./ReservationsOverviewTableRow";
 
+type reservationType = {
+  date: Date,
+  reservation: boolean,
+  userID: number | null,
+  userName: string | null,
+}
+
+type carData = {
+  id: number,
+  brand: string,
+  model: string,
+  imgPath: string,
+  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
+  reservations: reservationType[]
+}
+interface ReservationsOverviewTableProps {
+  data: carData[];
+}
 
 
-
-const ReservationsOverviewTable = () => {
+const ReservationsOverviewTable = (props: ReservationsOverviewTableProps) => {
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         <div className="max-w-full overflow-x-auto">
@@ -21,30 +38,35 @@ const ReservationsOverviewTable = () => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-    
-               <ReservationsOverviewTableRow
-               carID={1} 
-               carBrand={'Renault'}
-               carModel={'Megane'}
-               carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}
-               twoWeeksData={[
-                  { day: 'czw.', isBooked: true, name: 'Hubert Łoś'},
-                  { day: 'pt.', isBooked: false, name: ''},
-                  { day: 'sob.', isBooked: false, name: ''},
-                  { day: 'ndz.', isBooked: true, name: 'Grzegorz Brzęczyszczykiewicz'},
-                  { day: 'pon.', isBooked: false, name: ''},
-                  { day: 'wt.', isBooked: false, name: ''},
-                  { day: 'śr.', isBooked: true, name: 'Jan Kowalski'},
-                  { day: 'czw.', isBooked: false, name: ''},
-                  { day: 'pt.', isBooked: false, name: ''},
-                  { day: 'sob.', isBooked: false, name: ''},
-                  { day: 'ndz.', isBooked: false, name: ''},
-                  { day: 'pon.', isBooked: true, name: 'Kinga Jońska'},
-                  { day: 'wt.', isBooked: false, name: ''},
-                  { day: 'śr.', isBooked: false, name: ''},
-                  { day: 'czw.', isBooked: true, name: 'Andrzej Kuś'}
-              ]}/>
-              <ReservationsOverviewTableRow
+              {props.data.map(carData => 
+                <ReservationsOverviewTableRow
+                carID={carData.id} 
+                carBrand={carData.brand}
+                carModel={carData.model}
+                carImg={carData.imgPath}
+                
+              //   twoWeeksData={[
+              //      { day: 'czw.', isBooked: true, name: 'Hubert Łoś'},
+              //      { day: 'pt.', isBooked: false, name: ''},
+              //      { day: 'sob.', isBooked: false, name: ''},
+              //      { day: 'ndz.', isBooked: true, name: 'Grzegorz Brzęczyszczykiewicz'},
+              //      { day: 'pon.', isBooked: false, name: ''},
+              //      { day: 'wt.', isBooked: false, name: ''},
+              //      { day: 'śr.', isBooked: true, name: 'Jan Kowalski'},
+              //      { day: 'czw.', isBooked: false, name: ''},
+              //      { day: 'pt.', isBooked: false, name: ''},
+              //      { day: 'sob.', isBooked: false, name: ''},
+              //      { day: 'ndz.', isBooked: false, name: ''},
+              //      { day: 'pon.', isBooked: true, name: 'Kinga Jońska'},
+              //      { day: 'wt.', isBooked: false, name: ''},
+              //      { day: 'śr.', isBooked: false, name: ''},
+              //      { day: 'czw.', isBooked: true, name: 'Andrzej Kuś'}
+              //  ]}
+              twoWeeksData={carData.reservations}
+               />
+                )}
+               
+              {/* <ReservationsOverviewTableRow
                carID={2} 
                carBrand={'Mercedes'}
                carModel={'Sprinter'}
@@ -87,7 +109,7 @@ const ReservationsOverviewTable = () => {
                   { day: 'wt.', isBooked: false, name: ''},
                   { day: 'śr.', isBooked: false, name: ''},
                   { day: 'czw.', isBooked: false, name: ''}
-              ]}/>
+              ]}/> */}
 
             </tbody>
           </table>

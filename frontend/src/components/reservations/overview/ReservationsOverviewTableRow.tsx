@@ -1,23 +1,53 @@
 import TwoWeeksReservations from "./TwoWeeksReservations";
 
-type twoWeeksDataArrType = {
-    day: 'pon.' | 'wt.' | 'śr.' | 'czw.' | 'pt.' | 'sob.' | 'ndz.',
+
+
+type weekdaysType = 'pon.' | 'wt.' | 'śr.' | 'czw.' | 'pt.' | 'sob.' | 'ndz.';
+
+type newTwoWeeksDataArrType = {
+    day: weekdaysType,
+    date: Date,
     isBooked: boolean,
-    name: string,
+    name: string | null,
 }
+
+type reservationType = {
+    date: Date,
+    reservation: boolean,
+    userID: number | null,
+    userName: string | null,
+  }
 
 interface ReservationsOverviewTableRowProps {
     carID: number;
     carBrand: string;
     carModel: string;
     carImg: string;
-    twoWeeksData: twoWeeksDataArrType[];
+    twoWeeksData: reservationType[];
+  }
+
+  const dateToDayOfTheWeek = (date: Date): weekdaysType => {
+    date = new Date(date);
+    const dayOfTheWeek = date.getDay();
+    
+    const weekdays: weekdaysType[] = ['ndz.','pon.','wt.','śr.','czw.','pt.','sob.'];
+    return weekdays[dayOfTheWeek];
   }
 
   
 
-const ReservationsOverviewTableRow = (props: ReservationsOverviewTableRowProps) => {
 
+const ReservationsOverviewTableRow = (props: ReservationsOverviewTableRowProps) => {
+    
+    let newTwoWeeksData: newTwoWeeksDataArrType[] = []
+    newTwoWeeksData = props.twoWeeksData.map(elem => (
+        {
+            day: dateToDayOfTheWeek(elem.date),
+            date: elem.date,
+            isBooked: elem.reservation,
+            name: elem.userName,
+        }
+    ))
 
     return (
     <>
@@ -37,7 +67,7 @@ const ReservationsOverviewTableRow = (props: ReservationsOverviewTableRowProps) 
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <TwoWeeksReservations twoWeeksData ={props.twoWeeksData}/>
+        <TwoWeeksReservations twoWeeksData={newTwoWeeksData}/>
     </td>
     </tr>
     </>
