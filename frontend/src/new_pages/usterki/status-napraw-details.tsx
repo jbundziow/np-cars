@@ -22,6 +22,12 @@ const RepairsStatusDetails = (props: Props) => {
 
     const params = useParams();
 
+    type warnings = {
+      pl: string,
+      en: string,
+    } 
+    const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
+
     const [data, setData] = useState<ApiResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -33,13 +39,23 @@ const RepairsStatusDetails = (props: Props) => {
             `${DOMAIN_NAME}/faults/getall/${params.carID}?basicdata=true`
           );
           if (!response.ok) {
-            throw new Error(
-              `This is an HTTP error: The status is ${response.status}`
-            );
+            const responseJSON = await response.json();
+            if(responseJSON.status === 'fail') {
+              setWarnings(responseJSON.data);
+              setData(responseJSON);
+              setError(null);
+            }
+            else {
+              throw new Error(
+                `This is an HTTP error: The status is ${response.status}`
+              );
+            }
           }
-          let actualData = await response.json();
-          setData(actualData);
-          setError(null);
+          else {
+            let actualData = await response.json();
+            setData(actualData);
+            setError(null);
+          }
         } catch(err: any) {
           setError(err.message);
           setData(null);
@@ -56,7 +72,7 @@ const RepairsStatusDetails = (props: Props) => {
       <>
       <Breadcrumb pageName="Status napraw" />
 
-      {loading === true ? <Loader/> : (error === null && data?.status==='success' && data?.data !== null) ? <FaultsStatusDetailsContainer data={data.data}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (error === null && data?.status==='success' && data?.data !== null) ? <FaultsStatusDetailsContainer data={data.data}/> : (error === null && data?.status==='fail' && data?.data !== null) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={warnings} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       
       </>
     );

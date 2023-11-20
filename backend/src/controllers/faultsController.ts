@@ -85,7 +85,7 @@ export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: Ne
                 res.status(200).json({status: 'success', data: {carData, pending, accepted, finished, cancelled}})
             }
             else {
-                res.status(400).json({status: 'fail', data: [{en: `Car of ID: ${req.params.carid} does not exist w bazie danych.`, pl: `Samochód o ID: ${req.params.caird} nie istnieje w bazie danych.`}]})
+                res.status(400).json({status: 'fail', data: [{en: `Car of ID: ${req.params.carid} does not exist w bazie danych.`, pl: `Samochód o ID: ${req.params.carid} nie istnieje w bazie danych.`}]})
             }
         }
         catch(e) {

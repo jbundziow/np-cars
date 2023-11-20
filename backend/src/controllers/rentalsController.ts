@@ -1,5 +1,6 @@
 
 import { NextFunction, Request, Response, response } from 'express'
+import Rental from '../models/Rental';
 
 
 // id: this.id,
@@ -27,7 +28,10 @@ export const addOneRental = async (req: Request, res: Response, next: NextFuncti
 
 
     try {
-
+        const test = new Rental(null,1,11,null,data.carMileageBefore,null,null,null,null);
+        const x = await test.addOneRental()
+        console.log(x);
+        res.status(200).json({status: 'success', data: x})
     }
     catch (err) {
         res.status(500).json({status: 'error', message: err})

@@ -8,6 +8,7 @@ import faultsRoutes from './routes/faults'
 import refuelingRoutes from './routes/refueling'
 import usersRoutes from './routes/users'
 import reservationsRoutes from './routes/reservations'
+import rentalsRoutes from './routes/rentals'
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use('/faults', faultsRoutes)
 app.use('/refuelings', refuelingRoutes)
 app.use('/users', usersRoutes)
 app.use('/reservations', reservationsRoutes)
+app.use('/rentals', rentalsRoutes)
 
 
 

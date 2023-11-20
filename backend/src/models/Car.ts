@@ -145,3 +145,4 @@ class Car {
 
 
 export default Car
+export {CarModel}

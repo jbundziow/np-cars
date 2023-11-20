@@ -1,8 +1,8 @@
 const {DataTypes} = require('sequelize');
 
-
-
 import sequelize from "../database/database";
+import Car, { CarModel } from "./Car";
+
 const RentalModel = sequelize.define('Rental', {
     id: {
         type: DataTypes.INTEGER,
@@ -41,7 +41,7 @@ const RentalModel = sequelize.define('Rental', {
       },
       dateTo: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
       },
       
 })
@@ -67,17 +67,32 @@ class Rental {
         ) {}
 
     async addOneRental() {
-        await RentalModel.create({
-          id: this.id,
-          carID: this.carID,
-          userID: this.userID,
-          lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
-          carMileageBefore: this.carMileageBefore,
-          carMileageAfter: this.carMileageAfter,
-          travelDestination: this.travelDestination,
-          placeID: this.placeID,
-          dateTo: this.dateTo,
+      try {
+        return await sequelize.transaction(async (t) => {
+          await RentalModel.create({
+            id: this.id,
+            carID: this.carID,
+            userID: this.userID,
+            lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+            carMileageBefore: this.carMileageBefore,
+            carMileageAfter: this.carMileageAfter,
+            travelDestination: this.travelDestination,
+            placeID: this.placeID,
+            dateTo: this.dateTo,
+          }, { transaction: t })
+
+          const car:any = await CarModel.findByPk(this.carID, { transaction: t });
+          if (car) {
+            car.availabilityStatus = 'rented';
+            await car.save({ transaction: t });
+          } else {
+            throw new Error('Car not found');
+          }
         })
+      }
+        catch (error) {
+          console.error('Error creating rental and updating car status:', error);
+        }
     }
 
     static async fetchAll() {
