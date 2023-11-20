@@ -10,7 +10,12 @@ import usersRoutes from './routes/users'
 import reservationsRoutes from './routes/reservations'
 
 const app = express();
-app.use(cors()) 
+
+const corsOptions = {
+    origin: 'http://localhost:5173'
+}
+
+app.use(cors(corsOptions)) 
 
 const PORT = process.env.PORT || 3000;
 

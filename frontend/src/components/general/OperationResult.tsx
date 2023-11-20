@@ -1,10 +1,16 @@
 import { MouseEventHandler } from "react";
 import { Link } from "react-router-dom"
 
+type warnings = {
+  pl: string,
+  en: string,
+} 
+
 interface OperationResultProps {
   status: 'success' | 'warning' | 'error',
   title: string,
-  description: string,
+  description?: string,
+  warnings?: warnings[],
   showButton: boolean,
   buttonText?: string,
   buttonLinkTo?: string,
@@ -66,9 +72,9 @@ const OperationResult = (props: OperationResultProps) => {
           <h5 className="mb-3 text-lg font-semibold text-[#9D5425]">
             {props.title}
           </h5>
-          <p className="leading-relaxed text-[#D0915C]">
-            {props.description}
-          </p>
+          <ul>
+            {props.warnings && props.warnings.length > 0 ? props.warnings.map(item => <li className="leading-relaxed text-[#D0915C] list-disc">{item.pl}</li>) : ''}
+          </ul>
         </div>
       </div>
       :
@@ -96,11 +102,9 @@ const OperationResult = (props: OperationResultProps) => {
           <h5 className="mb-3 font-semibold text-[#B45454]">
             {props.title}
           </h5>
-          <ul>
-            <li className="leading-relaxed text-[#CD5D5D]">
-              {props.description}
-            </li>
-          </ul>
+          <p className="leading-relaxed text-[#B45454]">
+            {props.description}
+          </p>
         </div>
       </div>
       :
