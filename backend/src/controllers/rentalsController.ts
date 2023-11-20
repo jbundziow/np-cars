@@ -28,7 +28,9 @@ export const addOneRental = async (req: Request, res: Response, next: NextFuncti
 
 
     try {
-        const test = new Rental(null,1,11,null,data.carMileageBefore,null,null,null,null);
+        // TODO: CHECK IF CAR EXIST
+        //TODO: CHECK IF USER EXIST
+        const test = new Rental(null,data.carID,data.userID,null,data.carMileageBefore,null,null,null,null);
         const x = await test.addOneRental()
         console.log(x);
         res.status(200).json({status: 'success', data: x})

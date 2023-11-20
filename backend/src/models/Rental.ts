@@ -92,6 +92,7 @@ class Rental {
       }
         catch (error) {
           console.error('Error creating rental and updating car status:', error);
+          throw new Error('err')
         }
     }
 
