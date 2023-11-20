@@ -44,72 +44,10 @@ const ReservationsOverviewTable = (props: ReservationsOverviewTableProps) => {
                 carBrand={carData.brand}
                 carModel={carData.model}
                 carImg={carData.imgPath}
-                
-              //   twoWeeksData={[
-              //      { day: 'czw.', isBooked: true, name: 'Hubert Łoś'},
-              //      { day: 'pt.', isBooked: false, name: ''},
-              //      { day: 'sob.', isBooked: false, name: ''},
-              //      { day: 'ndz.', isBooked: true, name: 'Grzegorz Brzęczyszczykiewicz'},
-              //      { day: 'pon.', isBooked: false, name: ''},
-              //      { day: 'wt.', isBooked: false, name: ''},
-              //      { day: 'śr.', isBooked: true, name: 'Jan Kowalski'},
-              //      { day: 'czw.', isBooked: false, name: ''},
-              //      { day: 'pt.', isBooked: false, name: ''},
-              //      { day: 'sob.', isBooked: false, name: ''},
-              //      { day: 'ndz.', isBooked: false, name: ''},
-              //      { day: 'pon.', isBooked: true, name: 'Kinga Jońska'},
-              //      { day: 'wt.', isBooked: false, name: ''},
-              //      { day: 'śr.', isBooked: false, name: ''},
-              //      { day: 'czw.', isBooked: true, name: 'Andrzej Kuś'}
-              //  ]}
-              twoWeeksData={carData.reservations}
-               />
+                twoWeeksData={carData.reservations}
+                />
                 )}
                
-              {/* <ReservationsOverviewTableRow
-               carID={2} 
-               carBrand={'Mercedes'}
-               carModel={'Sprinter'}
-               carImg={'https://upload.wikimedia.org/wikipedia/commons/2/2f/Mercedes_sprinter_1_v_sst.jpg'}
-               twoWeeksData={[
-                  { day: 'czw.', isBooked: false, name: ''},
-                  { day: 'pt.', isBooked: false, name: ''},
-                  { day: 'sob.', isBooked: false, name: ''},
-                  { day: 'ndz.', isBooked: false, name: ''},
-                  { day: 'pon.', isBooked: false, name: ''},
-                  { day: 'wt.', isBooked: false, name: ''},
-                  { day: 'śr.', isBooked: true, name: 'Jan Kowalski'},
-                  { day: 'czw.', isBooked: false, name: ''},
-                  { day: 'pt.', isBooked: false, name: ''},
-                  { day: 'sob.', isBooked: false, name: ''},
-                  { day: 'ndz.', isBooked: false, name: ''},
-                  { day: 'pon.', isBooked: true, name: 'Michał Jach'},
-                  { day: 'wt.', isBooked: true, name: 'Michał Jach'},
-                  { day: 'śr.', isBooked: true, name: 'Michał Jach'},
-                  { day: 'czw.', isBooked: false, name: ''}
-              ]}/>
-              <ReservationsOverviewTableRow
-               carID={3} 
-               carBrand={'Renault'}
-               carModel={'Traffic'}
-               carImg={'https://image.ceneostatic.pl/data/products/140258533/i-renault-trafic-exclusive-2-0-115-km-2-x-klima.jpg'}
-               twoWeeksData={[
-                  { day: 'czw.', isBooked: false, name: ''},
-                  { day: 'pt.', isBooked: false, name: ''},
-                  { day: 'sob.', isBooked: false, name: ''},
-                  { day: 'ndz.', isBooked: false, name: ''},
-                  { day: 'pon.', isBooked: true, name: 'Tomasz Kloc'},
-                  { day: 'wt.', isBooked: true, name: 'Tomasz Kloc'},
-                  { day: 'śr.', isBooked: false, name: ''},
-                  { day: 'czw.', isBooked: true, name: 'Sandra Lewandowska'},
-                  { day: 'pt.', isBooked: true, name: 'Sandra Lewandowska'},
-                  { day: 'sob.', isBooked: false, name: ''},
-                  { day: 'ndz.', isBooked: false, name: ''},
-                  { day: 'pon.', isBooked: false, name: ''},
-                  { day: 'wt.', isBooked: false, name: ''},
-                  { day: 'śr.', isBooked: false, name: ''},
-                  { day: 'czw.', isBooked: false, name: ''}
-              ]}/> */}
 
             </tbody>
           </table>

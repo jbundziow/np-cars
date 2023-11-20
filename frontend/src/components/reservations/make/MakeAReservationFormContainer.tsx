@@ -34,13 +34,9 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
   });
 
   const handleValueChange = (newValue: DateValueType) => {
-    console.log("newValue:", newValue);
     setValue(newValue);
   };
 
-  console.log('travelDest' + travelDestination);
-  console.log('dateFrom' + value?.startDate);
-  console.log('dateTo' + value?.endDate);
   
 
 

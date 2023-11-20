@@ -1,7 +1,20 @@
 import MakeAReservationTableRow from "./MakeAReservationTableRow";
 
 
-const MakeAReservationTable = () => {
+type carData = {
+  id: number,
+  brand: string,
+  model: string,
+  imgPath: string,
+  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
+}
+
+interface MakeAReservationTableProps {
+  data: carData[];
+}
+
+const MakeAReservationTable = (props: MakeAReservationTableProps) => {
+
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         <div className="max-w-full overflow-x-auto">
@@ -18,9 +31,8 @@ const MakeAReservationTable = () => {
             </thead>
             <tbody>
             <div className='py-2' />
-               {/* INSERT ROWS HERE */}
-    
-               <MakeAReservationTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}/>
+              {props.data.map(item => <MakeAReservationTableRow carID={item.id} carBrand={item.brand} carModel={item.model} carImg={item.imgPath}/>)}
+               {/* <MakeAReservationTableRow carID={props.id} carBrand={props.brand} carModel={props.model} carImg={props.imgPath}/> */}
 
             </tbody>
           </table>
