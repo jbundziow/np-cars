@@ -73,7 +73,7 @@ const OperationResult = (props: OperationResultProps) => {
             {props.title}
           </h5>
           <ul>
-            {props.warnings && props.warnings.length > 0 ? props.warnings.map(item => <li className="leading-relaxed text-[#D0915C] list-disc">{item.pl}</li>) : ''}
+            {props.warnings && props.warnings.length > 0 ? props.warnings.map((item, index) => <li key={index} className="leading-relaxed text-[#D0915C] list-disc">{item.pl}</li>) : ''}
           </ul>
         </div>
       </div>
