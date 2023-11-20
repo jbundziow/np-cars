@@ -45,12 +45,12 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
     e.preventDefault();
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/reservations/report/${props.data.id}`, {
+      const response = await fetch(`${DOMAIN_NAME}/reservations/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
-        body: JSON.stringify({dateFrom: value?.startDate, dateTo: value?.endDate, travelDestination}),
+        body: JSON.stringify({carID: props.data.id, userID: 12, lastEditedByModeratorOfID: null, dateFrom: value?.startDate, dateTo: value?.endDate, travelDestination}),
       });
 
       if (response.ok) {
@@ -129,7 +129,7 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
                     </form>
                   :
                   pageState === PageStatus.FormWasSentCorrectly ?
-                    <OperationResult status={'success'} title={'Pomyślnie dokonano rezerwacji 👍'} description={'Będzie ona teraz widoczna dla innych użytkowników.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/usterki/status-napraw/${props.data.id}`}/>
+                    <OperationResult status={'success'} title={'Pomyślnie dokonano rezerwacji 👍'} description={'Będzie ona teraz widoczna dla innych użytkowników.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/rezerwacje/moje-rezerwacje`}/>
                   :
                   pageState === PageStatus.ErrorWithSendingForm ?
                   <OperationResult status={'error'} title={'Wystąpił błąd podczas składania rezerwacji 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
