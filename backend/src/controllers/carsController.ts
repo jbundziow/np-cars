@@ -32,7 +32,14 @@ export const fetchOneCar = async (req: Request, res: Response, next: NextFunctio
             else {
                 dbResponse = await Car.fetchOne(Number(req.params.carid)); 
             }
-            res.status(200).json({status: 'success', data: dbResponse})
+
+            if(!dbResponse) {
+                res.status(400).json({status: 'fail', data: [{en: `Car of ID: ${req.params.carid} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carid} nie istnieje w bazie danych.`}]})
+            }
+            else {
+                res.status(200).json({status: 'success', data: dbResponse})
+            }
+            
         }
         catch(err) {
             res.status(500).json({status: 'error', message: err})
