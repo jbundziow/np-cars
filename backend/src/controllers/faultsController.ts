@@ -3,6 +3,7 @@ import { NextFunction, Request, Response, response } from 'express'
 
 import Fault from '../models/Fault'
 import Car from '../models/Car'
+import { addOneFaultByUserSchema } from '../models/validation/FaultsSchemas';
 
 
 
@@ -17,6 +18,7 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
         const isCarExist = await Car.fetchOne(Number(req.params.carid))
         if(isCarExist) {
         const newFault = new Fault(null, Number(req.params.carid), 1, null, null, data.title, data.description, 'pending', null, null);
+        await addOneFaultByUserSchema.validateAsync(newFault);
         await newFault.addOneFault();
         res.status(200).json({status: 'success', data: data});
         }

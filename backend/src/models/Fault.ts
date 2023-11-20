@@ -65,7 +65,7 @@ class Fault {
         private title: string,
         private description: string,  
         private status: 'pending' | 'accepted' | 'finished' | 'cancelled',
-        private resultDesctiption: string | null,
+        private resultDescription: string | null,
         private repairCost: number | null,
         ) {}
 
@@ -79,7 +79,7 @@ class Fault {
           title: this.title,
           description: this.description,
           status: this.status,
-          resultDesctiption: this.resultDesctiption,
+          resultDesctiption: this.resultDescription,
           repairCost: this.repairCost,
         })
     }
