@@ -5,7 +5,8 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 enum PageStatus {
   FillingTheForm,
   FormWasSentCorrectly,
-  ErrorWithSendingForm
+  ErrorWithSendingForm,
+  FailOnSendingForm
 }
 
 type dataSchema = {
@@ -21,6 +22,12 @@ interface ReportFaultFormContainerProps {
 }
 
 const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
+  type warnings = {
+    pl: string,
+    en: string,
+  } 
+  const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
+
   const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('')
@@ -42,7 +49,14 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
         setTitle('');
         setDescription('');
       } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setPageState(PageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
+        }
+        else {
         setPageState(PageStatus.ErrorWithSendingForm);
+        }
       }
     }
     catch (error) {
@@ -106,6 +120,9 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
                   :
                   pageState === PageStatus.ErrorWithSendingForm ?
                   <OperationResult status={'error'} title={'Wystąpił błąd podczas dodawania usterki 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  :
+                  pageState === PageStatus.FailOnSendingForm ?
+                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas dodawania usterki 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
                   :
                   ''
                   }
