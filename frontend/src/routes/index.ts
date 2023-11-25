@@ -17,6 +17,7 @@ const FaultDetails = lazy(() => import('../new_pages/usterki/status-usterki'));
 const ReportFault = lazy(() => import('../new_pages/usterki/zglos'));
 const ReportFaultForm = lazy(() => import('../new_pages/usterki/zglos-form'));
 const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'));
+const RentACarForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod-form'));
 const MyRentals = lazy(() => import('../new_pages/wypozyczenia/moje-wypozyczenia'));
 const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
 const Calendar = lazy(() => import('../pages/Calendar'));
@@ -35,6 +36,11 @@ const coreRoutes = [
     path: '/wypozyczenia/wypozycz-samochod',
     title: 'Wypożycz samochód',
     component: RentACar,
+  },
+  {
+    path: '/wypozyczenia/wypozycz-samochod/:carid',
+    title: 'Wypożycz samochód',
+    component: RentACarForm,
   },
   {
     path: '/wypozyczenia/oddaj-samochod',
