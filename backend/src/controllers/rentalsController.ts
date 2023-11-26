@@ -30,12 +30,14 @@ export const addOneRental = async (req: Request, res: Response, next: NextFuncti
     try {
         // TODO: CHECK IF CAR EXIST
         //TODO: CHECK IF USER EXIST
-        const test = new Rental(null,data.carID,data.userID,null,data.carMileageBefore,null,null,null,null);
-        const x = await test.addOneRental()
-        console.log(x);
-        res.status(200).json({status: 'success', data: x})
+        //TODO: CHECK IF CARMILEAGEBEFORE IS THE SAME AS LAST RECORD VALUE - IF NOT, ADD 2 RECORDS - ONE NULL
+        
+        const test = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,null,null,null);
+        const response = await test.addOneRental()
+        res.status(200).json({status: 'success', data: response})
     }
-    catch (err) {
-        res.status(500).json({status: 'error', message: err})
+    catch (error) {
+        // console.error(err?.toString());
+        res.status(500).json({status: 'error', message: error?.toString()})
     }
 }

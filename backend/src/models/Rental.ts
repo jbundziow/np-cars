@@ -1,7 +1,7 @@
 const {DataTypes} = require('sequelize');
 
 import sequelize from "../database/database";
-import Car, { CarModel } from "./Car";
+import { CarModel } from "./Car";
 
 const RentalModel = sequelize.define('Rental', {
     id: {
@@ -16,6 +16,10 @@ const RentalModel = sequelize.define('Rental', {
         allowNull: false,
       },
       userID: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
+      returnUserID: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
@@ -57,7 +61,8 @@ class Rental {
     constructor(
         private id: number | null,
         private carID: number,
-        private userID: number,
+        private userID: number | null,
+        private returnUserID: number | null,
         private lastEditedByModeratorOfID: number | null,
         private carMileageBefore: number,
         private carMileageAfter: number | null,
@@ -67,12 +72,14 @@ class Rental {
         ) {}
 
     async addOneRental() {
+      let rentalData;
       try {
-        return await sequelize.transaction(async (t) => {
-          await RentalModel.create({
+        await sequelize.transaction(async (t) => {
+          rentalData = await RentalModel.create({
             id: this.id,
             carID: this.carID,
             userID: this.userID,
+            returnUserID: this.returnUserID,
             lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
             carMileageBefore: this.carMileageBefore,
             carMileageAfter: this.carMileageAfter,
@@ -89,10 +96,10 @@ class Rental {
             throw new Error('Car not found');
           }
         })
+        return rentalData;
       }
         catch (error) {
-          console.error('Error creating rental and updating car status:', error);
-          throw new Error('err')
+          throw new Error('Error creating rental and updating car status')
         }
     }
 
