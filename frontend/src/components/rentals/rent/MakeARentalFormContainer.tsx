@@ -2,9 +2,7 @@ import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
 import DOMAIN_NAME from "../../../utilities/domainName";
 
-import Datepicker from "react-tailwindcss-datepicker";
-import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
-import formatDate from "../../../utilities/formatDate";
+
 
 enum PageStatus {
   FillingTheForm,
@@ -36,6 +34,12 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
 
   const [carMileageBefore, setCarMileageBefore] = useState<number>();
   const[showTravelDestinationInput, setShowTravelDestinationInput] = useState<boolean>(false);
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setShowTravelDestinationInput(e.target.value === 'true');
+  };
+
+  const [travelDestination, setTravelDestination] = useState<string>('');
   
 
   
@@ -62,7 +66,6 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
         if(responseJSON.status === 'fail') {
           setPageState(PageStatus.FailOnSendingForm);
           setWarnings(responseJSON.data);
-
         }
         else {
         setPageState(PageStatus.ErrorWithSendingForm);
@@ -99,6 +102,8 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                         <input
                           required
                           type="number"
+                          step="1"
+                          max="2000000"
                           placeholder={`Wpisz przebieg samochodu przed rozpoczęciem podróży`}
                           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           value={carMileageBefore}
@@ -112,16 +117,30 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                         </label>
                         <div className="sm:ml-3 relative z-20 bg-white dark:bg-form-input">
                           <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><path fill="#3C50E0" d="M512 80c8.8 0 16 7.2 16 16v32H48V96c0-8.8 7.2-16 16-16H512zm16 144V416c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V224H528zM64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H512c35.3 0 64-28.7 64-64V96c0-35.3-28.7-64-64-64H64zm56 304c-13.3 0-24 10.7-24 24s10.7 24 24 24h48c13.3 0 24-10.7 24-24s-10.7-24-24-24H120zm128 0c-13.3 0-24 10.7-24 24s10.7 24 24 24H360c13.3 0 24-10.7 24-24s-10.7-24-24-24H248z"/></svg>
+                          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><path fill="#3C50E0" d="M215.7 499.2C267 435 384 279.4 384 192C384 86 298 0 192 0S0 86 0 192c0 87.4 117 243 168.3 307.2c12.3 15.3 35.1 15.3 47.4 0zM192 128a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
                           </span>
                           <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                          value={showTravelDestinationInput}
-                          onChange={setShowTravelDestinationInput((e: HTMLInputElement) => (e.target.value)}
+                          value={showTravelDestinationInput ? 'true' : 'false'}
+                          onChange={handleSelectChange}
                           >
-                            <option value={false}>Nie</option>
-                            <option value={true}>Tak</option>
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
                           </select>
                         </div>
+                      </div>
+
+                      <div className={`mb-5 ${showTravelDestinationInput ? 'block' : 'hidden'}`}>
+                        <label className="mb-3 block text-black dark:text-white">
+                          Cel podróży:
+                        </label>
+                        <input
+                          {...(showTravelDestinationInput ? { required: true } : {})}
+                          type="text"
+                          placeholder={`Wpisz nazwę miejsca, do którego jedziesz`}
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                          value={travelDestination}
+                          onChange={e => setTravelDestination(e.target.value)}
+                        />
                       </div>
 
                       <div className='flex justify-center mb-2'>
