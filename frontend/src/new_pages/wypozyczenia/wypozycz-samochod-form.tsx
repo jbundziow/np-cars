@@ -29,10 +29,12 @@ const MakeARentalForm = (props: Props) => {
     } 
     const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
 
-    const [data, setData] = useState<ApiResponse | null>(null);
+    const [carData, setCarData] = useState<ApiResponse | null>(null);
+    const [LastRentalData, setLastRentalData] = useState<ApiResponse | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
   
+    //fetch car basic data
     useEffect(() => {
       const getData = async () => {
         try {
@@ -43,7 +45,7 @@ const MakeARentalForm = (props: Props) => {
             const responseJSON = await response.json();
             if(responseJSON.status === 'fail') {
               setWarnings(responseJSON.data);
-              setData(responseJSON);
+              setCarData(responseJSON);
               setError(null);
             }
             else {
@@ -54,13 +56,50 @@ const MakeARentalForm = (props: Props) => {
           }
           else {
             let actualData = await response.json();
-            setData(actualData);
+            setCarData(actualData);
             setError(null);
           }
           
         } catch(err: any) {
           setError(err.message);
-          setData(null);
+          setCarData(null);
+        } finally {
+          setLoading(false);
+          
+        }  
+      }
+      getData()
+    }, [])
+
+    //fetch last rental data of car
+    useEffect(() => {
+      const getData = async () => {
+        try {
+          const response = await fetch(
+            `${DOMAIN_NAME}/cars`
+          );
+          if (!response.ok) {
+            const responseJSON = await response.json();
+            if(responseJSON.status === 'fail') {
+              setWarnings(responseJSON.data);
+              setLastRentalData(responseJSON);
+              setError(null);
+            }
+            else {
+              throw new Error(
+                `This is an HTTP error: The status is ${response.status}`
+              );
+            }
+          }
+          else {
+            let actualData = await response.json();
+            setLastRentalData(actualData);
+            setError(null);
+          }
+          
+        } catch(err: any) {
+          setError(err.message);
+          setLastRentalData(null);
         } finally {
           setLoading(false);
           
@@ -69,11 +108,12 @@ const MakeARentalForm = (props: Props) => {
       getData()
     }, [])
     
-
+    console.log(carData);
+    console.log(LastRentalData);
     return (
       <>
       <Breadcrumb pageName="Wypożycz samochód" />
-      {loading === true ? <Loader/> : (error === null && data?.status==='success' && data?.data !== null) ? <MakeARentalFormContainer data={data.data}/> : (error === null && data?.status==='fail' && data?.data !== null) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={warnings} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (error === null && carData?.status==='success' && carData?.data !== null) ? <MakeARentalFormContainer data={carData.data}/> : (error === null && carData?.status==='fail' && carData?.data !== null) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={warnings} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };
