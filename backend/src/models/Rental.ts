@@ -110,6 +110,15 @@ class Rental {
     static async fetchOne(id: number) {
         return await RentalModel.findOne({ where: {id: id} })
     }
+
+    static async fetchLastRentalOfCar(carid: number) {
+      return await RentalModel.findOne({
+        where: {
+          carID: carid,
+        },
+        order: [['id', 'DESC']],
+      })
+    }
 }
 
 

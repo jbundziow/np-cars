@@ -1,7 +1,8 @@
 
 import { NextFunction, Request, Response, response } from 'express'
 import Rental from '../models/Rental';
-
+import Car from '../models/Car';
+import User from '../models/User';
 
 // id: this.id,
 // carID: this.carID,
@@ -31,13 +32,30 @@ export const addOneRental = async (req: Request, res: Response, next: NextFuncti
         // TODO: CHECK IF CAR EXIST
         //TODO: CHECK IF USER EXIST
         //TODO: CHECK IF CARMILEAGEBEFORE IS THE SAME AS LAST RECORD VALUE - IF NOT, ADD 2 RECORDS - ONE NULL
-        
-        const test = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,null,null,null);
-        const response = await test.addOneRental()
-        res.status(200).json({status: 'success', data: response})
+        const isCarExist = await Car.fetchOne(Number(data.carID))
+        const isUserExist = await User.fetchOne(Number(data.userID))
+        if(isCarExist && isUserExist) {
+            const lastRentalData = await Rental.fetchLastRentalOfCar(data.carID);
+            if (lastRentalData) {
+
+            }
+            else {
+
+            }
+            const test = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,null,null,null);
+            const response = await test.addOneRental()
+            res.status(200).json({status: 'success', data: response})
+        }
+        else {
+            if(!isCarExist) {
+                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carID} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carID} nie istnieje w bazie danych.`}]})
+            }
+            else if (!isUserExist) {
+                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${req.params.userID} does not exist in the database.`, pl: `Użytkownik o ID: ${req.params.userID} nie istnieje w bazie danych.`}]})
+            }
+        }
     }
     catch (error) {
-        // console.error(err?.toString());
         res.status(500).json({status: 'error', message: error?.toString()})
     }
 }
