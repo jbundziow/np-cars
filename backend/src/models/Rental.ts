@@ -21,7 +21,7 @@ const RentalModel = sequelize.define('Rental', {
       },
       returnUserID: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
       lastEditedByModeratorOfID: {
         type: DataTypes.INTEGER,
@@ -106,27 +106,26 @@ class Rental {
         return rentalData;
       }
         catch (error) {
+          console.log(error);
           throw new Error('Error while creating rental and updating car status')
         }
     }
 
     //by normal user
-    async returnCar() {
+    static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageAfter: number, dateTo: Date) {
       let rentalData;
       try {
         await sequelize.transaction(async (t) => {
           rentalData = await RentalModel.update({
-            returnUserID: this.returnUserID,
-            lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
-            carMileageAfter: this.carMileageAfter,
-            travelDestination: this.travelDestination,
-            dateTo: this.dateTo,
+            returnUserID: returnUserID,
+            carMileageAfter: carMileageAfter,
+            dateTo: dateTo,
           },
-          {where: {id: this.id},
+          {where: {id: rentalID},
           transaction: t
           })
 
-          const car:any = await CarModel.findByPk(this.carID, { transaction: t });
+          const car:any = await CarModel.findByPk(carID, { transaction: t });
           if (car) {
             car.availabilityStatus = 'available';
             await car.save({ transaction: t });

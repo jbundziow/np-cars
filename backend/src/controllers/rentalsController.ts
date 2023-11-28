@@ -3,16 +3,8 @@ import { NextFunction, Request, Response, response } from 'express'
 import Rental from '../models/Rental';
 import Car from '../models/Car';
 import User from '../models/User';
+import { addOneNullRentalByNormalUserSchema, addOneRentalByNormalUserSchema, returnCarByNormalUserSchema } from '../models/validation/RentalsSchemas';
 
-// id: this.id,
-// carID: this.carID,
-// userID: this.userID,
-// lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
-// carMileageBefore: this.carMileageBefore,
-// carMileageAfter: this.carMileageAfter,
-// travelDestination: this.travelDestination,
-// placeID: this.placeID,
-// dateTo: this.dateTo,
 
 
 export const addOneRentalByNormalUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -29,36 +21,72 @@ export const addOneRentalByNormalUser = async (req: Request, res: Response, next
 
 
     try {
-        // TODO: CHECK IF CAR EXIST
-        //TODO: CHECK IF USER EXIST
-        //TODO: CHECK IF CARMILEAGEBEFORE IS THE SAME AS LAST RECORD VALUE - IF NOT, ADD 2 RECORDS - ONE NULL
-        //TODO: IF USERID IS DIFFERENT THAN CURRENT USER (MODERATOR) ADD LASTEDITED BY MODERATOR OF ID
         const isCarExist = await Car.fetchOne(Number(data.carID))
         const isUserExist = await User.fetchOne(Number(data.userID))
         if(isCarExist && isUserExist) {
             const lastRentalData = await Rental.fetchLastRentalOfCar(data.carID);
             if (lastRentalData) {
-                if(lastRentalData.dataValues.carMileageAfter !== null) {
-                    //add carmileagebefore value to lastrentaldata carmileageafter, then add new rental
-                    //check if carmileage after is greater than last value
+                if(lastRentalData.dataValues.carMileageAfter === null) {
+                    if(data.carMileageBefore >= lastRentalData.dataValues.carMileageBefore) {
+                        //return last rental
+                        //TODO: ADD CORRECT USER
+                        const returnCarArgs = {rentalID: lastRentalData.dataValues.id, carID: lastRentalData.dataValues.carID, returnUserID: 12, carMileageAfter: data.carMileageBefore, dateTo: new Date()};
+                        await returnCarByNormalUserSchema.validateAsync(returnCarArgs);
+                        await Rental.returnCar(returnCarArgs.rentalID, returnCarArgs.carID, returnCarArgs.returnUserID, returnCarArgs.carMileageAfter, returnCarArgs.dateTo);
+
+                        //add new rental
+                        const newRental = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(),null);
+                        await addOneRentalByNormalUserSchema.validateAsync(newRental);
+                        const response = await newRental.addOneRental();
+                        res.status(200).json({status: 'success', data: response})
+                    }
+                    else {
+                        res.status(400).json({status: 'fail', data: [{en: 'You have passed a less mileage than mileage of that car in last rental.', pl: 'Wpisano mniejszy przebieg niż został wpisany przy ostatnim wypożyczeniu tego samochodu.'}]})
+                        return;
+                    }
                 }
                 else {
+                    if(data.carMileageBefore === lastRentalData.dataValues.carMileageAfter) {
+                        //add new rental
+                        const newRental = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(),null);
+                        await addOneRentalByNormalUserSchema.validateAsync(newRental);
+                        const response = await newRental.addOneRental();
+                        res.status(200).json({status: 'success', data: response})
+                    }
+                    else if(data.carMileageBefore > lastRentalData.dataValues.carMileageAfter) {
+                        //add null (unknown) rental
+                        const newNullRental = new Rental(null,data.carID,null,null,null,lastRentalData.dataValues.carMileageAfter,data.carMileageBefore,null,null,new Date(),new Date());
+                        await addOneNullRentalByNormalUserSchema.validateAsync(newNullRental);
+                        const responseNullRental = await newNullRental.addOneRental();
 
+                        //then add new rental
+                        const newRental = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(),null);
+                        await addOneRentalByNormalUserSchema.validateAsync(newRental);
+                        const responseNewRental = await newRental.addOneRental();
+                        res.status(200).json({status: 'success', data: {responseNullRental, responseNewRental}})
+                    }
+                    else {
+                        res.status(400).json({status: 'fail', data: [{en: 'You have passed a less mileage than mileage of that car in last rental.', pl: 'Wpisano mniejszy przebieg niż został wpisany przy ostatnim wypożyczeniu tego samochodu.'}]})
+                        return;
+                    }
                 }
             }
             else {
-
+                //just add new rental (the first for that car)
+                const newRental = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(),null);
+                await addOneRentalByNormalUserSchema.validateAsync(newRental);
+                const response = await newRental.addOneRental();
+                res.status(200).json({status: 'success', data: response})
             }
-            const test = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(Date.now()),null);
-            const response = await test.addOneRental()
-            res.status(200).json({status: 'success', data: response})
         }
         else {
             if(!isCarExist) {
-                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carID} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carID} nie istnieje w bazie danych.`}]})
+                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${data.carID} does not exist in the database.`, pl: `Samochód o ID: ${data.carID} nie istnieje w bazie danych.`}]})
+                return;
             }
             else if (!isUserExist) {
-                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${req.params.userID} does not exist in the database.`, pl: `Użytkownik o ID: ${req.params.userID} nie istnieje w bazie danych.`}]})
+                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${data.userID} does not exist in the database.`, pl: `Użytkownik o ID: ${data.userID} nie istnieje w bazie danych.`}]})
+                return;
             }
         }
     }

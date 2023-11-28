@@ -42,6 +42,50 @@ const addOneRentalByNormalUserSchema = Joi.object({
         .required(),
 
     dateTo: Joi.date()
+        .valid(null)
+})
+
+const addOneNullRentalByNormalUserSchema = Joi.object({
+    id: Joi.number()
+        .valid(null),
+
+    carID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    userID: Joi.number()
+        .valid(null),
+
+    returnUserID: Joi.number()
+        .valid(null),
+
+    lastEditedByModeratorOfID: Joi.number()
+        .valid(null),
+
+    carMileageBefore: Joi.number()
+        .integer()
+        .positive()
+        .max(2000000)
+        .required(),
+
+    carMileageAfter: Joi.number()
+        .integer()
+        .positive()
+        .max(2000000)
+        .min(Joi.ref('carMileageBefore'))
+        .required(),
+    
+    travelDestination: Joi.string()
+        .valid(null),
+
+    placeID: Joi.string()
+        .valid(null),
+
+    dateFrom: Joi.date()
+        .required(),
+
+    dateTo: Joi.date()
         .min(Joi.ref('dateFrom'))
         .required(),
 })
@@ -49,7 +93,12 @@ const addOneRentalByNormalUserSchema = Joi.object({
 
 
 const returnCarByNormalUserSchema = Joi.object({
-    id: Joi.number()
+    rentalID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    carID: Joi.number()
         .integer()
         .positive()
         .required(),
@@ -59,21 +108,10 @@ const returnCarByNormalUserSchema = Joi.object({
         .positive()
         .required(),
 
-    lastEditedByModeratorOfID: Joi.number()
-        .integer()
-        .positive()
-        .required()
-        .valid(null),
-
     carMileageAfter: Joi.number()
         .integer()
         .positive()
         .max(2000000)
-        .required(),
-    
-    travelDestination: Joi.string()
-        .min(1)
-        .max(70)
         .required(),
 
     dateTo: Joi.date()
@@ -84,5 +122,5 @@ const returnCarByNormalUserSchema = Joi.object({
 
 
 
-export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema};
+export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema, addOneNullRentalByNormalUserSchema};
 
