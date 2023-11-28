@@ -1,9 +1,9 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { addOneRental } from '../controllers/rentalsController';
+import { addOneRentalByNormalUser } from '../controllers/rentalsController';
 const app = express.Router();
 
 
-app.post('/add', addOneRental);
+app.post('/add', addOneRentalByNormalUser);
 
 
 
