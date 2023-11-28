@@ -43,6 +43,10 @@ const RentalModel = sequelize.define('Rental', {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      dateFrom: {
+        type: DataTypes.DATE,
+        allowNull: true,
+      },
       dateTo: {
         type: DataTypes.DATE,
         allowNull: true,
@@ -68,9 +72,11 @@ class Rental {
         private carMileageAfter: number | null,
         private travelDestination: string | null,
         private placeID: number | null,
+        private dateFrom: Date | null,
         private dateTo: Date | null,
         ) {}
 
+    //by normal user
     async addOneRental() {
       let rentalData;
       try {
@@ -85,6 +91,7 @@ class Rental {
             carMileageAfter: this.carMileageAfter,
             travelDestination: this.travelDestination,
             placeID: this.placeID,
+            dateFrom: this.dateFrom,
             dateTo: this.dateTo,
           }, { transaction: t })
 
@@ -99,7 +106,38 @@ class Rental {
         return rentalData;
       }
         catch (error) {
-          throw new Error('Error creating rental and updating car status')
+          throw new Error('Error while creating rental and updating car status')
+        }
+    }
+
+    //by normal user
+    async returnCar() {
+      let rentalData;
+      try {
+        await sequelize.transaction(async (t) => {
+          rentalData = await RentalModel.update({
+            returnUserID: this.returnUserID,
+            lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+            carMileageAfter: this.carMileageAfter,
+            travelDestination: this.travelDestination,
+            dateTo: this.dateTo,
+          },
+          {where: {id: this.id},
+          transaction: t
+          })
+
+          const car:any = await CarModel.findByPk(this.carID, { transaction: t });
+          if (car) {
+            car.availabilityStatus = 'available';
+            await car.save({ transaction: t });
+          } else {
+            throw new Error('Car not found');
+          }
+        })
+        return rentalData;
+      }
+        catch (error) {
+          throw new Error('Error while updating rental and updating car status')
         }
     }
 

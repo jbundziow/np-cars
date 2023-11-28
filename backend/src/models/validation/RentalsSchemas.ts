@@ -38,11 +38,51 @@ const addOneRentalByNormalUserSchema = Joi.object({
     placeID: Joi.string()
         .valid(null),
 
+    dateFrom: Joi.date()
+        .required(),
+
     dateTo: Joi.date()
-        .valid(null),
+        .min(Joi.ref('dateFrom'))
+        .required(),
 })
 
 
 
-export { addOneRentalByNormalUserSchema };
+const returnCarByNormalUserSchema = Joi.object({
+    id: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    returnUserID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    lastEditedByModeratorOfID: Joi.number()
+        .integer()
+        .positive()
+        .required()
+        .valid(null),
+
+    carMileageAfter: Joi.number()
+        .integer()
+        .positive()
+        .max(2000000)
+        .required(),
+    
+    travelDestination: Joi.string()
+        .min(1)
+        .max(70)
+        .required(),
+
+    dateTo: Joi.date()
+        .required(),
+})
+
+
+
+
+
+export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema};
 

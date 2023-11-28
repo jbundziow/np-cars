@@ -49,7 +49,7 @@ export const addOneRentalByNormalUser = async (req: Request, res: Response, next
             else {
 
             }
-            const test = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,data.travelDestination,null,null);
+            const test = new Rental(null,data.carID,data.userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(Date.now()),null);
             const response = await test.addOneRental()
             res.status(200).json({status: 'success', data: response})
         }
