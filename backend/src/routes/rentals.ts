@@ -1,9 +1,10 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { addOneRentalByNormalUser } from '../controllers/rentalsController';
+import { addOneRentalByNormalUser, returnCarByNormalUser } from '../controllers/rentalsController';
 const app = express.Router();
 
 
 app.post('/add', addOneRentalByNormalUser);
+app.post('/returncar', returnCarByNormalUser);
 
 
 

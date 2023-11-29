@@ -116,6 +116,11 @@ const returnCarByNormalUserSchema = Joi.object({
 
     dateTo: Joi.date()
         .required(),
+
+    travelDestination: Joi.string()
+        .min(1)
+        .max(70)
+        .required()
 })
 
 

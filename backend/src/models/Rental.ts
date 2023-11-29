@@ -112,7 +112,7 @@ class Rental {
     }
 
     //by normal user
-    static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageAfter: number, dateTo: Date) {
+    static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageAfter: number, dateTo: Date, travelDestination: string) {
       let rentalData;
       try {
         await sequelize.transaction(async (t) => {
@@ -120,8 +120,9 @@ class Rental {
             returnUserID: returnUserID,
             carMileageAfter: carMileageAfter,
             dateTo: dateTo,
+            travelDestination: travelDestination,
           },
-          {where: {id: rentalID},
+          {where: {id: rentalID, carID: carID},
           transaction: t
           })
 
