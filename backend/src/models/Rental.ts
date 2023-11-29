@@ -1,4 +1,4 @@
-const {DataTypes} = require('sequelize');
+const {DataTypes, Op} = require('sequelize');
 
 import sequelize from "../database/database";
 import { CarModel } from "./Car";
@@ -157,7 +157,42 @@ class Rental {
         order: [['id', 'DESC']],
       })
     }
+
+
+
+    static async fetchAllRentalsOfUser (userID: number, type: 'all' | 'pending' | 'closed') {
+      if (type === 'pending') {
+        return await RentalModel.findAll({
+          where: {
+            userID: userID,
+            carMileageAfter: null,
+          }
+        })
+      }
+      else if (type === 'closed') { //TODO: maybe add pagination?
+        return await RentalModel.findAll({
+          where: {
+            userID: userID,
+            carMileageAfter: {
+              [Op.not]: null,
+            },
+          }
+        })
+      }
+      else {
+        return await RentalModel.findAll({
+          where: {
+            userID: userID, 
+          }
+        })
+      }
+    }
+
+
 }
+
+
+
 
 
 

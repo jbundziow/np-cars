@@ -25,6 +25,10 @@ export const addOneRentalByNormalUser = async (req: Request, res: Response, next
         const isCarExist = await Car.fetchOne(Number(data.carID))
         const isUserExist = await User.fetchOne(Number(data.userID))
         if(isCarExist && isUserExist) {
+            if(isCarExist.dataValues.availabilityStatus !== 'rented' && isCarExist.dataValues.availabilityStatus !== 'available') {
+                res.status(400).json({status: 'fail', data: [{en: `You cannot rent a car that has status '${isCarExist.dataValues.availabilityStatus}'.`, pl: `Nie można wypożyczyć samochodu o statusie '${isCarExist.dataValues.availabilityStatus}'.`}]})
+                return;
+            }
             const lastRentalData = await Rental.fetchLastRentalOfCar(data.carID);
             if (lastRentalData) {
                 if(lastRentalData.dataValues.carMileageAfter === null) {
@@ -151,7 +155,7 @@ export const returnCarByNormalUser = async (req: Request, res: Response, next: N
                         else {
                             //everything is OK
                             await returnCarByNormalUserSchema.validateAsync(data);
-                            const response = await Rental.returnCar(data.rentalID, data.carID, data.returnUserID, data.carMileageAfter, data.dateTo, data.travelDestination);
+                            await Rental.returnCar(data.rentalID, data.carID, data.returnUserID, data.carMileageAfter, data.dateTo, data.travelDestination);
                             res.status(200).json({status: 'success', data: data})
                         }
                     }
@@ -177,3 +181,51 @@ export const returnCarByNormalUser = async (req: Request, res: Response, next: N
         res.status(500).json({status: 'error', message: error?.toString()})
     }
 }
+
+
+
+export const fetchAllRentalsOfUser = async (req: Request, res: Response, next: NextFunction) => {
+    //TODO: CHECK IF PASSED :userid IS CURRENT USER
+    if (!isNaN(Number(req.params.userid))) {
+        try {
+            const isUserExist = await User.fetchOne(Number(req.params.userid));
+            if (isUserExist) {
+                let dbResponse;
+
+                if(!req.query.type || req.query.type === 'all') {
+                    dbResponse = await Rental.fetchAllRentalsOfUser(Number(req.params.userid), 'all');
+                }
+                else if(req.query.type === 'pending') {
+                    dbResponse = await Rental.fetchAllRentalsOfUser(Number(req.params.userid), 'pending');
+                }
+                else if(req.query.type === 'closed') {
+                    dbResponse = await Rental.fetchAllRentalsOfUser(Number(req.params.userid), 'closed');
+                }
+                else {
+                    res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong 'type' in query params. It should be null, 'all', 'pending' or 'closed'.`, pl: `Podałeś złe 'type' w linku jako query params. Prawidłowe wartości to null, 'all', 'pending', 'closed'.`}]})
+                    return;
+                }
+
+                let response = [];
+                for await (const item of dbResponse) {
+                    const carBasicData = await Car.fetchOneBasicData(Number(item.dataValues.carID));
+                    response.push({...item.dataValues, carBasicData: carBasicData?.dataValues})
+                }
+
+                res.status(200).json({status: 'success', data: response})
+
+            }
+            else {
+                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${Number(req.params.userid)} does not exist in the database.`, pl: `Użytkownik o ID: ${Number(req.params.userid)} nie istnieje w bazie danych.`}]})
+                return;
+            }
+        }
+        catch(e) {
+            res.status(500).json({status: 'error', message: e})
+        }
+    }
+    else {
+    res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]});
+    }   
+}
+
