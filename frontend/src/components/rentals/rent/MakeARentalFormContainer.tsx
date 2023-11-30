@@ -33,9 +33,20 @@ type lastRentalDataSchema = {
   dateTo: Date | null,
 }
 
+type lastRentalUserDataSchema = {
+  id: number,
+  gender: 'male' | 'female',
+  name: string,
+  surname: string,
+  employedAs: string,
+  avatarPath: string | null,
+  role: 'admin' | 'user' | 'banned',
+}
+
 interface MakeARentalFormContainerProps {
   carData: carDataSchema,
   lastRentalData: lastRentalDataSchema | null,
+  lastRentalUserData: lastRentalUserDataSchema | null,
 }
 
 const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
@@ -113,11 +124,11 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                     
                     
                     
-                    <form onSubmit={submitHandler}>
+                    <form onSubmit={submitHandler} className='p-2'>
 
                       <div className='mb-5'>
-                      <OperationResult status={'error'} title={'UWAGA!'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={false} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
-                      <OperationResult status={'error'} title={'UWAGA!'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={false} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                      <OperationResult status={'error'} title={'UWAGA! To auto nie zostało jeszcze zwrócone przez poprzedniego użytkownika!'} description={`Po uzupełnieniu poniższych danych oraz po kliknięciu "Wypożycz samochód" JEDNOCZEŚNIE zwrócisz to auto za użytkownika ${props.lastRentalUserData?.name.toUpperCase()} ${props.lastRentalUserData?.surname.toUpperCase()} oraz dokonasz nowego wypożyczenia na swoje konto. Wpisany przez Ciebie "przebieg początkowy" będzie jednocześnie "przebiegiem końcowym" użytkownika ${props.lastRentalUserData?.name.toUpperCase()} ${props.lastRentalUserData?.surname.toUpperCase()}.`} showButton={false}/>
+                      <OperationResult status={'warning'} title={'UWAGA! To auto ma już zaplanowane rezerwacje!'} warnings={[{en: '.', pl: 'Sprawdź listę rezerwacji dla tego samochodu w zakładce "Rezerwacje / Przegląd rezerwacji."'}, {en: '.', pl: 'Skontaktuj się najpierw z użytkownikiem, który dokonał rezerwacji jeśli obaj zamierzacie wypożyczyć to auto w jednym terminie.'}]} showButton={false}/>
                       </div>
 
                       <div className='mb-5'>
