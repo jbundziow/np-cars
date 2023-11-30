@@ -110,7 +110,16 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
             
               <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
                   {pageState === PageStatus.FillingTheForm ?
+                    
+                    
+                    
                     <form onSubmit={submitHandler}>
+
+                      <div className='mb-5'>
+                      <OperationResult status={'error'} title={'UWAGA!'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={false} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                      <OperationResult status={'error'} title={'UWAGA!'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={false} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                      </div>
+
                       <div className='mb-5'>
                         <label className="mb-3 block text-black dark:text-white">
                           Przebieg początkowy [km]:
