@@ -1,7 +1,19 @@
 import RentalsTableRow from "./RentalsTableRow";
 
+type carData = {
+  id: number,
+  brand: string,
+  model: string,
+  imgPath: string,
+  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
+  numberOfFutureReservations: number,
+}
 
-const RentalsTable = () => {
+interface RentalsTableProps {
+  data: carData[];
+}
+
+const RentalsTable = (props: RentalsTableProps) => {
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         <div className="max-w-full overflow-x-auto">
@@ -25,12 +37,9 @@ const RentalsTable = () => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-    
-               <RentalsTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carStatus={'available'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={1}/>
-               <RentalsTableRow carID={2} carBrand={'Renault'} carModel={'Megane'} carStatus={'notAvailable'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={0}/>
-               <RentalsTableRow carID={3} carBrand={'Mercedes'} carModel={'Sprinter'} carStatus={'rented'} carImg={'https://upload.wikimedia.org/wikipedia/commons/2/2f/Mercedes_sprinter_1_v_sst.jpg'} amountOfReservations={2}/>
-               <RentalsTableRow carID={4} carBrand={'Renault'} carModel={'Megane'} carStatus={'onService'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={0}/>
-               <RentalsTableRow carID={5} carBrand={'Renault'} carModel={'Megane'} carStatus={'damaged'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} amountOfReservations={3}/>
+              {props.data.map(carData => 
+                <RentalsTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carStatus={carData.availabilityStatus} carImg={carData.imgPath} amountOfReservations={carData.numberOfFutureReservations}/>
+                )}
             </tbody>
           </table>
         </div>

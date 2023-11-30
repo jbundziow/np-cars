@@ -5,7 +5,7 @@ interface RentalsTableRowProps {
     carID: number;
     carBrand: string;
     carModel: string;
-    carStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged';
+    carStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned';
     carImg: string;
     amountOfReservations: number;
   }
@@ -30,6 +30,9 @@ const RentalsTableRow = (props: RentalsTableRowProps) => {
                 break;
             case 'damaged':
                 result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Awaria</p>
+                break;
+            case 'banned':
+                result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Wycofany</p>
                 break;
         }
         return result;
