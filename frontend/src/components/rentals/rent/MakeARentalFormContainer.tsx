@@ -11,7 +11,7 @@ enum PageStatus {
   FailOnSendingForm
 }
 
-type dataSchema = {
+type carDataSchema = {
   id: number,
   brand: string,
   model: string,
@@ -19,8 +19,23 @@ type dataSchema = {
   availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
 }
 
+type lastRentalDataSchema = {
+  id: number,
+  carID: number,
+  userID: number,
+  returnUserID: number | null,
+  lastEditedByModeratorOfID: number | null,
+  carMileageBefore: number,
+  carMileageAfter: number | null,
+  travelDestination: string | null,
+  placeID: number | null,
+  dateFrom: Date,
+  dateTo: Date | null,
+}
+
 interface MakeARentalFormContainerProps {
-    data: dataSchema;
+  carData: carDataSchema,
+  lastRentalData: lastRentalDataSchema | null,
 }
 
 const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
@@ -32,14 +47,15 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
   const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
 
-  const [carMileageBefore, setCarMileageBefore] = useState<number>();
+  // if(props.lastRentalData !== null && props.la)
+  const [carMileageBefore, setCarMileageBefore] = useState<number | null>(null);
   const[showTravelDestinationInput, setShowTravelDestinationInput] = useState<boolean>(false);
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setShowTravelDestinationInput(e.target.value === 'true');
   };
 
-  const [travelDestination, setTravelDestination] = useState<string>('');
+  const [travelDestination, setTravelDestination] = useState<string | null>(null);
   
 
   
@@ -85,8 +101,8 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
   
           <div className='p-5 pt-0'>
-          <img src={props.data.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-          <p className='text-black dark:text-white pb-2 text-lg'>{props.data.brand}&nbsp;{props.data.model}</p>
+          <img src={props.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
+          <p className='text-black dark:text-white pb-2 text-lg'>{props.carData.brand}&nbsp;{props.carData.model}</p>
           </div>
 
           
@@ -97,11 +113,11 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                     <form onSubmit={submitHandler}>
                       <div className='mb-5'>
                         <label className="mb-3 block text-black dark:text-white">
-                          Przebieg początkowy:
+                          Przebieg początkowy [km]:
                         </label>
                         <input
                           required
-                          type="number"
+                          type="text"
                           step="1"
                           max="2000000"
                           placeholder={`Wpisz przebieg samochodu przed rozpoczęciem podróży`}
