@@ -183,6 +183,28 @@ export const returnCarByNormalUser = async (req: Request, res: Response, next: N
 }
 
 
+export const fetchLastRentalOfCar = async (req: Request, res: Response, next: NextFunction) => {
+    if (!isNaN(Number(req.params.carid))) {
+        try {
+            const isCarExist = await Car.fetchOne(Number(req.params.carid));
+            if (isCarExist) {
+                const lastReservaton = await Rental.fetchLastRentalOfCar(Number(req.params.carid))
+                res.status(200).json({status: 'success', data: lastReservaton})
+            }
+            else {
+                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${Number(req.params.carid)} does not exist in the database.`, pl: `Samochód o ID: ${Number(req.params.carid)} nie istnieje w bazie danych.`}]})
+                return;
+            }
+        }
+        catch(e) {
+            res.status(500).json({status: 'error', message: e})
+        }
+    }
+    else {
+    res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]});
+    }   
+}
+
 
 export const fetchAllRentalsOfUser = async (req: Request, res: Response, next: NextFunction) => {
     //TODO: CHECK IF PASSED :userid IS CURRENT USER
