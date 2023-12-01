@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response, response } from 'express'
 import Refueling from '../../models/Refueling';
 
-// import Refueling from '../models/Refueling';
+
 // import Car from '../models/Car';
 // import User from '../models/User'
 // import { addOneRefuelingByNormalUserSchema } from '../models/validation/RefuelingSchemas';
@@ -63,6 +63,11 @@ export const acknowledgeOneRefueling = async (req: Request, res: Response, next:
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refuelling ID, which you want to change.', pl: 'Podano złe ID tankowania, które chcesz zmienić.'}]})
         return;
     }
+    else if (!data.value || typeof data.value !== 'boolean') {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong value to update. It must be boolean type.', pl: 'Podano złą wartość do aktualizacji tankowania. Musi być typu boolean.'}]})
+        return;
+    }
+
     try {
         const isRefuelingExist = Refueling.fetchOne(Number(data.refuelingID));
         if(!isRefuelingExist) {
