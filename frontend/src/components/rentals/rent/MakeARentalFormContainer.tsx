@@ -47,6 +47,7 @@ interface MakeARentalFormContainerProps {
   carData: carDataSchema,
   lastRentalData: lastRentalDataSchema | null,
   lastRentalUserData: lastRentalUserDataSchema | null,
+  numberOfFutureReservations: number | null,
 }
 
 const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
@@ -58,17 +59,33 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
   const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
 
-  // if(props.lastRentalData !== null && props.la)
-  const [carMileageBefore, setCarMileageBefore] = useState<number | null>(null);
+  //
+  let showCarAlreadyRentedAlert: boolean = false;
+  let carMileageBeforeStartValue: number | '' = '';
+  if(props.lastRentalData) {
+    if(props.lastRentalData.carMileageAfter !== null) {
+      carMileageBeforeStartValue = props.lastRentalData.carMileageAfter;
+    }
+    else if(props.lastRentalUserData) {
+      showCarAlreadyRentedAlert = true;
+    }
+  }
+  const [carMileageBefore, setCarMileageBefore] = useState<number | ''>(carMileageBeforeStartValue);
+  //
+
   const[showTravelDestinationInput, setShowTravelDestinationInput] = useState<boolean>(false);
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setShowTravelDestinationInput(e.target.value === 'true');
   };
 
-  const [travelDestination, setTravelDestination] = useState<string | null>(null);
+  const [travelDestination, setTravelDestination] = useState<string>('');
   
 
+  let showFutureReservationsAlert: boolean = false;
+  if(props.numberOfFutureReservations !== null && props.numberOfFutureReservations > 0) {
+    showFutureReservationsAlert = true;
+  }
   
 
 
@@ -77,13 +94,22 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/reservations/add`, {
+
+      //set null if it is ''
+      let travelDestinationSubmit = null;
+      if (travelDestination !== '') {
+        travelDestinationSubmit = travelDestination;
+      }
+      console.log(travelDestinationSubmit);
+
+      const response = await fetch(`${DOMAIN_NAME}/rentals/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
         // TODO: ADD CORRECT USER!!!!!
-        // body: JSON.stringify({carID: props.data.id, userID: 12, lastEditedByModeratorOfID: null, dateFrom: value?.startDate, dateTo: value?.endDate, travelDestination}),
+        
+        body: JSON.stringify({carID: props.carData.id, userID: 12, carMileageBefore: carMileageBefore, travelDestination: travelDestinationSubmit}),
       });
 
       if (response.ok) {
@@ -127,8 +153,12 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                     <form onSubmit={submitHandler} className='p-2'>
 
                       <div className='mb-5'>
+                      {showCarAlreadyRentedAlert ?
                       <OperationResult status={'error'} title={'UWAGA! To auto nie zostało jeszcze zwrócone przez poprzedniego użytkownika!'} description={`Po uzupełnieniu poniższych danych oraz po kliknięciu "Wypożycz samochód" JEDNOCZEŚNIE zwrócisz to auto za użytkownika ${props.lastRentalUserData?.name.toUpperCase()} ${props.lastRentalUserData?.surname.toUpperCase()} oraz dokonasz nowego wypożyczenia na swoje konto. Wpisany przez Ciebie "przebieg początkowy" będzie jednocześnie "przebiegiem końcowym" użytkownika ${props.lastRentalUserData?.name.toUpperCase()} ${props.lastRentalUserData?.surname.toUpperCase()}.`} showButton={false}/>
+                      : ''}
+                      {showFutureReservationsAlert ?
                       <OperationResult status={'warning'} title={'UWAGA! To auto ma już zaplanowane rezerwacje!'} warnings={[{en: '.', pl: 'Sprawdź listę rezerwacji dla tego samochodu w zakładce "Rezerwacje / Przegląd rezerwacji."'}, {en: '.', pl: 'Skontaktuj się najpierw z użytkownikiem, który dokonał rezerwacji jeśli obaj zamierzacie wypożyczyć to auto w jednym terminie.'}]} showButton={false}/>
+                      : ''}
                       </div>
 
                       <div className='mb-5'>
@@ -187,13 +217,13 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                     </form>
                   :
                   pageState === PageStatus.FormWasSentCorrectly ?
-                    <OperationResult status={'success'} title={'Pomyślnie dokonano rezerwacji 👍'} description={'Będzie ona teraz widoczna dla innych użytkowników.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/rezerwacje/moje-rezerwacje`}/>
+                    <OperationResult status={'success'} title={'Pomyślnie dokonano wypożyczenia samochodu 👍'} description={'Pamiętaj o dokonaniu zwrotu po zakończeniu podróży.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/wypozyczenia/oddaj-samochod`}/>
                   :
                   pageState === PageStatus.ErrorWithSendingForm ?
-                  <OperationResult status={'error'} title={'Wystąpił błąd podczas składania rezerwacji 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  <OperationResult status={'error'} title={'Wystąpił błąd podczas wypożyczania samochodu 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
                   :
                   pageState === PageStatus.FailOnSendingForm ?
-                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas składania rezerwacji 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas wypożyczania samochodu 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
                   :
                   ''
                   }

@@ -32,6 +32,7 @@ const MakeARentalForm = (props: Props) => {
     const [carData, setCarData] = useState<ApiResponse | null>(null);
     const [LastRentalData, setLastRentalData] = useState<ApiResponse | null>(null);
     const [LastRentalUserData, setLastRentalUserData] = useState<ApiResponse | null>(null);
+    const [numberOfFutureReservations, setNumberOfFutureReservations] = useState<number | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
   
@@ -63,13 +64,13 @@ const MakeARentalForm = (props: Props) => {
 
             //NEXT ENDPOINT TO FETCH
             const response2 = await fetch(
-              `${DOMAIN_NAME}/rentals/car/${params.carid}/last`
+              `${DOMAIN_NAME}/reservations/fetchallofcar/${params.carid}?time=future`
             );
             if (!response2.ok) {
               const response2JSON = await response2.json();
               if(response2JSON.status === 'fail') {
                 setWarnings(response2JSON.data);
-                setLastRentalData(response2JSON);
+                setNumberOfFutureReservations(response2JSON);
                 setError(null);
               }
               else {
@@ -80,14 +81,14 @@ const MakeARentalForm = (props: Props) => {
             }
             else {
               let actualData2 = await response2.json();
-              setLastRentalData(actualData2);
+              setNumberOfFutureReservations(actualData2.data.reservations.length);
               setError(null);
 
 
               //NEXT ENDPOINT TO FETCH
-            if (actualData2.data !== null) {
+            
               const response3 = await fetch(
-                `${DOMAIN_NAME}/users/fetchone/${actualData2.data.userID}`
+                `${DOMAIN_NAME}/rentals/car/${params.carid}/last`
               );
               if (!response3.ok) {
                 const response3JSON = await response3.json();
@@ -104,8 +105,32 @@ const MakeARentalForm = (props: Props) => {
               }
               else {
                 let actualData3 = await response3.json();
-                setLastRentalUserData(actualData3);
+                setLastRentalData(actualData3);
                 setError(null);
+                if (actualData3.data !== null) {
+                  const response4 = await fetch(
+                    `${DOMAIN_NAME}/users/fetchone/${actualData3.data.userID}`
+                  );
+                  if (!response4.ok) {
+                    const response4JSON = await response4.json();
+                    if(response4JSON.status === 'fail') {
+                      setWarnings(response4JSON.data);
+                      setLastRentalUserData(response4JSON);
+                      setError(null);
+                    }
+                    else {
+                      throw new Error(
+                        `This is an HTTP error: The status is ${response4.status}`
+                      );
+                    }
+                  }
+                  else {
+                    let actualData4 = await response4.json();
+                    setLastRentalUserData(actualData4);
+                    setError(null);
+                  }
+                //.*********************
+
               }
             }
             //.*********************
@@ -136,7 +161,7 @@ const MakeARentalForm = (props: Props) => {
       <>
       <Breadcrumb pageName="Wypożycz samochód" />
  
-      {loading === true ? <Loader/> : (error === null && carData?.status==='success' && carData?.data !== null && carData?.data.availabilityStatus !== 'notAvailable' && carData?.data.availabilityStatus !== 'onService' && carData?.data.availabilityStatus !== 'damaged' && carData?.data.availabilityStatus !== 'banned') ? <MakeARentalFormContainer carData={carData.data} lastRentalData={LastRentalData?.data} lastRentalUserData={LastRentalUserData?.data}/> : (error === null && carData?.status==='fail' && carData?.data !== null) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={warnings} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (error === null && carData?.status==='success' && carData?.data !== null && carData?.data.availabilityStatus !== 'notAvailable' && carData?.data.availabilityStatus !== 'onService' && carData?.data.availabilityStatus !== 'damaged' && carData?.data.availabilityStatus !== 'banned') ? <MakeARentalFormContainer carData={carData.data} lastRentalData={LastRentalData?.data} lastRentalUserData={LastRentalUserData?.data} numberOfFutureReservations={numberOfFutureReservations}/> : (error === null && carData?.status==='fail' && carData?.data !== null) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={warnings} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };
