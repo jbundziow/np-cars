@@ -7,7 +7,8 @@ import User from '../models/User'
 import { addOneRefuelingByNormalUserSchema } from '../models/validation/RefuelingSchemas';
 
 
-//TODO: ENDPOINT TO ACKNOWLEDGE BY MODERATOR - COST BRUTTO IS NEEDED HERE TO INSERT
+//TODO: ENDPOINT TO EDIT REFUELING - IF SOME VARRIABLES WERE CHANGED - ADD LASTEDITEDBYMODERATOROFID
+//TODO: ENDPOINT TO ACKNOWLEDGE BY MODERATOR - JUST UPDATE LAST COLUMN
 
 export const addOneRefueling = async (req: Request, res: Response, next: NextFunction) => {
     //TODO: ONLY LOGGED USER CAN ADD REFUELING
@@ -26,7 +27,7 @@ export const addOneRefueling = async (req: Request, res: Response, next: NextFun
         const isCarExist = await Car.fetchOne(Number(data.carID))
         const isUserExist = await User.fetchOne(Number(data.userID))
         if(isCarExist && isUserExist) {
-            const newRefueling = new Refueling(null, Number(req.params.carid), 1, null, data.carMileage, data.numberOfLiters, data.costBrutto, data.isFuelCardUsed, null);
+            const newRefueling = new Refueling(null, Number(req.params.carid), 1, null, data.carMileage, data.numberOfLiters, data.costBrutto, data.isFuelCardUsed, false);
             addOneRefuelingByNormalUserSchema.validateAsync(newRefueling);
             const lastRefueling = await Refueling.fetchLastRefuelingOfCar(Number(data.carID));
             if(lastRefueling) {
