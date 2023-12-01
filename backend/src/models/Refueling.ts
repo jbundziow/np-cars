@@ -39,6 +39,10 @@ const RefuelingModel = sequelize.define('Refueling', {
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
+      isAcknowledgedByModerator: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
 })
 
 
@@ -59,6 +63,7 @@ class Refueling {
         private numberOfLiters: number,
         private costBrutto: number | null,
         private isFuelCardUsed: boolean,
+        private isAcknowledgedByModerator: boolean | null,
         ) {}
 
     async addOneRefueling() {
@@ -71,6 +76,7 @@ class Refueling {
           numberOfLiters: this.numberOfLiters,
           costBrutto: this.costBrutto,
           isFuelCardUsed: this.isFuelCardUsed,
+          isAcknowledgedByModerator: this.isAcknowledgedByModerator,
         })
     }
 
