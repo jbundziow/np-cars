@@ -7,8 +7,6 @@ import User from '../models/User'
 import { addOneRefuelingByNormalUserSchema } from '../models/validation/RefuelingSchemas';
 
 
-//TODO: ENDPOINT TO EDIT REFUELING - IF SOME VARRIABLES WERE CHANGED - ADD LASTEDITEDBYMODERATOROFID
-//TODO: ENDPOINT TO ACKNOWLEDGE BY MODERATOR - JUST UPDATE LAST COLUMN
 
 export const addOneRefueling = async (req: Request, res: Response, next: NextFunction) => {
     //TODO: ONLY LOGGED USER CAN ADD REFUELING

@@ -1,5 +1,6 @@
 
 import { NextFunction, Request, Response, response } from 'express'
+import Refueling from '../../models/Refueling';
 
 // import Refueling from '../models/Refueling';
 // import Car from '../models/Car';
@@ -54,3 +55,28 @@ import { NextFunction, Request, Response, response } from 'express'
 //             res.status(500).json({status: 'error', message: err})
 //         }
 // }
+
+
+export const acknowledgeOneRefueling = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+    if (!data.refuelingID || isNaN(Number(data.refuelingID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refuelling ID, which you want to change.', pl: 'Podano złe ID tankowania, które chcesz zmienić.'}]})
+        return;
+    }
+    try {
+        const isRefuelingExist = Refueling.fetchOne(Number(data.refuelingID));
+        if(!isRefuelingExist) {
+            res.status(400).json({status: 'fail', data: [{en: `Refueling of ID: ${data.refuelingID} does not exist in the database.`, pl: `Tankowanie o ID: ${data.refuelingID} nie istnieje w bazie danych.`}]})
+            return;
+        }
+        else {
+            const result = await Refueling.acknowledgeRefuelingByModerator(data.refuelingID, data.value);
+            //TODO: CHECK IF UPDATEDCOUNT === 1
+            res.status(200).json({status: 'success', data: result});
+        }
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
+
+}

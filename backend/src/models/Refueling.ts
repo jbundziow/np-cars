@@ -96,8 +96,16 @@ class Refueling {
         order: [['id', 'DESC']],
       })
     }
+
+    static async acknowledgeRefuelingByModerator(refuelingID: number, value: boolean) {
+      return await RefuelingModel.update({
+        acknowledgeRefuelingByModerator: value
+      },
+      {where: {id: refuelingID}},
+      );
+    }
+
+
 }
-
-
 
 export default Refueling;
