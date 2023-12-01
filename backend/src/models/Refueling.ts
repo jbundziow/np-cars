@@ -87,6 +87,15 @@ class Refueling {
     static async fetchOne(id: number) {
         return await RefuelingModel.findOne({ where: { id: id } })
     }
+
+    static async fetchLastRefuelingOfCar(carid: number) {
+      return await RefuelingModel.findOne({
+        where: {
+          carID: carid,
+        },
+        order: [['id', 'DESC']],
+      })
+    }
 }
 
 
