@@ -80,6 +80,22 @@ class Refueling {
         })
     }
 
+    async updateOneRefueling() {
+      await RefuelingModel.update({
+        // id: this.id,
+        // carID: this.carID,
+        userID: this.userID,
+        lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+        carMileage: this.carMileage,
+        numberOfLiters: this.numberOfLiters,
+        costBrutto: this.costBrutto,
+        isFuelCardUsed: this.isFuelCardUsed,
+        isAcknowledgedByModerator: this.isAcknowledgedByModerator,
+      },
+      {where: {id: this.id}}
+      )
+    }
+
     static async fetchAll() {
         return await RefuelingModel.findAll()
     }

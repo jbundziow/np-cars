@@ -26,7 +26,7 @@ export const addOneRefueling = async (req: Request, res: Response, next: NextFun
         const isUserExist = await User.fetchOne(Number(data.userID))
         if(isCarExist && isUserExist) {
             const newRefueling = new Refueling(null, Number(req.params.carid), 1, null, data.carMileage, data.numberOfLiters, data.costBrutto, data.isFuelCardUsed, false);
-            addOneRefuelingByNormalUserSchema.validateAsync(newRefueling);
+            await addOneRefuelingByNormalUserSchema.validateAsync(newRefueling);
             const lastRefueling = await Refueling.fetchLastRefuelingOfCar(Number(data.carID));
             if(lastRefueling) {
                 if(lastRefueling.dataValues.carMileage >= data.carMileage) {

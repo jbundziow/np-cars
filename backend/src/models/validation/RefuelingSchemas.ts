@@ -92,5 +92,5 @@ const updateOneRefuelingByModeratorSchema = Joi.object({
 
 
 
-export { addOneRefuelingByNormalUserSchema };
+export { addOneRefuelingByNormalUserSchema, updateOneRefuelingByModeratorSchema };
 
