@@ -1,6 +1,8 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
 import DOMAIN_NAME from "../../../utilities/domainName";
+import ModalWarning from "../../general/ModalWarning";
+
 
 
 
@@ -135,8 +137,8 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
 
     return (
         <>
+        
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
-  
           <div className='p-5 pt-0'>
           <img src={props.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
           <p className='text-black dark:text-white pb-2 text-lg'>{props.carData.brand}&nbsp;{props.carData.model}</p>
@@ -214,6 +216,10 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                           Wypożycz samochód
                         </button>
                       </div>
+                      <div className="">
+                      <ModalWarning/>
+                      </div>
+                      
                     </form>
                   :
                   pageState === PageStatus.FormWasSentCorrectly ?
