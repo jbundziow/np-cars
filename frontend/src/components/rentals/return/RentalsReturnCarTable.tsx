@@ -1,7 +1,37 @@
 import RentalsReturnCarTableRow from "./RentalsReturnCarTableRow";
 
+type carBasicData = {
+  id: number,
+  brand: string,
+  model: string,
+  imgPath: string,
+  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
+}
 
-const RentalsReturnCarTable = () => {
+type rentalData = {
+  id: number,
+  carID: number,
+  userID: number,
+  returnUserID: null,
+  lastEditedByModeratorOfID: number | null,
+  carMileageBefore: number,
+  carMileageAfter: null,
+  travelDestination: string | null,
+  placeID: number | null,
+  dateFrom: Date,
+  dateTo: Date | null,
+  createdAt: Date,
+  updatedAt: Date,
+  carBasicData: carBasicData,
+}
+
+type RentalsReturnCarTableProps = {
+  data: rentalData[]
+}
+
+
+const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
+
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         <div className="max-w-full overflow-x-auto">
@@ -22,7 +52,10 @@ const RentalsReturnCarTable = () => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-               <RentalsReturnCarTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} rentDate={'27.10.2023 14:21'}/>
+               {props.data.map(rental => 
+                <RentalsReturnCarTableRow carID={rental.carBasicData.id} carBrand={rental.carBasicData.brand} carModel={rental.carBasicData.model} carImg={rental.carBasicData.imgPath} rentDate={'@@ TO BE FILLED @@27.10.2023 14:21'}/>
+                )}
+               {/* <RentalsReturnCarTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} rentDate={'27.10.2023 14:21'}/> */}
             </tbody>
           </table>
         </div>
