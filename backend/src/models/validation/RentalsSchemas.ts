@@ -120,6 +120,7 @@ const returnCarByNormalUserSchema = Joi.object({
     travelDestination: Joi.string()
         .min(1)
         .max(70)
+        .allow(null)
         .required()
 })
 

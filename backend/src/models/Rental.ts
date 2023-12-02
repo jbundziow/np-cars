@@ -112,7 +112,7 @@ class Rental {
     }
 
     //by normal user
-    static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageAfter: number, dateTo: Date, travelDestination: string) {
+    static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageAfter: number, dateTo: Date, travelDestination: string | null) {
       let rentalData;
       try {
         await sequelize.transaction(async (t) => {
