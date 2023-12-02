@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod'));
 const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
 const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje'));
 const MakeAReservation = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji'));
@@ -18,6 +17,8 @@ const ReportFault = lazy(() => import('../new_pages/usterki/zglos'));
 const ReportFaultForm = lazy(() => import('../new_pages/usterki/zglos-form'));
 const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'));
 const RentACarForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod-form'));
+const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod'));
+const ReturnACarForm = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod-form'));
 const MyRentals = lazy(() => import('../new_pages/wypozyczenia/moje-wypozyczenia'));
 const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
 const Calendar = lazy(() => import('../pages/Calendar'));
@@ -46,6 +47,11 @@ const coreRoutes = [
     path: '/wypozyczenia/oddaj-samochod',
     title: 'Oddaj auto',
     component: ReturnACar,
+  },
+  {
+    path: '/wypozyczenia/oddaj-samochod/:rentalid',
+    title: 'Oddaj auto',
+    component: ReturnACarForm,
   },
   {
     path: '/wypozyczenia/moje-wypozyczenia',
