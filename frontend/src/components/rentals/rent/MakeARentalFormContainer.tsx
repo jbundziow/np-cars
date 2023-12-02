@@ -90,10 +90,22 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
   }
   
 
+  const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
 
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if(props.lastRentalData && props.lastRentalData.carMileageAfter !== null && Number(carMileageBefore) > Number(props.lastRentalData.carMileageAfter)) {
+      setShowWarningModal(true);
+      //then callback from modal will execute postForm()
+    }
+    else {
+      await postForm();
+    }
+  }
+
+
+    const postForm = async () => {
 
     try {
 
@@ -137,7 +149,8 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
 
     return (
         <>
-        
+        <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Ostrzeżenie!'} bodyText={`Wpisano większy przebieg początkowy niż przebieg końcowy z ostatniego wypożyczenia tego samochodu. Wypożyczenie przez Ciebie tego auta będzie skutować dodaniem dodatkowo jednej pustej podróży pomiędzy przebiegiem ${props.lastRentalData?.carMileageAfter}km, a ${carMileageBefore}km.`} cancelBtnText={'Anuluj'} acceptBtnText={'Wypożycz mimo to'} callback={ async () => await postForm() }/>
+
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
           <div className='p-5 pt-0'>
           <img src={props.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
@@ -216,9 +229,9 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                           Wypożycz samochód
                         </button>
                       </div>
-                      <div className="">
-                      <ModalWarning/>
-                      </div>
+                      
+                      
+                      
                       
                     </form>
                   :
