@@ -7,6 +7,22 @@ import { addOneNullRentalByNormalUserSchema, addOneRentalByNormalUserSchema, ret
 import { isDateString } from '../utilities/functions/isDateString';
 
 
+export const fetchOneRental = async (req: Request, res: Response, next: NextFunction) => {
+    const rentalID = req.params.rentalid;
+    if (!rentalID || isNaN(Number(rentalID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong rental ID.', pl: 'Podano złe ID wypożyczenia.'}]})
+        return;
+    }
+
+    const rental = await Rental.fetchOne(Number(rentalID));
+    if(rental) {
+        res.status(200).json({status: 'success', data: rental})
+    }
+    else {
+        res.status(400).json({status: 'fail', data: [{en: `Rental of ID: ${req.params.rentalid} is not found in the database.`, pl: `Wypożyczenie o ID: ${req.params.rentalid} nie zostało znalezione w bazie danych.`}]})
+        return;
+    }
+}
 
 export const addOneRentalByNormalUser = async (req: Request, res: Response, next: NextFunction) => {
     //TODO: ONLY LOGGED USER CAN ADD RENTAL!!!

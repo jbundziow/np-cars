@@ -1,3 +1,4 @@
+import dateFormatter from "../../../utilities/dateFormatter";
 import RentalsReturnCarTableRow from "./RentalsReturnCarTableRow";
 
 type carBasicData = {
@@ -53,9 +54,8 @@ const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
                {props.data.map(rental => 
-                <RentalsReturnCarTableRow carID={rental.carBasicData.id} carBrand={rental.carBasicData.brand} carModel={rental.carBasicData.model} carImg={rental.carBasicData.imgPath} rentDate={'@@ TO BE FILLED @@27.10.2023 14:21'}/>
+                <RentalsReturnCarTableRow carID={rental.carBasicData.id} carBrand={rental.carBasicData.brand} carModel={rental.carBasicData.model} carImg={rental.carBasicData.imgPath} rentDate={dateFormatter(rental.dateFrom.toString())}/>
                 )}
-               {/* <RentalsReturnCarTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'} rentDate={'27.10.2023 14:21'}/> */}
             </tbody>
           </table>
         </div>

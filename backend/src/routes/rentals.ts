@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express'
-import { addOneRentalByNormalUser, fetchAllRentalsOfUser, fetchLastRentalOfCar, returnCarByNormalUser } from '../controllers/rentalsController';
+import { addOneRentalByNormalUser, fetchAllRentalsOfUser, fetchLastRentalOfCar, returnCarByNormalUser, fetchOneRental } from '../controllers/rentalsController';
 const app = express.Router();
 
-
+app.get('/:rentalid', fetchOneRental)
 app.post('/add', addOneRentalByNormalUser);
 app.post('/returncar', returnCarByNormalUser);
 app.get('/user/:userid', fetchAllRentalsOfUser)
