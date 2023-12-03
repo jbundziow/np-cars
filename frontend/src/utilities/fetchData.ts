@@ -1,33 +1,50 @@
 
-type httpMethods = 'GET' | 'PUT' | 'POST' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'TRACE' | 'CONNECT';
-const fetchData = async (method: httpMethods, url: string, setData: Function, setWarning: Function, setError: Function ) => {
+// type httpMethods = 'GET' | 'PUT' | 'POST' | 'DELETE' | 'PATCH' | 'HEAD' | 'OPTIONS' | 'TRACE' | 'CONNECT';
+
+
+interface ApiResponse {
+  status: 'success' | 'fail' | 'error',
+  data?: any,
+  message?: any,
+}
+
+// type responseSchema = {
+//   isSuccess: boolean,
+//   isFail: boolean,
+//   isError: boolean,
+//   data: ApiResponse
+// }
+
+
+const fetchData = async (url: string, setFailData: Function, isFail: Function, isError: Function ): Promise<ApiResponse> => {
     try {
         const response = await fetch(url, {
-            method: method
+            method: 'GET'
         });
-        if (!response.ok) {
-          const responseJSON = await response.json();
-          if(responseJSON.status === 'fail') {
-            setWarning(responseJSON.data);
-            setData(responseJSON);
-            setError(null);
-          }
-          else {
-            throw new Error(
-              `This is an HTTP error: The status is ${response.status}`
-            );
-          }
+        const responseJSON = await response.json();
+
+        if(responseJSON.status === 'success') {
+          // setData(responseJSON)
+          return responseJSON;
         }
-        else {
-          let responseData = await response.json();
-          setData(responseData);
-          setError(null);
+        else if(responseJSON.status === 'fail') {
+          // setData(responseJSON)
+          setFailData(responseJSON)
+          isFail(true);
+          return responseJSON;
+        }
+        else { //responseJSON.status === 'error')
+          // setData(responseJSON)
+          isError(true);
+          return responseJSON;
         }
       }
       catch(err: any) {
-        setError(err.message);
-        setData(null);
-      } 
+        // setData({status: 'error', message: err?.message});
+        isError(true);
+        return {status: 'error', message: err?.message};
+      }
+      
     
 }
 

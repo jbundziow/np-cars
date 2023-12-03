@@ -4,6 +4,7 @@ import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import RentalsReturnCarTable from "../../components/rentals/return/RentalsReturnCarTable";
+import fetchData from "../../utilities/fetchData";
 
 
 
@@ -20,58 +21,43 @@ interface ApiResponse {
 const ReturnACar = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
-    type warnings = {
-      pl: string,
-      en: string,
-    } 
-    const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
+    
+    const [data1, setData1] = useState<ApiResponse>();
+    const [data2, setData2] = useState<ApiResponse>();
 
-    const [data, setData] = useState<ApiResponse | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-  
+    const [failData, setFailData] = useState<ApiResponse>();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [isFail, setFail] = useState<boolean>(false)
+    const [isError, setError] = useState<boolean>(false);
+    
     useEffect(() => {
-      const getData = async () => {
-        //TODO: PASS HERE A CORRECT USER ID (CURRENTLY LOGGED IN)
-        try {
-          const response = await fetch(
-            `${DOMAIN_NAME}/rentals/user/12?type=pending`
-          );
-          if (!response.ok) {
-            const responseJSON = await response.json();
-            if(responseJSON.status === 'fail') {
-              setWarnings(responseJSON.data);
-              setData(responseJSON);
-              setError(null);
-            }
-            else {
-              throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-              );
-            }
-          }
-          else {
-            let actualData = await response.json();
-            setData(actualData);
-            setError(null);
-          }
-        } catch(err: any) {
-          setError(err.message);
-          setData(null);
-        } finally {
-          setLoading(false);
-          
-        }  
+      const getData = async () => {   
+       
+      //TODO: PASS HERE A CORRECT USER ID (CURRENTLY LOGGED IN)
+      const res1 = await fetchData(`${DOMAIN_NAME}/rentals/user/122?type=pending`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData1(res1);
+      
+      if(res1.status==='success') {
+      const res2 = await fetchData(`${DOMAIN_NAME}/cars/12/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData2(res2);
+      }
+        
+        
+      setLoading(false)
       }
       getData()
     }, [])
 
-
+    console.log(data1);
+    console.log(data2);
+    console.log(failData);
+    console.log(isFail);
+    console.log(isError);
     return (
       <>
       <Breadcrumb pageName="Oddaj auto" />
 
-      {loading === true ? <Loader/> : (error === null && data?.status==='success' && data?.data !== null) ? <RentalsReturnCarTable data={data.data}/> : (error === null && data?.status==='fail' && data?.data !== null) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={warnings} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <><RentalsReturnCarTable data={data1?.data}/><div>{data2?.data.brand}</div></> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       
       </>
     );
