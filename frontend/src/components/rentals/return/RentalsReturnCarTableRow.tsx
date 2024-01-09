@@ -7,6 +7,7 @@ interface RentalsReturnCarTableRowProps {
     carModel: string;
     carImg: string;
     rentDate: string;
+    rentalID: number;
   }
 
 const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
@@ -37,7 +38,7 @@ const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex items-center space-x-3.5">
         <Link
-        to={`./${props.carID}`}
+        to={`./${props.rentalID}`}
         className='inline-flex items-center justify-center rounded-full bg-primary py-1 sm:py-2 px-4 sm:px-7 text-center text-xs sm:text-base font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
         >
         Oddaj auto

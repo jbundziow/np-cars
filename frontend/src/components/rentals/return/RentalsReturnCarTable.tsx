@@ -35,6 +35,7 @@ const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
 
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
+        {props.data.length !== 0 ?
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -54,11 +55,14 @@ const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
                {props.data.map(rental => 
-                <RentalsReturnCarTableRow carID={rental.carBasicData.id} carBrand={rental.carBasicData.brand} carModel={rental.carBasicData.model} carImg={rental.carBasicData.imgPath} rentDate={dateFormatter(rental.dateFrom.toString())}/>
+                <RentalsReturnCarTableRow carID={rental.carBasicData.id} carBrand={rental.carBasicData.brand} carModel={rental.carBasicData.model} carImg={rental.carBasicData.imgPath} rentDate={dateFormatter(rental.dateFrom.toString())} rentalID={rental.id}/>
                 )}
             </tbody>
           </table>
         </div>
+        :
+        <p className="text-black dark:text-white text-md text-center mb-4">W tej chwili nie masz żadnych wypożyczonych samochodów do oddania.</p>
+        }
       </div>
     );
   };
