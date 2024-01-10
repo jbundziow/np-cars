@@ -4,6 +4,7 @@ import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import RentalsTable from "../../components/rentals/rent/RentalsTable";
+import fetchData from "../../utilities/fetchData";
 
 type carBasicData = {
   id: number,
@@ -26,66 +27,34 @@ interface ApiResponse {
 const RentACar = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
-    type warnings = {
-      pl: string,
-      en: string,
-    } 
-    const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
+    const [data1, setData1] = useState<ApiResponse>();
 
-    const [data, setData] = useState<ApiResponse | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-  
-    //fetch car basic data
+    const [failData, setFailData] = useState<ApiResponse>();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [isFail, setFail] = useState<boolean>(false)
+    const [isError, setError] = useState<boolean>(false);
+
+
     useEffect(() => {
-      const getData = async () => {
-        try {
-          const carDataResponse = await fetch(`${DOMAIN_NAME}/cars/?basicdata=true`);
+      const getData = async () => {   
+       
+      
+      const res1 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      
+      //TODO: CHECK IF USERID OF RENTAL IS A CURRENT USER ID OR IF USER IS MODERATOR
+      if(res1.status==='success') {
+      const carIDsArr: number[] = [];
+      res1.data.forEach((carData: carBasicData) => carIDsArr.push(carData.id))
 
-          if (!carDataResponse.ok) {
-            const responseJSON = await carDataResponse.json();
-            if(responseJSON.status === 'fail') {
-              setWarnings(responseJSON.data);
-              setData(responseJSON);
-              setError(null);
-            }
-            else {
-              throw new Error(
-                `This is an HTTP error: The status is ${carDataResponse.status}`
-              );
-            }
-          }
-          else {
-            let allCarsData = await carDataResponse.json();
-            //NEXT ENDPOINT TO FETCH
-            const carIDsArr: number[] = [];
-            allCarsData.data.forEach((carData: carBasicData) => carIDsArr.push(carData.id))
-            
-            for await (const [index, id] of carIDsArr.entries()) {
-              const futureReservations = await fetch(`${DOMAIN_NAME}/reservations/fetchallofcar/${id}?time=future`);
-              const responseJSON = await futureReservations.json();
-              if(responseJSON.status === 'fail') {
-                setWarnings(responseJSON.data);
-                setData(responseJSON);
-                setError(null);
-                return;
-              }
-              else {
-                allCarsData.data[index].numberOfFutureReservations = responseJSON.data.reservations.length;
-              }
-            }
-            // .********************
-            setData(allCarsData)
-            setError(null);
-          }
-          
-        } catch(err: any) {
-          setError(err.message);
-          setData(null);
-        } finally {
-          setLoading(false);
-          
-        }  
+      for await (const [index, id] of carIDsArr.entries()) {
+      const res2 = await fetchData(`${DOMAIN_NAME}/reservations/fetchallofcar/${id}?time=future`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      res1.data[index].numberOfFutureReservations = res2.data.reservations.length;
+      }
+      setData1(res1);
+      }
+      
+
+      setLoading(false)
       }
       getData()
     }, [])
@@ -97,7 +66,7 @@ const RentACar = (props: Props) => {
       <>
       <Breadcrumb pageName="Wypożycz samochód" />
 
-      {loading === true ? <Loader/> : (error === null && data?.status==='success' && data?.data !== null) ? <RentalsTable data={data.data}/> : (error === null && data?.status==='fail' && data?.data !== null) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={warnings} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsTable data={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       
       </>
     );
