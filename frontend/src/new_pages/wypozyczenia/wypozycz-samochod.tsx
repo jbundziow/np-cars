@@ -37,11 +37,9 @@ const RentACar = (props: Props) => {
 
     useEffect(() => {
       const getData = async () => {   
-       
       
       const res1 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       
-      //TODO: CHECK IF USERID OF RENTAL IS A CURRENT USER ID OR IF USER IS MODERATOR
       if(res1.status==='success') {
       const carIDsArr: number[] = [];
       res1.data.forEach((carData: carBasicData) => carIDsArr.push(carData.id))
