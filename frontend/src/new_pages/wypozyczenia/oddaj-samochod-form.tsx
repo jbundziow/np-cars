@@ -47,6 +47,9 @@ const ReturnACarForm = (props: Props) => {
       setData2(res2);
       }
       
+      if(res1.data.carMileageAfter !== null) { //rental already finished
+        setError(true);
+      }
 
       setLoading(false)
       }
