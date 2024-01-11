@@ -21,7 +21,7 @@ interface ApiResponse {
 const MakeAReservation = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
-    const [data1, setData1] = useState<ApiResponse>(); 
+    const [data1, setData1] = useState<ApiResponse>();  //all cars basic data
 
     const [failData, setFailData] = useState<ApiResponse>();
     const [loading, setLoading] = useState<boolean>(true);
