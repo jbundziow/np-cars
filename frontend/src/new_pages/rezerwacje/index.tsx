@@ -5,6 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 
 import ReservationsOverviewTable from "../../components/reservations/overview/ReservationsOverviewTable";
+import fetchData from "../../utilities/fetchData";
 
 interface Props {
     documentTitle: string;
@@ -19,58 +20,32 @@ interface ApiResponse {
 const ReservationsOverview = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
-    type warnings = {
-      pl: string,
-      en: string,
-    } 
-    const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
+    const [data1, setData1] = useState<ApiResponse>(); //reservations for all cars for 2 weeks
 
-    const [data, setData] = useState<ApiResponse | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-  
+    const [failData, setFailData] = useState<ApiResponse>();
+    const [loading, setLoading] = useState<boolean>(true);
+    const [isFail, setFail] = useState<boolean>(false)
+    const [isError, setError] = useState<boolean>(false);
+    
     useEffect(() => {
-      const getData = async () => {
-        try {
-          const response = await fetch(
-            `${DOMAIN_NAME}/reservations/checktwoweeksforallcars`
-          );
-          if (!response.ok) {
-            const responseJSON = await response.json();
-            if(responseJSON.status === 'fail') {
-              setWarnings(responseJSON.data);
-              setData(responseJSON);
-              setError(null);
-            }
-            else {
-              throw new Error(
-                `This is an HTTP error: The status is ${response.status}`
-              );
-            }
-          }
-          else {
-            let actualData = await response.json();
-            setData(actualData);
-            setError(null);
-          }
-        } catch(err: any) {
-          setError(err.message);
-          setData(null);
-        } finally {
-          setLoading(false);
-          
-        }  
+      const getData = async () => {   
+
+      const res1 = await fetchData(`${DOMAIN_NAME}/reservations/checktwoweeksforallcars`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData1(res1);
+
+      setLoading(false)
       }
       getData()
     }, [])
+  
+    
 
 
     return (
       <>
       <Breadcrumb pageName="Przegląd rezerwacji" />
 
-      {loading === true ? <Loader/> : (error === null && data?.status==='success' && data?.data !== null) ? <ReservationsOverviewTable data={data.data}/> : (error === null && data?.status==='fail' && data?.data !== null) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={warnings} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
-      
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <ReservationsOverviewTable data={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };
