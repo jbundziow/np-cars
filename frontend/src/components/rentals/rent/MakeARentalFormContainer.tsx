@@ -49,7 +49,7 @@ interface MakeARentalFormContainerProps {
   carData: carDataSchema,
   lastRentalData: lastRentalDataSchema | null,
   lastRentalUserData: lastRentalUserDataSchema | null,
-  numberOfFutureReservations: number | null,
+  numberOfFutureReservations: number | undefined,
 }
 
 const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
@@ -85,7 +85,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
   
 
   let showFutureReservationsAlert: boolean = false;
-  if(props.numberOfFutureReservations !== null && props.numberOfFutureReservations > 0) {
+  if(props.numberOfFutureReservations && props.numberOfFutureReservations > 0) {
     showFutureReservationsAlert = true;
   }
   

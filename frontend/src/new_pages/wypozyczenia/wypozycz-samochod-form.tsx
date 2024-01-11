@@ -25,7 +25,7 @@ const MakeARentalForm = (props: Props) => {
     const params = useParams();
 
     const [data1, setData1] = useState<ApiResponse>(); //car basic data
-    const [data2, setData2] = useState<ApiResponse>(); //number of future reservations
+    const [data2, setData2] = useState<number>(); //number of future reservations
     const [data3, setData3] = useState<ApiResponse>(); //last rental data
     const [data4, setData4] = useState<ApiResponse>(); //last rental user data
 
@@ -74,7 +74,7 @@ const MakeARentalForm = (props: Props) => {
       <>
       <Breadcrumb pageName="Wypożycz samochód" />
       
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <MakeARentalFormContainer carData={data1?.data} numberOfFutureReservations={data2?.data} lastRentalData={data3?.data} lastRentalUserData={data4?.data} /> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <MakeARentalFormContainer carData={data1?.data} numberOfFutureReservations={data2} lastRentalData={data3?.data} lastRentalUserData={data4?.data} /> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };
