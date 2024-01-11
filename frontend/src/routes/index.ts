@@ -122,7 +122,7 @@ const coreRoutes = [
     component: ReportFault,
   },
   {
-    path: '/usterki/zglos/:carID',
+    path: '/usterki/zglos/:carid',
     title: 'Zgłoś usterkę',
     component: ReportFaultForm,
   },
