@@ -132,12 +132,12 @@ const coreRoutes = [
     component: RepairsStatus,
   },
   {
-    path: '/usterki/status-napraw/:carID',
+    path: '/usterki/status-napraw/:carid',
     title: 'Status napraw',
     component: RepairsStatusDetails,
   },
   {
-    path: '/usterki/:faultID',
+    path: '/usterki/:faultid',
     title: 'Szczegóły dotyczące usterki',
     component: FaultDetails,
   },
