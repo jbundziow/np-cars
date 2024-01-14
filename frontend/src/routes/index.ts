@@ -105,7 +105,7 @@ const coreRoutes = [
     component: ReportRefueling,
   },
   {
-    path: '/tankowania/zglos-tankowanie/:carID',
+    path: '/tankowania/zglos-tankowanie/:carid',
     title: 'Zgłoś zatankowanie samochodu',
     component: ReportRefuelingForm,
   },

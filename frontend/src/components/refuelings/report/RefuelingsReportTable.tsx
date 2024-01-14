@@ -1,7 +1,18 @@
 import RefuelingsReportTableRow from "./RefuelingsReportTableRow";
 
+interface carData {
+  id: number,
+  brand: string,
+  model: string,
+  imgPath: string,
+  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
+}
 
-const RefuelingsReportTable = () => {
+interface RefuelingsReportTableProps {
+  carData: carData[];
+}
+
+const RefuelingsReportTable = (props: RefuelingsReportTableProps) => {
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         <div className="max-w-full overflow-x-auto">
@@ -19,10 +30,9 @@ const RefuelingsReportTable = () => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-    
-               <RefuelingsReportTableRow carID={1} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}/>
-               <RefuelingsReportTableRow carID={2} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}/>
-               <RefuelingsReportTableRow carID={3} carBrand={'Renault'} carModel={'Megane'} carImg={'https://ocdn.eu/pulscms-transforms/1/fCGk9kqTURBXy9mY2Y3MGRkOWE2OGZkODQzYmE4MmYxNmM3NWMzY2IwZi5qcGVnkpUDzIvNATrNBTrNAvGTBc0EsM0CpN4AAqEwAaExAA'}/>
+              {props.carData.map(car => (
+                <RefuelingsReportTableRow carID={car.id} carBrand={car.brand} carModel={car.model} carImg={car.imgPath}/>
+              ))}
             </tbody>
           </table>
         </div>
