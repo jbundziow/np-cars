@@ -1,10 +1,30 @@
 
+const bcrypt = require('bcrypt');
 import { NextFunction, Request, Response, response } from 'express'
+import { signUpUserSchema } from '../models/validation/UserSchemas';
 
 import User from '../models/User';
 
 
+export const signUp = async (req: Request, res: Response, next: NextFunction) => {
+    //TODO: ONLY ADMIN CAN ADD USER!!!
+    const data = req.body;
+    try {
+    const newUser = new User(null, data.email, data.password, data.gender, data.name, data.surname, data.employedAs, data.avatarPath, 'unconfirmed');
+    await signUpUserSchema.validateAsync(newUser);
 
+    //hash password
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(data.password, salt);
+    newUser.changePassword(hashedPassword);
+
+    await newUser.addOneUser();
+    res.status(200).json({status: 'success', data: {}});
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
+}
 
 export const fetchAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {

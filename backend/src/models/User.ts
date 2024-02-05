@@ -11,30 +11,39 @@ const UserModel = sequelize.define('User', {
         autoIncrement: true,
         unique: true
       },
-      gender: {
-        type: DataTypes.ENUM('male', 'female'),
-        allowNull: false
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      surname: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      employedAs: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      avatarPath: {
-        type: DataTypes.STRING,
-        allowNull: true,
-      },
-      role: {
-        type: DataTypes.ENUM('admin', 'user', 'banned'),
-        allowNull: false
-      },
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    gender: {
+      type: DataTypes.ENUM('male', 'female'),
+      allowNull: false
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    surname: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    employedAs: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    avatarPath: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    role: {
+      type: DataTypes.ENUM('unconfirmed', 'admin', 'user', 'banned'),
+      allowNull: false
+    },
 })
 
 
@@ -48,17 +57,21 @@ const UserModel = sequelize.define('User', {
 class User {
     constructor(
         private id: number | null,
+        private email: string,
+        private password: string,
         private gender: 'male' | 'female',
         private name: string,
         private surname: string,
         private employedAs: string,
         private avatarPath: string | null,
-        private role: 'admin' | 'user' | 'banned',
+        private role: 'unconfirmed' | 'admin' | 'user' | 'banned',
         ) {}
 
     async addOneUser() {
         await UserModel.create({
           id: this.id,
+          email: this.email,
+          password: this.password,
           gender: this.gender,
           name: this.name,
           surname: this.surname,
@@ -66,6 +79,10 @@ class User {
           avatarPath: this.avatarPath,
           role: this.role,
         })
+    }
+
+    changePassword(hashedPassword: string) {
+      this.password = hashedPassword;
     }
 
     static async fetchAll() {

@@ -1,11 +1,20 @@
 import Joi from 'joi';
 
-const addOneUserSchema = Joi.object({
+const signUpUserSchema = Joi.object({
     id: Joi.number()
         .integer()
         .positive()
         .allow(null)
         .optional(),
+
+    email: Joi.string()
+        .email({ tlds: { allow: false } })
+        .required(),
+    
+    password: Joi.string()
+        .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/) // minimum eight characters, at least one letter and one number
+        .min(8)
+        .required(),
 
     gender: Joi.string()
         .valid('male', 'female')
@@ -31,8 +40,11 @@ const addOneUserSchema = Joi.object({
         .optional(),
 
     role: Joi.string()
-        .valid('admin', 'user', 'banned')
-        .required(),
+        //TODO: BELOW ONLY FOR ADMIN!!!
+        // .valid('unconfirmed', 'admin', 'user', 'banned')
+        // .required(),
+        .allow(null)
+        .optional(),
 })
 
-export { addOneUserSchema };
+export { signUpUserSchema };
