@@ -1,8 +1,7 @@
 const {DataTypes} = require('sequelize');
-
-
-
+const bcrypt = require('bcrypt')
 import sequelize from "../database/database";
+
 const UserModel = sequelize.define('User', {
     id: {
         type: DataTypes.INTEGER,
@@ -64,7 +63,7 @@ class User {
         private surname: string,
         private employedAs: string,
         private avatarPath: string | null,
-        private role: 'unconfirmed' | 'admin' | 'user' | 'banned',
+        private role: 'unconfirmed' | 'banned' | 'admin' | 'user',
         ) {}
 
     async addOneUser() {
@@ -91,6 +90,22 @@ class User {
 
     static async fetchOne(id: number) {
         return await UserModel.findOne({ where: { id: id } })
+    }
+
+    static async login(email: string, password: string) {
+      const user = await UserModel.findOne({where: {email: email}});
+      if(user) {
+        const auth = await bcrypt.compare(password, user.dataValues.password)
+        if(auth) {
+          return user;
+        }
+        else {
+          throw Error('incorrect password')
+        }
+      }
+      else {
+        throw Error('incorrect email')
+      }
     }
 }
 
