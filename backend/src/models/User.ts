@@ -68,7 +68,7 @@ class User {
         ) {}
 
     async addOneUser() {
-        await UserModel.create({
+        return await UserModel.create({
           id: this.id,
           email: this.email,
           password: this.password,

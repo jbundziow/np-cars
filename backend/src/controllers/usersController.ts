@@ -1,16 +1,28 @@
 
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken')
+import JWT_SECRET_KEY from '../config/JWT_SECRET_KEY';
+
 import { NextFunction, Request, Response, response } from 'express'
 import { signUpUserSchema } from '../models/validation/UserSchemas';
 
 import User from '../models/User';
 
 
+//create JWT
+const maxAge = 60*60; //1h
+const createToken = (id: number) => {
+    return jwt.sign({id}, JWT_SECRET_KEY, {
+        expiresIn: maxAge
+    });
+}
+
+
+//POST
 export const signUp = async (req: Request, res: Response, next: NextFunction) => {
-    //TODO: ONLY ADMIN CAN ADD USER!!!
     const data = req.body;
     try {
-    const newUser = new User(null, data.email, data.password, data.gender, data.name, data.surname, data.employedAs, data.avatarPath, 'unconfirmed');
+    const newUser = new User(null, data.email.toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, data.avatarPath, 'unconfirmed');
     await signUpUserSchema.validateAsync(newUser);
 
     //hash password
@@ -18,13 +30,28 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     const hashedPassword = await bcrypt.hash(data.password, salt);
     newUser.changePassword(hashedPassword);
 
-    await newUser.addOneUser();
-    res.status(200).json({status: 'success', data: {}});
+    const result = await newUser.addOneUser();
+    if(result) {
+        const assignedUserID = result.dataValues.id;
+        const token = createToken(assignedUserID);
+        res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
+        res.status(200).json({status: 'success', data: {userID: assignedUserID}});
+    }
+    else {
+        res.status(500).json({status: 'error', message: 'Error occured while adding user to the database.'})
+    }
     }
     catch (err) {
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
 
 export const fetchAllUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {

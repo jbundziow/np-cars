@@ -1,1 +1,4 @@
 node_modules
+
+# config like a JWT_SECRET_KEY
+config
