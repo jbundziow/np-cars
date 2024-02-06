@@ -18,8 +18,8 @@ const createToken = (id: number) => {
 }
 
 
-//POST
-export const signUp = async (req: Request, res: Response, next: NextFunction) => {
+
+export const signup_POST = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     try {
     const newUser = new User(null, data.email.toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, data.avatarPath, 'unconfirmed');
@@ -44,6 +44,11 @@ export const signUp = async (req: Request, res: Response, next: NextFunction) =>
     catch (err) {
         res.status(500).json({status: 'error', message: err})
     }
+}
+
+export const logout_GET = async (req: Request, res: Response, next: NextFunction) => {
+    res.cookie('jwt', '', { maxAge: 1 });
+    res.status(200).json({status: 'success', data: {}});
 }
 
 
