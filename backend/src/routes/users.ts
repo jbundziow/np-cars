@@ -1,11 +1,7 @@
-import express, { NextFunction, Request, Response } from 'express'
-import { signup_POST, login_POST, logout_GET, fetchAllUsers, fetchOneUser } from '../controllers/usersController';
+import express from 'express'
+import { fetchAllUsers, fetchOneUser } from '../controllers/usersController';
 
 const app = express.Router();
-
-app.post('/signup', signup_POST);
-app.post('/login', login_POST);
-app.get('/logout', logout_GET);
 
 app.get('/fetchall', fetchAllUsers);
 app.get('/fetchone/:userid', fetchOneUser);
