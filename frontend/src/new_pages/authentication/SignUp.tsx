@@ -13,6 +13,7 @@ const SignUp = () => {
                 <img className="hidden dark:block w-60" src={Logo} alt="Logo" />
                 <img className="dark:hidden w-60" src={LogoDark} alt="Logo" />
               </div>
+              
               <p className="2xl:px-20">
                 <a href='https://novaprocess.pl/'>www.novaprocess.pl</a>
               </p>
