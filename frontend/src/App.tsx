@@ -4,8 +4,8 @@ import { Toaster } from 'react-hot-toast';
 
 
 import Homepage from './new_pages/Homepage';
-import SignIn from './pages/Authentication/SignIn';
-import SignUp from './pages/Authentication/SignUp';
+import SignIn from './new_pages/authentication/SignIn';
+import SignUp from './new_pages/authentication/SignUp';
 import Loader from './common/Loader';
 import routes from './routes';
 
