@@ -12,7 +12,7 @@ import usersRoutes from './routes/users'
 import reservationsRoutes from './routes/reservations'
 import rentalsRoutes from './routes/rentals'
 
-import { requireAuthAsUser } from "./middleware/authMiddleware"
+import { requireAuthAsAdmin, requireAuthAsUser } from "./middleware/authMiddleware"
 
 const app = express();
 
@@ -37,21 +37,25 @@ app.use(bodyParser.json())
 app.use(cookies())
 
 
+
+// *************************************************
+// ROUTES
+
 //for all users
 app.use('/auth', authRoutes)
 
 //for 'user'
 app.use('/cars', requireAuthAsUser, carsRoutes)
-app.use('/faults', faultsRoutes)
-app.use('/refuelings', refuelingRoutes)
-app.use('/users', usersRoutes)
-app.use('/reservations', reservationsRoutes)
-app.use('/rentals', rentalsRoutes)
+app.use('/faults', requireAuthAsUser, faultsRoutes)
+app.use('/refuelings', requireAuthAsUser, refuelingRoutes)
+app.use('/users', requireAuthAsUser, usersRoutes)
+app.use('/reservations', requireAuthAsUser, reservationsRoutes)
+app.use('/rentals', requireAuthAsUser, rentalsRoutes)
 
 //for 'admin'
-app.use('/admin', adminRoutes)
+app.use('/admin', requireAuthAsAdmin, adminRoutes)
 
-
+// *************************************************
 
 
 
