@@ -17,7 +17,8 @@ import { requireAuthAsAdmin, requireAuthAsUser } from "./middleware/authMiddlewa
 const app = express();
 
 const corsOptions = {
-    origin: 'http://localhost:5173'
+    origin: 'http://localhost:5173', //frontend
+    credentials: true, // Enable credentials (cookies)
 }
 
 app.use(cors(corsOptions)) 

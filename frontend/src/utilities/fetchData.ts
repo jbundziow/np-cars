@@ -10,7 +10,8 @@ interface ApiResponse {
 const fetchData = async (url: string, setFailData: Function, isFail: Function, isError: Function ): Promise<ApiResponse> => {
     try {
         const response = await fetch(url, {
-            method: 'GET'
+            method: 'GET',
+            credentials: 'include'
         });
         const responseJSON = await response.json();
 
