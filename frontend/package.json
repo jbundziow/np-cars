@@ -1,5 +1,5 @@
 {
-  "name": "tailadmin-react-free",
+  "name": "frontned np-cars based on tailadmin",
   "private": true,
   "version": "1.0.5",
   "type": "module",
@@ -9,9 +9,9 @@
     "preview": "vite preview"
   },
   "author": {
-    "name": "TailAdmin",
-    "email": "hello@tailadmin.com",
-    "url": "https://tailadmin.com"
+    "name": "jbundziow",
+    "email": "jakub.bundziow@gmail.com",
+    "url": "https://github.com/jbundziow/"
   },
   "dependencies": {
     "apexcharts": "^3.41.0",
