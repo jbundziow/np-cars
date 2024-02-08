@@ -9,6 +9,7 @@ import SignUp from './new_pages/authentication/SignUp';
 import Loader from './common/Loader';
 import routes from './routes';
 import RequireAuth from './components/RequireAuth';
+import AuthLayout from './layout/AuthLayout';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -29,8 +30,10 @@ function App() {
   
       <Routes>
         {/* public routes */}
+        <Route element={<AuthLayout />}>
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} />
+        </Route>
         {/* TODO: add unauthorized */}
 
         <Route element={<RequireAuth allowedRole='user' />}>
