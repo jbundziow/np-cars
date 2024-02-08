@@ -22,7 +22,7 @@ const createToken = (id: number, role: 'unconfirmed' | 'banned' | 'admin' | 'use
 export const signup_POST = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     try {
-    const newUser = new User(null, data.email.toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, data.avatarPath, 'unconfirmed');
+    const newUser = new User(null, data.email.toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, null, 'unconfirmed');
     await signUpUserSchema.validateAsync(newUser);
 
     //hash password
@@ -43,8 +43,21 @@ export const signup_POST = async (req: Request, res: Response, next: NextFunctio
         res.status(500).json({status: 'error', message: 'Error occured while adding user to the database.'})
     }
     }
-    catch (err) {
-        res.status(500).json({status: 'error', message: err})
+    catch (err: any) {
+        if(Array.isArray(err.errors) && err.errors[0].message) {
+        if(err.errors[0].message === 'email must be unique') {
+            res.status(400).json({status: 'fail', data: [{en: 'The user of this email already exist in the database.', pl: 'Użytkownik o tym adresie email już istnieje w bazie danych.'}]})
+        }
+        else {
+            res.status(400).json({status: 'fail', data: [{en: 'Database error occured.', pl: 'Wystąpił błąd bazy danych.'}]})
+        }
+        }
+        else if(Array.isArray(err.details) && err.details[0].message) {
+            res.status(400).json({status: 'fail', data: [{en: 'A data validation error occurred. Check if they are correct and try again.', pl: 'Wystąpił błąd walidacji danych. Sprawdź czy są one poprawne i spróbuj ponownie.'}]})
+        }
+        else {
+            res.status(500).json({status: 'error', message: err})
+        }
     }
 }
 

@@ -1,11 +1,96 @@
 import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-icon-dark.png';
 import Logo from '../../images/logo/logo.png';
+import { useEffect, useState } from 'react';
+import DOMAIN_NAME from '../../utilities/domainName';
+import OperationResult from '../../components/general/OperationResult';
 
 const SignUp = () => {
+  useEffect(() => {document.title = `Rejestracja | NP-CARS`}, []);
+
+  enum PageStatus {
+    FillingTheForm,
+    ErrorOccured,
+    DifferentPasswords,
+    Success,
+    PasswordRegExpFail
+  }
+
+  const [name, setName] = useState<string>('');
+  const [surname, setSurname] = useState<string>('');
+  const [gender, setGender] = useState<string>('male');
+  const [employedAs, setEmployedAs] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [password1, setPassword1] = useState<string>('')
+  const [password2, setPassword2] = useState<string>('')
+
+  const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
+  const [errorText, setErrorText] = useState<string>('Wystąpił błąd. Skontaktuj się z administratorem.')
+
+  const validPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // minimum eight characters, at least one letter and one number
+
+  const arePasswordsTheSame = (pass1: string, pass2: string): boolean => pass1 === pass2;
+
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if(!arePasswordsTheSame(password1, password2)) {
+      setPageState(PageStatus.DifferentPasswords);
+    }
+    else if (!validPassword.test(password1)) {
+      setPageState(PageStatus.PasswordRegExpFail);
+    }
+    else {
+      try {
+        const response = await fetch(`${DOMAIN_NAME}/auth/signup`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          credentials: 'include',
+          body: JSON.stringify({name, surname, gender, employedAs, email, password: password1}),
+        });
+          const responseJSON = await response.json();
+
+        if (responseJSON.status === 'success') {
+          setPageState(PageStatus.Success);
+          setName('')
+          setSurname('')
+          setGender('male')
+          setEmployedAs('')
+          setEmail('')
+          setPassword1('')
+          setPassword2('')
+        } else {
+          if(responseJSON.status === 'fail') {
+            setErrorText(responseJSON.data[0].pl)
+            setPageState(PageStatus.ErrorOccured);
+            setPassword1('')
+            setPassword2('')
+          }
+          else {
+            setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
+            setPageState(PageStatus.ErrorOccured);
+            setPassword1('')
+            setPassword2('')
+          }
+        }
+      }
+      catch (error) {
+        setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
+        setPageState(PageStatus.ErrorOccured);
+        setPassword1('')
+        setPassword2('')
+      }
+    }
+  };
+
+
+
+
   return (
     <>
-      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-10 xl:my-20 mx-5 2xl:mx-30">
+      <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
@@ -138,27 +223,33 @@ const SignUp = () => {
               </span>
             </div>
           </div>
-
+          {pageState !== PageStatus.Success ?
           <div className="w-full border-stroke dark:border-strokedark xl:w-3/5 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              <span className="mb-1.5 block font-medium text-center xl:text-left">Zarządzanie samochodami nigdy nie było tak proste!</span>
+              <span className="mb-1.5 block font-medium text-center xl:text-left">Zarządzanie samochodami jeszcze nigdy nie było tak proste!</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2 text-center xl:text-left">
                 Zarejestruj się do aplikacji np-cars
               </h2>
-
-              <form>
+              
+              <form onSubmit={submitHandler}>
 
 
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
                     Imię
+                    </span>
                   </label>
                   <div className="relative">
                     <input
                       type="text"
                       placeholder="Wpisz swoje imię"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      onClick={() => setPageState(PageStatus.FillingTheForm)}
+                      required
                     />
 
                     <span className="absolute right-4 top-4">
@@ -189,13 +280,19 @@ const SignUp = () => {
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
                     Nazwisko
+                    </span>
                   </label>
                   <div className="relative">
                     <input
                       type="text"
                       placeholder="Wpisz swoje nazwisko"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={surname}
+                      onChange={e => setSurname(e.target.value)}
+                      onClick={() => setPageState(PageStatus.FillingTheForm)}
+                      required
                     />
 
                     <span className="absolute right-4 top-4">
@@ -226,25 +323,35 @@ const SignUp = () => {
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
                     Płeć
+                    </span>
                   </label>
                   <div className="relative">
-                    <select className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary">
-                    <option value="male">Mężczyzna</option>
-                    <option value="female">Kobieta</option>
+                    <select className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                    onChange={e => setGender(e.target.value)}
+                    >
+                    <option value='male'>Mężczyzna</option>
+                    <option value='female'>Kobieta</option>
                   </select>
                   </div>
                 </div>
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
                     Stanowisko pracy
+                    </span>
                   </label>
                   <div className="relative">
                     <input
                       type="text"
                       placeholder='np. "Spawacz TIG"'
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={employedAs}
+                      onChange={e => setEmployedAs(e.target.value)}
+                      onClick={() => setPageState(PageStatus.FillingTheForm)}
+                      required
                     />
 
                     <span className="absolute right-4 top-4">
@@ -273,13 +380,19 @@ const SignUp = () => {
 
                 <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
                     Email
+                    </span>
                   </label>
                   <div className="relative">
                     <input
                       type="email"
                       placeholder="Wpisz swój adres email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      onClick={() => setPageState(PageStatus.FillingTheForm)}
+                      required
                     />
 
                     <span className="absolute right-4 top-4">
@@ -303,14 +416,20 @@ const SignUp = () => {
                 </div>
 
                 <div className="mb-4">
-                  <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
                     Hasło
+                    </span>
                   </label>
                   <div className="relative">
                     <input
                       type="password"
                       placeholder="Wpisz swoje hasło"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      className={`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:bg-form-input dark:focus:border-primary ${pageState === PageStatus.DifferentPasswords || pageState === PageStatus.PasswordRegExpFail ? 'border-rose-700 dark:border-rose-700' : 'border-stroke dark:border-form-strokedark'}`}
+                      value={password1}
+                      onChange={e => setPassword1(e.target.value)}
+                      onClick={() => setPageState(PageStatus.FillingTheForm)}
+                      required
                     />
 
                     <span className="absolute right-4 top-4">
@@ -337,15 +456,21 @@ const SignUp = () => {
                   </div>
                 </div>
 
-                <div className="mb-6">
+                <div className="mb-5">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
+                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
                     Powtórz hasło
+                    </span>
                   </label>
                   <div className="relative">
                     <input
                       type="password"
                       placeholder="Wpisz ponownie swoje hasło"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                      className={`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:bg-form-input dark:focus:border-primary ${pageState === PageStatus.DifferentPasswords || pageState === PageStatus.PasswordRegExpFail ? 'border-rose-700 dark:border-rose-700' : 'border-stroke dark:border-form-strokedark'}`}
+                      value={password2}
+                      onChange={e => setPassword2(e.target.value)}
+                      onClick={() => setPageState(PageStatus.FillingTheForm)}
+                      required
                     />
 
                     <span className="absolute right-4 top-4">
@@ -371,53 +496,46 @@ const SignUp = () => {
                     </span>
                   </div>
                 </div>
+                {pageState === PageStatus.DifferentPasswords || pageState === PageStatus.PasswordRegExpFail ? <p className="mb-5 text-danger font-bold text-lg text-center">{pageState === PageStatus.PasswordRegExpFail ? 'Hasło powinno mieć przynajmniej 8 znaków, powinno zawierać jedną literę oraz cyfrę.' : 'Hasła nie mogą się od siebie różnić!'}</p> : <></>}
                 <div className="mb-5">
                   <p>Uwaga! Po zarejestrowaniu się Twoje konto nadal pozostanie niekatywne do czasu jego potwierdzenia przez administratora serwisu.</p>
                 </div>
                 <div className="mb-5">
-                  <input
+                  <button
                     type="submit"
-                    value="Utwórz konto"
                     className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
+                  >
+                    Utwórz konto
+                  </button>
                 </div>
 
-                {/* <button className="flex w-full items-center justify-center gap-3.5 rounded-lg border border-stroke bg-gray p-4 hover:bg-opacity-50 dark:border-strokedark dark:bg-meta-4 dark:hover:bg-opacity-50">
-                  <span>
+
+                {pageState === PageStatus.ErrorOccured ?
+                <div className="flex w-full border-l-6 border-warning bg-warning bg-opacity-[15%] px-4 py-4 shadow-md dark:bg-opacity-[5%]">
+                  <div className="mr-5 flex h-9 w-9 items-center justify-center rounded-lg bg-warning bg-opacity-30">
                     <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 20 20"
+                      width="19"
+                      height="16"
+                      viewBox="0 0 19 16"
                       fill="none"
                       xmlns="http://www.w3.org/2000/svg"
                     >
-                      <g clipPath="url(#clip0_191_13499)">
-                        <path
-                          d="M19.999 10.2217C20.0111 9.53428 19.9387 8.84788 19.7834 8.17737H10.2031V11.8884H15.8266C15.7201 12.5391 15.4804 13.162 15.1219 13.7195C14.7634 14.2771 14.2935 14.7578 13.7405 15.1328L13.7209 15.2571L16.7502 17.5568L16.96 17.5774C18.8873 15.8329 19.9986 13.2661 19.9986 10.2217"
-                          fill="#4285F4"
-                        />
-                        <path
-                          d="M10.2055 19.9999C12.9605 19.9999 15.2734 19.111 16.9629 17.5777L13.7429 15.1331C12.8813 15.7221 11.7248 16.1333 10.2055 16.1333C8.91513 16.1259 7.65991 15.7205 6.61791 14.9745C5.57592 14.2286 4.80007 13.1801 4.40044 11.9777L4.28085 11.9877L1.13101 14.3765L1.08984 14.4887C1.93817 16.1456 3.24007 17.5386 4.84997 18.5118C6.45987 19.4851 8.31429 20.0004 10.2059 19.9999"
-                          fill="#34A853"
-                        />
-                        <path
-                          d="M4.39899 11.9777C4.1758 11.3411 4.06063 10.673 4.05807 9.99996C4.06218 9.32799 4.1731 8.66075 4.38684 8.02225L4.38115 7.88968L1.19269 5.4624L1.0884 5.51101C0.372763 6.90343 0 8.4408 0 9.99987C0 11.5589 0.372763 13.0963 1.0884 14.4887L4.39899 11.9777Z"
-                          fill="#FBBC05"
-                        />
-                        <path
-                          d="M10.2059 3.86663C11.668 3.84438 13.0822 4.37803 14.1515 5.35558L17.0313 2.59996C15.1843 0.901848 12.7383 -0.0298855 10.2059 -3.6784e-05C8.31431 -0.000477834 6.4599 0.514732 4.85001 1.48798C3.24011 2.46124 1.9382 3.85416 1.08984 5.51101L4.38946 8.02225C4.79303 6.82005 5.57145 5.77231 6.61498 5.02675C7.65851 4.28118 8.9145 3.87541 10.2059 3.86663Z"
-                          fill="#EB4335"
-                        />
-                      </g>
-                      <defs>
-                        <clipPath id="clip0_191_13499">
-                          <rect width="20" height="20" fill="white" />
-                        </clipPath>
-                      </defs>
+                      <path
+                        d="M1.50493 16H17.5023C18.6204 16 19.3413 14.9018 18.8354 13.9735L10.8367 0.770573C10.2852 -0.256858 8.70677 -0.256858 8.15528 0.770573L0.156617 13.9735C-0.334072 14.8998 0.386764 16 1.50493 16ZM10.7585 12.9298C10.7585 13.6155 10.2223 14.1433 9.45583 14.1433C8.6894 14.1433 8.15311 13.6155 8.15311 12.9298V12.9015C8.15311 12.2159 8.6894 11.688 9.45583 11.688C10.2223 11.688 10.7585 12.2159 10.7585 12.9015V12.9298ZM8.75236 4.01062H10.2548C10.6674 4.01062 10.9127 4.33826 10.8671 4.75288L10.2071 10.1186C10.1615 10.5049 9.88572 10.7455 9.50142 10.7455C9.11929 10.7455 8.84138 10.5028 8.79579 10.1186L8.13574 4.75288C8.09449 4.33826 8.33984 4.01062 8.75236 4.01062Z"
+                        fill="#FBBF24"
+                      ></path>
                     </svg>
-                  </span>
-                  Sign up with Google
-                </button> */}
+                  </div>
+                  <div className="w-full">
+                    <h5 className="text-lg font-semibold text-[#9D5425] text-[#D0915C]">
+                      {errorText}
+                    </h5>     
+                  </div>
+                </div>
+                :
+                <></>
+                }
+
 
                 <div className="mt-6 text-center">
                   <p>
@@ -428,9 +546,23 @@ const SignUp = () => {
                   </p>
                 </div>
               </form>
+              
             </div>
           </div>
+      :
+      <div>
+        <OperationResult status='success' title='Rejestracja przebiegła pomyślnie' description='Konto zostało utworzone. Pamiętaj, że będziesz mógł z niego korzystać dopiero po zatwierdzeniu przez administratora.' showButton={false}/>
+        <div className="mt-6 text-center">
+          <p>
+            Konto zostało już potwierdzone?{' '}
+            <Link to="/auth/signin" className="text-primary">
+              Zaloguj się
+            </Link>
+          </p>
         </div>
+      </div>
+      }
+      </div>
       </div>
     </>
   );
