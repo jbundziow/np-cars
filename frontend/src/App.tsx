@@ -10,6 +10,7 @@ import Loader from './common/Loader';
 import routes from './routes';
 import RequireAuth from './components/RequireAuth';
 import AuthLayout from './layout/AuthLayout';
+import Unauthorized from './new_pages/authentication/Unauthorized';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -33,10 +34,12 @@ function App() {
         <Route element={<AuthLayout />}>
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} />
+        <Route path="/unauthorized" element={<Unauthorized/>} />
         </Route>
-        {/* TODO: add unauthorized */}
+        
 
-        <Route element={<RequireAuth allowedRole='user' />}>
+        {/* protected routes for all users (admin + user) */}
+        <Route element={<RequireAuth allowedRoles={['user','admin']} />}>
           <Route element={<DefaultLayout />}>
             <Route index element={<Homepage documentTitle={'Strona główna' + websiteTitle} />} />
             {routes.map(({ path, component: Component, title }) => (
@@ -51,6 +54,10 @@ function App() {
             ))}
           </Route>
         </Route>
+
+        {/* TODO: protected routes only for admins */}
+        {/* <Route element={<RequireAuth allowedRoles={['admin']} />}>
+        </Route> */}
 
       </Routes>
     </>
