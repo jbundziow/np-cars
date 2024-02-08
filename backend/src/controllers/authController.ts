@@ -64,10 +64,10 @@ export const login_POST = async (req: Request, res: Response, next: NextFunction
     }
     catch (err) {
         if((err as Error).message === 'incorrect email') {
-            res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong email.', pl: 'Podano zły email.'}]})
+            res.status(400).json({status: 'fail', data: [{en: 'This email address does not exist in the database.', pl: 'Ten adres email nie istnieje w bazie danych.'}]})
         }
         else if((err as Error).message === 'incorrect password') {
-            res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong password.', pl: 'Podano złe hasło'}]})
+            res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong password. Try again.', pl: 'Nieprawidłowe hasło. Spróbuj ponownie.'}]})
         }
         else {
         res.status(500).json({status: 'error', message: err})

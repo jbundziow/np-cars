@@ -7,16 +7,12 @@ const SignUp = () => {
     <>
       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-10 xl:my-20 mx-5 2xl:mx-30">
         <div className="flex flex-wrap items-center">
-          <div className="hidden w-full xl:block xl:w-1/2">
+          <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
               <div className="mb-5.5 inline-block">
                 <img className="hidden dark:block w-60" src={Logo} alt="Logo" />
                 <img className="dark:hidden w-60" src={LogoDark} alt="Logo" />
               </div>
-              
-              <p className="2xl:px-20">
-                <a href='https://novaprocess.pl/'>www.novaprocess.pl</a>
-              </p>
 
               <span className="mt-15 inline-block">
                 <svg
@@ -143,7 +139,7 @@ const SignUp = () => {
             </div>
           </div>
 
-          <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
+          <div className="w-full border-stroke dark:border-strokedark xl:w-3/5 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium text-center xl:text-left">Zarządzanie samochodami nigdy nie było tak proste!</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2 text-center xl:text-left">

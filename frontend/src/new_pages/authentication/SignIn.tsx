@@ -6,14 +6,21 @@ import DOMAIN_NAME from '../../utilities/domainName';
 import { useState } from 'react';
 
 const SignIn = () => {
+
+  enum PageStatus {
+    FillingTheForm,
+    ErrorOccured
+  }
+
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const from = location.state?.from?.pathname || "/";
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('')
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('')
+  const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
+  const [errorText, setErrorText] = useState<string>('Wystąpił błąd. Skontaktuj się z administratorem.')
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -27,35 +34,29 @@ const SignIn = () => {
         credentials: 'include',
         body: JSON.stringify({email, password}),
       });
+        const responseJSON = await response.json();
 
-
-      const responseJSON = await response.json();
-      console.log(responseJSON);
-      if(responseJSON.status === 'success') {
+      if (responseJSON.status === 'success') {
         const {userID, userRole} = responseJSON.data;
         setAuth({userID, userRole});
         navigate(from, { replace: true });
-        setIsSuccess(true)
+      } else {
+        if(responseJSON.status === 'fail') {
+          setErrorText(responseJSON.data[0].pl)
+          setPageState(PageStatus.ErrorOccured);
+          setPassword('')
+        }
+        else {
+          setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
+          setPageState(PageStatus.ErrorOccured);
+          setPassword('')
+        }
       }
-
-
-      // if (response.ok) {
-      //   setPageState(PageStatus.FormWasSentCorrectly);
-      //   setTitle('');
-      //   setDescription('');
-      // } else {
-      //   const responseJSON = await response.json();
-      //   if(responseJSON.status === 'fail') {
-      //     setPageState(PageStatus.FailOnSendingForm);
-      //     setWarnings(responseJSON.data);
-      //   }
-      //   else {
-      //   setPageState(PageStatus.ErrorWithSendingForm);
-      //   }
-      // }
     }
     catch (error) {
-      // setPageState(PageStatus.ErrorWithSendingForm);
+      setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
+      setPageState(PageStatus.ErrorOccured);
+      setPassword('')
       console.log(error);
     }
   };
@@ -66,16 +67,12 @@ const SignIn = () => {
     <>
        <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
         <div className="flex flex-wrap items-center">
-          <div className="hidden w-full xl:block xl:w-1/2">
+          <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
               <div className="mb-5.5 inline-block">
                 <img className="hidden dark:block w-40" src={Logo} alt="Logo" />
                 <img className="dark:hidden w-40" src={LogoDark} alt="Logo" />
               </div>
-
-              <p className="2xl:px-20">
-                <a href='https://novaprocess.pl/'>www.novaprocess.pl</a>
-              </p>
 
               <span className="mt-15 inline-block">
                 <svg
@@ -202,7 +199,7 @@ const SignIn = () => {
             </div>
           </div>
 
-          <div className="w-full border-stroke dark:border-strokedark xl:w-1/2 xl:border-l-2">
+          <div className="w-full border-stroke dark:border-strokedark xl:w-3/5 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Jedziemy!</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
@@ -221,6 +218,7 @@ const SignIn = () => {
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
+                      onClick={() => setPageState(PageStatus.FillingTheForm)}
                       required
                     />
 
@@ -255,6 +253,7 @@ const SignIn = () => {
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       value={password}
                       onChange={e => setPassword(e.target.value)}
+                      onClick={() => setPageState(PageStatus.FillingTheForm)}
                       required
                     />
 
@@ -290,8 +289,8 @@ const SignIn = () => {
                   />
                 </div>
 
-
-                <div className="flex w-full border-l-6 border-warning bg-warning bg-opacity-[15%] px-7 py-8 shadow-md dark:bg-opacity-[5%] md:px-4 md:py-4">
+                {pageState === PageStatus.ErrorOccured ?
+                <div className="flex w-full border-l-6 border-warning bg-warning bg-opacity-[15%] px-4 py-4 shadow-md dark:bg-opacity-[5%]">
                   <div className="mr-5 flex h-9 w-9 items-center justify-center rounded-lg bg-warning bg-opacity-30">
                     <svg
                       width="19"
@@ -308,11 +307,13 @@ const SignIn = () => {
                   </div>
                   <div className="w-full">
                     <h5 className="text-lg font-semibold text-[#9D5425] text-[#D0915C]">
-                      Nieprawidłowe hasło!
+                      {errorText}
                     </h5>     
                   </div>
                 </div>
-
+                :
+                <></>
+                }
 
 
                 <div className="mt-6 text-center">
