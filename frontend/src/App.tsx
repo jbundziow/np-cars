@@ -8,6 +8,7 @@ import SignIn from './new_pages/authentication/SignIn';
 import SignUp from './new_pages/authentication/SignUp';
 import Loader from './common/Loader';
 import routes from './routes';
+import RequireAuth from './components/RequireAuth';
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -27,21 +28,27 @@ function App() {
     <Toaster position='top-right' reverseOrder={false} containerClassName='overflow-auto'/>
   
       <Routes>
+        {/* public routes */}
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} />
-        <Route element={<DefaultLayout />}>
-          <Route index element={<Homepage documentTitle={'Strona główna' + websiteTitle} />} />
-          {routes.map(({ path, component: Component, title }) => (
-            <Route
-              path={path}
-              element={
-                <Suspense fallback={<Loader />}>
-                  <Component documentTitle={title + websiteTitle}/>
-                </Suspense>
-              }
-            />
-          ))}
+        {/* TODO: add unauthorized */}
+
+        <Route element={<RequireAuth allowedRole='user' />}>
+          <Route element={<DefaultLayout />}>
+            <Route index element={<Homepage documentTitle={'Strona główna' + websiteTitle} />} />
+            {routes.map(({ path, component: Component, title }) => (
+              <Route
+                path={path}
+                element={
+                  <Suspense fallback={<Loader />}>
+                    <Component documentTitle={title + websiteTitle}/>
+                  </Suspense>
+                }
+              />
+            ))}
+          </Route>
         </Route>
+
       </Routes>
     </>
   );

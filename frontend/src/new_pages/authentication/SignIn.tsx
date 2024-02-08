@@ -1,10 +1,15 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import useAuth from '../../hooks/useAuth';
 import LogoDark from '../../images/logo/logo-icon-dark.png';
 import Logo from '../../images/logo/logo.png';
 import DOMAIN_NAME from '../../utilities/domainName';
 import { useState } from 'react';
 
 const SignIn = () => {
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const from = location.state?.from?.pathname || "/";
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('')
@@ -27,6 +32,9 @@ const SignIn = () => {
       const responseJSON = await response.json();
       console.log(responseJSON);
       if(responseJSON.status === 'success') {
+        const {userID, userRole} = responseJSON.data;
+        setAuth({userID, userRole});
+        navigate(from, { replace: true });
         setIsSuccess(true)
       }
 

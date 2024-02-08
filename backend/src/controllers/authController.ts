@@ -60,7 +60,7 @@ export const login_POST = async (req: Request, res: Response, next: NextFunction
         const token = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role);
         //TODO: MAKE SURE THAT IN PRODUCTION SECURE IS ENABLED
         res.cookie('jwt', token, { httpOnly: true, secure: process.env.NODE_ENV !== "dev", maxAge: maxAge * 1000 })
-        res.status(200).json({status: 'success', data: {userID: loggedUser.dataValues.id}});
+        res.status(200).json({status: 'success', data: {userID: loggedUser.dataValues.id, userRole: loggedUser.dataValues.role}});
     }
     catch (err) {
         if((err as Error).message === 'incorrect email') {
