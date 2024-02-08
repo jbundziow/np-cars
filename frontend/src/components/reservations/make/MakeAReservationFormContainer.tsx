@@ -57,6 +57,7 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
+        credentials: 'include',
         // TODO: ADD CORRECT USER!!!!!
         body: JSON.stringify({carID: props.data.id, userID: 12, lastEditedByModeratorOfID: null, dateFrom: value?.startDate, dateTo: value?.endDate, travelDestination}),
       });

@@ -38,7 +38,7 @@ function App() {
         </Route>
         
 
-        {/* protected routes for all users (admin + user) */}
+        {/* protected routes for all users (normal user + admin) */}
         <Route element={<RequireAuth allowedRoles={['user','admin']} />}>
           <Route element={<DefaultLayout />}>
             <Route index element={<Homepage documentTitle={'Strona główna' + websiteTitle} />} />

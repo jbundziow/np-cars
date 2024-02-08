@@ -8,7 +8,6 @@ type RequireAuthProps = {
 const RequireAuth = (props: RequireAuthProps) => {
     const { auth } = useAuth();
     const location = useLocation();
-
     return (
         (props.allowedRoles.includes(auth?.userRole))
             ? <Outlet />

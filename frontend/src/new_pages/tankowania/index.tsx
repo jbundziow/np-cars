@@ -42,7 +42,6 @@ const RefuelingOverview = (props: Props) => {
       getData()
     }, [])
 
-
     return (
       <>
       <Breadcrumb pageName="Przegląd zatankowania aut" />

@@ -121,6 +121,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
+        credentials: 'include',
         // TODO: ADD CORRECT USER!!!!!
         
         body: JSON.stringify({carID: props.carData.id, userID: 12, carMileageBefore: carMileageBefore, travelDestination: travelDestinationSubmit}),
