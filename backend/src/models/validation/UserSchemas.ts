@@ -45,10 +45,6 @@ const signUpUserSchema = Joi.object({
         // .required(),
         .allow(null)
         .optional(),
-
-    refreshToken: Joi.string()
-        .allow(null)
-        .optional(),
 })
 
 export { signUpUserSchema };

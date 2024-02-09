@@ -12,6 +12,9 @@ import RequireAuth from './components/RequireAuth';
 import AuthLayout from './layout/AuthLayout';
 import Unauthorized from './new_pages/authentication/Unauthorized';
 
+import useAuth from './hooks/useAuth';
+import Cookies from "js-cookie";
+
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
 function App() {
@@ -22,6 +25,13 @@ function App() {
   }, []);
 
   const websiteTitle: string = ' | NP-CARS'
+
+  //set auth if JWT token is not expired
+  const { auth, setAuth } = useAuth();
+  if(Cookies.get('userID') && Cookies.get('userRole') && !auth.userID && !auth.userRole) {
+    setAuth({userID: Cookies.get('userID'), userRole: Cookies.get('userRole')})
+  }
+  
 
   return loading ? (
     <Loader />

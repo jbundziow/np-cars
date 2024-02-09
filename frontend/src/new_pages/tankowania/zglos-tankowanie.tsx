@@ -18,6 +18,7 @@ import DOMAIN_NAME from "../../utilities/domainName";
 
 
 const ReportRefueling = (props: Props) => {
+
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
     const [data1, setData1] = useState<ApiResponse>(); //basic cars data
@@ -26,6 +27,7 @@ const ReportRefueling = (props: Props) => {
     const [loading, setLoading] = useState<boolean>(true);
     const [isFail, setFail] = useState<boolean>(false)
     const [isError, setError] = useState<boolean>(false);
+
     
     useEffect(() => {
       const getData = async () => {   
@@ -36,17 +38,18 @@ const ReportRefueling = (props: Props) => {
       if(res1.data.length === 0) {
         setError(true)
       }
-
+      
       setLoading(false)
+
       }
       getData()
     }, [])
 
+    
 
     return (
       <>
       <Breadcrumb pageName="Zgłoś zatankowanie samochodu" />
-
       {loading === true ? <Loader/> : (!isFail && !isError) ? <RefuelingsReportTable carData={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
      
       </>

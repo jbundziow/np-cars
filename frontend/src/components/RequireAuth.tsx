@@ -1,13 +1,21 @@
 import { useLocation, Navigate, Outlet } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-
+import Cookies from "js-cookie";
 
 type RequireAuthProps = {
     allowedRoles: string[]
 }
 const RequireAuth = (props: RequireAuthProps) => {
-    const { auth } = useAuth();
+    const { auth, setAuth } = useAuth();
     const location = useLocation();
+
+    //JWT token expired
+    if(!Cookies.get('userID') || !Cookies.get('userRole')) {
+        setAuth({})
+    }
+
+    
+
     return (
         (props.allowedRoles.includes(auth?.userRole))
             ? <Outlet />

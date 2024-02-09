@@ -1,7 +1,7 @@
 
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken')
-import {JWT_ACCESS_TOKEN_SECRET_KEY, JWT_REFRESH_TOKEN_SECRET_KEY} from '../config/JWT_SECRET_KEYS';
+import JWT_SECRET_KEY from '../config/JWT_SECRET_KEY';
 
 import { NextFunction, Request, Response, response } from 'express'
 import { signUpUserSchema } from '../models/validation/UserSchemas';
@@ -9,10 +9,11 @@ import { signUpUserSchema } from '../models/validation/UserSchemas';
 import User from '../models/User';
 
 
-//create JWT token
-const createToken = (id: number, role: 'unconfirmed' | 'banned' | 'admin' | 'user', maxAgeAsSeconds: number, JWT_SECRET_KEY: string) => {
+//create JWT
+const maxAge = 60*60; //1h
+const createToken = (id: number, role: 'unconfirmed' | 'banned' | 'admin' | 'user') => {
     return jwt.sign({id, role}, JWT_SECRET_KEY, {
-        expiresIn: maxAgeAsSeconds
+        expiresIn: maxAge
     });
 }
 
@@ -21,7 +22,7 @@ const createToken = (id: number, role: 'unconfirmed' | 'banned' | 'admin' | 'use
 export const signup_POST = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     try {
-    const newUser = new User(null, data.email.toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, null, 'unconfirmed', null);
+    const newUser = new User(null, data.email.toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, null, 'unconfirmed');
     await signUpUserSchema.validateAsync(newUser);
 
     //hash password
@@ -31,12 +32,7 @@ export const signup_POST = async (req: Request, res: Response, next: NextFunctio
 
     const result = await newUser.addOneUser();
     if(result) {
-        // const assignedUserID = result.dataValues.id;
-        // const assignedUserRole = result.dataValues.role;
-        // const token = createToken(assignedUserID, assignedUserRole);
-        //TODO: MAKE SURE THAT IN PRODUCTION SECURE IS ENABLED
-        // res.cookie('jwt', token, { httpOnly: true, secure: process.env.NODE_ENV !== "dev", maxAge: maxAge * 1000 })
-        res.status(200).json({status: 'success', data: {}});
+        res.status(200).json({status: 'success', data: 'User successfully registered.'});
     }
     else {
         res.status(500).json({status: 'error', message: 'Error occured while adding user to the database.'})
@@ -65,19 +61,21 @@ export const login_POST = async (req: Request, res: Response, next: NextFunction
 
     if(req.cookies.jwt) { //logout if user is already logged in
         res.cookie('jwt', '', { maxAge: 1 });
+        res.cookie('userID', '', { maxAge: 1 });
+        res.cookie('userRole', '', { maxAge: 1 });
     }
 
     try {
         const loggedUser = await User.login(email, password);
-        const accessToken = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role, 10, JWT_ACCESS_TOKEN_SECRET_KEY);
-        const refreshToken = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role, 10*60*60, JWT_REFRESH_TOKEN_SECRET_KEY);
+        const token = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role);
+        //TODO: MAKE SURE THAT IN PRODUCTION SECURE IS ENABLED
+        res.cookie('jwt', token, { httpOnly: true, secure: process.env.NODE_ENV !== "dev", maxAge: maxAge * 1000 })
 
-        //save refresh token in the database and set cookie
-        await User.updateRefreshToken(loggedUser.dataValues.id, refreshToken);
-        res.cookie('jwt', refreshToken, { httpOnly: true, secure: process.env.NODE_ENV !== "dev", maxAge: 10*60*60*1000 })
+        //available for frontend to read, the same maxAge as httpOnly JWT token
+        res.cookie('userID', loggedUser.dataValues.id, { httpOnly: false, secure: process.env.NODE_ENV !== "dev", maxAge: maxAge * 1000 })
+        res.cookie('userRole', loggedUser.dataValues.role, { httpOnly: false, secure: process.env.NODE_ENV !== "dev", maxAge: maxAge * 1000 })
 
-        //send userID, userRole and accessToken
-        res.status(200).json({status: 'success', data: {userID: loggedUser.dataValues.id, userRole: loggedUser.dataValues.role, accessToken}});
+        res.status(200).json({status: 'success', data: {userID: loggedUser.dataValues.id, userRole: loggedUser.dataValues.role}});
     }
     catch (err) {
         if((err as Error).message === 'incorrect email') {
@@ -95,5 +93,7 @@ export const login_POST = async (req: Request, res: Response, next: NextFunction
 
 export const logout_GET = async (req: Request, res: Response, next: NextFunction) => {
     res.cookie('jwt', '', { maxAge: 1 });
+    res.cookie('userID', '', { maxAge: 1 });
+    res.cookie('userRole', '', { maxAge: 1 });
     res.status(200).json({status: 'success', data: {}});
 }

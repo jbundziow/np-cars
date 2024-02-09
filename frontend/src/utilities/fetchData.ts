@@ -1,4 +1,3 @@
-
 interface ApiResponse {
   status: 'success' | 'fail' | 'error',
   data?: any,
