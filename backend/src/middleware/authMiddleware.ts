@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-import JWT_SECRET_KEY from '../config/JWT_SECRET_KEY';
+import { JWT_REFRESH_TOKEN_SECRET_KEY } from '../config/JWT_SECRET_KEYS';
 import { NextFunction, Request, Response, response } from 'express'
 
 export const requireAuthAsUser = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.jwt;
   // check json web token exists & is verified & user has role 'user'
   if (token) {
-    jwt.verify(token, JWT_SECRET_KEY, (err: Error, decodedToken: any) => {
+    jwt.verify(token, JWT_REFRESH_TOKEN_SECRET_KEY, (err: Error, decodedToken: any) => {
       if (err) {
         console.log(err.message);
         res.status(400).json({status: 'fail', data: [{en: `You don't have permissions to view that resource. Please log in.`, pl: `Nie masz uprawnień do wyświetlenia tych zasobów. Zaloguj się.`}]})
@@ -37,7 +37,7 @@ export const requireAuthAsAdmin = async (req: Request, res: Response, next: Next
   const token = req.cookies.jwt;
   // check json web token exists & is verified & user has role 'user'
   if (token) {
-    jwt.verify(token, JWT_SECRET_KEY, (err: Error, decodedToken: any) => {
+    jwt.verify(token, JWT_REFRESH_TOKEN_SECRET_KEY, (err: Error, decodedToken: any) => {
       if (err) {
         console.log(err.message);
         res.status(400).json({status: 'fail', data: [{en: `You don't have permissions to view that resource. Please log in.`, pl: `Nie masz uprawnień do wyświetlenia tych zasobów. Zaloguj się.`}]})

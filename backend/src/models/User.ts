@@ -43,6 +43,10 @@ const UserModel = sequelize.define('User', {
       type: DataTypes.ENUM('unconfirmed', 'admin', 'user', 'banned'),
       allowNull: false
     },
+    refreshToken: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
 })
 
 
@@ -64,6 +68,7 @@ class User {
         private employedAs: string,
         private avatarPath: string | null,
         private role: 'unconfirmed' | 'banned' | 'admin' | 'user',
+        private refreshToken: string | null,
         ) {}
 
     async addOneUser() {
@@ -77,6 +82,7 @@ class User {
           employedAs: this.employedAs,
           avatarPath: this.avatarPath,
           role: this.role,
+          refreshToken: this.refreshToken
         })
     }
 
@@ -107,6 +113,14 @@ class User {
         throw Error('incorrect email')
       }
     }
+
+  
+  static async updateRefreshToken(userID: number, newRefreshToken: string) {
+    return await UserModel.update({ refreshToken: newRefreshToken }, {where: {id: userID}});
+  }
+
+
+  
 }
 
 
