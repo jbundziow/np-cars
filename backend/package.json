@@ -13,7 +13,7 @@
     "ts-node": "^10.9.1",
     "typescript": "^5.2.2"
   },
-  "name": "backend np-cars",
+  "name": "backend-np-cars",
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
