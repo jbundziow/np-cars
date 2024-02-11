@@ -550,7 +550,7 @@ const SignUp = () => {
             </div>
           </div>
       :
-      <div>
+      <div className="w-full border-stroke dark:border-strokedark xl:w-3/5 xl:border-l-2">
         <OperationResult status='success' title='Rejestracja przebiegła pomyślnie' description='Konto zostało utworzone. Pamiętaj, że będziesz mógł z niego korzystać dopiero po zatwierdzeniu przez administratora.' showButton={false}/>
         <div className="mt-6 text-center">
           <p>

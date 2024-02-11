@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 
-import UserOne from '../images/user/user-01.png';
+import UserMale from '../images/user/unknownUserMale.jpg';
+import UserFemale from '../images/user/unknownUserFemale.jpg';
 import fetchData from '../utilities/fetchData';
 import DOMAIN_NAME from '../utilities/domainName';
 
@@ -56,7 +57,7 @@ const DropdownUser = () => {
     const getData = async () => {   
      
     if(auth.userID) {
-      const res1 = await fetchData(`${DOMAIN_NAME}/users/fetchone/1`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${DOMAIN_NAME}/users/fetchone/${auth.userID}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       
 
@@ -96,7 +97,7 @@ const DropdownUser = () => {
         </span>
 
         <span className="h-12 w-12 rounded-full ">
-          <img className="bg-cover bg-top-center rounded-[50%]" src={UserOne} alt="User" />
+          <img className="bg-cover bg-top-center rounded-[50%]" src={(!isFail && !isError) ? data1?.data.avatarPath !== null ? `${DOMAIN_NAME}${data1?.data.avatarPath}` : data1?.data.gender === 'female' ? UserFemale : UserMale : UserMale} alt="User Avatar" />
         </span>
 
         <svg
@@ -150,7 +151,7 @@ const DropdownUser = () => {
                   fill=""
                 />
               </svg>
-              My Profile
+              Mój Profil
             </Link>
           </li>
           <li>
@@ -171,7 +172,7 @@ const DropdownUser = () => {
                   fill=""
                 />
               </svg>
-              My Contacts
+              Kontakty
             </Link>
           </li>
           <li>
@@ -196,7 +197,7 @@ const DropdownUser = () => {
                   fill=""
                 />
               </svg>
-              Account Settings
+              Ustawienia konta
             </Link>
           </li>
         </ul>
@@ -221,7 +222,7 @@ const DropdownUser = () => {
               fill=""
             />
           </svg>
-          Log Out
+          Wyloguj się
         </button>
       </div>
       {/* <!-- Dropdown End --> */}

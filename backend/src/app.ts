@@ -36,7 +36,7 @@ app.listen(PORT, () => {
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 app.use(cookies())
-
+app.use(express.static('public'));
 
 
 // *************************************************
