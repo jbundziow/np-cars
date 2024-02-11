@@ -1,13 +1,29 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
 
 import UserOne from '../images/user/user-01.png';
+import fetchData from '../utilities/fetchData';
+import DOMAIN_NAME from '../utilities/domainName';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { auth, setAuth } = useAuth();
 
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+
+  interface ApiResponse {
+    status: 'success' | 'fail' | 'error',
+    data?: any,
+    message?: any,
+  }
+
+  const [data1, setData1] = useState<ApiResponse>(); //user data
+  const [failData, setFailData] = useState<ApiResponse>();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [isFail, setFail] = useState<boolean>(false)
+  const [isError, setError] = useState<boolean>(false);
 
   // close on click outside
   useEffect(() => {
@@ -35,6 +51,33 @@ const DropdownUser = () => {
     return () => document.removeEventListener('keydown', keyHandler);
   });
 
+
+  useEffect(() => {
+    const getData = async () => {   
+     
+    if(auth.userID) {
+      const res1 = await fetchData(`${DOMAIN_NAME}/users/fetchone/1`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData1(res1);
+      
+
+      if(res1.data === null) {
+        setError(true)
+      }
+    }
+    else {
+      setError(true)
+    }
+
+    setLoading(false)
+    }
+    getData()
+  }, [])
+
+
+  const logoutHandler = () => {
+    setAuth({})
+  }
+
   return (
     <div className="relative">
       <Link
@@ -45,13 +88,15 @@ const DropdownUser = () => {
       >
         <span className="hidden text-right lg:block">
           <span className="block text-sm font-medium text-black dark:text-white">
-            Thomas Anree
+          {loading === true ? `Trwa ładowanie...` : (!isFail && !isError) ? `${data1?.data.name} ${data1?.data.surname}` : `#BŁĄD#`}
           </span>
-          <span className="block text-xs">UX Designer</span>
+          <span className="block text-xs">
+          {loading === true ? `...` : (!isFail && !isError) ? `${data1?.data.employedAs}` : `#BŁĄD#`}
+          </span>
         </span>
 
-        <span className="h-12 w-12 rounded-full">
-          <img src={UserOne} alt="User" />
+        <span className="h-12 w-12 rounded-full ">
+          <img className="bg-cover bg-top-center rounded-[50%]" src={UserOne} alt="User" />
         </span>
 
         <svg
@@ -155,7 +200,10 @@ const DropdownUser = () => {
             </Link>
           </li>
         </ul>
-        <button className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base">
+        <button
+        className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out hover:text-primary lg:text-base"
+        onClick={logoutHandler}
+        >
           <svg
             className="fill-current"
             width="22"

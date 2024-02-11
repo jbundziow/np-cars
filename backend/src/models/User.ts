@@ -89,7 +89,8 @@ class User {
     }
 
     static async fetchOne(id: number) {
-        return await UserModel.findOne({ where: { id: id } })
+        return await UserModel.findOne({ where: { id: id },
+          attributes: { exclude: ['password'] } })
     }
 
     static async login(email: string, password: string) {
