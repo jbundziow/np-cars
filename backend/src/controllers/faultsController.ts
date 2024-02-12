@@ -4,20 +4,19 @@ import { NextFunction, Request, Response, response } from 'express'
 import Fault from '../models/Fault'
 import Car from '../models/Car'
 import { addOneFaultByUserSchema } from '../models/validation/FaultsSchemas';
+import identifyUserId from '../utilities/functions/identifyUserId';
 
 
 
 
 export const addOneFault = async (req: Request, res: Response, next: NextFunction) => {
-    // TODO: VALIDATE DATA BEFORE ADDING RECORD TO DB
-    //TODO: PASS CORRECT USER ID
-
     const data = req.body;
     if (!isNaN(Number(req.params.carid))) {
         try {
         const isCarExist = await Car.fetchOne(Number(req.params.carid))
         if(isCarExist) {
-        const newFault = new Fault(null, Number(req.params.carid), 1, null, null, data.title, data.description, 'pending', null, null);
+        const userID = await identifyUserId(req.cookies.jwt);
+        const newFault = new Fault(null, Number(req.params.carid), userID, null, null, data.title, data.description, 'pending', null, null);
         await addOneFaultByUserSchema.validateAsync(newFault);
         await newFault.addOneFault();
         res.status(200).json({status: 'success', data: data});
