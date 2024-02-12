@@ -57,7 +57,7 @@ const DropdownUser = () => {
     const getData = async () => {   
      
     if(auth.userID) {
-      const res1 = await fetchData(`${DOMAIN_NAME}/users/fetchone/${auth.userID}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${DOMAIN_NAME}/users/${auth.userID}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       
 

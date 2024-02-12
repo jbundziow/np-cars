@@ -5,7 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import RentalsReturnCarTable from "../../components/rentals/return/RentalsReturnCarTable";
 import fetchData from "../../utilities/fetchData";
-
+import useAuth from "../../hooks/useAuth";
 
 
 interface Props {
@@ -29,11 +29,12 @@ const ReturnACar = (props: Props) => {
     const [isFail, setFail] = useState<boolean>(false)
     const [isError, setError] = useState<boolean>(false);
     
+    const { auth } = useAuth()
     useEffect(() => {
       const getData = async () => {   
        
-      //TODO: PASS HERE A CORRECT USER ID (CURRENTLY LOGGED IN)
-      const res1 = await fetchData(`${DOMAIN_NAME}/rentals/user/12?type=pending`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      
+      const res1 = await fetchData(`${DOMAIN_NAME}/rentals/users/${auth.userID}?type=pending`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
       setLoading(false)

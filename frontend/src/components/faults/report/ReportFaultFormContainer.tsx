@@ -36,8 +36,7 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
     e.preventDefault();
 
     try {
-      // TODO: ADD CORRECT USER, CARID ETC.!!!!!
-      const response = await fetch(`${DOMAIN_NAME}/faults/report/${props.data.id}`, {
+      const response = await fetch(`${DOMAIN_NAME}/faults/cars/${props.data.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',

@@ -4,7 +4,7 @@ import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
-
+import useAuth from '../../hooks/useAuth'
 import MyReservationsTable from "../../components/reservations/MyReservationsTable";
 
 
@@ -22,6 +22,8 @@ interface ApiResponse {
 const MyReservations = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
+    
+
     const [data1, setData1] = useState<ApiResponse>();  //all cars basic data
 
     const [failData, setFailData] = useState<ApiResponse>();
@@ -29,10 +31,12 @@ const MyReservations = (props: Props) => {
     const [isFail, setFail] = useState<boolean>(false)
     const [isError, setError] = useState<boolean>(false);
     
+
+    const { auth }= useAuth();
     useEffect(() => {
       const getData = async () => {   
-      // TODO: ADD CORRECT USER ID TO LINK INSTEAD '12'
-      const res1 = await fetchData(`${DOMAIN_NAME}/reservations/fetchallofuser/12?time=future`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+
+      const res1 = await fetchData(`${DOMAIN_NAME}/reservations/users/${auth.userID}?time=future`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
 

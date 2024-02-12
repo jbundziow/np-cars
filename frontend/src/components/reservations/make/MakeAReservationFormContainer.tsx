@@ -6,6 +6,7 @@ import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
 import formatDate from "../../../utilities/formatDate";
 
+
 enum PageStatus {
   FillingTheForm,
   FormWasSentCorrectly,
@@ -47,19 +48,17 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
   
 
 
-
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/reservations/add`, {
+      const response = await fetch(`${DOMAIN_NAME}/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
         credentials: 'include',
-        // TODO: ADD CORRECT USER!!!!!
-        body: JSON.stringify({carID: props.data.id, userID: 12, lastEditedByModeratorOfID: null, dateFrom: value?.startDate, dateTo: value?.endDate, travelDestination}),
+        body: JSON.stringify({carID: props.data.id, lastEditedByModeratorOfID: null, dateFrom: value?.startDate, dateTo: value?.endDate, travelDestination}),
       });
 
       if (response.ok) {

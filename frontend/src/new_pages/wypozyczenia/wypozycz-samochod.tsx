@@ -45,7 +45,7 @@ const RentACar = (props: Props) => {
       res1.data.forEach((carData: carBasicData) => carIDsArr.push(carData.id))
 
       for await (const [index, id] of carIDsArr.entries()) {
-      const res2 = await fetchData(`${DOMAIN_NAME}/reservations/fetchallofcar/${id}?time=future`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res2 = await fetchData(`${DOMAIN_NAME}/reservations/cars/${id}?time=future`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       res1.data[index].numberOfFutureReservations = res2.data.reservations.length;
       }
       setData1(res1);

@@ -49,43 +49,42 @@ const RentalsReturnCarFormContainer = (props: RentalsReturnCarFormContainerProps
   const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
 
  
-  const [travelDestination, setTravelDestination] = useState<string>('')
-
-  
+  const [travelDestination, setTravelDestination] = useState<string>(props.rentalData.travelDestination === null ? '' : props.rentalData.travelDestination)
+  const [carMileageAfter, setCarMileageAfter] = useState<number>(props.rentalData.carMileageBefore)
 
 
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // try {
-    //   const response = await fetch(`${DOMAIN_NAME}/reservations/add`, {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json; charset=utf-8',
-    //     },
-    //     credentials: 'include',
-    //     // TODO: ADD CORRECT USER!!!!!
-    //     body: JSON.stringify({carID: props.data.id, userID: 12, lastEditedByModeratorOfID: null, dateFrom: value?.startDate, dateTo: value?.endDate, travelDestination}),
-    //   });
+    try {
+      const response = await fetch(`${DOMAIN_NAME}/rentals/return`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        credentials: 'include',
+        
+        body: JSON.stringify({rentalID: props.rentalData.id, carID: props.rentalData.carID, carMileageAfter: carMileageAfter, dateTo: new Date(), travelDestination: travelDestination}),
+      });
 
-    //   if (response.ok) {
-    //     setPageState(PageStatus.FormWasSentCorrectly);
-    //   } else {
-    //     const responseJSON = await response.json();
-    //     if(responseJSON.status === 'fail') {
-    //       setPageState(PageStatus.FailOnSendingForm);
-    //       setWarnings(responseJSON.data);
+      if (response.ok) {
+        setPageState(PageStatus.FormWasSentCorrectly);
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setPageState(PageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
 
-    //     }
-    //     else {
-    //     setPageState(PageStatus.ErrorWithSendingForm);
-    //     }
-    //   }
-    // }
-    // catch (error) {
-    //   setPageState(PageStatus.ErrorWithSendingForm);
-    // }
+        }
+        else {
+        setPageState(PageStatus.ErrorWithSendingForm);
+        }
+      }
+    }
+    catch (error) {
+      setPageState(PageStatus.ErrorWithSendingForm);
+    }
   };
 
 
@@ -107,10 +106,24 @@ const RentalsReturnCarFormContainer = (props: RentalsReturnCarFormContainerProps
                   {pageState === PageStatus.FillingTheForm ?
                     <form onSubmit={submitHandler}>
                       
+                      <div className='mb-5'>
+                        <label className="mb-3 block text-black dark:text-white">
+                          Przebieg końcowy:
+                        </label>
+                        <input
+                          required
+                          type="number"
+                          min={props.rentalData.carMileageBefore}
+                          placeholder={`Wpisz stan licznika na koniec podróży`}
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                          value={carMileageAfter}
+                          onChange={e => setCarMileageAfter(Number(e.target.value))}
+                        />
+                      </div>
 
                       <div className='mb-5'>
                         <label className="mb-3 block text-black dark:text-white">
-                          Wpisz cel podróży:
+                          Cel podróży:
                         </label>
                         <input
                           required

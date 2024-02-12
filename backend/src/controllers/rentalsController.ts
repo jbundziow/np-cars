@@ -165,7 +165,7 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
                         }
                         else {
                             //everything is OK
-                            await returnCarByNormalUserSchema.validateAsync(data);
+                            await returnCarByNormalUserSchema.validateAsync({...data, returnUserID: userID});
                             await Rental.returnCar(data.rentalID, data.carID, userID, data.carMileageAfter, data.dateTo, data.travelDestination);
                             res.status(200).json({status: 'success', data: data})
                         }
@@ -188,8 +188,9 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
     }
 
     }
-    catch (error) {
-        res.status(500).json({status: 'error', message: error?.toString()})
+    catch (err) {
+        console.log((err as Error).message);
+        res.status(500).json({status: 'error', message: (err as Error).message})
     }
 }
 

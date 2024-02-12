@@ -21,7 +21,7 @@ export default function ModalWarning(props: ModalWarningProps) {
             onClick={(e)=> {if(e.currentTarget.id === 'outside-modal') {props.setShowModal(false)}}}
           > {/* close modal after clicking outside */}
 
-            <div className="relative w-100 my-6 max-w-3xl mx-8">
+            <div className="relative w-96 2xl:w-auto my-6 max-w-3xl mx-8">
               {/*content*/}
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white dark:bg-black outline-none focus:outline-none border-l-6 border-warning">
                 {/*header*/}

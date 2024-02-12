@@ -5,7 +5,6 @@ import ModalWarning from "../../general/ModalWarning";
 
 
 
-
 enum PageStatus {
   FillingTheForm,
   FormWasSentCorrectly,
@@ -93,6 +92,8 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
   const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
 
 
+  
+
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if(props.lastRentalData && props.lastRentalData.carMileageAfter !== null && Number(carMileageBefore) > Number(props.lastRentalData.carMileageAfter)) {
@@ -116,15 +117,14 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
       }
       console.log(travelDestinationSubmit);
 
-      const response = await fetch(`${DOMAIN_NAME}/rentals/add`, {
+      const response = await fetch(`${DOMAIN_NAME}/rentals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
         credentials: 'include',
-        // TODO: ADD CORRECT USER!!!!!
         
-        body: JSON.stringify({carID: props.carData.id, userID: 12, carMileageBefore: carMileageBefore, travelDestination: travelDestinationSubmit}),
+        body: JSON.stringify({carID: props.carData.id, carMileageBefore: carMileageBefore, travelDestination: travelDestinationSubmit}),
       });
 
       if (response.ok) {
@@ -183,7 +183,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                         </label>
                         <input
                           required
-                          type="text"
+                          type="number"
                           step="1"
                           max="2000000"
                           placeholder={`Wpisz przebieg samochodu przed rozpoczęciem podróży`}
