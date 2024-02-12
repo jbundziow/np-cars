@@ -117,7 +117,6 @@ export const addOneRentalByNormalUser = async (req: Request, res: Response, next
 
 
 export const returnCarByNormalUser = async (req: Request, res: Response, next: NextFunction) => {
-    //TODO: ONLY LOGGED USER CAN RETURN CAR!!!
     const data = req.body;
     if (!data.rentalID || isNaN(Number(data.rentalID))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong rental ID.', pl: 'Podano złe ID wypożyczenia.'}]})
@@ -125,10 +124,6 @@ export const returnCarByNormalUser = async (req: Request, res: Response, next: N
     }
     else if (!data.carID || isNaN(Number(data.carID))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
-        return;
-    }
-    else if (!data.returnUserID || isNaN(Number(data.returnUserID))) {
-        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong returnUserID.', pl: 'Podano złe ID użytkownika dokonującego zwrotu samochodu (wypożyczenia).'}]})
         return;
     }
     else if (!data.carMileageAfter || isNaN(Number(data.carMileageAfter))) {
@@ -145,7 +140,8 @@ export const returnCarByNormalUser = async (req: Request, res: Response, next: N
         }
 
         const carData = await Car.fetchOne(Number(data.carID))
-        const isReturnUserExist = await User.fetchOne(Number(data.returnUserID))
+        const userID = await identifyUserId(req.cookies.jwt);
+        const isReturnUserExist = await User.fetchOne(userID)
         if(carData && data.carID === rental.dataValues.carID) {
             if(isReturnUserExist) {
                 if(data.carMileageAfter < rental.dataValues.carMileageBefore) {
@@ -170,14 +166,14 @@ export const returnCarByNormalUser = async (req: Request, res: Response, next: N
                         else {
                             //everything is OK
                             await returnCarByNormalUserSchema.validateAsync(data);
-                            await Rental.returnCar(data.rentalID, data.carID, data.returnUserID, data.carMileageAfter, data.dateTo, data.travelDestination);
+                            await Rental.returnCar(data.rentalID, data.carID, userID, data.carMileageAfter, data.dateTo, data.travelDestination);
                             res.status(200).json({status: 'success', data: data})
                         }
                     }
                 }
             }
             else {
-                res.status(400).json({status: 'fail', data: [{en: `The user of ID: ${data.returnUserID}, who want to return a car (rental) does not exist in the database.`, pl: `Użytkownik o ID: ${data.returnUserID}, który chce dokonać zwrotu samochodu (wypożyczenia) nie istnieje w bazie danych.`}]})
+                res.status(400).json({status: 'fail', data: [{en: `The user of ID: ${userID}, who want to return a car (rental) does not exist in the database.`, pl: `Użytkownik o ID: ${userID}, który chce dokonać zwrotu samochodu (wypożyczenia) nie istnieje w bazie danych.`}]})
                 return; 
             }
         }
@@ -222,7 +218,6 @@ export const fetchLastRentalOfCar = async (req: Request, res: Response, next: Ne
 
 
 export const fetchAllRentalsOfUser = async (req: Request, res: Response, next: NextFunction) => {
-    //TODO: CHECK IF PASSED :userid IS CURRENT USER
     if (!isNaN(Number(req.params.userid))) {
         try {
             const isUserExist = await User.fetchOne(Number(req.params.userid));

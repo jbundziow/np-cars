@@ -6,19 +6,15 @@ import Car from '../models/Car';
 import User from '../models/User';
 import { addOneReservationSchema, dateOnlyValidator } from '../models/validation/ReservationSchemas';
 import { getNextTwoWeeksDatesArr } from '../utilities/functions/getNextTwoWeeksDatesArr';
+import identifyUserId from '../utilities/functions/identifyUserId';
 
 
 
 
 export const addOneReservation = async (req: Request, res: Response, next: NextFunction) => {
-    //TODO: ONLY LOGGED USER CAN ADD RESERVATION!!!
     const data = req.body;
     if (!data.carID || isNaN(Number(data.carID))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
-        return;
-    }
-    else if (!data.userID || isNaN(Number(data.userID))) {
-        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
         return;
     }
     else if(!data.dateFrom || !dateOnlyValidator(data.dateFrom)) {
@@ -33,9 +29,10 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
 
     try {
     const isCarExist = await Car.fetchOne(Number(data.carID))
-    const isUserExist = await User.fetchOne(Number(data.userID))
+    const userID = await identifyUserId(req.cookies.jwt);
+    const isUserExist = await User.fetchOne(userID)
         if(isCarExist && isUserExist) {
-            const newReservation = new Reservation(null, data.carID, data.userID, data.lastEditedByModeratorOfID, data.dateFrom, data.dateTo, data.travelDestination);
+            const newReservation = new Reservation(null, data.carID, userID, data.lastEditedByModeratorOfID, data.dateFrom, data.dateTo, data.travelDestination);
             
             await addOneReservationSchema.validateAsync(newReservation);
 
@@ -50,10 +47,10 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
             }
         else {
             if(!isCarExist) {
-                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carID} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carID} nie istnieje w bazie danych.`}]})
+                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${Number(data.carID)} does not exist in the database.`, pl: `Samochód o ID: ${Number(data.carID)} nie istnieje w bazie danych.`}]})
             }
             else if (!isUserExist) {
-                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${req.params.userID} does not exist in the database.`, pl: `Użytkownik o ID: ${req.params.userID} nie istnieje w bazie danych.`}]})
+                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${userID} does not exist in the database.`, pl: `Użytkownik o ID: ${userID} nie istnieje w bazie danych.`}]})
             }
         }
     }
