@@ -1,9 +1,9 @@
-import express, { NextFunction, Request, Response } from 'express'
-import { addOneRefueling } from '../controllers/refuelingController';
+import express from 'express'
+import { addOneRefueling_POST_user } from '../controllers/refuelingController';
 const app = express.Router();
 
 
-app.post('/report/:carid', addOneRefueling);
+app.post('/:carid', addOneRefueling_POST_user);
 
 
 

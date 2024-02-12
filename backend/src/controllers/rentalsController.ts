@@ -5,10 +5,10 @@ import Car from '../models/Car';
 import User from '../models/User';
 import { addOneNullRentalByNormalUserSchema, addOneRentalByNormalUserSchema, returnCarByNormalUserSchema } from '../models/validation/RentalsSchemas';
 import { isDateString } from '../utilities/functions/isDateString';
-import identifyUserId from '../utilities/functions/identifyUserId';
+import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 
 
-export const fetchOneRental = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchOneRental_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     const rentalID = req.params.rentalid;
     if (!rentalID || isNaN(Number(rentalID))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong rental ID.', pl: 'Podano złe ID wypożyczenia.'}]})
@@ -25,7 +25,7 @@ export const fetchOneRental = async (req: Request, res: Response, next: NextFunc
     }
 }
 
-export const addOneRentalByNormalUser = async (req: Request, res: Response, next: NextFunction) => {
+export const addOneRental_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!data.carID || isNaN(Number(data.carID))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
@@ -116,7 +116,7 @@ export const addOneRentalByNormalUser = async (req: Request, res: Response, next
 }
 
 
-export const returnCarByNormalUser = async (req: Request, res: Response, next: NextFunction) => {
+export const returnCar_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!data.rentalID || isNaN(Number(data.rentalID))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong rental ID.', pl: 'Podano złe ID wypożyczenia.'}]})
@@ -194,7 +194,7 @@ export const returnCarByNormalUser = async (req: Request, res: Response, next: N
 }
 
 
-export const fetchLastRentalOfCar = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchLastRentalOfCar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {
         try {
             const isCarExist = await Car.fetchOne(Number(req.params.carid));
@@ -217,7 +217,7 @@ export const fetchLastRentalOfCar = async (req: Request, res: Response, next: Ne
 }
 
 
-export const fetchAllRentalsOfUser = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.userid))) {
         try {
             const isUserExist = await User.fetchOne(Number(req.params.userid));

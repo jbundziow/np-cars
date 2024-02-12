@@ -6,8 +6,7 @@ import { addOneCarSchema } from '../../models/validation/CarSchemas';
 
 
 
-export const addOneCar = async (req: Request, res: Response, next: NextFunction) => {
-    //TODO: ONLY ADMIN CAN ADD CAR!!!
+export const addOneCar_POST_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     try {
     const newCar = new Car(null, data.brand, data.model, data.type, data.imgPath, data.plateNumber, data.hasFuelCard, data.fuelCardPIN, data.fuelType, data.tankCapacity, data.loadCapacity, new Date(data.nextInspectionDate), new Date(data.nextInsuranceDate), data.availabilityStatus, data.availabilityDescription);

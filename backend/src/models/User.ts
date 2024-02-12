@@ -85,7 +85,7 @@ class User {
     }
 
     static async fetchAll() {
-        return await UserModel.findAll()
+        return await UserModel.findAll({attributes: { exclude: ['password'] }})
     }
 
     static async fetchOne(id: number) {

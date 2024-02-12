@@ -1,9 +1,9 @@
-import express, { NextFunction, Request, Response } from 'express'
-import { addOneCar } from '../controllers/admin/carsController';
+import express from 'express'
+import { addOneCar_POST_admin } from '../controllers/admin/carsController';
 
 const app = express.Router();
 
-app.post('/cars/add', addOneCar)
+app.post('/cars', addOneCar_POST_admin)
 
 
 //TODO: update refueling

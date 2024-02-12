@@ -1,7 +1,7 @@
 import { Sequelize, DataTypes } from 'sequelize';
 
-
-const sequelize = new Sequelize('sqlite:./src/database/database.db'); //file location
+require('dotenv').config();
+const sequelize = new Sequelize(`sqlite:${process.env.DB_FILE_LOCATION}`); //file location
 
 
 export default sequelize;

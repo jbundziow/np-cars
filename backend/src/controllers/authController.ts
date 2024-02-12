@@ -1,25 +1,14 @@
 
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken')
-import JWT_SECRET_KEY from '../config/JWT_SECRET_KEY';
 
 import { NextFunction, Request, Response, response } from 'express'
 import { signUpUserSchema } from '../models/validation/UserSchemas';
-
+import createToken from '../utilities/functions/JWT/createToken'
 import User from '../models/User';
 
 
-//create JWT
-const maxAge = 60*60; //1h
-const createToken = (id: number, role: 'unconfirmed' | 'banned' | 'admin' | 'user') => {
-    return jwt.sign({id, role}, JWT_SECRET_KEY, {
-        expiresIn: maxAge
-    });
-}
 
-
-
-export const signup_POST = async (req: Request, res: Response, next: NextFunction) => {
+export const signup_POST_public = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     try {
     const newUser = new User(null, data.email.toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, null, 'unconfirmed');
@@ -56,7 +45,7 @@ export const signup_POST = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
-export const login_POST = async (req: Request, res: Response, next: NextFunction) => {
+export const login_POST_public = async (req: Request, res: Response, next: NextFunction) => {
     const {email, password} = req.body;
 
     if(req.cookies.jwt) { //logout if user is already logged in
@@ -67,13 +56,13 @@ export const login_POST = async (req: Request, res: Response, next: NextFunction
 
     try {
         const loggedUser = await User.login(email, password);
-        const token = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role);
+        const token = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role, Number(process.env.JWT_MAXAGE));
         //TODO: MAKE SURE THAT IN PRODUCTION SECURE IS ENABLED
-        res.cookie('jwt', token, { httpOnly: true, secure: process.env.NODE_ENV !== "dev", maxAge: maxAge * 1000 })
+        res.cookie('jwt', token, { httpOnly: true, secure: process.env.NODE_ENV !== "dev", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
 
         //available for frontend to read, the same maxAge as httpOnly JWT token
-        res.cookie('userID', loggedUser.dataValues.id, { httpOnly: false, secure: process.env.NODE_ENV !== "dev", maxAge: maxAge * 1000 })
-        res.cookie('userRole', loggedUser.dataValues.role, { httpOnly: false, secure: process.env.NODE_ENV !== "dev", maxAge: maxAge * 1000 })
+        res.cookie('userID', loggedUser.dataValues.id, { httpOnly: false, secure: process.env.NODE_ENV !== "dev", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
+        res.cookie('userRole', loggedUser.dataValues.role, { httpOnly: false, secure: process.env.NODE_ENV !== "dev", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
 
         res.status(200).json({status: 'success', data: {userID: loggedUser.dataValues.id, userRole: loggedUser.dataValues.role}});
     }
@@ -91,7 +80,7 @@ export const login_POST = async (req: Request, res: Response, next: NextFunction
     
 }
 
-export const logout_GET = async (req: Request, res: Response, next: NextFunction) => {
+export const logout_GET_public = async (req: Request, res: Response, next: NextFunction) => {
     res.cookie('jwt', '', { maxAge: 1 });
     res.cookie('userID', '', { maxAge: 1 });
     res.cookie('userRole', '', { maxAge: 1 });

@@ -11,8 +11,12 @@ import refuelingRoutes from './routes/refueling'
 import usersRoutes from './routes/users'
 import reservationsRoutes from './routes/reservations'
 import rentalsRoutes from './routes/rentals'
+import placesRoutes from './routes/places'
 
 import { requireAuthAsAdmin, requireAuthAsUser } from "./middleware/authMiddleware"
+
+
+require('dotenv').config(); //https://www.npmjs.com/package/dotenv
 
 const app = express();
 
@@ -52,6 +56,7 @@ app.use('/refuelings', requireAuthAsUser, refuelingRoutes)
 app.use('/users', requireAuthAsUser, usersRoutes)
 app.use('/reservations', requireAuthAsUser, reservationsRoutes)
 app.use('/rentals', requireAuthAsUser, rentalsRoutes)
+app.use('/places', requireAuthAsUser, placesRoutes)
 
 //for 'admin'
 app.use('/admin', requireAuthAsAdmin, adminRoutes)

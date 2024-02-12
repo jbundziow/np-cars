@@ -5,7 +5,7 @@ import User from '../models/User';
 
 
 
-export const fetchAllUsers = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllUsers_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const data = await User.fetchAll();
         res.json({status: 'success', data: data});
@@ -15,7 +15,7 @@ export const fetchAllUsers = async (req: Request, res: Response, next: NextFunct
     }
 }
 
-export const fetchOneUser = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchOneUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     console.log(req.params.userid);
     if (!isNaN(Number(req.params.userid))) {
         try {

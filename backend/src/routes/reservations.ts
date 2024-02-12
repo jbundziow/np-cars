@@ -1,13 +1,14 @@
-import express, { NextFunction, Request, Response } from 'express'
-import { addOneReservation, checkReservationsForAllCarsForTheNextTwoWeeks, checkReservationsForOneCarForTheNextTwoWeeks, findAllReservationsOfCar, findAllReservationsOfUser} from '../controllers/reservationController';
+import express from 'express'
+import { addOneReservation_POST_user, checkReservationsForAllCarsForTheNextTwoWeeks_GET_user, checkReservationsForOneCarForTheNextTwoWeeks_GET_user, findAllReservationsOfCar_GET_user, findAllReservationsOfUser_GET_user} from '../controllers/reservationController';
 const app = express.Router();
 
 
-app.post('/add', addOneReservation);
-app.get('/checktwoweeksfor/:carid', checkReservationsForOneCarForTheNextTwoWeeks)
-app.get('/checktwoweeksforallcars', checkReservationsForAllCarsForTheNextTwoWeeks)
-app.get('/fetchallofcar/:carid', findAllReservationsOfCar)
-app.get('/fetchallofuser/:userid', findAllReservationsOfUser)
+app.post('/', addOneReservation_POST_user);
+
+app.get('/twoweeks/cars', checkReservationsForAllCarsForTheNextTwoWeeks_GET_user)
+app.get('/twoweeks/cars/:carid', checkReservationsForOneCarForTheNextTwoWeeks_GET_user)
+app.get('/cars/:carid', findAllReservationsOfCar_GET_user)
+app.get('/users/:userid', findAllReservationsOfUser_GET_user)
 
 
 

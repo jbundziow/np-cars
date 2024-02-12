@@ -5,12 +5,12 @@ import Fault from '../models/Fault'
 import Car from '../models/Car'
 import User from '../models/User';
 import { addOneFaultByUserSchema } from '../models/validation/FaultsSchemas';
-import identifyUserId from '../utilities/functions/identifyUserId';
+import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 
 
 
 
-export const addOneFault = async (req: Request, res: Response, next: NextFunction) => {
+export const addOneFault_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!isNaN(Number(req.params.carid))) {
         try {
@@ -20,6 +20,11 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
         if(isCarExist && isUserExist) {
         const newFault = new Fault(null, Number(req.params.carid), userID, null, null, data.title, data.description, 'pending', null, null);
         await addOneFaultByUserSchema.validateAsync(newFault);
+        const duplicate = await Fault.fetchDuplicate(Number(req.params.carid), data.title, data.description);
+        if(duplicate) {
+            res.status(400).json({status: 'fail', data: [{en: `This fault is already exist for that car`, pl: `Taka usterka już istnieje dla tego samochodu`}]})
+            return;
+        }
         await newFault.addOneFault();
         res.status(200).json({status: 'success', data: data});
         }
@@ -43,7 +48,7 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
-export const fetchOneFault = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchOneFault_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.faultid))) {
         try {
             const faultData = await Fault.fetchOne(Number(req.params.faultid));
@@ -71,7 +76,7 @@ export const fetchOneFault = async (req: Request, res: Response, next: NextFunct
     }
 }
 
-export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllFaultsOfACar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {
         try {
             const carData = await Car.fetchOneBasicData(Number(req.params.carid))
@@ -105,7 +110,7 @@ export const fetchAllFaultsOfACar = async (req: Request, res: Response, next: Ne
     }
 }
 
-export const fetchAllCarsWithNumberOfFaults = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllCarsWithNumberOfFaults_GET_user = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const carsData = await Car.fetchAllBasicData();
             let carsIDs:number[] = []
@@ -115,7 +120,6 @@ export const fetchAllCarsWithNumberOfFaults = async (req: Request, res: Response
             let cancelled:number[] = [];
 
             carsData.forEach(item => carsIDs.push(item.dataValues.id))
-
             for await (const id of carsIDs) {
             pending.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('pending', id));
             accepted.push(await Fault.fetchNumberOfRecordsOfCarThatHaveStatus('accepted', id));
@@ -137,7 +141,7 @@ export const fetchAllCarsWithNumberOfFaults = async (req: Request, res: Response
 }
 
 
-export const fetchAllFaultsOfUser = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllFaultsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.userid))) {
         try {
             let faultsOfUser;

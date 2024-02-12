@@ -5,11 +5,11 @@ import Refueling from '../models/Refueling';
 import Car from '../models/Car';
 import User from '../models/User'
 import { addOneRefuelingByNormalUserSchema } from '../models/validation/RefuelingSchemas';
-import identifyUserId from '../utilities/functions/identifyUserId';
+import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 
 
 
-export const addOneRefueling = async (req: Request, res: Response, next: NextFunction) => {
+export const addOneRefueling_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!req.params.carid || isNaN(Number(req.params.carid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})

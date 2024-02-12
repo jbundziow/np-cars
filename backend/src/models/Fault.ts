@@ -92,6 +92,10 @@ class Fault {
         return await FaultModel.findOne({ where: { id: id } })
     }
 
+    static async fetchDuplicate(carid: number, title: string, description: string) {
+      return await FaultModel.findOne({ where: { carID: carid, title, description } })
+    }
+
     static async fetchAllByCarIdAndStatus(carID: number, status: 'pending' | 'accepted' | 'finished' | 'cancelled') {
       return await FaultModel.findAll({ where: { carID: carID, status: status } })
     }

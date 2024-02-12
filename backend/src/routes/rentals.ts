@@ -1,12 +1,13 @@
-import express, { NextFunction, Request, Response } from 'express'
-import { addOneRentalByNormalUser, fetchAllRentalsOfUser, fetchLastRentalOfCar, returnCarByNormalUser, fetchOneRental } from '../controllers/rentalsController';
+import express from 'express'
+import { addOneRental_POST_user, fetchAllRentalsOfUser_GET_user, fetchLastRentalOfCar_GET_user, returnCar_POST_user, fetchOneRental_GET_user } from '../controllers/rentalsController';
 const app = express.Router();
 
-app.get('/:rentalid', fetchOneRental)
-app.post('/add', addOneRentalByNormalUser);
-app.post('/returncar', returnCarByNormalUser);
-app.get('/user/:userid', fetchAllRentalsOfUser)
-app.get('/car/:carid/last', fetchLastRentalOfCar)
+
+app.post('/', addOneRental_POST_user);
+app.post('/return', returnCar_POST_user);
+app.get('/users/:userid', fetchAllRentalsOfUser_GET_user)
+app.get('/cars/:carid/last', fetchLastRentalOfCar_GET_user)
+app.get('/:rentalid', fetchOneRental_GET_user)
 
 
 

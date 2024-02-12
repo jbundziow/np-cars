@@ -1,11 +1,11 @@
 
-import { NextFunction, Request, Response, response } from 'express'
+import { NextFunction, Request, Response } from 'express'
 
 import Car from '../models/Car'
 
 
 
-export const fetchAllCars = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllCars_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     let dbResponse;
     try {
         if(req.query.basicdata && req.query.basicdata === 'true') {
@@ -22,7 +22,7 @@ export const fetchAllCars = async (req: Request, res: Response, next: NextFuncti
 }
 
 
-export const fetchOneCar = async (req: Request, res: Response, next: NextFunction) => { 
+export const fetchOneCar_GET_user = async (req: Request, res: Response, next: NextFunction) => { 
     let dbResponse;
     if (!isNaN(Number(req.params.carid))) {
         try {

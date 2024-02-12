@@ -1,14 +1,13 @@
-import express, { NextFunction, Request, Response } from 'express'
-import {addOneFault, fetchAllFaultsOfACar, fetchAllCarsWithNumberOfFaults, fetchOneFault, fetchAllFaultsOfUser} from '../controllers/faultsController';
+import express from 'express'
+import {addOneFault_POST_user, fetchAllFaultsOfACar_GET_user, fetchAllCarsWithNumberOfFaults_GET_user, fetchOneFault_GET_user, fetchAllFaultsOfUser_GET_user} from '../controllers/faultsController';
 const app = express.Router();
 
 
-app.post('/report/:carid', addOneFault);
-
-app.get('/fetchone/:faultid', fetchOneFault);
-app.get('/getall/:carid', fetchAllFaultsOfACar);
-app.get('/getnumbers', fetchAllCarsWithNumberOfFaults);
-app.get('/fetchallofuser/:userid', fetchAllFaultsOfUser);
+app.get('/numbers', fetchAllCarsWithNumberOfFaults_GET_user);
+app.post('/cars/:carid', addOneFault_POST_user);
+app.get('/cars/:carid', fetchAllFaultsOfACar_GET_user);
+app.get('/users/:userid', fetchAllFaultsOfUser_GET_user);
+app.get('/:faultid', fetchOneFault_GET_user);
 
 
 export default app;

@@ -6,12 +6,12 @@ import Car from '../models/Car';
 import User from '../models/User';
 import { addOneReservationSchema, dateOnlyValidator } from '../models/validation/ReservationSchemas';
 import { getNextTwoWeeksDatesArr } from '../utilities/functions/getNextTwoWeeksDatesArr';
-import identifyUserId from '../utilities/functions/identifyUserId';
+import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 
 
 
 
-export const addOneReservation = async (req: Request, res: Response, next: NextFunction) => {
+export const addOneReservation_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!data.carID || isNaN(Number(data.carID))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
@@ -61,7 +61,7 @@ export const addOneReservation = async (req: Request, res: Response, next: NextF
 
 
 
-export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
+export const checkReservationsForOneCarForTheNextTwoWeeks_GET_user = async (req: Request, res: Response, next: NextFunction) => {
 
     type oneDayObjectType = {
         date: string,
@@ -119,7 +119,7 @@ export const checkReservationsForOneCarForTheNextTwoWeeks = async (req: Request,
 }
 
 
-export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request, res: Response, next: NextFunction) => {
+export const checkReservationsForAllCarsForTheNextTwoWeeks_GET_user = async (req: Request, res: Response, next: NextFunction) => {
 
     type reservationsType = {
         date: string,
@@ -184,7 +184,7 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks = async (req: Request
     }
 }
 
-export const findAllReservationsOfUser = async (req: Request, res: Response, next: NextFunction) => {
+export const findAllReservationsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.userid || isNaN(Number(req.params.userid))) {
             res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
@@ -214,7 +214,7 @@ export const findAllReservationsOfUser = async (req: Request, res: Response, nex
     }
 }
 
-export const findAllReservationsOfCar = async (req: Request, res: Response, next: NextFunction) => {
+export const findAllReservationsOfCar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.carid || isNaN(Number(req.params.carid))) {
             res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
