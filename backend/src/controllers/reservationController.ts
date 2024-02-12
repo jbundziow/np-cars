@@ -7,6 +7,7 @@ import User from '../models/User';
 import { addOneReservationSchema, dateOnlyValidator } from '../models/validation/ReservationSchemas';
 import { getNextTwoWeeksDatesArr } from '../utilities/functions/getNextTwoWeeksDatesArr';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
+import { getFormattedDate } from '../utilities/functions/getFormattedDate';
 
 
 
@@ -59,6 +60,46 @@ export const addOneReservation_POST_user = async (req: Request, res: Response, n
     }
 }
 
+
+export const deleteOneReservation_DELETE_user = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+    if (!data.reservationID || isNaN(Number(data.reservationID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong reservation ID.', pl: 'Podano złe ID rezerwacji.'}]})
+        return;
+    }
+
+    try {
+        const isReservationExist = await Reservation.fetchOne(Number(data.reservationID))
+        const userID = await identifyUserId(req.cookies.jwt);
+        const isUserExist = await User.fetchOne(userID)
+
+        if(!isReservationExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The reservation of id: ${Number(data.reservationID)} does not exist in the database.`, pl: `Rezerwacja o ID: ${Number(data.reservationID)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+        if(!isUserExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The user of id: ${userID} does not exist in the database.`, pl: `Użytkownik o ID: ${userID} nie istnieje w bazie danych.`}]})
+            return;
+        }
+        if(isReservationExist.dataValues.userID !== userID) {
+            res.status(400).json({status: 'fail', data: [{en: `You cannot delete a reservation that does not belong to you`, pl: `Nie możesz usunąć rezerwacji, która nie należy do Ciebie.`}]})
+            return; 
+        }
+
+        const dateToday = new Date(getFormattedDate(new Date())) //date today but in format "2024-02-12T00:00:00.000Z". Hours, minutes, seconds set to 0.
+        if(isReservationExist.dataValues.dateTo < dateToday) {
+            res.status(400).json({status: 'fail', data: [{en: `You cannot delete past reservations. Only administrator has permissions to do it.`, pl: `Nie możesz usuwać przeszłych rezerwacji. Tylko administrator może to zrobić.`}]})
+            return; 
+        }
+
+        const result = await Reservation.deleteReservation(Number(data.reservationID));
+        res.status(200).json({status: 'success', data: result})
+            
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
+}
 
 
 export const checkReservationsForOneCarForTheNextTwoWeeks_GET_user = async (req: Request, res: Response, next: NextFunction) => {

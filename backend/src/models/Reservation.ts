@@ -82,6 +82,19 @@ class Reservation {
         return await ReservationModel.findOne({ where: { id: id } })
     }
 
+    static async deleteReservation(id: number) {
+      const reservation = await Reservation.fetchOne(id);
+
+      if (reservation) {
+        return await reservation.destroy();
+      }
+      else {
+        throw new Error('Reservation not found');
+      }
+  
+  }
+  
+
     static async checkReservationAtDesiredDay (carID: number, date: Date) {
       return await ReservationModel.findOne({
         where: {
