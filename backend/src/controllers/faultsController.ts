@@ -3,6 +3,7 @@ import { NextFunction, Request, Response, response } from 'express'
 
 import Fault from '../models/Fault'
 import Car from '../models/Car'
+import User from '../models/User';
 import { addOneFaultByUserSchema } from '../models/validation/FaultsSchemas';
 import identifyUserId from '../utilities/functions/identifyUserId';
 
@@ -14,15 +15,23 @@ export const addOneFault = async (req: Request, res: Response, next: NextFunctio
     if (!isNaN(Number(req.params.carid))) {
         try {
         const isCarExist = await Car.fetchOne(Number(req.params.carid))
-        if(isCarExist) {
         const userID = await identifyUserId(req.cookies.jwt);
+        const isUserExist = await User.fetchOne(userID);
+        if(isCarExist && isUserExist) {
         const newFault = new Fault(null, Number(req.params.carid), userID, null, null, data.title, data.description, 'pending', null, null);
         await addOneFaultByUserSchema.validateAsync(newFault);
         await newFault.addOneFault();
         res.status(200).json({status: 'success', data: data});
         }
         else {
-            res.status(400).json({status: 'fail', data: [{en: `The car of id: ${req.params.carid} does not exist in the database.`, pl: `Samochód o ID: ${req.params.carid} nie istnieje w bazie danych.`}]})
+            if(!isCarExist) {
+                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${Number(req.params.carid)} does not exist in the database.`, pl: `Samochód o ID: ${Number(req.params.carid)} nie istnieje w bazie danych.`}]})
+                return;
+            }
+            else if (!isUserExist) {
+                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${userID} does not exist in the database.`, pl: `Użytkownik o ID: ${userID} nie istnieje w bazie danych.`}]})
+                return;
+            }
         }
         }
         catch (err) {
