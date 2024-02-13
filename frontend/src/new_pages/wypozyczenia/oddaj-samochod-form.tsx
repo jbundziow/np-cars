@@ -41,7 +41,6 @@ const ReturnACarForm = (props: Props) => {
       
       const res1 = await fetchData(`${DOMAIN_NAME}/rentals/${params.rentalid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
-      //TODO: CHECK IF USERID OF RENTAL IS A CURRENT USER ID OR IF USER IS MODERATOR
       if(res1.status==='success') {
       const res2 = await fetchData(`${DOMAIN_NAME}/cars/${res1.data.carID}/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData2(res2);
