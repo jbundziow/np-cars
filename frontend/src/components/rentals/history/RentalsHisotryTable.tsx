@@ -90,14 +90,18 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                }
               )}
               <tr>
-              <td></td>
+              <td>
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma całościowa: 1842 km</p>
+                </div>  
+              </td>
               <td></td>
               <td></td>
               <td></td>
               <td></td>
               <td className="pt-5">
                 <div className="flex justify-center">
-                  <p className='dark:text-white text-black text-xs xl:text-sm'>Suma: 230 km</p>
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma częściowa: 230 km</p>
                 </div>  
               </td>
               <td></td>

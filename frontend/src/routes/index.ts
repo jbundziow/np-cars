@@ -20,6 +20,8 @@ const RentACarForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samoc
 const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod'));
 const ReturnACarForm = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod-form'));
 const MyRentals = lazy(() => import('../new_pages/wypozyczenia/moje-wypozyczenia'));
+const UserPage = lazy(() => import('../new_pages/uzytkownicy/UserPage'));
+
 const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
@@ -145,6 +147,11 @@ const coreRoutes = [
     path: '/usterki/archiwum',
     title: 'Archiwum napraw',
     component: FaultsArchive,
+  },
+  {
+    path: '/uzytkownicy/:userid',
+    title: 'Profil użytkownika',
+    component: UserPage,
   },
 
 
