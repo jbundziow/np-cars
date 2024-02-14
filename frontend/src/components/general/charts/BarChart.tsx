@@ -1,5 +1,5 @@
 import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 interface BarChartState {
@@ -11,7 +11,8 @@ type BarChartProps = {
   data: number[],
   categories: string[],
   filterBy: 'year' | 'month'
-  setFilter: Function
+  filterValue: number
+  setFilterValue: Function
 }
 
 const BarChart = (props: BarChartProps) => {
@@ -38,7 +39,6 @@ const BarChart = (props: BarChartProps) => {
       bar: {
         horizontal: false,
         columnWidth: '55%',
-        // endingShape: "rounded",
         borderRadius: 2,
       },
     },
@@ -69,9 +69,6 @@ const BarChart = (props: BarChartProps) => {
         radius: 99,
       },
     },
-    // yaxis: {
-    //   title: false,
-    // },
     grid: {
       yaxis: {
         lines: {
@@ -87,11 +84,6 @@ const BarChart = (props: BarChartProps) => {
       x: {
         show: true,
       },
-      // y: {
-      //   formatter: function (val) {
-      //     return val;
-      //   },
-      // },
     },
   };
 
@@ -124,7 +116,7 @@ const BarChart = (props: BarChartProps) => {
 
  
   const filterChanged = (value: number) => {
-    props.setFilter(value)
+    props.setFilterValue(value)
 
   }
 
@@ -144,6 +136,7 @@ const BarChart = (props: BarChartProps) => {
               id="#"
               className="relative z-20 inline-flex appearance-none bg-transparent py-1 pl-3 pr-8 text-sm font-medium outline-none text-black dark:text-white"
               onChange={(e)=>filterChanged(Number(e.target.value))}
+              value={props.filterValue}
             >
               {generateOptionsData(props.filterBy).map(val => <option className='bg-white dark:bg-black' value={val.value}>{val.text}</option>)}
             </select>

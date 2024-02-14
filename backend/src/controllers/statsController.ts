@@ -15,12 +15,11 @@ export const fetchTotalTravelledDistanceByUser_GET_user = async (req: Request, r
     switch (Number(query.year)) {
         case 2024:
             res.status(200).json({status: 'success', data: {
-                status: "success",
-                data: {
                   userid: Number(query.userid),
                   year: Number(query.year),
+                  key: Math.random(),
                   distance: [
-                    {month_num: 0, month_text: 'January', total_dist: 312},
+                    {month_num: 0, month_text: 'January', total_dist: Math.floor(Math.random() * 101)},
                     {month_num: 1, month_text: 'February', total_dist: 242},
                     {month_num: 2, month_text: 'March', total_dist: 165},
                     {month_num: 3, month_text: 'April', total_dist: 362},
@@ -33,16 +32,14 @@ export const fetchTotalTravelledDistanceByUser_GET_user = async (req: Request, r
                     {month_num: 10, month_text: 'November', total_dist: 100},
                     {month_num: 11, month_text: 'December', total_dist: 494}
                   ]
-                }
             }})
             break;
 
         case 2023:
         res.status(200).json({status: 'success', data: {
-            status: "success",
-            data: {
                 userid: Number(query.userid),
                 year: Number(query.year),
+                key: Math.random(),
                 distance: [
                 {month_num: 0, month_text: 'January', total_dist: 100},
                 {month_num: 1, month_text: 'February', total_dist: 342},
@@ -57,16 +54,14 @@ export const fetchTotalTravelledDistanceByUser_GET_user = async (req: Request, r
                 {month_num: 10, month_text: 'November', total_dist: 194},
                 {month_num: 11, month_text: 'December', total_dist: 44}
                 ]
-            }
         }})
         break;
 
         case 2022:
         res.status(200).json({status: 'success', data: {
-            status: "success",
-            data: {
                 userid: Number(query.userid),
                 year: Number(query.year),
+                key: Math.random(),
                 distance: [
                 {month_num: 0, month_text: 'January', total_dist: 42},
                 {month_num: 1, month_text: 'February', total_dist: 432},
@@ -81,7 +76,6 @@ export const fetchTotalTravelledDistanceByUser_GET_user = async (req: Request, r
                 {month_num: 10, month_text: 'November', total_dist: 932},
                 {month_num: 11, month_text: 'December', total_dist: 542}
                 ]
-            }
         }})
         break;
     

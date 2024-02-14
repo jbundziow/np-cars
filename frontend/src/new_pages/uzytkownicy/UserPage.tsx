@@ -24,51 +24,48 @@ interface ApiResponse {
 const UserPage = (props: Props) => {
   useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
+  const { auth } = useAuth();
   const params = useParams();
 
   useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
   const [data1, setData1] = useState<ApiResponse>();  //user data
+  const [data2, setData2] = useState<ApiResponse>();  //<BarChart> data
 
   const [failData, setFailData] = useState<ApiResponse>();
   const [loading, setLoading] = useState<boolean>(true);
   const [isFail, setFail] = useState<boolean>(false)
   const [isError, setError] = useState<boolean>(false);
+
+  const [filterValue, setFilterValue] = useState(2024); //year to <BarChart>
   
   useEffect(() => {
     const getData = async () => {   
 
     const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
     setData1(res1);
-
-    if(!res1.data) {
-      setError(true)
+    if(res1.status === 'success') {
+      const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/distance?userid=${auth.userID}&year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData2(res2)
     }
 
     setLoading(false)
     }
     getData()
-  }, [])
+  }, [params.userid,filterValue])
+
+
+  // function generateRandomNumbers(): number[] {
+  //   const numbers: number[] = [];
+  //   for (let i = 0; i < 12; i++) {
+  //     const randomNumber = Math.floor(Math.random() * (300 - 100 + 1) + 100);
+  //     numbers.push(randomNumber);
+  //   }
+  //   return numbers;
+  // }
 
 
   
-  //TODO: DELETE IT LATER .....
-  const [kilometers, setKilometers] = useState(generateRandomNumbers());
-  const [chartKey, setChartKey] = useState(0);
-
-
-  function generateRandomNumbers(): number[] {
-    const numbers: number[] = [];
-    for (let i = 0; i < 12; i++) {
-      const randomNumber = Math.floor(Math.random() * (300 - 100 + 1) + 100);
-      numbers.push(randomNumber);
-    }
-    return numbers;
-  }
-
-  //TODO: DELETE IT LATER ^^^^
-
-  const { auth } = useAuth();
 
   return (
     <>
@@ -164,7 +161,7 @@ const UserPage = (props: Props) => {
             </div>
 
           <div className="md:my-10 md:mx-10">
-          <BarChart key={chartKey} title={'Przejechane kilometry'} data={kilometers} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} setFilter={async (value: number) => {await setKilometers(generateRandomNumbers()); await setChartKey(Math.random()); console.log(kilometers)}}/>
+          <BarChart key={data2?.data.key} title={'Przejechane kilometry'} data={data2?.data.distance.map((obj: {month_num: number, month_text: string, total_dist: number}) => obj.total_dist)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={filterValue} setFilterValue={(value: number) => {setFilterValue(value)}}/>
           </div>
 
           </div>
