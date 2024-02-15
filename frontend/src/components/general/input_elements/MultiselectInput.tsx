@@ -1,0 +1,82 @@
+import { useState } from "react";
+import Select from "react-tailwindcss-select";
+import { SelectValue } from "react-tailwindcss-select/dist/components/type";
+
+
+type MultiselectInputProps = {
+//   title: string,
+//   data: number[],
+//   categories: string[],
+//   filterBy: 'year' | 'month'
+//   filterValue: number
+//   setFilterValue: Function
+}
+
+const MultiselectInput = (props: MultiselectInputProps) => {
+
+    const options = [
+        { value: "1", label: "Citroen C4" },
+        { value: "2", label: "Mercedes Sprinter" },
+        { value: "3", label: "Ford Focus" }
+    ];
+    const[car, setCar] =useState<SelectValue>(null);
+
+    const handleChange = (value: SelectValue) => {
+        console.log("value:", value);
+        setCar(value);
+    };
+
+
+    return (
+        <Select
+        primaryColor="indigo"
+        isMultiple={true}
+        isSearchable={true}
+        placeholder={`Wybierz...`}
+        searchInputPlaceholder={`Zacznij pisać...`}
+        noOptionsMessage={`Brak rezultatów`}
+        value={car}
+        onChange={handleChange}
+        options={options}
+
+
+        classNames={{
+            //@ts-ignore
+            menuButton: ({ isDisabled }) => (
+                `flex w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-1 px-1 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-base
+                ${
+                    isDisabled
+                        ? "bg-gray-800"
+                        : "bg-gray-800 hover:border-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-500/20"
+                }`
+            ),
+            menu: "absolute z-10 w-full bg-white dark:bg-form-input shadow-lg border rounded py-1 mt-1.5 text-sm sm:text-base text-gray-700",
+            //@ts-ignore
+            listItem: ({ isSelected }) => (
+                `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${
+                    isSelected
+                        ? `text-white bg-blue-500`
+                        : `text-gray-500 hover:bg-blue-100 hover:text-blue-500`
+                }`
+            ),
+            searchContainer: `relative py-1 px-2.5`,
+            searchIcon: `absolute w-5 h-5 mt-2.5 pb-0.5 ml-2 text-gray-500`,
+            searchBox: `w-full py-2 pl-10 text-sm sm:text-base text-gray-500 bg-gray-100 dark:bg-black border border-gray-200 rounded focus:border-gray-200 focus:ring-0 focus:outline-none`,
+        }}
+        />
+    );
+}
+export default MultiselectInput;
+
+
+
+
+
+
+
+
+
+
+
+
+
