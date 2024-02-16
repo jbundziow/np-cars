@@ -5,9 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import useAuth from '../../hooks/useAuth'
-import MyReservationsTable from "../../components/reservations/MyReservationsTable";
-import RentalsHistoryTable from "../../components/rentals/history/RentalsHisotryTable";
-import TableFiltering from "../../components/rentals/history/TableFiltering";
+import RentalsHistory from "../../components/rentals/history/RentalsHistory";
 
 
 
@@ -57,7 +55,7 @@ const RentalsArchive = (props: Props) => {
       <>
       <Breadcrumb pageName="Archiwum wypożyczeń" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <div><TableFiltering/><RentalsHistoryTable rentalsData={data1?.data} allCarsBasicData={data2?.data}/></div> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };

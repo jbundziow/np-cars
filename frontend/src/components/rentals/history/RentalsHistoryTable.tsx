@@ -8,7 +8,7 @@ type carBasicData = {
   availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
 }
 
-type reservationData = {
+type rentalsData = {
   id: number,
   carID: number,
   userID: number,
@@ -24,7 +24,7 @@ type reservationData = {
 
 
 type RentalsHistoryTableProps = {
-  rentalsData: reservationData[],
+  rentalsData: rentalsData[],
   allCarsBasicData: carBasicData[],
 }
 
@@ -44,10 +44,10 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                   Samochód
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
-                  Data od
+                  Data wypożyczenia
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
-                  Data do
+                  Data zwrotu
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Przebieg początkowy [km]

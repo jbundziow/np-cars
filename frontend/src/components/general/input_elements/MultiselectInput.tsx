@@ -28,7 +28,7 @@ const MultiselectInput = (props: MultiselectInputProps) => {
         classNames={{
             //@ts-ignore
             menuButton: ({ isDisabled }) => (
-                `flex w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-1 px-1 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-base
+                `flex w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-1 px-1 outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-base
                 ${
                     isDisabled
                         ? "bg-gray-800"
