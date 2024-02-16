@@ -12,19 +12,19 @@ type TableFilteringProps = {
 
 const TableFiltering = (props: TableFilteringProps) => {
 
-    type InputRange = { from: number, to: number} | null;
-
     const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
     const [rentalDateFrom, setRentalDateFrom] = useState<DateValueType>(null);
     const [rentalDateTo, setRentalDateTo] = useState<DateValueType>(null);
-    const [carMileageBefore, setCarMileageBefore] = useState<InputRange>(null);
-    const [carMileageAfter, setCarMileageAfter] = useState<InputRange>(null);
-    const [distance, setDistance] = useState<InputRange>(null);
+    const [carMileageBefore_FROM, setCarMileageBefore_FROM] = useState<number | undefined>(undefined);
+    const [carMileageBefore_TO, setCarMileageBefore_TO] = useState<number | undefined>(undefined);
+    const [carMileageAfter_FROM, setCarMileageAfter_FROM] = useState<number | undefined>(undefined);
+    const [carMileageAfter_TO, setCarMileageAfter_TO] = useState<number | undefined>(undefined);
+    const [distance_FROM, setDistance_FROM] = useState<number | undefined>(undefined);
+    const [distance_TO, setDistance_TO] = useState<number | undefined>(undefined);
     const [travelDestination, setTravelDestination] = useState<string>('');
     const [selectedReturnedByUser, setSelectedReturnedByUser] = useState<SelectValue>(null);
-    const [acknowledgedByModerator, setAcknowledgedByModerator] = useState<'' | 'true' | 'false'>('');
+    const [acknowledgedByModerator, setAcknowledgedByModerator] = useState<string>('');
     const [selectedPlace, setSelectedPlace] = useState<SelectValue>(null);
-    
 
     const carOptions = [
         { value: "1", label: "Citroen C4" },
@@ -45,9 +45,52 @@ const TableFiltering = (props: TableFilteringProps) => {
     ];
 
 
+
+
+    const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        // const carIDs = selectedCars.map(obj: Op=> )
+
+        const filtersObj = {
+            carIDs: [1,2,3],
+            userIDs: [1,2,3],
+            returnUserIDs: [1,2,3],
+            placeIDs: [1,2,3],
+            editedByModerator: acknowledgedByModerator,
+            carMileageBefore: {
+                from: carMileageBefore_FROM,
+                to: carMileageBefore_TO
+            },
+            carMileageAfter: {
+                from: carMileageAfter_FROM,
+                to: carMileageAfter_TO
+            },
+            distance: {
+                from: distance_FROM,
+                to: distance_TO
+            },
+            travelDestination: travelDestination,
+            dateFrom: {
+                from: rentalDateFrom?.startDate,
+                to: rentalDateFrom?.endDate
+            },
+            dateTo: {
+                from: rentalDateTo?.startDate,
+                to: rentalDateTo?.endDate
+            },
+
+
+
+        }
+
+        console.log(filtersObj);
+    }
+
+
     return (
-      <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
-        <form>
+      <div className="rounded-lg bg-white dark:bg-neutral-800 p-2 text-black dark:text-white">
+        <form onSubmit={formSubmit}>
             <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
                 <div className="col-span-2">
 
@@ -120,8 +163,8 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 type="number"
                                 placeholder={`...`}
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
-                                value={carMileageBefore?.from}
-                                // onChange={(value: number)=>(setCarMileageBefore())}
+                                value={carMileageBefore_FROM}
+                                onChange={(e)=>(setCarMileageBefore_FROM(Number(e.target.value)))}
                             />
                             </div>
 
@@ -131,6 +174,8 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 type="number"
                                 placeholder={`...`}
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
+                                value={carMileageBefore_TO}
+                                onChange={(e)=>(setCarMileageBefore_TO(Number(e.target.value)))}
                             />
                             </div>
 
@@ -151,6 +196,8 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 type="number"
                                 placeholder={`...`}
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
+                                value={carMileageAfter_FROM}
+                                onChange={(e)=>(setCarMileageAfter_FROM(Number(e.target.value)))}
                             />
                             </div>
 
@@ -160,6 +207,8 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 type="number"
                                 placeholder={`...`}
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
+                                value={carMileageAfter_TO}
+                                onChange={(e)=>(setCarMileageAfter_TO(Number(e.target.value)))}
                             />
                             </div>
 
@@ -174,7 +223,7 @@ const TableFiltering = (props: TableFilteringProps) => {
 
                 <div className="mx-2 my-5 sm:mx-5">
                         <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                            Przebieg końcowy [km]:
+                            Przejechany dystans [km]:
                         </label>
                         <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-10">
 
@@ -184,6 +233,8 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 type="number"
                                 placeholder={`...`}
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
+                                value={distance_FROM}
+                                onChange={(e)=>(setDistance_FROM(Number(e.target.value)))}
                             />
                             </div>
 
@@ -193,6 +244,8 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 type="number"
                                 placeholder={`...`}
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
+                                value={distance_TO}
+                                onChange={(e)=>(setDistance_TO(Number(e.target.value)))}
                             />
                             </div>
 
@@ -210,6 +263,7 @@ const TableFiltering = (props: TableFilteringProps) => {
                         placeholder={`Wpisz cel podróży...`}
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base"
                         value={travelDestination}
+                        onChange={(e)=>setTravelDestination(e.target.value)}
                         
                     />
                     </div>
@@ -229,9 +283,13 @@ const TableFiltering = (props: TableFilteringProps) => {
                     </label>
                     <div className="relative z-1 bg-white dark:bg-form-input">
                         <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M96 128a128 128 0 1 0 256 0A128 128 0 1 0 96 128zm94.5 200.2l18.6 31L175.8 483.1l-36-146.9c-2-8.1-9.8-13.4-17.9-11.3C51.9 342.4 0 405.8 0 481.3c0 17 13.8 30.7 30.7 30.7H162.5c0 0 0 0 .1 0H168 280h5.5c0 0 0 0 .1 0H417.3c17 0 30.7-13.8 30.7-30.7c0-75.5-51.9-138.9-121.9-156.4c-8.1-2-15.9 3.3-17.9 11.3l-36 146.9L238.9 359.2l18.6-31c6.4-10.7-1.3-24.2-13.7-24.2H224 204.3c-12.4 0-20.1 13.6-13.7 24.2z"/>
+                        </svg>
                         </span>
-                        <select className="relative z-1 w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-13 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary sm:text-base"
+                        <select
+                        className="relative z-1 w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-13 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary sm:text-base"
+                        value={acknowledgedByModerator}
+                        onChange={(e)=>setAcknowledgedByModerator(e.target.value)}
                         >
                         <option value="" selected>Wybierz...</option>
                         <option value="true">Tak</option>
