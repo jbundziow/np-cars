@@ -1,43 +1,28 @@
-import { useState } from "react";
 import Select from "react-tailwindcss-select";
 import { SelectValue } from "react-tailwindcss-select/dist/components/type";
 
 
 type MultiselectInputProps = {
-//   title: string,
-//   data: number[],
-//   categories: string[],
-//   filterBy: 'year' | 'month'
-//   filterValue: number
-//   setFilterValue: Function
+    isSearchable: boolean,
+    value: SelectValue,
+    setValue: Function,
+    options: {value:string, label:string}[]
 }
 
 const MultiselectInput = (props: MultiselectInputProps) => {
-
-    const options = [
-        { value: "1", label: "Citroen C4" },
-        { value: "2", label: "Mercedes Sprinter" },
-        { value: "3", label: "Ford Focus" }
-    ];
-    const[car, setCar] =useState<SelectValue>(null);
-
-    const handleChange = (value: SelectValue) => {
-        console.log("value:", value);
-        setCar(value);
-    };
 
 
     return (
         <Select
         primaryColor="indigo"
         isMultiple={true}
-        isSearchable={true}
+        isSearchable={props.isSearchable}
         placeholder={`Wybierz...`}
         searchInputPlaceholder={`Zacznij pisać...`}
         noOptionsMessage={`Brak rezultatów`}
-        value={car}
-        onChange={handleChange}
-        options={options}
+        value={props.value}
+        onChange={(value: SelectValue)=>(props.setValue(value))}
+        options={props.options}
 
 
         classNames={{

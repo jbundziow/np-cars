@@ -1,4 +1,6 @@
+import { useState } from "react";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
+import { SelectValue } from "react-tailwindcss-select/dist/components/type";
 
 type TableFilteringProps = {
   
@@ -6,6 +8,14 @@ type TableFilteringProps = {
 
 
 const TableFiltering = (props: TableFilteringProps) => {
+
+    const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
+
+    const options = [
+        { value: "1", label: "Citroen C4" },
+        { value: "2", label: "Mercedes Sprinter"},
+        { value: "3", label: "Ford Focus" }
+    ];
 
 
     return (
@@ -43,7 +53,7 @@ const TableFiltering = (props: TableFilteringProps) => {
             <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                 Multiselect:
             </label>
-            <MultiselectInput/>
+            <MultiselectInput isSearchable={true} value={selectedCars} setValue={(value: SelectValue) => (setSelectedCars(value))} options={options} />
             
             </div>
           
