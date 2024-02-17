@@ -3,7 +3,7 @@ import { fetchAllPlaces_GET_user } from '../controllers/placesController';
 
 const app = express.Router();
 
-//TODO
+app.get('/', fetchAllPlaces_GET_user)
 
 
 export default app;
