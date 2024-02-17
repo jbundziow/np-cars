@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_FORM_ACTIONS, useState } from "react";
 import RentalsHistoryTable from "./RentalsHistoryTable";
 import TableFiltering from "./TableFiltering";
 import { TECollapse } from "tw-elements-react";
@@ -19,6 +19,7 @@ type carBasicData = {
     lastEditedByModeratorOfID: number,
     carMileageBefore: number,
     carMileageAfter: number | null,
+    distance: number | null,
     travelDestination: string | null,
     placeID: number | null,
     dateFrom: Date,

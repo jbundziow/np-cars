@@ -28,6 +28,7 @@ type lastRentalDataSchema = {
   lastEditedByModeratorOfID: number | null,
   carMileageBefore: number,
   carMileageAfter: number | null,
+  distance: number | null,
   travelDestination: string | null,
   placeID: number | null,
   dateFrom: Date,

@@ -28,6 +28,9 @@ const addOneRentalByNormalUserSchema = Joi.object({
 
     carMileageAfter: Joi.number()
         .valid(null),
+
+    distance: Joi.number()
+        .valid(null),
     
     travelDestination: Joi.string()
         .min(1)
@@ -75,6 +78,12 @@ const addOneNullRentalByNormalUserSchema = Joi.object({
         .max(2000000)
         .min(Joi.ref('carMileageBefore'))
         .required(),
+
+    distance: Joi.number()
+        .integer()
+        .positive()
+        .max(10000)
+        .required(),
     
     travelDestination: Joi.string()
         .valid(null),
@@ -106,6 +115,12 @@ const returnCarByNormalUserSchema = Joi.object({
     returnUserID: Joi.number()
         .integer()
         .positive()
+        .required(),
+
+    carMileageBefore: Joi.number()
+        .integer()
+        .positive()
+        .max(2000000)
         .required(),
 
     carMileageAfter: Joi.number()

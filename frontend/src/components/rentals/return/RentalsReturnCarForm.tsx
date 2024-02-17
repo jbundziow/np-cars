@@ -26,6 +26,7 @@ type rentalDataSchema = {
     lastEditedByModeratorOfID: number | null,
     carMileageBefore: number,
     carMileageAfter: null,
+    distance: number | null,
     travelDestination: string | null,
     placeID: number | null,
     dateFrom: Date,
@@ -50,7 +51,7 @@ const RentalsReturnCarFormContainer = (props: RentalsReturnCarFormContainerProps
 
  
   const [travelDestination, setTravelDestination] = useState<string>(props.rentalData.travelDestination === null ? '' : props.rentalData.travelDestination)
-  const [carMileageAfter, setCarMileageAfter] = useState<number>(props.rentalData.carMileageBefore)
+  const [carMileageAfter, setCarMileageAfter] = useState<number>()
 
 
 
@@ -113,7 +114,7 @@ const RentalsReturnCarFormContainer = (props: RentalsReturnCarFormContainerProps
                         <input
                           required
                           type="number"
-                          min={props.rentalData.carMileageBefore}
+                          // min={props.rentalData.carMileageBefore}
                           placeholder={`Wpisz stan licznika na koniec podróży`}
                           className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                           value={carMileageAfter}

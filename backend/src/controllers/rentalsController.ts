@@ -50,12 +50,12 @@ export const addOneRental_POST_user = async (req: Request, res: Response, next: 
                     }
                     if(data.carMileageBefore >= lastRentalData.dataValues.carMileageBefore) {
                         //return last rental
-                        const returnCarArgs = {rentalID: lastRentalData.dataValues.id, carID: lastRentalData.dataValues.carID, returnUserID: userID, carMileageAfter: data.carMileageBefore, dateTo: new Date(), travelDestination: lastRentalData.dataValues.travelDestination};
+                        const returnCarArgs = {rentalID: lastRentalData.dataValues.id, carID: lastRentalData.dataValues.carID, returnUserID: userID, carMileageBefore: lastRentalData.dataValues.carMileageBefore, carMileageAfter: data.carMileageBefore, dateTo: new Date(), travelDestination: lastRentalData.dataValues.travelDestination};
                         await returnCarByNormalUserSchema.validateAsync(returnCarArgs);
-                        await Rental.returnCar(returnCarArgs.rentalID, returnCarArgs.carID, returnCarArgs.returnUserID, returnCarArgs.carMileageAfter, returnCarArgs.dateTo,returnCarArgs.travelDestination);
+                        await Rental.returnCar(returnCarArgs.rentalID, returnCarArgs.carID, returnCarArgs.returnUserID, returnCarArgs.carMileageBefore, returnCarArgs.carMileageAfter, returnCarArgs.dateTo,returnCarArgs.travelDestination);
 
                         //add new rental
-                        const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(),null);
+                        const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,null,data.travelDestination,null,new Date(),null);
                         await addOneRentalByNormalUserSchema.validateAsync(newRental);
                         const response = await newRental.addOneRental();
                         res.status(200).json({status: 'success', data: response})
@@ -68,19 +68,20 @@ export const addOneRental_POST_user = async (req: Request, res: Response, next: 
                 else {
                     if(data.carMileageBefore === lastRentalData.dataValues.carMileageAfter) {
                         //add new rental
-                        const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(),null);
+                        const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,null,data.travelDestination,null,new Date(),null);
                         await addOneRentalByNormalUserSchema.validateAsync(newRental);
                         const response = await newRental.addOneRental();
                         res.status(200).json({status: 'success', data: response})
                     }
                     else if(data.carMileageBefore > lastRentalData.dataValues.carMileageAfter) {
                         //add null (unknown) rental
-                        const newNullRental = new Rental(null,data.carID,null,null,null,lastRentalData.dataValues.carMileageAfter,data.carMileageBefore,null,null,new Date(),new Date());
+                        const distance = data.carMileageBefore - lastRentalData.dataValues.carMileageAfter;
+                        const newNullRental = new Rental(null,data.carID,null,null,null,lastRentalData.dataValues.carMileageAfter,data.carMileageBefore,distance,null,null,new Date(),new Date());
                         await addOneNullRentalByNormalUserSchema.validateAsync(newNullRental);
                         const responseNullRental = await newNullRental.addOneRental();
 
                         //then add new rental
-                        const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(),null);
+                        const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,null,data.travelDestination,null,new Date(),null);
                         await addOneRentalByNormalUserSchema.validateAsync(newRental);
                         const responseNewRental = await newRental.addOneRental();
                         res.status(200).json({status: 'success', data: {responseNullRental, responseNewRental}})
@@ -93,7 +94,7 @@ export const addOneRental_POST_user = async (req: Request, res: Response, next: 
             }
             else {
                 //just add new rental (the first for that car)
-                const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,data.travelDestination,null,new Date(),null);
+                const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,null,data.travelDestination,null,new Date(),null);
                 await addOneRentalByNormalUserSchema.validateAsync(newRental);
                 const response = await newRental.addOneRental();
                 res.status(200).json({status: 'success', data: response})
@@ -165,8 +166,8 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
                         }
                         else {
                             //everything is OK
-                            await returnCarByNormalUserSchema.validateAsync({...data, returnUserID: userID});
-                            await Rental.returnCar(data.rentalID, data.carID, userID, data.carMileageAfter, data.dateTo, data.travelDestination);
+                            await returnCarByNormalUserSchema.validateAsync({...data, returnUserID: userID, carMileageBefore: rental.dataValues.carMileageBefore});
+                            await Rental.returnCar(data.rentalID, data.carID, userID, rental.dataValues.carMileageBefore, data.carMileageAfter, data.dateTo, data.travelDestination);
                             res.status(200).json({status: 'success', data: data})
                         }
                     }

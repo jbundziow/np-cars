@@ -11,6 +11,7 @@ type rentalDataType = {
     lastEditedByModeratorOfID: number,
     carMileageBefore: number,
     carMileageAfter: number | null,
+    distance: number | null,
     travelDestination: string | null,
     placeID: number | null,
     dateFrom: Date,
@@ -89,7 +90,7 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{`${props.rentalData.carMileageAfter - props.rentalData.carMileageBefore}`}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{`${props.rentalData.distance}`}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">

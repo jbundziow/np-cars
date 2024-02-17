@@ -35,6 +35,10 @@ const RentalModel = sequelize.define('Rental', {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      distance: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+      },
       travelDestination: {
         type: DataTypes.STRING,
         allowNull: true,
@@ -61,6 +65,7 @@ const RentalModel = sequelize.define('Rental', {
 // syncModel();
 
 
+
 class Rental {
     constructor(
         private id: number | null,
@@ -70,12 +75,14 @@ class Rental {
         private lastEditedByModeratorOfID: number | null,
         private carMileageBefore: number,
         private carMileageAfter: number | null,
+        private distance: number | null,
         private travelDestination: string | null,
         private placeID: number | null,
         private dateFrom: Date | null,
         private dateTo: Date | null,
         ) {}
 
+      
     //by normal user
     async addOneRental() {
       let rentalData;
@@ -89,6 +96,7 @@ class Rental {
             lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
             carMileageBefore: this.carMileageBefore,
             carMileageAfter: this.carMileageAfter,
+            distance: this.distance,
             travelDestination: this.travelDestination,
             placeID: this.placeID,
             dateFrom: this.dateFrom,
@@ -112,17 +120,18 @@ class Rental {
     }
 
     //by normal user
-    static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageAfter: number, dateTo: Date, travelDestination: string | null) {
+    static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageBefore: number, carMileageAfter: number, dateTo: Date, travelDestination: string | null) {
       let rentalData;
       try {
         await sequelize.transaction(async (t) => {
           rentalData = await RentalModel.update({
             returnUserID: returnUserID,
             carMileageAfter: carMileageAfter,
+            distance: carMileageAfter - carMileageBefore,
             dateTo: dateTo,
             travelDestination: travelDestination,
           },
-          {where: {id: rentalID, carID: carID},
+          {where: {id: rentalID, carID: carID, carMileageBefore: carMileageBefore},
           transaction: t
           })
 

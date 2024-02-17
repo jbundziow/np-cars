@@ -17,6 +17,7 @@ type rentalData = {
   lastEditedByModeratorOfID: number | null,
   carMileageBefore: number,
   carMileageAfter: null,
+  distance: number | null,
   travelDestination: string | null,
   placeID: number | null,
   dateFrom: Date,
