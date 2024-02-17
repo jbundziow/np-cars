@@ -1,6 +1,6 @@
 import { useState } from "react";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
-import { SelectValue } from "react-tailwindcss-select/dist/components/type";
+import { SelectValue , Option } from "react-tailwindcss-select/dist/components/type";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
 import formatDate from "../../../utilities/formatDate";
 
@@ -27,9 +27,9 @@ const TableFiltering = (props: TableFilteringProps) => {
     const [selectedPlace, setSelectedPlace] = useState<SelectValue>(null);
 
     const carOptions = [
-        { value: "1", label: "Citroen C4" },
-        { value: "2", label: "Mercedes Sprinter"},
-        { value: "3", label: "Ford Focus" }
+        { value: "11", label: "Citroen C4" },
+        { value: "22", label: "Mercedes Sprinter"},
+        { value: "33", label: "Ford Focus" }
     ];
 
     const userOptions = [
@@ -50,14 +50,31 @@ const TableFiltering = (props: TableFilteringProps) => {
     const formSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        // const carIDs = selectedCars.map(obj: Op=> )
+        const carIDs: number[] = [];
+        if(selectedCars !== null && Array.isArray(selectedCars)) {
+            selectedCars.forEach((obj: Option) => carIDs.push(Number(obj.value)))
+        }
+
+        const returnUserIDs: number[] = [];
+        if(selectedReturnedByUser !== null && Array.isArray(selectedReturnedByUser)) {
+            selectedReturnedByUser.forEach((obj: Option) => returnUserIDs.push(Number(obj.value)))
+        }
+
+        const placeIDs: number[] = [];
+        if(selectedPlace !== null && Array.isArray(selectedPlace)) {
+            selectedPlace.forEach((obj: Option) => placeIDs.push(Number(obj.value)))
+        }
+
+        //<select>
+        let acknowledgedByModeratorValue: undefined | boolean;
+        if(acknowledgedByModerator === 'false') {acknowledgedByModeratorValue = false}
+        else if(acknowledgedByModerator === 'true') {acknowledgedByModeratorValue = true}
 
         const filtersObj = {
-            carIDs: [1,2,3],
-            userIDs: [1,2,3],
-            returnUserIDs: [1,2,3],
-            placeIDs: [1,2,3],
-            editedByModerator: acknowledgedByModerator,
+            carIDs: carIDs,
+            returnUserIDs: returnUserIDs,
+            placeIDs: placeIDs,
+            editedByModerator: acknowledgedByModeratorValue,
             carMileageBefore: {
                 from: carMileageBefore_FROM,
                 to: carMileageBefore_TO
