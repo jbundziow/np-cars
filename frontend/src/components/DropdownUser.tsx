@@ -75,7 +75,8 @@ const DropdownUser = () => {
   }, [])
 
 
-  const logoutHandler = () => {
+  const logoutHandler = async () => {
+    await fetchData(`${DOMAIN_NAME}/auth/logout`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
     setAuth({})
   }
 
