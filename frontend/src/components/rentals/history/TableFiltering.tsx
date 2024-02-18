@@ -4,8 +4,39 @@ import { SelectValue , Option } from "react-tailwindcss-select/dist/components/t
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
 import formatDate from "../../../utilities/formatDate";
 
-type TableFilteringProps = {
+type carBasicData = {
+    id: number,
+    brand: string,
+    model: string,
+    imgPath: string,
+    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
+  }
   
+
+  type usersData = {
+    id: number,
+    email: string,
+    gender: 'male' | 'female',
+    name: string,
+    surname: string,
+    employedAs: string,
+    avatarPath: string | null,
+    role: 'unconfirmed' | 'banned' | 'admin' | 'user',
+  }
+
+  type placesData = {
+    id: number,
+    projectCode: string,
+    placeName: string,
+    projectName: string,
+    status: 'active' | 'banned',
+  }
+
+
+type TableFilteringProps = {
+    allCarsBasicData: carBasicData[] | [],
+    usersData: usersData[] | [],
+    placesData: placesData[] | [],
 }
 
 
@@ -26,23 +57,20 @@ const TableFiltering = (props: TableFilteringProps) => {
     const [acknowledgedByModerator, setAcknowledgedByModerator] = useState<string>('');
     const [selectedPlace, setSelectedPlace] = useState<SelectValue>(null);
 
-    const carOptions = [
-        { value: "11", label: "Citroen C4" },
-        { value: "22", label: "Mercedes Sprinter"},
-        { value: "33", label: "Ford Focus" }
-    ];
+    const carOptions = props.allCarsBasicData.map(car => ({
+        value: car.id.toString(),
+        label: `${car.brand} ${car.model}`
+      }));
 
-    const userOptions = [
-        { value: "1", label: "Tomasz Kit" },
-        { value: "2", label: "Marlena Kulka"},
-        { value: "3", label: "Andrzej Topek" }
-    ];
+    const userOptions = props.usersData.map(user => ({
+        value: user.id.toString(),
+        label: `${user.name} ${user.surname}`
+    }));
 
-    const placeOptions = [
-        { value: "1", label: "123/23/GB" },
-        { value: "2", label: "99/24"},
-        { value: "3", label: "052/11" }
-    ];
+    const placeOptions = props.placesData.map(place => ({
+        value: place.id.toString(),
+        label: `${place.projectCode}`
+    }));
 
 
 

@@ -26,6 +26,8 @@ const RentalsArchive = (props: Props) => {
 
     const [data1, setData1] = useState<ApiResponse>();  //rentals data of current user
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
+    const [data3, setData3] = useState<ApiResponse>();  //all users data
+    const [data4, setData4] = useState<ApiResponse>();  //all places data
 
     const [failData, setFailData] = useState<ApiResponse>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -42,8 +44,15 @@ const RentalsArchive = (props: Props) => {
       if(res1.status==='success') {
         const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData2(res2);
+        if(res2.status==='success') {
+          const res3 = await fetchData(`${DOMAIN_NAME}/users`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          setData3(res3);
+          if(res3.status==='success') {
+            const res4 = await fetchData(`${DOMAIN_NAME}/places`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+            setData4(res4);
+            }
+        }
       }
-
 
       setLoading(false)
       }
@@ -55,7 +64,7 @@ const RentalsArchive = (props: Props) => {
       <>
       <Breadcrumb pageName="Archiwum wypożyczeń" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data} usersData={data3?.data} placesData={data4?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };

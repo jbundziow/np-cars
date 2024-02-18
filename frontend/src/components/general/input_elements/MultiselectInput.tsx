@@ -35,7 +35,7 @@ const MultiselectInput = (props: MultiselectInputProps) => {
                         : "bg-gray-800 hover:border-gray-400 focus:border-blue-500 focus:ring focus:ring-blue-500/20"
                 }`
             ),
-            menu: "absolute z-10 w-full bg-white dark:bg-form-input shadow-lg border rounded py-1 mt-1.5 text-sm sm:text-base text-gray-700",
+            menu: "absolute z-[9999] w-full bg-white dark:bg-form-input shadow-lg border rounded py-1 mt-1.5 text-sm sm:text-base text-gray-700",
             //@ts-ignore
             listItem: ({ isSelected }) => (
                 `block transition duration-200 px-2 py-2 cursor-pointer select-none truncate rounded ${

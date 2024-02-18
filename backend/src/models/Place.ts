@@ -45,7 +45,7 @@ class Place {
         private projectCode: string,
         private placeName: string,
         private projectName: string,
-        private status: 'visible' | 'unvisible',
+        private status: 'active' | 'banned',
         ) {}
 
     async addOnePlace() {

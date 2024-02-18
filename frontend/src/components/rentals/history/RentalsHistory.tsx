@@ -1,4 +1,4 @@
-import { DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_FORM_ACTIONS, useState } from "react";
+import { useState } from "react";
 import RentalsHistoryTable from "./RentalsHistoryTable";
 import TableFiltering from "./TableFiltering";
 import { TECollapse } from "tw-elements-react";
@@ -26,9 +26,30 @@ type carBasicData = {
     dateTo: Date | null,
   }
 
+  type usersData = {
+    id: number,
+    email: string,
+    gender: 'male' | 'female',
+    name: string,
+    surname: string,
+    employedAs: string,
+    avatarPath: string | null,
+    role: 'unconfirmed' | 'banned' | 'admin' | 'user',
+  }
+
+  type placesData = {
+    id: number,
+    projectCode: string,
+    placeName: string,
+    projectName: string,
+    status: 'active' | 'banned',
+  }
+
 type RentalsHistoryProps = {
-    rentalsData: rentalsDataData[],
-    allCarsBasicData: carBasicData[],
+    rentalsData: rentalsDataData[] | [],
+    allCarsBasicData: carBasicData[] | [],
+    usersData: usersData[] | [],
+    placesData: placesData[] | [],
   }
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
@@ -87,10 +108,10 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                 </h2>
                 <TECollapse
                     show={activeElement === "element1"}
-                    className="!mt-0 !rounded-b-none !shadow-none"
+                    className="!mt-0 !rounded-b-none !shadow-none !overflow-visible"
                 >
                     <div>
-                        <TableFiltering/>
+                        <TableFiltering allCarsBasicData={props.allCarsBasicData}usersData={props.usersData} placesData={props.placesData}/>
                     </div>
                 </TECollapse>
                 </div>

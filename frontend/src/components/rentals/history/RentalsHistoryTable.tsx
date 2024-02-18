@@ -25,8 +25,8 @@ type rentalsData = {
 
 
 type RentalsHistoryTableProps = {
-  rentalsData: rentalsData[],
-  allCarsBasicData: carBasicData[],
+  rentalsData: rentalsData[] | [],
+  allCarsBasicData: carBasicData[] | [],
 }
 
 
