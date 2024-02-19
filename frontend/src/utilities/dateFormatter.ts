@@ -1,4 +1,4 @@
-const dateFormatter = (inputDateString: string): string | 'Błąd' => {
+export const dateFormatter = (inputDateString: string): string | 'Błąd' => {
     const inputDate = new Date(inputDateString);
   
     if (isNaN(inputDate.getTime())) {
@@ -15,8 +15,26 @@ const dateFormatter = (inputDateString: string): string | 'Błąd' => {
     const formattedDate = `${day}.${month}.${year} ${hours}:${minutes}`;
     return formattedDate;
   }
-  
 
 
+  export const dateFormatterAsObject = (inputDateString: string): {date: string, time: string} => {
+    const inputDate = new Date(inputDateString);
   
-  export default dateFormatter;
+    if (isNaN(inputDate.getTime())) {
+      // Invalid date string
+      return {date: 'Błąd', time: 'ERR'};
+    }
+  
+    const day = String(inputDate.getUTCDate()).padStart(2, '0');
+    const month = String(inputDate.getUTCMonth() + 1).padStart(2, '0');
+    const year = inputDate.getUTCFullYear();
+    const hours = String(inputDate.getUTCHours()).padStart(2, '0');
+    const minutes = String(inputDate.getUTCMinutes()).padStart(2, '0');
+  
+    const result = {
+      date: `${day}.${month}.${year}`,
+      time: `${hours}:${minutes}`
+    }
+    return result;
+  }
+  

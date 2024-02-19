@@ -1,4 +1,5 @@
 import formatDate from "../../../utilities/formatDate";
+import { dateFormatter, dateFormatterAsObject } from "../../../utilities/dateFormatter";
 // import ModalWarning from "../general/ModalWarning";
 // import { useState } from "react";
 // import DOMAIN_NAME from "../../utilities/domainName";
@@ -51,8 +52,6 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
 
     return (
     <>
-    {/* <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Usuń rezerwację'} bodyText={`Czy na pewno chcesz usunąć tę rezerwację? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteReservation() }/>
-    {!reservationDeleted ?  */}
     <tr className="hover:bg-gray-2 dark:hover:bg-meta-4">
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
         <div className="col-span-3 flex items-center">
@@ -70,12 +69,18 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{`${formatDate(new Date(props.rentalData.dateFrom))}`}</p>
+            <p className='dark:text-white text-black text-xs xl:text-sm text-center'>
+                <span className="block">{`${props.rentalData.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).date}` : '#ERR'}`}</span>
+                <span className="block">{`${props.rentalData.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).time}` : '#ERR'}`}</span>
+            </p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{`${props.rentalData.dateTo ? formatDate(new Date(props.rentalData.dateTo)) : 'brak'}`}</p>
+            <p className='dark:text-white text-black text-xs xl:text-sm text-center'>
+                <span className="block">{`${props.rentalData.dateTo ? `${dateFormatterAsObject(props.rentalData.dateTo.toString()).date}` : '#ERR'}`}</span>
+                <span className="block">{`${props.rentalData.dateTo ? `${dateFormatterAsObject(props.rentalData.dateTo.toString()).time}` : '#ERR'}`}</span>
+            </p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
@@ -115,9 +120,6 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
 
     </tr>
-    {/* :
-    <></>
-    } */}
     </>
     );
   };

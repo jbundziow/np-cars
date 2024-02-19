@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-import dateFormatter from "../../../utilities/dateFormatter";
+import { dateFormatter } from "../../../utilities/dateFormatter";
 
 type carData = {
   id: number,

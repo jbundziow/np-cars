@@ -1,4 +1,4 @@
-import dateFormatter from "../../../utilities/dateFormatter";
+import { dateFormatter } from "../../../utilities/dateFormatter";
 import RentalsReturnCarTableRow from "./RentalsReturnCarTableRow";
 
 type carBasicData = {

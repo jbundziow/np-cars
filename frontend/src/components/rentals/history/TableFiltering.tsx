@@ -2,7 +2,6 @@ import { useState } from "react";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { SelectValue , Option } from "react-tailwindcss-select/dist/components/type";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
-import formatDate from "../../../utilities/formatDate";
 
 type carBasicData = {
     id: number,
