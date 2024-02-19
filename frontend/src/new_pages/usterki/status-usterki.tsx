@@ -24,6 +24,7 @@ const RepairsStatusDetails = (props: Props) => {
     const params = useParams();
 
       const [data1, setData1] = useState<ApiResponse>();  //one fault data of specific id
+      const [data2, setData2] = useState<ApiResponse>();  //all users data
   
       const [failData, setFailData] = useState<ApiResponse>();
       const [loading, setLoading] = useState<boolean>(true);
@@ -35,6 +36,10 @@ const RepairsStatusDetails = (props: Props) => {
 
         const res1 = await fetchData(`${DOMAIN_NAME}/faults/${params.faultid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
+        if(res1.status === 'success') {
+          const res2 = await fetchData(`${DOMAIN_NAME}/users`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          setData2(res2);
+        }
   
         if(res1.data === null) {
           setError(true)
@@ -50,7 +55,7 @@ const RepairsStatusDetails = (props: Props) => {
       <>
       <Breadcrumb pageName="Szczegóły dotyczące usterki" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <FaultDetailsContainer data={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <FaultDetailsContainer faultAndCarData={data1?.data} usersData={data2?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       
       </>
     );

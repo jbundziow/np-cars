@@ -24,7 +24,7 @@ const RepairsStatusDetails = (props: Props) => {
     const params = useParams();
 
       const [data1, setData1] = useState<ApiResponse>();  //car basic data and basic data of all faults of that car
-  
+
       const [failData, setFailData] = useState<ApiResponse>();
       const [loading, setLoading] = useState<boolean>(true);
       const [isFail, setFail] = useState<boolean>(false)

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 
 import { dateFormatter } from "../../../utilities/dateFormatter";
+import useAuth from "../../../hooks/useAuth";
 
 type carData = {
   id: number,
@@ -19,22 +20,36 @@ type faultData = {
   title: string,
   description: string,  
   status: 'pending' | 'accepted' | 'finished' | 'cancelled',
-  resultDesctiption: string | null,
+  resultDescription: string | null,
   repairCost: number | null,
   createdAt: string,
   updatedAt: string,
 }
 
-type dataSchema = {
+type usersData = {
+  id: number,
+  email: string,
+  gender: 'male' | 'female',
+  name: string,
+  surname: string,
+  employedAs: string,
+  avatarPath: string | null,
+  role: 'unconfirmed' | 'banned' | 'admin' | 'user',
+}
+
+type faultDataSchema = {
   carData: carData,
   faultData: faultData,
 }
 
 interface FaultDetailsContainerProps {
-  data: dataSchema
+  faultAndCarData: faultDataSchema,
+  usersData: usersData[] | [],
 }
 
+
 const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
+
   
 
   const faultStatusJSX = (status: faultData["status"]):JSX.Element => {
@@ -58,16 +73,30 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
   }
 
 
+  const userSpan = (user: usersData | undefined, nullText: string):JSX.Element => {
+      if(user) {
+          return <>{user.role === 'admin' ? <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span> : ''}&nbsp;<Link to={`/uzytkownicy/${user.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{user.name} {user.surname}</span></Link></>
+      }
+      else {
+          return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
+      }
+  }
+
+
+  const userObject = props.usersData.find(user => user.id === props.faultAndCarData.faultData.userID);
+  const moderatorObject = props.usersData.find(user => user.id === props.faultAndCarData.faultData.moderatorID);
+  const { auth } = useAuth();
+
 
     return (
       <>
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
 
         <div className='p-5 pt-0'>
-        <img src={props.data.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-        <p className='text-black dark:text-white pb-2 text-lg'>{props.data.carData.brand}&nbsp;{props.data.carData.model}</p>
+        <img src={props.faultAndCarData.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
+        <p className='text-black dark:text-white pb-2 text-lg'>{props.faultAndCarData.carData.brand}&nbsp;{props.faultAndCarData.carData.model}</p>
         <Link
-        to={`/usterki/zglos/${props.data.carData.id}`}
+        to={`/usterki/zglos/${props.faultAndCarData.carData.id}`}
         className={`inline-flex items-center justify-center rounded-full bg-primary py-2 px-7 text-center text-base font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8 mt-2`}
         >
         Zgłoś nową usterkę
@@ -76,16 +105,16 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
 
         <div className='col-span-3'>
         <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
-            <h1 className="text-3xl font-bold mb-3">{props.data.faultData.title}</h1>
-            <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5>{faultStatusJSX(`${props.data.faultData.status}`)}</p>
+            <h1 className="text-3xl font-bold mb-3">{props.faultAndCarData.faultData.title}</h1>
+            <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5>{faultStatusJSX(`${props.faultAndCarData.faultData.status}`)}</p>
             {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
-            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zgłoszona przez:&nbsp;</h5>@@@ TODO: FETCH USER FULLNAME @@@</p>
-            <p className="mb-2"><h5 className="font-bold inline-block">Data zgłoszenia usterki:&nbsp;</h5>{dateFormatter(props.data.faultData.createdAt)}</p>
-            {props.data.faultData.status !== 'pending' ?
+            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zgłoszona przez:&nbsp;</h5>{userSpan(userObject, `#BŁĄD`)}</p>
+            <p className="mb-2"><h5 className="font-bold inline-block">Data zgłoszenia usterki:&nbsp;</h5>{dateFormatter(props.faultAndCarData.faultData.createdAt)}</p>
+            {props.faultAndCarData.faultData.status !== 'pending' ?
             <>
             {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
-            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zaakceptowana przez moderatora:&nbsp;</h5>{props.data.faultData.moderatorID === null ? '-' : '@@@ TODO: FETCH MODERATOR FULLNAME @@@'}</p>
-            <p className="mb-6"><h5 className="font-bold inline-block">Data ostatniej zmiany statusu:&nbsp;</h5>{props.data.faultData.lastChangeAt === null ? '-' : dateFormatter(props.data.faultData.lastChangeAt)}</p>
+            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zaakceptowana przez moderatora:&nbsp;</h5>{props.faultAndCarData.faultData.moderatorID === null ? '-' : userSpan(moderatorObject, `#BŁĄD`)}</p>
+            <p className="mb-6"><h5 className="font-bold inline-block">Data ostatniej zmiany statusu:&nbsp;</h5>{props.faultAndCarData.faultData.lastChangeAt === null ? '-' : dateFormatter(props.faultAndCarData.faultData.lastChangeAt)}</p>
             </>
             :
             null
@@ -94,14 +123,19 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
 
             <p className="mb-1"><h5 className="font-bold inline-block">Szczegółowy opis problemu:&nbsp;</h5></p>
             <div className="mb-6 border rounded-md p-2 w-full md:w-[90%] dark:bg-form-input">
-            <p>{props.data.faultData.description}</p>
+            <p>{props.faultAndCarData.faultData.description}</p>
             </div>
-            {props.data.faultData.status !== 'pending' ?
+            {props.faultAndCarData.faultData.status !== 'pending' ?
             <>
             <p className="mb-1"><h5 className="font-bold inline-block">Komentarz moderatora:&nbsp;</h5></p>
             <div className="mb-1 border rounded-md p-2 w-full md:w-[90%] dark:bg-form-input">
-            {props.data.faultData.resultDesctiption ? <p>{props.data.faultData.resultDesctiption}</p> : <p className='text-danger'>Brak komentarza.</p>}
+            {props.faultAndCarData.faultData.resultDescription ? <p>{props.faultAndCarData.faultData.resultDescription}</p> : <p className='text-danger'>Brak komentarza.</p>}
             </div>
+            {props.faultAndCarData.faultData.status === 'finished' &&  auth.userRole === 'admin' && props.faultAndCarData.faultData.repairCost ?
+            <p className="mt-4 mb-1"><h5 className="font-bold inline-block">Koszt naprawy:&nbsp;</h5>{props.faultAndCarData.faultData.repairCost} zł [netto]</p>
+            :
+            null
+            }
             </>
             :
             null

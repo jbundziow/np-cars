@@ -1,9 +1,5 @@
-import formatDate from "../../../utilities/formatDate";
-import { dateFormatter, dateFormatterAsObject } from "../../../utilities/dateFormatter";
+import { dateFormatterAsObject } from "../../../utilities/dateFormatter";
 import { Link } from "react-router-dom";
-// import ModalWarning from "../general/ModalWarning";
-// import { useState } from "react";
-// import DOMAIN_NAME from "../../utilities/domainName";
 
 type rentalDataType = {
     id: number,
