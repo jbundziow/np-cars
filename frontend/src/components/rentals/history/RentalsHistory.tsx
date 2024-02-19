@@ -111,12 +111,12 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                     className="!mt-0 !rounded-b-none !shadow-none !overflow-visible"
                 >
                     <div>
-                        <TableFiltering allCarsBasicData={props.allCarsBasicData}usersData={props.usersData} placesData={props.placesData}/>
+                        <TableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData}/>
                     </div>
                 </TECollapse>
                 </div>
             </div>
-            <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData}/>
+            <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData}/>
         </div>
         </>
     )

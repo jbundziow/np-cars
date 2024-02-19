@@ -24,9 +24,31 @@ type rentalsData = {
 }
 
 
+type usersData = {
+  id: number,
+  email: string,
+  gender: 'male' | 'female',
+  name: string,
+  surname: string,
+  employedAs: string,
+  avatarPath: string | null,
+  role: 'unconfirmed' | 'banned' | 'admin' | 'user',
+}
+
+type placesData = {
+  id: number,
+  projectCode: string,
+  placeName: string,
+  projectName: string,
+  status: 'active' | 'banned',
+}
+
+
 type RentalsHistoryTableProps = {
   rentalsData: rentalsData[] | [],
   allCarsBasicData: carBasicData[] | [],
+  usersData: usersData[] | [],
+  placesData: placesData[] | [],
 }
 
 
@@ -86,7 +108,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
               {props.rentalsData.map(rental => {
                 const carData = props.allCarsBasicData.find(car => car.id === rental.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
                 return (
-                <RentalsHistoryTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} rentalData={rental} />
+                <RentalsHistoryTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} rentalData={rental} usersData={props.usersData} placesData={props.placesData}/>
                 );
                }
               )}

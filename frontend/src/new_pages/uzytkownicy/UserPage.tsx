@@ -131,6 +131,7 @@ const UserPage = (props: Props) => {
               {`${data1?.data.name} ${data1?.data.surname}`}
             </h3>
             <p className="font-medium">{data1?.data.employedAs}</p>
+            {data1?.data.role === 'admin' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Admin</p> : ''}
 
             
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
