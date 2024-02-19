@@ -129,6 +129,29 @@ const TableFiltering = (props: TableFilteringProps) => {
         }
 
         console.log(filtersObj);
+        
+
+        //converting object to a string and passing it as a parameter in the query string
+        const queryString = '?filters=' +  encodeURIComponent(JSON.stringify(filtersObj));
+
+        const myUrl = 'https://www.example.com/products' + queryString;
+        console.log(myUrl)
+
+
+        // create a URL object from the string
+        const url = new URL(myUrl);
+
+        // get the query string
+        const receivedQueryString = url.searchParams.get('filters');
+
+        // convert the query string to an array
+        if(receivedQueryString) {
+        const receivedIds = JSON.parse(receivedQueryString);
+        console.log(receivedIds);
+        }
+        
+
+
     }
 
 
