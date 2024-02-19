@@ -1,6 +1,8 @@
-export const dateFormatter = (inputDateString: string): string | 'Błąd' => {
-    const inputDate = new Date(inputDateString);
-  
+const offset = 60 * 60 * 1000; // Poland is UTC+1 in standard time
+
+export const dateFormatter = (inputDateString: string): string | 'Błąd' => { //converted to UTC+1
+    let inputDate = new Date(inputDateString);
+    inputDate = new Date(inputDate.getTime() + offset)
     if (isNaN(inputDate.getTime())) {
       // Invalid date string
       return 'Błąd'
@@ -17,8 +19,9 @@ export const dateFormatter = (inputDateString: string): string | 'Błąd' => {
   }
 
 
-  export const dateFormatterAsObject = (inputDateString: string): {date: string, time: string} => {
-    const inputDate = new Date(inputDateString);
+  export const dateFormatterAsObject = (inputDateString: string): {date: string, time: string} => { //converted to UTC+1
+    let inputDate = new Date(inputDateString);
+    inputDate = new Date(inputDate.getTime() + offset)
   
     if (isNaN(inputDate.getTime())) {
       // Invalid date string
