@@ -50,7 +50,8 @@ type RentalsHistoryProps = {
     allCarsBasicData: carBasicData[] | [],
     usersData: usersData[] | [],
     placesData: placesData[] | [],
-    setFilters: Function
+    setFilters: Function,
+    setCurrentPage: (pageNumber: number) => void,
   }
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
@@ -117,7 +118,7 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                 </TECollapse>
                 </div>
             </div>
-            <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData}/>
+            <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
         </div>
         </>
     )

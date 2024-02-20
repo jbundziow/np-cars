@@ -50,6 +50,7 @@ type RentalsHistoryTableProps = {
   allCarsBasicData: carBasicData[] | [],
   usersData: usersData[] | [],
   placesData: placesData[] | [],
+  setCurrentPage: (pageNumber: number) => void;
 }
 
 
@@ -135,7 +136,9 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
             </tbody>
           </table>
         </div>
-               <RentalsHistoryTablePagination/>
+
+        <RentalsHistoryTablePagination pagination={{totalCount: 111, totalPages: 11, currentPage: 11, hasPreviousPage: true, hasNextPage: false}} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+
     </>
         :
         <p className="text-black dark:text-white text-md text-center mb-4">Brak danych do wyświetlenia.</p>
