@@ -50,6 +50,7 @@ type RentalsHistoryProps = {
     allCarsBasicData: carBasicData[] | [],
     usersData: usersData[] | [],
     placesData: placesData[] | [],
+    setFilters: Function
   }
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
@@ -111,7 +112,7 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                     className="!mt-0 !rounded-b-none !shadow-none !overflow-visible"
                 >
                     <div>
-                        <TableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData}/>
+                        <TableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setFilters={(val: string) => props.setFilters(val)}/>
                     </div>
                 </TECollapse>
                 </div>

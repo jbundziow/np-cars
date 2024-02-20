@@ -36,6 +36,7 @@ type TableFilteringProps = {
     allCarsBasicData: carBasicData[] | [],
     usersData: usersData[] | [],
     placesData: placesData[] | [],
+    setFilters: Function
 }
 
 
@@ -128,27 +129,27 @@ const TableFiltering = (props: TableFilteringProps) => {
 
         }
 
-        console.log(filtersObj);
-        
+        const queryString: string = '?filters=' +  encodeURIComponent(JSON.stringify(filtersObj));
+        props.setFilters(queryString);
 
-        //converting object to a string and passing it as a parameter in the query string
-        const queryString = '?filters=' +  encodeURIComponent(JSON.stringify(filtersObj));
+        // //converting object to a string and passing it as a parameter in the query string
+        // const queryString = '?filters=' +  encodeURIComponent(JSON.stringify(filtersObj));
 
-        const myUrl = 'https://www.example.com/products' + queryString;
-        console.log(myUrl)
+        // const myUrl = 'https://www.example.com/products' + queryString;
+        // console.log(myUrl)
 
 
-        // create a URL object from the string
-        const url = new URL(myUrl);
+        // // create a URL object from the string
+        // const url = new URL(myUrl);
 
-        // get the query string
-        const receivedQueryString = url.searchParams.get('filters');
+        // // get the query string
+        // const receivedQueryString = url.searchParams.get('filters');
 
-        // convert the query string to an array
-        if(receivedQueryString) {
-        const receivedIds = JSON.parse(receivedQueryString);
-        console.log(receivedIds);
-        }
+        // // convert the query string to an array
+        // if(receivedQueryString) {
+        // const receivedIds = JSON.parse(receivedQueryString);
+        // console.log(receivedIds);
+        // }
         
 
 

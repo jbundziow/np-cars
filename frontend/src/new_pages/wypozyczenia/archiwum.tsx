@@ -28,6 +28,7 @@ const RentalsArchive = (props: Props) => {
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
     const [data3, setData3] = useState<ApiResponse>();  //all users data
     const [data4, setData4] = useState<ApiResponse>();  //all places data
+    const [filters, setFilters] = useState<string | null>(null);
 
     const [failData, setFailData] = useState<ApiResponse>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -39,6 +40,7 @@ const RentalsArchive = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
 
+        if(filters) console.log('filters');
       const res1 = await fetchData(`${DOMAIN_NAME}/rentals/users/${auth.userID}?type=all`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.status==='success') {
@@ -57,14 +59,15 @@ const RentalsArchive = (props: Props) => {
       setLoading(false)
       }
       getData()
-    }, [])
+    }, [filters])
 
 
     return (
       <>
       <Breadcrumb pageName="Archiwum wypożyczeń" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data} usersData={data3?.data} placesData={data4?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory key={filters} allCarsBasicData={data2?.data} rentalsData={data1?.data} usersData={data3?.data} placesData={data4?.data} setFilters={(val: string) => setFilters(val)}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      <p>{filters}</p>
       </>
     );
   };
