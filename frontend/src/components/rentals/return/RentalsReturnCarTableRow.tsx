@@ -1,16 +1,23 @@
 import { Link } from "react-router-dom";
 
+type carBasicData = {
+    id: number,
+    brand: string,
+    model: string,
+    imgPath: string,
+    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
+  }
 
 interface RentalsReturnCarTableRowProps {
-    carID: number;
-    carBrand: string;
-    carModel: string;
-    carImg: string;
+    carsData: carBasicData[];
+    rentalCarId: number;
     rentDate: string;
     rentalID: number;
   }
 
 const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
+
+    const car = props.carsData.find(car => car.id === props.rentalCarId);
 
 
     return (
@@ -22,10 +29,10 @@ const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
             <div className=" w-22 sm:w-32 rounded-md">
             <img 
             className="rounded-md block"
-            src={props.carImg} alt="Zdjęcie samochodu" />
+            src={car?.imgPath} alt="Zdjęcie samochodu" />
             </div>
             <h5 className="font-medium text-xs sm:text-base text-black dark:text-white">
-            {`${props.carBrand} ${props.carModel}`}
+            {`${car?.brand} ${car?.model}`}
             </h5>
         </div>
         </div>

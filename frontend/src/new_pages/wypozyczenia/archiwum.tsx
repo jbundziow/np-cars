@@ -41,10 +41,10 @@ const RentalsArchive = (props: Props) => {
       const getData = async () => {
          
       if(filters) {
-        const res = await fetchData(`${DOMAIN_NAME}/rentals/test/${auth.userID}${filters}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res = await fetchData(`${DOMAIN_NAME}/rentals/users/${auth.userID}${filters}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res); 
       }
-      if(!filters) {
+      else {
         const res1 = await fetchData(`${DOMAIN_NAME}/rentals/users/${auth.userID}?type=all`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         
@@ -73,7 +73,6 @@ const RentalsArchive = (props: Props) => {
       <Breadcrumb pageName="Archiwum wypożyczeń" />
 
       {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data} usersData={data3?.data} placesData={data4?.data} setFilters={(val: string) => setFilters(val)}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
-      <p>{filters}</p>
       </>
     );
   };

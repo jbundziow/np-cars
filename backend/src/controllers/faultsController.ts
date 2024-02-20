@@ -15,7 +15,7 @@ export const addOneFault_POST_user = async (req: Request, res: Response, next: N
     if (!isNaN(Number(req.params.carid))) {
         try {
         const isCarExist = await Car.fetchOne(Number(req.params.carid))
-        const userID = await identifyUserId(req.cookies.jwt);
+        const {id: userID} = await identifyUserId(req.cookies.jwt);
         const isUserExist = await User.fetchOne(userID);
         if(isCarExist && isUserExist) {
         const newFault = new Fault(null, Number(req.params.carid), userID, null, null, data.title, data.description, 'pending', null, null);

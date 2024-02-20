@@ -24,11 +24,11 @@ type rentalData = {
   dateTo: Date | null,
   createdAt: Date,
   updatedAt: Date,
-  carBasicData: carBasicData,
 }
 
 type RentalsReturnCarTableProps = {
-  data: rentalData[]
+  rentalsData: rentalData[]
+  carsData: carBasicData[]
 }
 
 
@@ -36,7 +36,7 @@ const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
 
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
-        {props.data.length !== 0 ?
+        {props.rentalsData.length !== 0 ?
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -55,8 +55,8 @@ const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-               {props.data.map(rental => 
-                <RentalsReturnCarTableRow carID={rental.carBasicData.id} carBrand={rental.carBasicData.brand} carModel={rental.carBasicData.model} carImg={rental.carBasicData.imgPath} rentDate={dateFormatter(rental.dateFrom.toString())} rentalID={rental.id}/>
+               {props.rentalsData.map(rental => 
+                <RentalsReturnCarTableRow carsData={props.carsData} rentalCarId={rental.carID} rentDate={dateFormatter(rental.dateFrom.toString())} rentalID={rental.id}/>
                 )}
             </tbody>
           </table>

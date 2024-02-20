@@ -200,7 +200,7 @@ class Rental {
     }
 
 
-    static async fetchAllRentalsWithFilters (userID: number, filters:any) {
+    static async fetchAllRentalsOfUserWithFilters (userID: number, filters:any) {
         const whereClause: any = {
           userID: userID,
         };

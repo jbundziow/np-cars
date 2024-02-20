@@ -30,7 +30,7 @@ export const addOneReservation_POST_user = async (req: Request, res: Response, n
 
     try {
     const isCarExist = await Car.fetchOne(Number(data.carID))
-    const userID = await identifyUserId(req.cookies.jwt);
+    const {id: userID} = await identifyUserId(req.cookies.jwt);
     const isUserExist = await User.fetchOne(userID)
         if(isCarExist && isUserExist) {
             const newReservation = new Reservation(null, data.carID, userID, data.lastEditedByModeratorOfID, data.dateFrom, data.dateTo, data.travelDestination);
@@ -70,7 +70,7 @@ export const deleteOneReservation_DELETE_user = async (req: Request, res: Respon
 
     try {
         const isReservationExist = await Reservation.fetchOne(Number(data.reservationID))
-        const userID = await identifyUserId(req.cookies.jwt);
+        const {id: userID} = await identifyUserId(req.cookies.jwt);
         const isUserExist = await User.fetchOne(userID)
 
         if(!isReservationExist) {
