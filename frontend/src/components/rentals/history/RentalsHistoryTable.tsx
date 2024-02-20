@@ -1,3 +1,4 @@
+import RentalsHistoryTablePagination from "./RentalsHistoryTablePagination";
 import RentalsHistoryTableRow from "./RentalsHistoryTableRow";
 
 type carBasicData = {
@@ -134,37 +135,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
             </tbody>
           </table>
         </div>
-        <nav aria-label="Page navigation" className="flex justify-center">
-        <ul className="list-style-none flex">
-            <li>
-                <a
-                    className="pointer-events-none relative block rounded bg-transparent px-3 py-1.5 text-md text-neutral-500 transition-all duration-300 dark:text-neutral-400">Poprzednia</a>
-            </li>
-            <li>
-                <a
-                    className="relative block rounded bg-transparent px-3 py-1.5 text-md text-neutral-600 transition-all duration-300 hover:bg-neutral-100  dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                    href="#!">1</a>
-            </li>
-            <li aria-current="page">
-                <a
-                    className="relative block rounded bg-primary-100 px-3 py-1.5 text-md font-medium text-primary-700 transition-all duration-300"
-                    href="#!">2
-                    <span
-                        className="absolute -m-px h-px w-px overflow-hidden whitespace-nowrap border-0 p-0 [clip:rect(0,0,0,0)]">(current)</span>
-                </a>
-            </li>
-            <li>
-                <a
-                    className="relative block rounded bg-transparent px-3 py-1.5 text-md text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                    href="#!">3</a>
-            </li>
-            <li>
-                <a
-                    className="relative block rounded bg-transparent px-3 py-1.5 text-md text-neutral-600 transition-all duration-300 hover:bg-neutral-100 dark:text-white dark:hover:bg-neutral-700 dark:hover:text-white"
-                    href="#!">Następna</a>
-            </li>
-        </ul>
-      </nav>
+               <RentalsHistoryTablePagination/>
     </>
         :
         <p className="text-black dark:text-white text-md text-center mb-4">Brak danych do wyświetlenia.</p>
