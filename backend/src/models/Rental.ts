@@ -170,6 +170,7 @@ class Rental {
 
 
     static async fetchAllRentalsOfUser (userID: number, type: 'all' | 'pending' | 'closed') {
+      
       if (type === 'pending') {
         return await RentalModel.findAll({
           where: {
@@ -195,6 +196,7 @@ class Rental {
           }
         })
       }
+      
     }
 
 

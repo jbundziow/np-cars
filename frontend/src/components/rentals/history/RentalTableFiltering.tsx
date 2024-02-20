@@ -32,7 +32,7 @@ type carBasicData = {
   }
 
 
-type TableFilteringProps = {
+type RentalTableFilteringProps = {
     allCarsBasicData: carBasicData[] | [],
     usersData: usersData[] | [],
     placesData: placesData[] | [],
@@ -41,7 +41,7 @@ type TableFilteringProps = {
 
 
 
-const TableFiltering = (props: TableFilteringProps) => {
+const RentalTableFiltering = (props: RentalTableFilteringProps) => {
 
     const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
     const [rentalDateFrom, setRentalDateFrom] = useState<DateValueType>(null);
@@ -118,30 +118,27 @@ const TableFiltering = (props: TableFilteringProps) => {
 
         const queryString: string = '?filters=' +  encodeURIComponent(JSON.stringify(filtersObj));
         props.setFilters(queryString);
-
-        // //converting object to a string and passing it as a parameter in the query string
-        // const queryString = '?filters=' +  encodeURIComponent(JSON.stringify(filtersObj));
-
-        // const myUrl = 'https://www.example.com/products' + queryString;
-        // console.log(myUrl)
-
-
-        // // create a URL object from the string
-        // const url = new URL(myUrl);
-
-        // // get the query string
-        // const receivedQueryString = url.searchParams.get('filters');
-
-        // // convert the query string to an array
-        // if(receivedQueryString) {
-        // const receivedIds = JSON.parse(receivedQueryString);
-        // console.log(receivedIds);
-        // }
-        
-
-
     }
 
+
+
+    const resetFilters = () => {
+        setSelectedCars(null);
+        setRentalDateFrom(null);
+        setRentalDateTo(null);
+        setCarMileageBefore_FROM('');
+        setCarMileageBefore_TO('');
+        setCarMileageAfter_FROM('');
+        setCarMileageAfter_TO('');
+        setDistance_FROM('');
+        setDistance_TO('');
+        setTravelDestination('');
+        setSelectedReturnedByUser(null);
+        setAcknowledgedByModerator('');
+        setSelectedPlace(null);
+        
+        props.setFilters(null)
+    }
 
     return (
       <div className="rounded-lg bg-white dark:bg-neutral-800 p-2 text-black dark:text-white">
@@ -400,8 +397,15 @@ const TableFiltering = (props: TableFilteringProps) => {
                 
                     
                     <div className="mx-2 mt-14 mb-5 sm:mx-5">
-                    <div className='flex justify-center mb-2'>
-                    <button className="flex w-[90%] justify-center rounded bg-primary p-3 font-medium text-gray hover:opacity-90 sm:text-base" type='submit'>
+                    <div className='flex flex-col items-center gap-5 lg:flex-row lg:justify-around mb-2'>
+                    <button
+                    className="flex w-full lg:w-[30%] justify-center rounded bg-danger p-3 font-medium text-gray hover:opacity-90 sm:text-base"
+                    onClick={resetFilters}
+                    type='reset'
+                    >
+                        Reset
+                    </button>
+                    <button className="flex w-full justify-center rounded bg-primary p-3 font-medium text-gray hover:opacity-90 sm:text-base" type='submit'>
                         Filtruj wyniki
                     </button>
                     </div>
@@ -416,4 +420,4 @@ const TableFiltering = (props: TableFilteringProps) => {
     );
   };
   
-  export default TableFiltering;
+  export default RentalTableFiltering;

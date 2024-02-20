@@ -1,6 +1,6 @@
 import { useState } from "react";
 import RentalsHistoryTable from "./RentalsHistoryTable";
-import TableFiltering from "./TableFiltering";
+import RentalTableFiltering from "./RentalTableFiltering";
 import { TECollapse } from "tw-elements-react";
 
 type carBasicData = {
@@ -112,7 +112,7 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                     className="!mt-0 !rounded-b-none !shadow-none !overflow-visible"
                 >
                     <div>
-                        <TableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setFilters={(val: string) => props.setFilters(val)}/>
+                        <RentalTableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setFilters={(val: string) => props.setFilters(val)}/>
                     </div>
                 </TECollapse>
                 </div>

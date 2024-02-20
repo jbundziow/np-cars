@@ -55,6 +55,8 @@ type RentalsHistoryTableProps = {
 const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
 
 
+    let totalDistanceInVisibleTable = 0;
+
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         {props.rentalsData.length !== 0 ?
@@ -93,10 +95,6 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Przypisany numer projektu
                 </th>
-                {/* {hidden md:table-cell} */}
-                {/* <th className="py-4 px-4 font-medium text-xs sm:text-base text-black dark:text-white">
-                  Działania
-                </th> */}
                 
                 
               </tr>
@@ -107,6 +105,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                {/* INSERT ROWS HERE */}
               {props.rentalsData.map(rental => {
                 const carData = props.allCarsBasicData.find(car => car.id === rental.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
+                if(typeof rental.distance === 'number') {totalDistanceInVisibleTable += rental.distance;}
                 return (
                 <RentalsHistoryTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} rentalData={rental} usersData={props.usersData} placesData={props.placesData}/>
                 );
@@ -115,7 +114,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
               <tr>
               <td>
                 <div className="flex justify-center">
-                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma całościowa: 1842 km</p>
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma całościowa: #### km</p>
                 </div>  
               </td>
               <td></td>
@@ -124,7 +123,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
               <td></td>
               <td className="pt-5">
                 <div className="flex justify-center">
-                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma częściowa: 230 km</p>
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma: {totalDistanceInVisibleTable} km</p>
                 </div>  
               </td>
               <td></td>

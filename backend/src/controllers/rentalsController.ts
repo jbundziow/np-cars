@@ -246,7 +246,7 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
                     const carBasicData = await Car.fetchOneBasicData(Number(item.dataValues.carID));
                     response.push({...item.dataValues, carBasicData: carBasicData?.dataValues})
                 }
-
+                
                 res.status(200).json({status: 'success', data: response})
 
             }

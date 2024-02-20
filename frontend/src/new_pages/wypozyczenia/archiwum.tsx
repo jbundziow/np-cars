@@ -38,30 +38,29 @@ const RentalsArchive = (props: Props) => {
 
     const { auth }= useAuth();
     useEffect(() => {
-      const getData = async () => {   
-
-    if(filters) {
-      const res = await fetchData(`${DOMAIN_NAME}/rentals/test/${auth.userID}${filters}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-      setData1(res); 
-      console.log(res.data);
-    }
-    if(!filters) {
-      const res1 = await fetchData(`${DOMAIN_NAME}/rentals/users/${auth.userID}?type=all`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-      setData1(res1);
-      
-      if(res1.status==='success') {
-        const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-        setData2(res2);
-        if(res2.status==='success') {
-          const res3 = await fetchData(`${DOMAIN_NAME}/users`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-          setData3(res3);
-          if(res3.status==='success') {
-            const res4 = await fetchData(`${DOMAIN_NAME}/places`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-            setData4(res4);
-            }
+      const getData = async () => {
+         
+      if(filters) {
+        const res = await fetchData(`${DOMAIN_NAME}/rentals/test/${auth.userID}${filters}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        setData1(res); 
+      }
+      if(!filters) {
+        const res1 = await fetchData(`${DOMAIN_NAME}/rentals/users/${auth.userID}?type=all`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        setData1(res1);
+        
+        if(res1.status==='success') {
+          const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          setData2(res2);
+          if(res2.status==='success') {
+            const res3 = await fetchData(`${DOMAIN_NAME}/users`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+            setData3(res3);
+            if(res3.status==='success') {
+              const res4 = await fetchData(`${DOMAIN_NAME}/places`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+              setData4(res4);
+              }
+          }
         }
       }
-    }
 
       setLoading(false)
       }
