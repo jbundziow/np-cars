@@ -168,7 +168,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
       </nav>
     </>
         :
-        <p className="text-black dark:text-white text-md text-center mb-4">Nie masz żadnych archiwalnych wypożyczeń.</p>
+        <p className="text-black dark:text-white text-md text-center mb-4">Brak danych do wyświetlenia.</p>
         }
       </div>
     );

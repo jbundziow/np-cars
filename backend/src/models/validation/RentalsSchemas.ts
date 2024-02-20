@@ -140,8 +140,63 @@ const returnCarByNormalUserSchema = Joi.object({
 })
 
 
+const filtersObjSchema = Joi.object({
+    carIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+
+    returnUserIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+
+    placeIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+
+    editedByModerator: Joi.boolean()
+        .optional(),
+    
+    carMileageBefore_from: Joi.number()
+        .min(0)
+        .optional(),
+
+    carMileageBefore_to: Joi.number()
+        .min(0)
+        .optional(),
+
+    carMileageAfter_from: Joi.number()
+        .min(0)
+        .optional(),
+
+    carMileageAfter_to: Joi.number()
+        .min(0)
+        .optional(),
+
+    distance_from: Joi.number()
+        .min(0)
+        .optional(),
+
+    distance_to: Joi.number()
+        .min(0)
+        .optional(),
+
+    travelDestination: Joi.string()
+        .min(1)
+        .optional(),
+
+    dateFrom_from: Joi.date()
+        .optional(),
+
+    dateFrom_to: Joi.date()
+        .optional(),
+
+    dateTo_from: Joi.date()
+        .optional(),
+
+    dateTo_to: Joi.date()
+        .optional(),
+});
 
 
-
-export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema, addOneNullRentalByNormalUserSchema};
+export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema, addOneNullRentalByNormalUserSchema, filtersObjSchema};
 

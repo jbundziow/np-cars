@@ -46,12 +46,12 @@ const TableFiltering = (props: TableFilteringProps) => {
     const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
     const [rentalDateFrom, setRentalDateFrom] = useState<DateValueType>(null);
     const [rentalDateTo, setRentalDateTo] = useState<DateValueType>(null);
-    const [carMileageBefore_FROM, setCarMileageBefore_FROM] = useState<number | undefined>(undefined);
-    const [carMileageBefore_TO, setCarMileageBefore_TO] = useState<number | undefined>(undefined);
-    const [carMileageAfter_FROM, setCarMileageAfter_FROM] = useState<number | undefined>(undefined);
-    const [carMileageAfter_TO, setCarMileageAfter_TO] = useState<number | undefined>(undefined);
-    const [distance_FROM, setDistance_FROM] = useState<number | undefined>(undefined);
-    const [distance_TO, setDistance_TO] = useState<number | undefined>(undefined);
+    const [carMileageBefore_FROM, setCarMileageBefore_FROM] = useState<number | ''>('');
+    const [carMileageBefore_TO, setCarMileageBefore_TO] = useState<number | ''>('');
+    const [carMileageAfter_FROM, setCarMileageAfter_FROM] = useState<number | ''>('');
+    const [carMileageAfter_TO, setCarMileageAfter_TO] = useState<number | ''>('');
+    const [distance_FROM, setDistance_FROM] = useState<number | ''>('');
+    const [distance_TO, setDistance_TO] = useState<number | ''>('');
     const [travelDestination, setTravelDestination] = useState<string>('');
     const [selectedReturnedByUser, setSelectedReturnedByUser] = useState<SelectValue>(null);
     const [acknowledgedByModerator, setAcknowledgedByModerator] = useState<string>('');
@@ -103,30 +103,17 @@ const TableFiltering = (props: TableFilteringProps) => {
             returnUserIDs: returnUserIDs,
             placeIDs: placeIDs,
             editedByModerator: acknowledgedByModeratorValue,
-            carMileageBefore: {
-                from: carMileageBefore_FROM,
-                to: carMileageBefore_TO
-            },
-            carMileageAfter: {
-                from: carMileageAfter_FROM,
-                to: carMileageAfter_TO
-            },
-            distance: {
-                from: distance_FROM,
-                to: distance_TO
-            },
+            carMileageBefore_from: carMileageBefore_FROM,
+            carMileageBefore_to: carMileageBefore_TO,
+            carMileageAfter_from: carMileageAfter_FROM,
+            carMileageAfter_to: carMileageAfter_TO,
+            distance_from: distance_FROM,
+            distance_to: distance_TO,
             travelDestination: travelDestination,
-            dateFrom: {
-                from: rentalDateFrom?.startDate,
-                to: rentalDateFrom?.endDate
-            },
-            dateTo: {
-                from: rentalDateTo?.startDate,
-                to: rentalDateTo?.endDate
-            },
-
-
-
+            dateFrom_from: rentalDateFrom?.startDate,
+            dateFrom_to: rentalDateFrom?.endDate,
+            dateTo_from: rentalDateTo?.startDate,
+            dateTo_to: rentalDateTo?.endDate
         }
 
         const queryString: string = '?filters=' +  encodeURIComponent(JSON.stringify(filtersObj));
@@ -233,6 +220,13 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
                                 value={carMileageBefore_FROM}
                                 onChange={(e)=>(setCarMileageBefore_FROM(Number(e.target.value)))}
+                                onKeyDown={(e)=>{
+                                    const { key } = e;
+                                    if ((key === 'Backspace' || key === 'Delete') && carMileageBefore_FROM === 0) {
+                                        setCarMileageBefore_FROM('');
+                                      }
+                                }}
+
                             />
                             </div>
 
@@ -244,6 +238,12 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
                                 value={carMileageBefore_TO}
                                 onChange={(e)=>(setCarMileageBefore_TO(Number(e.target.value)))}
+                                onKeyDown={(e)=>{
+                                    const { key } = e;
+                                    if ((key === 'Backspace' || key === 'Delete') && carMileageBefore_TO === 0) {
+                                        setCarMileageBefore_TO('');
+                                      }
+                                }}
                             />
                             </div>
 
@@ -266,6 +266,12 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
                                 value={carMileageAfter_FROM}
                                 onChange={(e)=>(setCarMileageAfter_FROM(Number(e.target.value)))}
+                                onKeyDown={(e)=>{
+                                    const { key } = e;
+                                    if ((key === 'Backspace' || key === 'Delete') && carMileageAfter_FROM === 0) {
+                                        setCarMileageAfter_FROM('');
+                                      }
+                                }}
                             />
                             </div>
 
@@ -277,6 +283,12 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
                                 value={carMileageAfter_TO}
                                 onChange={(e)=>(setCarMileageAfter_TO(Number(e.target.value)))}
+                                onKeyDown={(e)=>{
+                                    const { key } = e;
+                                    if ((key === 'Backspace' || key === 'Delete') && carMileageAfter_TO === 0) {
+                                        setCarMileageAfter_TO('');
+                                      }
+                                }}
                             />
                             </div>
 
@@ -303,6 +315,12 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
                                 value={distance_FROM}
                                 onChange={(e)=>(setDistance_FROM(Number(e.target.value)))}
+                                onKeyDown={(e)=>{
+                                    const { key } = e;
+                                    if ((key === 'Backspace' || key === 'Delete') && distance_FROM === 0) {
+                                        setDistance_FROM('');
+                                      }
+                                }}
                             />
                             </div>
 
@@ -314,6 +332,12 @@ const TableFiltering = (props: TableFilteringProps) => {
                                 className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
                                 value={distance_TO}
                                 onChange={(e)=>(setDistance_TO(Number(e.target.value)))}
+                                onKeyDown={(e)=>{
+                                    const { key } = e;
+                                    if ((key === 'Backspace' || key === 'Delete') && distance_TO === 0) {
+                                        setDistance_TO('');
+                                      }
+                                }}
                             />
                             </div>
 

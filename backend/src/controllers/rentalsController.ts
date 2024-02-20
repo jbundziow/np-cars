@@ -3,9 +3,10 @@ import { NextFunction, Request, Response, response } from 'express'
 import Rental from '../models/Rental';
 import Car from '../models/Car';
 import User from '../models/User';
-import { addOneNullRentalByNormalUserSchema, addOneRentalByNormalUserSchema, returnCarByNormalUserSchema } from '../models/validation/RentalsSchemas';
+import { addOneNullRentalByNormalUserSchema, addOneRentalByNormalUserSchema, filtersObjSchema, returnCarByNormalUserSchema } from '../models/validation/RentalsSchemas';
 import { isDateString } from '../utilities/functions/isDateString';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
+import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValuesFromObject';
 
 
 export const fetchOneRental_GET_user = async (req: Request, res: Response, next: NextFunction) => {
@@ -263,3 +264,38 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
     }   
 }
 
+
+
+export const test_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    if (isNaN(Number(req.params.userid))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]});
+        return;
+    }
+
+        try {
+            const isUserExist = await User.fetchOne(Number(req.params.userid));
+            if (!isUserExist) {
+                res.status(400).json({status: 'fail', data: [{en: `The user of id: ${Number(req.params.userid)} does not exist in the database.`, pl: `Użytkownik o ID: ${Number(req.params.userid)} nie istnieje w bazie danych.`}]})
+                return;
+            }
+
+            
+            if(!req.query.filters) {
+                res.status(400).json({status: 'fail', data: [{en: `No filters passed.`, pl: `Nie podano filtrów.`}]})
+                return;
+            }
+
+            const receivedQueryString = req.query.filters.toString();
+            let filtersObj = JSON.parse(receivedQueryString);
+            filtersObj = removeEmptyValuesFromObject(filtersObj)
+            await filtersObjSchema.validateAsync(filtersObj)
+            const db_res = await Rental.fetchAllRentalsWithFilters(Number(req.params.userid), filtersObj)
+            res.status(200).json({status: 'success', data: db_res})
+            
+
+        }
+        catch(e) {
+            console.log(e);
+            res.status(500).json({status: 'error', message: e})
+        }
+    }

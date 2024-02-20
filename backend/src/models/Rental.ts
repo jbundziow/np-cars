@@ -198,6 +198,113 @@ class Rental {
     }
 
 
+    static async fetchAllRentalsWithFilters (userID: number, filters:any) {
+        const whereClause: any = {
+          userID: userID,
+        };
+        //arrays
+        if (filters.carIDs && filters.carIDs.length > 0) {
+          whereClause.carID = { [Op.in]: filters.carIDs };
+        }
+        if (filters.returnUserIDs && filters.returnUserIDs.length > 0) {
+          whereClause.returnUserID = { [Op.in]: filters.returnUserIDs };
+        }
+        if (filters.placeIDs && filters.placeIDs.length > 0) {
+          whereClause.placeID = { [Op.in]: filters.placeIDs };
+        }
+
+        //booleans
+        if (filters.editedByModerator !== undefined && typeof filters.editedByModerator === 'boolean') {
+          if (filters.editedByModerator) {
+            whereClause.lastEditedByModeratorOfID = { [Op.ne]: null }; //true
+          } else {
+            whereClause.lastEditedByModeratorOfID = { [Op.eq]: null }; //false
+          }
+        }
+
+        //from/to numbers
+        if(filters.carMileageBefore_from && filters.carMileageBefore_to) {
+          whereClause.carMileageBefore = {
+            [Op.gte]: filters.carMileageBefore_from,
+            [Op.lte]: filters.carMileageBefore_to
+          }
+        }
+        else if(filters.carMileageBefore_from) {
+          whereClause.carMileageBefore = { [Op.gte]: filters.carMileageBefore_from }
+        }
+        else if(filters.carMileageBefore_to) {
+          whereClause.carMileageBefore = { [Op.lte]: filters.carMileageBefore_to }
+        }
+
+        if(filters.carMileageAfter_from && filters.carMileageAfter_to) {
+          whereClause.carMileageAfter = {
+            [Op.gte]: filters.carMileageAfter_from,
+            [Op.lte]: filters.carMileageAfter_to
+          }
+        }
+        else if(filters.carMileageAfter_from) {
+          whereClause.carMileageAfter = { [Op.gte]: filters.carMileageAfter_from }
+        }
+        else if(filters.carMileageAfter_to) {
+          whereClause.carMileageAfter = { [Op.lte]: filters.carMileageAfter_to }
+        }
+
+        if(filters.distance_from && filters.distance_to) {
+          whereClause.distance = {
+            [Op.gte]: filters.distance_from,
+            [Op.lte]: filters.distance_to
+          }
+        }
+        else if(filters.distance_from) {
+          whereClause.distance = { [Op.gte]: filters.distance_from }
+        }
+        else if(filters.distance_to) {
+          whereClause.distance = { [Op.lte]: filters.distance_to }
+        }
+
+        //strings (case-insensitive search)
+        if(filters.travelDestination) {
+          whereClause.travelDestination = { [Op.and]: [
+            sequelize.where(sequelize.fn('LOWER', sequelize.col('travelDestination')), 'LIKE', `%${filters.travelDestination.toLowerCase()}%`)
+          ] };
+        }
+
+
+        //from/to dates [add UTC+1 time (Warsaw, Poland). Correct passed date format is '2024-02-20']
+        if(filters.dateFrom_from && filters.dateFrom_to) {
+          whereClause.dateFrom = {
+            [Op.gte]: new Date(`${filters.dateFrom_from}T00:00:00+01:00`),
+            [Op.lte]: new Date(`${filters.dateFrom_to}T23:59:59+01:00`)
+          }
+        }
+        else if(filters.dateFrom_from) {
+          whereClause.dateFrom = { [Op.gte]: new Date(`${filters.dateFrom_from}T00:00:00+01:00`) }
+        }
+        else if(filters.dateFrom_to) {
+          whereClause.dateFrom = { [Op.lte]: new Date(`${filters.dateFrom_to}T23:59:59+01:00`) }
+        }
+
+        if(filters.dateTo_from && filters.dateTo_to) {
+          whereClause.dateTo = {
+            [Op.gte]: new Date(`${filters.dateTo_from}T00:00:00+01:00`),
+            [Op.lte]: new Date(`${filters.dateTo_to}T23:59:59+01:00`)
+          }
+        }
+        else if(filters.dateTo_from) {
+          whereClause.dateTo = { [Op.gte]: new Date(`${filters.dateTo_from}T00:00:00+01:00`) }
+        }
+        else if(filters.dateTo_to) {
+          whereClause.dateTo = { [Op.lte]: new Date(`${filters.dateTo_to}T23:59:59+01:00`) }
+        }
+
+
+
+        return await RentalModel.findAll({
+          where: whereClause
+        })
+    }
+
+
 }
 
 
