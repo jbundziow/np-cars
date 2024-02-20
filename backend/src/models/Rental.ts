@@ -200,7 +200,7 @@ class Rental {
     }
 
 
-    static async fetchAllRentalsOfUserWithFilters (userID: number, filters:any) {
+    static async fetchAllRentalsOfUserWithFilters (userID: number, filters:any, pageSize: number, pageNumber: number) {
         const whereClause: any = {
           userID: userID,
         };
@@ -301,9 +301,34 @@ class Rental {
 
 
 
-        return await RentalModel.findAll({
-          where: whereClause
-        })
+        const totalCount = await RentalModel.count({
+            where: whereClause,
+        });
+
+
+        const totalPages = Math.ceil(totalCount / pageSize);
+
+
+        const offset = (pageNumber - 1) * pageSize;
+
+
+        const records = await RentalModel.findAll({
+            where: whereClause,
+            limit: pageSize,
+            offset: offset
+        });
+
+
+        return {
+            records,
+            pagination: {
+              totalCount: totalCount,
+              totalPages: totalPages,
+              currentPage: pageNumber,
+              hasPreviousPage: pageNumber > 1,
+              hasNextPage: pageNumber < totalPages
+            }
+        };
     }
 
 

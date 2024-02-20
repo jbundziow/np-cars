@@ -307,8 +307,8 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
                 let filtersObj = JSON.parse(receivedQueryString);
                 filtersObj = removeEmptyValuesFromObject(filtersObj)
                 await filtersObjSchema.validateAsync(filtersObj)
-                const response = await Rental.fetchAllRentalsOfUserWithFilters(Number(req.params.userid), filtersObj)
-                res.status(200).json({status: 'success', data: response})
+                const response = await Rental.fetchAllRentalsOfUserWithFilters(Number(req.params.userid), filtersObj, 2, 1)
+                res.status(200).json({status: 'success', data: response.records, pagination: response.pagination})
             }
             else {
                 res.status(400).json({status: 'fail', data: [{en: `No query params 'types' or 'filters' passed.`, pl: `Nie przekazano 'types' lub 'filters' w parametrach zapytania.`}]})
