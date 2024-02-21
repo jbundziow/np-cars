@@ -6,13 +6,18 @@ import Car from '../models/Car'
 
 
 export const fetchAllCars_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    let alsoBanned = false;
+    if(req.query.showbanned && req.query.showbanned === 'true') {
+        alsoBanned = true;
+    }
+
     let dbResponse;
     try {
         if(req.query.basicdata && req.query.basicdata === 'true') {
-            dbResponse = await Car.fetchAllBasicData();
+                dbResponse = await Car.fetchAllBasicData(alsoBanned);
         }
         else {
-            dbResponse = await Car.fetchAll();
+            dbResponse = await Car.fetchAll(alsoBanned);
         }
         res.status(200).json({status: 'success', data: dbResponse})
     }
@@ -23,14 +28,19 @@ export const fetchAllCars_GET_user = async (req: Request, res: Response, next: N
 
 
 export const fetchOneCar_GET_user = async (req: Request, res: Response, next: NextFunction) => { 
+    let alsoBanned = false;
+    if(req.query.showbanned && req.query.showbanned === 'true') {
+        alsoBanned = true;
+    }
+
     let dbResponse;
     if (!isNaN(Number(req.params.carid))) {
         try {
             if(req.query.basicdata && req.query.basicdata === 'true') {
-                dbResponse = await Car.fetchOneBasicData(Number(req.params.carid));
+                dbResponse = await Car.fetchOneBasicData(Number(req.params.carid), alsoBanned);
             }
             else {
-                dbResponse = await Car.fetchOne(Number(req.params.carid)); 
+                dbResponse = await Car.fetchOne(Number(req.params.carid), alsoBanned); 
             }
 
             if(!dbResponse) {

@@ -17,9 +17,9 @@ export const addOneRefueling_POST_user = async (req: Request, res: Response, nex
     }
 
     try {
-        const isCarExist = await Car.fetchOne(Number(req.params.carid))
+        const isCarExist = await Car.fetchOne(Number(req.params.carid), false)
         const {id: userID} = await identifyUserId(req.cookies.jwt);
-        const isUserExist = await User.fetchOne(userID)
+        const isUserExist = await User.fetchOne(userID, false)
         if(isCarExist && isUserExist) {
             const newRefueling = new Refueling(null, Number(req.params.carid), userID, null, data.carMileage, data.numberOfLiters, data.costBrutto, data.isFuelCardUsed, false);
             await addOneRefuelingByNormalUserSchema.validateAsync(newRefueling);

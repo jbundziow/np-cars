@@ -37,9 +37,9 @@ export const addOneRental_POST_user = async (req: Request, res: Response, next: 
     }
 
     try {
-        const isCarExist = await Car.fetchOne(Number(data.carID))
+        const isCarExist = await Car.fetchOne(Number(data.carID), false)
         const {id: userID} = await identifyUserId(req.cookies.jwt);
-        const isUserExist = await User.fetchOne(userID)
+        const isUserExist = await User.fetchOne(userID, false)
         if(isCarExist && isUserExist) {
             if(isCarExist.dataValues.availabilityStatus !== 'rented' && isCarExist.dataValues.availabilityStatus !== 'available') {
                 res.status(400).json({status: 'fail', data: [{en: `You cannot rent a car that has status '${isCarExist.dataValues.availabilityStatus}'.`, pl: `Nie można wypożyczyć samochodu o statusie '${isCarExist.dataValues.availabilityStatus}'.`}]})
@@ -149,9 +149,9 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
             return;
         }
 
-        const carData = await Car.fetchOne(Number(data.carID))
+        const carData = await Car.fetchOne(Number(data.carID), true)
         const {id: userID} = await identifyUserId(req.cookies.jwt);
-        const isReturnUserExist = await User.fetchOne(userID)
+        const isReturnUserExist = await User.fetchOne(userID, true)
         if(carData && data.carID === rental.dataValues.carID) {
             if(isReturnUserExist) {
                 if(data.carMileageAfter < rental.dataValues.carMileageBefore) {
@@ -214,10 +214,10 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
 export const fetchLastRentalOfCar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {
         try {
-            const isCarExist = await Car.fetchOne(Number(req.params.carid));
+            const isCarExist = await Car.fetchOne(Number(req.params.carid), true);
             if (isCarExist) {
-                const lastReservaton = await Rental.fetchLastRentalOfCar(Number(req.params.carid))
-                res.status(200).json({status: 'success', data: lastReservaton})
+                const lastRental = await Rental.fetchLastRentalOfCar(Number(req.params.carid))
+                res.status(200).json({status: 'success', data: lastRental})
             }
             else {
                 res.status(400).json({status: 'fail', data: [{en: `The car of id: ${Number(req.params.carid)} does not exist in the database.`, pl: `Samochód o ID: ${Number(req.params.carid)} nie istnieje w bazie danych.`}]})
@@ -247,7 +247,7 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
     }
 
         try {
-            const isUserExist = await User.fetchOne(Number(req.params.userid));
+            const isUserExist = await User.fetchOne(Number(req.params.userid), true);
             if (!isUserExist) {
                 res.status(400).json({status: 'fail', data: [{en: `The user of id: ${Number(req.params.userid)} does not exist in the database.`, pl: `Użytkownik o ID: ${Number(req.params.userid)} nie istnieje w bazie danych.`}]})
                 return;

@@ -29,9 +29,9 @@ export const addOneReservation_POST_user = async (req: Request, res: Response, n
     }
 
     try {
-    const isCarExist = await Car.fetchOne(Number(data.carID))
+    const isCarExist = await Car.fetchOne(Number(data.carID), false)
     const {id: userID} = await identifyUserId(req.cookies.jwt);
-    const isUserExist = await User.fetchOne(userID)
+    const isUserExist = await User.fetchOne(userID, false)
         if(isCarExist && isUserExist) {
             const newReservation = new Reservation(null, data.carID, userID, data.lastEditedByModeratorOfID, data.dateFrom, data.dateTo, data.travelDestination);
             
@@ -71,7 +71,7 @@ export const deleteOneReservation_DELETE_user = async (req: Request, res: Respon
     try {
         const isReservationExist = await Reservation.fetchOne(Number(data.reservationID))
         const {id: userID} = await identifyUserId(req.cookies.jwt);
-        const isUserExist = await User.fetchOne(userID)
+        const isUserExist = await User.fetchOne(userID, false)
 
         if(!isReservationExist) {
             res.status(400).json({status: 'fail', data: [{en: `The reservation of id: ${Number(data.reservationID)} does not exist in the database.`, pl: `Rezerwacja o ID: ${Number(data.reservationID)} nie istnieje w bazie danych.`}]})
@@ -118,7 +118,7 @@ export const checkReservationsForOneCarForTheNextTwoWeeks_GET_user = async (req:
             return;
         }
     
-        const isCarExist = await Car.fetchOne(Number(req.params.carid))
+        const isCarExist = await Car.fetchOne(Number(req.params.carid), false)
         if (isCarExist) {
             const nextTwoWeeks: string[] = getNextTwoWeeksDatesArr();
 
@@ -136,7 +136,7 @@ export const checkReservationsForOneCarForTheNextTwoWeeks_GET_user = async (req:
                     oneDayObject = {...oneDayObject, reservation: true}
                     oneDayObject = {... oneDayObject, userID: reservation.dataValues.userID}
                     
-                        const userData = await User.fetchOne(oneDayObject.userID!)
+                        const userData = await User.fetchOne(oneDayObject.userID!, true)
                         if(userData) {
                             oneDayObject = {...oneDayObject, userName: `${userData.dataValues.name} ${userData.dataValues.surname}`}
                         }
@@ -181,7 +181,7 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks_GET_user = async (req
     let responseObj: oneCarObjectType[] = [];
     try {
         
-        const allCarsBasicData = await Car.fetchAllBasicData();
+        const allCarsBasicData = await Car.fetchAllBasicData(false);
         if (allCarsBasicData) {
 
             for await (const carObj of allCarsBasicData) {
@@ -199,7 +199,7 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks_GET_user = async (req
                         oneDayObject = {...oneDayObject, reservation: true}
                         oneDayObject = {... oneDayObject, userID: reservation.dataValues.userID}
                         
-                            const userData = await User.fetchOne(oneDayObject.userID!)
+                            const userData = await User.fetchOne(oneDayObject.userID!, true)
                             if(userData) {
                                 oneDayObject = {...oneDayObject, userName: `${userData.dataValues.name} ${userData.dataValues.surname}`}
                             }
@@ -237,11 +237,11 @@ export const findAllReservationsOfUser_GET_user = async (req: Request, res: Resp
             return;
         }
 
-        const isUserExist = await User.fetchOne(Number(req.params.userid))
+        const isUserExist = await User.fetchOne(Number(req.params.userid), true)
         if(isUserExist) {
             //TODO: PAGINATION
             const reservations = await Reservation.fetchAllReservationsOfUser(Number(req.params.userid), req.query.time);
-            const allCars = await Car.fetchAllBasicData();
+            const allCars = await Car.fetchAllBasicData(true);
             res.status(200).json({status: 'success', data: {reservations, allCarsData: allCars}});
         }
         else {
@@ -266,7 +266,7 @@ export const findAllReservationsOfCar_GET_user = async (req: Request, res: Respo
             return;
         }
 
-        const carData = await Car.fetchOneBasicData(Number(req.params.carid))
+        const carData = await Car.fetchOneBasicData(Number(req.params.carid), false)
         if(carData) {
             //TODO: PAGINATION
             

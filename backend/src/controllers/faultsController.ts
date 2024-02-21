@@ -14,9 +14,9 @@ export const addOneFault_POST_user = async (req: Request, res: Response, next: N
     const data = req.body;
     if (!isNaN(Number(req.params.carid))) {
         try {
-        const isCarExist = await Car.fetchOne(Number(req.params.carid))
+        const isCarExist = await Car.fetchOne(Number(req.params.carid), false)
         const {id: userID} = await identifyUserId(req.cookies.jwt);
-        const isUserExist = await User.fetchOne(userID);
+        const isUserExist = await User.fetchOne(userID, false);
         if(isCarExist && isUserExist) {
         const newFault = new Fault(null, Number(req.params.carid), userID, null, null, data.title, data.description, 'pending', null, null);
         await addOneFaultByUserSchema.validateAsync(newFault);
@@ -55,7 +55,7 @@ export const fetchOneFault_GET_user = async (req: Request, res: Response, next: 
 
             if(faultData) {
                 const carID = faultData.dataValues.carID;
-                const carData = await Car.fetchOneBasicData(carID);
+                const carData = await Car.fetchOneBasicData(carID, true);
                 if(carData) {
                     res.status(200).json({status: 'success', data: {carData, faultData}})
                 }
@@ -79,7 +79,7 @@ export const fetchOneFault_GET_user = async (req: Request, res: Response, next: 
 export const fetchAllFaultsOfACar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {
         try {
-            const carData = await Car.fetchOneBasicData(Number(req.params.carid))
+            const carData = await Car.fetchOneBasicData(Number(req.params.carid), true)
 
             if(carData !== null) {
                 let pending, accepted, finished, cancelled;
@@ -112,7 +112,7 @@ export const fetchAllFaultsOfACar_GET_user = async (req: Request, res: Response,
 
 export const fetchAllCarsWithNumberOfFaults_GET_user = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const carsData = await Car.fetchAllBasicData();
+            const carsData = await Car.fetchAllBasicData(false);
             let carsIDs:number[] = []
             let pending:number[] = [];
             let accepted:number[] = [];

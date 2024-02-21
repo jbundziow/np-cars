@@ -42,7 +42,7 @@ const UserPage = (props: Props) => {
   useEffect(() => {
     const getData = async () => {   
 
-    const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+    const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
     setData1(res1);
     if(res1.status === 'success') {
       const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/distance?userid=${auth.userID}&year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
@@ -54,15 +54,6 @@ const UserPage = (props: Props) => {
     getData()
   }, [params.userid,filterValue])
 
-
-  // function generateRandomNumbers(): number[] {
-  //   const numbers: number[] = [];
-  //   for (let i = 0; i < 12; i++) {
-  //     const randomNumber = Math.floor(Math.random() * (300 - 100 + 1) + 100);
-  //     numbers.push(randomNumber);
-  //   }
-  //   return numbers;
-  // }
 
 
   
@@ -132,6 +123,7 @@ const UserPage = (props: Props) => {
             </h3>
             <p className="font-medium">{data1?.data.employedAs}</p>
             {data1?.data.role === 'admin' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Admin</p> : ''}
+            {data1?.data.role === 'banned' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Użytkownik zbanowany</p> : ''}
 
             
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">

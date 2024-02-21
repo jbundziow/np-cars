@@ -6,8 +6,13 @@ import User from '../models/User';
 
 
 export const fetchAllUsers_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    let alsoBanned = false;
+    if(req.query.showbanned && req.query.showbanned === 'true') {
+        alsoBanned = true;
+    }
+
     try {
-        const data = await User.fetchAll();
+        const data = await User.fetchAll(alsoBanned);
         res.json({status: 'success', data: data});
     }
     catch(e) {
@@ -16,10 +21,14 @@ export const fetchAllUsers_GET_user = async (req: Request, res: Response, next: 
 }
 
 export const fetchOneUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
-    console.log(req.params.userid);
+    let alsoBanned = false;
+    if(req.query.showbanned && req.query.showbanned === 'true') {
+        alsoBanned = true;
+    }
+
     if (!isNaN(Number(req.params.userid))) {
         try {
-            const data = await User.fetchOne(Number(req.params.userid));
+            const data = await User.fetchOne(Number(req.params.userid), alsoBanned);
             res.status(200).json({status: 'success', data: data})
         }
         catch(err) {

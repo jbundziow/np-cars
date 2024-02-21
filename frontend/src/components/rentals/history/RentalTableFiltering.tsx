@@ -37,6 +37,7 @@ type RentalTableFilteringProps = {
     usersData: usersData[] | [],
     placesData: placesData[] | [],
     setFilters: Function
+    setCurrentPage: Function
 }
 
 
@@ -125,6 +126,7 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
 
         const queryString: string = encodeURIComponent(JSON.stringify(filtersObj));
         props.setFilters(queryString);
+        props.setCurrentPage(1);
     }
 
 
@@ -145,7 +147,8 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
         setAcknowledgedByModerator('');
         setSelectedPlace(null);
         
-        props.setFilters(null)
+        props.setFilters(null);
+        props.setCurrentPage(1);
     }
 
     return (

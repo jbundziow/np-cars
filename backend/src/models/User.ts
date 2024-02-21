@@ -1,5 +1,6 @@
 const {DataTypes} = require('sequelize');
 const bcrypt = require('bcrypt')
+import { Op } from "sequelize";
 import sequelize from "../database/database";
 
 const UserModel = sequelize.define('User', {
@@ -84,13 +85,24 @@ class User {
       this.password = hashedPassword;
     }
 
-    static async fetchAll() {
+    static async fetchAll(showBanned: boolean) {
+      if(showBanned) {
         return await UserModel.findAll({attributes: { exclude: ['password'] }})
+      }
+      else {
+        return await UserModel.findAll({attributes: { exclude: ['password'] }, where: {role: { [Op.ne]: 'banned' }}})
+      }
+        
     }
 
-    static async fetchOne(id: number) {
-        return await UserModel.findOne({ where: { id: id },
-          attributes: { exclude: ['password'] } })
+    static async fetchOne(id: number, showBanned: boolean) {
+      if(showBanned) {
+        return await UserModel.findOne({ where: { id: id }, attributes: { exclude: ['password'] } })
+      }
+      else {
+        return await UserModel.findOne({ where: { id: id, role: { [Op.ne]: 'banned' } }, attributes: { exclude: ['password'] } })
+      }
+        
     }
 
     static async login(email: string, password: string) {

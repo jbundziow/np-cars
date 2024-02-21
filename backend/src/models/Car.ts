@@ -114,32 +114,44 @@ class Car {
         })
     }
 
-    //NOT BANNED CARS
-    static async fetchAll() {
+
+    static async fetchAll(showBanned: boolean) {
+      if(showBanned) {
+        return await CarModel.findAll()
+      }
+      else {
         return await CarModel.findAll({where: {availabilityStatus: { [Op.ne]: 'banned' }}})
-    }
-    static async fetchAllBasicData() {
-      return await CarModel.findAll({attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus'], where: {availabilityStatus: { [Op.ne]: 'banned' }}})
+      }
     }
 
-    static async fetchOne(carid: number) {
+    static async fetchAllBasicData(showBanned: boolean) {
+      if(showBanned) {
+        return await CarModel.findAll({attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
+      }
+      else {
+        return await CarModel.findAll({attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus'], where: {availabilityStatus: { [Op.ne]: 'banned' }}})
+      }
+      
+    }
+
+    static async fetchOne(carid: number, showBanned: boolean) {
+      if(showBanned) {
+        return await CarModel.findOne({ where: {id: carid} })
+      }
+      else {
         return await CarModel.findOne({ where: {id: carid, availabilityStatus: { [Op.ne]: 'banned' }} })
+      }
     }
-    static async fetchOneBasicData(carid: number) {
-      return await CarModel.findOne({ where: {id: carid, availabilityStatus: { [Op.ne]: 'banned' }}, attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
+    static async fetchOneBasicData(carid: number, showBanned: boolean) {
+      if(showBanned) {
+        return await CarModel.findOne({ where: {id: carid}, attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
+      }
+      else {
+        return await CarModel.findOne({ where: {id: carid, availabilityStatus: { [Op.ne]: 'banned' }}, attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
+      }
+      
     }
-    //END NOT BANNED CARS
 
-
-
-    //FOR ADMIN ALSO WITH BANNED CARS
-    static async fetchAllAlsoBanned() {
-      return await CarModel.findAll()
-    }
-    static async fetchOneAlsoBanned(carid: number) {
-      return await CarModel.findOne({ where: {id: carid} })
-    }
-    //END FOR ADMIN ALSO WITH BANNED CARS
 }
 
 
