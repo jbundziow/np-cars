@@ -45,6 +45,14 @@ type carBasicData = {
     status: 'active' | 'banned',
   }
 
+  type Pagination = {
+    totalCount: number,
+    totalPages: number,
+    currentPage: number,
+    hasPreviousPage: boolean,
+    hasNextPage: boolean,
+  }
+
 type RentalsHistoryProps = {
     rentalsData: rentalsDataData[] | [],
     allCarsBasicData: carBasicData[] | [],
@@ -52,6 +60,7 @@ type RentalsHistoryProps = {
     placesData: placesData[] | [],
     setFilters: Function,
     setCurrentPage: (pageNumber: number) => void,
+    paginationData: Pagination,
   }
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
@@ -118,7 +127,7 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                 </TECollapse>
                 </div>
             </div>
-            <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+            <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData}/>
         </div>
         </>
     )

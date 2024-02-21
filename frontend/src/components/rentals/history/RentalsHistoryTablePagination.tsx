@@ -1,4 +1,4 @@
-type pagination = {
+type Pagination = {
   totalCount: number,
   totalPages: number,
   currentPage: number,
@@ -8,7 +8,7 @@ type pagination = {
 
 
 type RentalsHistoryTablePaginationProps = {
-  pagination: pagination
+  pagination: Pagination,
   setCurrentPage: (pageNumber: number) => void;
 }
 

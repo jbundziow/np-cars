@@ -44,6 +44,13 @@ type placesData = {
   status: 'active' | 'banned',
 }
 
+type Pagination = {
+  totalCount: number,
+  totalPages: number,
+  currentPage: number,
+  hasPreviousPage: boolean,
+  hasNextPage: boolean,
+}
 
 type RentalsHistoryTableProps = {
   rentalsData: rentalsData[] | [],
@@ -51,6 +58,7 @@ type RentalsHistoryTableProps = {
   usersData: usersData[] | [],
   placesData: placesData[] | [],
   setCurrentPage: (pageNumber: number) => void;
+  paginationData: Pagination,
 }
 
 
@@ -137,7 +145,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
           </table>
         </div>
 
-        <RentalsHistoryTablePagination pagination={{totalCount: 111, totalPages: 11, currentPage: 11, hasPreviousPage: true, hasNextPage: false}} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+        <RentalsHistoryTablePagination pagination={props.paginationData} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
 
     </>
         :

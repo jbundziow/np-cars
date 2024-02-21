@@ -1,6 +1,15 @@
+type Pagination = {
+  totalCount: number,
+  totalPages: number,
+  currentPage: number,
+  hasPreviousPage: boolean,
+  hasNextPage: boolean,
+}
+
 interface ApiResponse {
   status: 'success' | 'fail' | 'error',
   data?: any,
+  pagination?: Pagination,
   message?: any,
 }
 
