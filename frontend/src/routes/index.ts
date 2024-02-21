@@ -19,7 +19,7 @@ const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'
 const RentACarForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod-form'));
 const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod'));
 const ReturnACarForm = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod-form'));
-const MyRentals = lazy(() => import('../new_pages/wypozyczenia/moje-wypozyczenia'));
+const ActualRentals = lazy(() => import('../new_pages/wypozyczenia/biezace-wypozyczenia'));
 const UserPage = lazy(() => import('../new_pages/uzytkownicy/UserPage'));
 
 const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
@@ -56,9 +56,9 @@ const coreRoutes = [
     component: ReturnACarForm,
   },
   {
-    path: '/wypozyczenia/moje-wypozyczenia',
-    title: 'Moje wypożyczenia',
-    component: MyRentals,
+    path: '/wypozyczenia/biezace-wypozyczenia',
+    title: 'Bieżące wypożyczenia',
+    component: ActualRentals,
   },
   {
     path: '/wypozyczenia/archiwum',

@@ -343,6 +343,20 @@ class Rental {
     }
 
 
+
+
+
+
+
+    static async fetchAllPendingRentals () {
+      return await RentalModel.findAll({ where: { carMileageAfter: null } })
+    }
+
+
+
+
+
+
 }
 
 

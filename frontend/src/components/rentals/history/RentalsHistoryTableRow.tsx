@@ -52,10 +52,10 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
         let result:JSX.Element = <span>ERR#</span>;
         switch (color) {
             case 'danger':
-                result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 font-medium text-danger">{text}</span>
+                result = <span className="inline-flex text-center rounded-full bg-danger bg-opacity-10 py-1 px-3 font-medium text-danger">{text}</span>
                 break;
             case 'warning':
-                result = <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{text}</span>
+                result = <span className="inline-flex text-center rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{text}</span>
                 break;
         }
         return result;

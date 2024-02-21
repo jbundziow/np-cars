@@ -11,7 +11,7 @@ type carBasicData = {
     availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
   }
   
-  type rentalsDataData = {
+  type rentalsData = {
     id: number,
     carID: number,
     userID: number,
@@ -54,7 +54,7 @@ type carBasicData = {
   }
 
 type RentalsHistoryProps = {
-    rentalsData: rentalsDataData[] | [],
+    rentalsData: rentalsData[] | [],
     allCarsBasicData: carBasicData[] | [],
     usersData: usersData[] | [],
     placesData: placesData[] | [],

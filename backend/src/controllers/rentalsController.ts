@@ -319,3 +319,15 @@ export const fetchAllRentals_GET_user = async (req: Request, res: Response, next
             res.status(500).json({status: 'error', message: e})
         }
     }
+
+
+    export const fetchAllPendingRentals_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+        try {
+            const response = await Rental.fetchAllPendingRentals();
+            res.status(200).json({status: 'success', data: response})
+        }
+        catch(e) {
+            console.log(e);
+            res.status(500).json({status: 'error', message: e})
+        }
+    }
