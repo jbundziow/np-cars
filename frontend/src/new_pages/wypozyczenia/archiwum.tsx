@@ -4,7 +4,6 @@ import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
-import useAuth from '../../hooks/useAuth'
 import RentalsHistory from "../../components/rentals/history/RentalsHistory";
 
 
@@ -24,6 +23,13 @@ type Pagination = {
 interface ApiResponse {
   status: 'success' | 'fail' | 'error',
   data?: any,
+  message?: any,
+}
+
+interface ApiResponseRentalsHistory {
+  status: 'success' | 'fail' | 'error',
+  totalDistance?: number,
+  data?: any,
   pagination?: Pagination,
   message?: any,
 }
@@ -34,15 +40,15 @@ const RentalsArchive = (props: Props) => {
 
     
 
-    const [data1, setData1] = useState<ApiResponse>();  //rentals data of current user
+    const [data1, setData1] = useState<ApiResponseRentalsHistory>();  //rentals data of current user
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
     const [data3, setData3] = useState<ApiResponse>();  //all users data
     const [data4, setData4] = useState<ApiResponse>();  //all places data
-    const [filters, setFilters] = useState<string | null>(null);
-    const [currentPage, setCurrentPage] = useState<number>(1)
-    const [paginationData, setPaginationData] = useState<Pagination>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false})
-    // console.log(currentPage);
-    // console.log(paginationData);
+    const [filters, setFilters] = useState<string>('%7B%7D'); //%7B%7D is an empty object {}
+    const [currentPage, setCurrentPage] = useState<number>(1) //current page for pagination
+    const [totalDistance, setTotalDistance] = useState<number>(0) //total distance from all records
+    const [paginationData, setPaginationData] = useState<Pagination>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false}) //pagination data
+
 
     const [failData, setFailData] = useState<ApiResponse>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -50,18 +56,13 @@ const RentalsArchive = (props: Props) => {
     const [isError, setError] = useState<boolean>(false);
     
 
-    const { auth }= useAuth();
+
     useEffect(() => {
       const getData = async () => {
-         
-      if(filters) {
-        const res = await fetchData(`${DOMAIN_NAME}/rentals/users/${auth.userID}${filters}?pagenumber=${currentPage}?pagesize=2`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-        setData1(res);
-        if(res.pagination) setPaginationData(res.pagination)
-      }
-      else {
-        const res1 = await fetchData(`${DOMAIN_NAME}/rentals/users/${auth.userID}?type=all`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${DOMAIN_NAME}/rentals?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponseRentalsHistory)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
+        if(res1.pagination) setPaginationData(res1.pagination)
+        if(res1.totalDistance !== undefined && res1.totalDistance !== null) setTotalDistance(res1.totalDistance)
         
         if(res1.status==='success') {
           const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
@@ -75,19 +76,18 @@ const RentalsArchive = (props: Props) => {
               }
           }
         }
-      }
 
       setLoading(false)
       }
       getData()
-    }, [filters])
+    }, [filters, currentPage])
 
 
     return (
       <>
       <Breadcrumb pageName="Archiwum wypożyczeń" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data} usersData={data3?.data} placesData={data4?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data} usersData={data3?.data} placesData={data4?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData} totalDistance={totalDistance}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };

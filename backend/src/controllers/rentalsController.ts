@@ -311,7 +311,7 @@ export const fetchAllRentals_GET_user = async (req: Request, res: Response, next
             filtersObj = removeEmptyValuesFromObject(filtersObj)
             await filtersObjSchema.validateAsync(filtersObj)
             const response = await Rental.fetchAllRentalsWithFilters(filtersObj, pageSize, pageNumber)
-            res.status(200).json({status: 'success', data: response.records, pagination: response.pagination})
+            res.status(200).json({status: 'success', data: response.records, pagination: response.pagination, totalDistance: response.totalDistance})
 
         }
         catch(e) {

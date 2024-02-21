@@ -63,7 +63,7 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
 
     const userSpan = (user: usersData | undefined, nullText: string):JSX.Element => {
         if(user) {
-            return <>{user.role === 'admin' ? <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span> : ''}&nbsp;<Link to={`/uzytkownicy/${user.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{user.name} {user.surname}</span></Link></>
+            return <p className="whitespace-nowrap">{user.role === 'admin' ? <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span> : ''}&nbsp;<Link to={`/uzytkownicy/${user.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{user.name} {user.surname}</span></Link></p>
         }
         else {
             return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
@@ -78,7 +78,7 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
             return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
         }
     }
-
+    const rentalUserObject = props.usersData.find(user => user.id === props.rentalData.userID);
     const returnUserObject = props.usersData.find(user => user.id === props.rentalData.returnUserID);
     const acknowledgedByModeratorObject = props.usersData.find(user => user.id === props.rentalData.lastEditedByModeratorOfID)
     const placeObject = props.placesData.find(place => place.id === props.rentalData.placeID)
@@ -100,6 +100,11 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
             </h5>
             </Link>
         </div>
+        </div>
+    </td>
+    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+        <div className="flex justify-center">
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{userSpan(rentalUserObject, 'brak')}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">

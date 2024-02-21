@@ -59,6 +59,7 @@ type RentalsHistoryTableProps = {
   placesData: placesData[] | [],
   setCurrentPage: (pageNumber: number) => void;
   paginationData: Pagination,
+  totalDistance: number,
 }
 
 
@@ -77,6 +78,9 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Samochód
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Wypożyczone przez użytkownika
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Data wypożyczenia
@@ -124,20 +128,25 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
               <tr>
               <td>
                 <div className="flex justify-center">
-                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma całościowa: #### km</p>
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łączna ilość wyników: {props.paginationData.totalCount}</p>
                 </div>  
               </td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
               <td></td>
               <td className="pt-5">
                 <div className="flex justify-center">
-                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma: {totalDistanceInVisibleTable} km</p>
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma w tabeli: {totalDistanceInVisibleTable} km</p>
                 </div>  
               </td>
               <td></td>
-              <td></td>
+              <td className="pt-5">
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łączna suma dla zapytania: {props.totalDistance} km</p>
+                </div>  
+              </td>
               <td></td>
               <td></td>
               </tr>

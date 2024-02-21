@@ -1,5 +1,6 @@
 const {DataTypes, Op} = require('sequelize');
 
+import { fn, literal } from "sequelize";
 import sequelize from "../database/database";
 import { CarModel } from "./Car";
 
@@ -202,7 +203,7 @@ class Rental {
 
     static async fetchAllRentalsWithFilters (filters:any, pageSize: number, pageNumber: number) {
         const whereClause: any = {};
-        
+
         //arrays
         if (filters.carIDs && filters.carIDs.length > 0) {
           whereClause.carID = { [Op.in]: filters.carIDs };
@@ -317,12 +318,20 @@ class Rental {
         const records = await RentalModel.findAll({
             where: whereClause,
             limit: pageSize,
-            offset: offset
+            offset: offset,
+            order: [['createdAt', 'DESC']] //sort from the newest
         });
+
+        
+        let totalDistance = await RentalModel.sum('distance', {
+          where: whereClause
+        });
+        if(totalDistance === null) {totalDistance = 0}
 
 
         return {
             records,
+            totalDistance: totalDistance,
             pagination: {
               totalCount: totalCount,
               totalPages: totalPages,

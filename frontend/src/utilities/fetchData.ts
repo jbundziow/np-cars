@@ -8,6 +8,7 @@ type Pagination = {
 
 interface ApiResponse {
   status: 'success' | 'fail' | 'error',
+  totalDistance?: number,
   data?: any,
   pagination?: Pagination,
   message?: any,

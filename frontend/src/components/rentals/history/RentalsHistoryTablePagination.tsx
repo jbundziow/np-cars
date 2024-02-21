@@ -33,7 +33,7 @@ const RentalsHistoryTablePagination = (props: RentalsHistoryTablePaginationProps
     };
   
     return (
-      <nav aria-label="Page navigation" className="flex justify-center">
+      <nav aria-label="Page navigation" className="flex justify-center select-none">
         <ul className="list-style-none flex">
 
 

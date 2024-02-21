@@ -44,6 +44,7 @@ type RentalTableFilteringProps = {
 const RentalTableFiltering = (props: RentalTableFilteringProps) => {
 
     const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
+    const [selectedUserIDs, setSelectedUserIDs] = useState<SelectValue>(null);
     const [rentalDateFrom, setRentalDateFrom] = useState<DateValueType>(null);
     const [rentalDateTo, setRentalDateTo] = useState<DateValueType>(null);
     const [carMileageBefore_FROM, setCarMileageBefore_FROM] = useState<number | ''>('');
@@ -83,6 +84,11 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
             selectedCars.forEach((obj: Option) => carIDs.push(Number(obj.value)))
         }
 
+        const userIDs: number[] = [];
+        if(selectedUserIDs !== null && Array.isArray(selectedUserIDs)) {
+            selectedUserIDs.forEach((obj: Option) => userIDs.push(Number(obj.value)))
+        }
+
         const returnUserIDs: number[] = [];
         if(selectedReturnedByUser !== null && Array.isArray(selectedReturnedByUser)) {
             selectedReturnedByUser.forEach((obj: Option) => returnUserIDs.push(Number(obj.value)))
@@ -100,6 +106,7 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
 
         const filtersObj = {
             carIDs: carIDs,
+            userIDs: userIDs,
             returnUserIDs: returnUserIDs,
             placeIDs: placeIDs,
             editedByModerator: acknowledgedByModeratorValue,
@@ -116,7 +123,7 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
             dateTo_to: rentalDateTo?.endDate
         }
 
-        const queryString: string = '?filters=' +  encodeURIComponent(JSON.stringify(filtersObj));
+        const queryString: string = encodeURIComponent(JSON.stringify(filtersObj));
         props.setFilters(queryString);
     }
 
@@ -124,6 +131,7 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
 
     const resetFilters = () => {
         setSelectedCars(null);
+        setSelectedUserIDs(null);
         setRentalDateFrom(null);
         setRentalDateTo(null);
         setCarMileageBefore_FROM('');
@@ -153,6 +161,16 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
                     </label>
                     <MultiselectInput isSearchable={true} value={selectedCars} setValue={(value: SelectValue) => (setSelectedCars(value))} options={carOptions} />
                     </div>
+
+
+
+                    <div className="mx-2 my-5 sm:mx-5">
+                    <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
+                        Wypożyczone przez użytkownika:
+                    </label>
+                    <MultiselectInput isSearchable={true} value={selectedUserIDs} setValue={(value: SelectValue) => (setSelectedUserIDs(value))} options={userOptions} />
+                    </div>
+
 
 
                     <div className='mx-2 my-5 sm:mx-5'>

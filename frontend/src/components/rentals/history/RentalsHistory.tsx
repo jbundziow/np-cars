@@ -61,6 +61,7 @@ type RentalsHistoryProps = {
     setFilters: Function,
     setCurrentPage: (pageNumber: number) => void,
     paginationData: Pagination,
+    totalDistance: number,
   }
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
@@ -127,7 +128,7 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                 </TECollapse>
                 </div>
             </div>
-            <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData}/>
+            <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalDistance={props.totalDistance}/>
         </div>
         </>
     )
