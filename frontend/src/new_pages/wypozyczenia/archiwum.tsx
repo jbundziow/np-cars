@@ -41,8 +41,8 @@ const RentalsArchive = (props: Props) => {
     const [filters, setFilters] = useState<string | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(1)
     const [paginationData, setPaginationData] = useState<Pagination>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false})
-    console.log(currentPage);
-    console.log(paginationData);
+    // console.log(currentPage);
+    // console.log(paginationData);
 
     const [failData, setFailData] = useState<ApiResponse>();
     const [loading, setLoading] = useState<boolean>(true);

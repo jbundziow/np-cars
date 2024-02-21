@@ -200,13 +200,15 @@ class Rental {
     }
 
 
-    static async fetchAllRentalsOfUserWithFilters (userID: number, filters:any, pageSize: number, pageNumber: number) {
-        const whereClause: any = {
-          userID: userID,
-        };
+    static async fetchAllRentalsWithFilters (filters:any, pageSize: number, pageNumber: number) {
+        const whereClause: any = {};
+        
         //arrays
         if (filters.carIDs && filters.carIDs.length > 0) {
           whereClause.carID = { [Op.in]: filters.carIDs };
+        }
+        if (filters.userIDs && filters.userIDs.length > 0) {
+          whereClause.userID = { [Op.in]: filters.userIDs };
         }
         if (filters.returnUserIDs && filters.returnUserIDs.length > 0) {
           whereClause.returnUserID = { [Op.in]: filters.returnUserIDs };

@@ -145,6 +145,10 @@ const filtersObjSchema = Joi.object({
         .items(Joi.number().positive().integer())
         .optional(),
 
+    userIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+
     returnUserIDs: Joi.array()
         .items(Joi.number().positive().integer())
         .optional(),

@@ -9,6 +9,9 @@ import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValuesFromObject';
 
 
+
+
+
 export const fetchOneRental_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     const rentalID = req.params.rentalid;
     if (!rentalID || isNaN(Number(rentalID))) {
@@ -118,6 +121,11 @@ export const addOneRental_POST_user = async (req: Request, res: Response, next: 
 }
 
 
+
+
+
+
+
 export const returnCar_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!data.rentalID || isNaN(Number(data.rentalID))) {
@@ -197,6 +205,12 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
 }
 
 
+
+
+
+
+
+
 export const fetchLastRentalOfCar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {
         try {
@@ -220,49 +234,9 @@ export const fetchLastRentalOfCar_GET_user = async (req: Request, res: Response,
 }
 
 
-// export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
-//     if (!isNaN(Number(req.params.userid))) {
-//         try {
-//             const isUserExist = await User.fetchOne(Number(req.params.userid));
-//             if (isUserExist) {
-//                 let dbResponse;
 
-//                 if(!req.query.type || req.query.type === 'all') {
-//                     dbResponse = await Rental.fetchAllRentalsOfUser(Number(req.params.userid), 'all');
-//                 }
-//                 else if(req.query.type === 'pending') {
-//                     dbResponse = await Rental.fetchAllRentalsOfUser(Number(req.params.userid), 'pending');
-//                 }
-//                 else if(req.query.type === 'closed') {
-//                     dbResponse = await Rental.fetchAllRentalsOfUser(Number(req.params.userid), 'closed');
-//                 }
-//                 else {
-//                     res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong 'type' in query params. It should be null, 'all', 'pending' or 'closed'.`, pl: `Podałeś złe 'type' w linku jako query params. Prawidłowe wartości to null, 'all', 'pending', 'closed'.`}]})
-//                     return;
-//                 }
 
-//                 let response = [];
-//                 for await (const item of dbResponse) {
-//                     const carBasicData = await Car.fetchOneBasicData(Number(item.dataValues.carID));
-//                     response.push({...item.dataValues, carBasicData: carBasicData?.dataValues})
-//                 }
-                
-//                 res.status(200).json({status: 'success', data: response})
 
-//             }
-//             else {
-//                 res.status(400).json({status: 'fail', data: [{en: `The user of id: ${Number(req.params.userid)} does not exist in the database.`, pl: `Użytkownik o ID: ${Number(req.params.userid)} nie istnieje w bazie danych.`}]})
-//                 return;
-//             }
-//         }
-//         catch(e) {
-//             res.status(500).json({status: 'error', message: e})
-//         }
-//     }
-//     else {
-//     res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]});
-//     }   
-// }
 
 
 
@@ -280,19 +254,18 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
             }
 
             //only admin can fetch rentals data of other users
-            const queryUser = await identifyUserId(req.cookies.jwt);
-            if(queryUser.id !== Number(req.params.userid)) {
-                if(queryUser.role !== 'admin') {
-                    res.status(400).json({status: 'fail', data: [{en: `Only admin can fetch rentals data of other users.`, pl: `Tylko admin może pobrać dane o wypożyczeniach innych użytkowników.`}]})
-                    return;
-                }
-            }
-         
-            if(req.query.filters && req.query.type) {
-                res.status(400).json({status: 'fail', data: [{en: `You cannot pass both 'type' and 'filters' query params in one query. Select only one of the options.`, pl: `W jednym zapytaniu nie można przekazać obu parametrów zapytania 'types' i 'filters'. Wybierz tylko jedną z opcji.`}]})
+            // const queryUser = await identifyUserId(req.cookies.jwt);
+            // if(queryUser.id !== Number(req.params.userid)) {
+            //     if(queryUser.role !== 'admin') {
+            //         res.status(400).json({status: 'fail', data: [{en: `Only admin can fetch rentals data of other users.`, pl: `Tylko admin może pobrać dane o wypożyczeniach innych użytkowników.`}]})
+            //         return;
+            //     }
+            // }
+            if(!req.query.type) {
+                res.status(400).json({status: 'fail', data: [{en: `No query param 'type' passed.`, pl: `Nie przekazano 'type' w parametrach zapytania.`}]})
                 return;
             }
-            else if(req.query.type) {
+            else {
                 if(req.query.type === 'all' || req.query.type === 'pending' || req.query.type === 'closed') {
                     const response = await Rental.fetchAllRentalsOfUser(Number(req.params.userid), req.query.type);
                     res.status(200).json({status: 'success', data: response})
@@ -302,18 +275,43 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
                     return;
                 }
             }
-            else if(req.query.filters) {
-                const receivedQueryString = req.query.filters.toString();
-                let filtersObj = JSON.parse(receivedQueryString);
-                filtersObj = removeEmptyValuesFromObject(filtersObj)
-                await filtersObjSchema.validateAsync(filtersObj)
-                const response = await Rental.fetchAllRentalsOfUserWithFilters(Number(req.params.userid), filtersObj, 2, 1)
-                res.status(200).json({status: 'success', data: response.records, pagination: response.pagination})
-            }
-            else {
-                res.status(400).json({status: 'fail', data: [{en: `No query params 'types' or 'filters' passed.`, pl: `Nie przekazano 'types' lub 'filters' w parametrach zapytania.`}]})
-                return;
-            }
+               
+        }
+        catch(e) {
+            console.log(e);
+            res.status(500).json({status: 'error', message: e})
+        }
+}
+
+
+
+
+
+
+export const fetchAllRentals_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    if(!req.query.filters) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'filters' passed.`, pl: `Nie przekazano 'filters' w parametrach zapytania.`}]})
+        return;
+    }
+    if(!req.query.pagenumber || isNaN(Number(req.query.pagenumber))) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'pagenumber' passed or it is not a number.`, pl: `Nie przekazano 'pagenumber' w parametrach zapytania lub nie jest to cyfra.`}]})
+        return;
+    }
+    if(!req.query.pagesize || isNaN(Number(req.query.pagesize))) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'pagesize' passed or it is not a number.`, pl: `Nie przekazano 'pagesize' w parametrach zapytania lub nie jest to cyfra.`}]})
+        return;
+    }
+
+        try {
+            const pageNumber = Number(req.query.pagenumber);
+            const pageSize = Number(req.query.pagesize);
+
+            const receivedQueryString = req.query.filters.toString();
+            let filtersObj = JSON.parse(receivedQueryString);
+            filtersObj = removeEmptyValuesFromObject(filtersObj)
+            await filtersObjSchema.validateAsync(filtersObj)
+            const response = await Rental.fetchAllRentalsWithFilters(filtersObj, pageSize, pageNumber)
+            res.status(200).json({status: 'success', data: response.records, pagination: response.pagination})
 
         }
         catch(e) {
