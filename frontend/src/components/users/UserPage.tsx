@@ -1,66 +1,28 @@
-import { useEffect, useState } from 'react';
-import Breadcrumb from '../../components/Breadcrumb';
 import CoverOne from '../../images/cover/spawacz-cover.jpg';
 import UserMale from '../../images/user/unknownUserMale.jpg';
 import UserFemale from '../../images/user/unknownUserFemale.jpg';
 import DOMAIN_NAME from '../../utilities/domainName';
-import { useParams } from 'react-router-dom';
-import fetchData from '../../utilities/fetchData';
-import Loader from '../../common/Loader';
-import OperationResult from '../../components/general/OperationResult';
-import BarChart from '../../components/general/charts/BarChart';
+import BarChart from '../general/charts/BarChart';
+import { db_User } from '../../types/db_types';
 import useAuth from '../../hooks/useAuth';
-import { ApiResponse } from '../../types/common';
+import { stats_UserDistanceInYear, stats_UserDistanceInYear_oneMonthSchema } from '../../types/stats';
 
-interface Props {
-  documentTitle: string;
+
+type UserPageProps = {
+  userData: db_User;
+  statsData: stats_UserDistanceInYear;
+  filterValue: number,
+  setFilterValue: Function;
 }
 
-
-
-const UserPage = (props: Props) => {
-  useEffect(() => {document.title = `${props.documentTitle}`}, []);
+const UserPage = (props: UserPageProps) => {
 
   const { auth } = useAuth();
-  const params = useParams();
-
-  useEffect(() => {document.title = `${props.documentTitle}`}, []);
-
-  const [data1, setData1] = useState<ApiResponse>();  //user data
-  const [data2, setData2] = useState<ApiResponse>();  //<BarChart> data
-
-  const [failData, setFailData] = useState<ApiResponse>();
-  const [loading, setLoading] = useState<boolean>(true);
-  const [isFail, setFail] = useState<boolean>(false)
-  const [isError, setError] = useState<boolean>(false);
-
-  const [filterValue, setFilterValue] = useState(2024); //year to <BarChart>
-  
-  useEffect(() => {
-    const getData = async () => {   
-
-    const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-    setData1(res1);
-    if(res1.status === 'success') {
-      const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/distance?userid=${auth.userID}&year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-      setData2(res2)
-    }
-
-    setLoading(false)
-    }
-    getData()
-  }, [params.userid,filterValue])
-
-
-
   
 
   return (
-    <>
-      <Breadcrumb pageName="Profil użytkownika" />
 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-      {loading === true ? <Loader/> : (!isFail && !isError) ?
       <div>
         <div className="relative z-20 h-35 md:h-65">
           <img
@@ -73,9 +35,9 @@ const UserPage = (props: Props) => {
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2">
-              <img className="bg-cover bg-top-center rounded-[50%]" src={(!isFail && !isError) ? data1?.data.avatarPath !== null ? `${DOMAIN_NAME}${data1?.data.avatarPath}` : data1?.data.gender === 'female' ? UserFemale : UserMale : UserMale} alt="User Avatar"/>
+              <img className="bg-cover bg-top-center rounded-[50%]" src={props.userData.avatarPath !== null ? `${DOMAIN_NAME}${props.userData.avatarPath}` : props.userData.gender === 'female' ? UserFemale : UserMale} alt="Avatar użytkownika"/>
 
-              {Number(auth.userID) === data1?.data.id || auth.userRole === 'admin' ?
+              {Number(auth.userID) === props.userData.id || auth.userRole === 'admin' ?
               <label
                 htmlFor="profile"
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
@@ -116,11 +78,11 @@ const UserPage = (props: Props) => {
           </div>
           <div className="mt-4">
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-              {`${data1?.data.name} ${data1?.data.surname}`}
+              {`${props.userData.name} ${props.userData.surname}`}
             </h3>
-            <p className="font-medium">{data1?.data.employedAs}</p>
-            {data1?.data.role === 'admin' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Admin</p> : ''}
-            {data1?.data.role === 'banned' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Użytkownik zbanowany</p> : ''}
+            <p className="font-medium">{props.userData.employedAs}</p>
+            {props.userData.role === 'admin' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Admin</p> : ''}
+            {props.userData.role === 'banned' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Użytkownik zbanowany</p> : ''}
 
             
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
@@ -151,17 +113,13 @@ const UserPage = (props: Props) => {
             </div>
 
           <div className="md:my-10 md:mx-10">
-          <BarChart key={data2?.data.key} title={'Przejechane kilometry'} data={data2?.data.distance.map((obj: {month_num: number, month_text: string, total_dist: number}) => obj.total_dist)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={filterValue} setFilterValue={(value: number) => {setFilterValue(value)}}/>
+          <BarChart key={props.statsData.key} title={'Przejechane kilometry'} data={props.statsData.distance.map((obj: stats_UserDistanceInYear_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
           </div>
 
           </div>
         </div>
       </div>
-      :
-      (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>
-      }
       </div>
-    </>
   );
 };
 

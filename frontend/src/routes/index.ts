@@ -1,11 +1,11 @@
 import { lazy } from 'react';
 const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
-const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje'));
+const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje/index'));
 const MakeAReservation = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji'));
 const MakeAReservationForm = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji-form'));
 const MyReservations = lazy(() => import('../new_pages/rezerwacje/moje-rezerwacje'));
 const ReservationArchive = lazy(() => import('../new_pages/rezerwacje/archiwum'));
-const RefuelingOverview = lazy(() => import('../new_pages/tankowania'));
+const RefuelingOverview = lazy(() => import('../new_pages/tankowania/index'));
 const ReportRefueling = lazy(() => import('../new_pages/tankowania/zglos-tankowanie'));
 const ReportRefuelingForm = lazy(() => import('../new_pages/tankowania/zglos-tankowanie-form'));
 const RefuelingArchive = lazy(() => import('../new_pages/tankowania/archiwum'));
@@ -20,8 +20,10 @@ const RentACarForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samoc
 const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod'));
 const ReturnACarForm = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod-form'));
 const ActualRentals = lazy(() => import('../new_pages/wypozyczenia/biezace-wypozyczenia'));
-const UserPage = lazy(() => import('../new_pages/uzytkownicy/UserPage'));
+const UserMainpage = lazy(() => import('../new_pages/uzytkownicy/index'));
 
+
+//TODO: DELETE IT LATER
 const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
 const Calendar = lazy(() => import('../pages/Calendar'));
 const Chart = lazy(() => import('../pages/Chart'));
@@ -148,13 +150,16 @@ const coreRoutes = [
     title: 'Archiwum napraw',
     component: FaultsArchive,
   },
+
+
+  //uzytkownicy
   {
     path: '/uzytkownicy/:userid',
     title: 'Profil użytkownika',
-    component: UserPage,
+    component: UserMainpage,
   },
 
-
+  //TODO: DELETE IT LATER
   // @@@ TEMPLATE TO DELETE BELOW @@@
   {
     path: '/dashboard',
