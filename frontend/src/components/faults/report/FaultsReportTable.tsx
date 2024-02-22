@@ -20,6 +20,8 @@ const FaultsReportTable = (props: FaultsReportTableProps) => {
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         <div className="max-w-full overflow-x-auto">
+        {props.data && props.data.length > 0
+          ?
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -42,6 +44,9 @@ const FaultsReportTable = (props: FaultsReportTableProps) => {
 
             </tbody>
           </table>
+          :
+          <p className="text-black dark:text-white text-md text-center mb-4">Nie odznaleziono żadnych aut w bazie danych.</p>   
+          }
         </div>
       </div>
     );

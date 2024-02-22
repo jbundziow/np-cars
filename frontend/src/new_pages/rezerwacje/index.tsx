@@ -33,10 +33,6 @@ const ReservationsOverview = (props: Props) => {
       const res1 = await fetchData(`${DOMAIN_NAME}/reservations/twoweeks/cars`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
-      if(res1.data.length === 0) {
-        setError(true)
-      }
-
       setLoading(false)
       }
       getData()
