@@ -7,16 +7,12 @@ import DOMAIN_NAME from "../../utilities/domainName";
 
 import MakeARentalFormContainer from '../../components/rentals/rent/MakeARentalFormContainer';
 import fetchData from '../../utilities/fetchData';
+import { ApiResponse } from '../../types/common';
 
 interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
 
 
 const MakeARentalForm = (props: Props) => {

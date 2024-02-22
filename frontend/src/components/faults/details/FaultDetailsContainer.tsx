@@ -2,49 +2,17 @@ import { Link } from "react-router-dom";
 
 import { dateFormatter } from "../../../utilities/dateFormatter";
 import useAuth from "../../../hooks/useAuth";
+import { db_Car_basic, db_Fault, db_User } from "../../../types/db_types";
 
-type carData = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-}
-
-type faultData = {
-  id: number,
-  carID: number,
-  userID: number,
-  moderatorID: number | null,
-  lastChangeAt: string | null,
-  title: string,
-  description: string,  
-  status: 'pending' | 'accepted' | 'finished' | 'cancelled',
-  resultDescription: string | null,
-  repairCost: number | null,
-  createdAt: string,
-  updatedAt: string,
-}
-
-type usersData = {
-  id: number,
-  email: string,
-  gender: 'male' | 'female',
-  name: string,
-  surname: string,
-  employedAs: string,
-  avatarPath: string | null,
-  role: 'unconfirmed' | 'banned' | 'admin' | 'user',
-}
 
 type faultDataSchema = {
-  carData: carData,
-  faultData: faultData,
+  carData: db_Car_basic,
+  faultData: db_Fault,
 }
 
 interface FaultDetailsContainerProps {
   faultAndCarData: faultDataSchema,
-  usersData: usersData[] | [],
+  usersData: db_User[] | [],
 }
 
 
@@ -52,7 +20,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
 
   
 
-  const faultStatusJSX = (status: faultData["status"]):JSX.Element => {
+  const faultStatusJSX = (status: db_Fault["status"]):JSX.Element => {
 
     let result:JSX.Element = <span>Błąd</span>;
     switch (status) {
@@ -73,7 +41,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
   }
 
 
-  const userSpan = (user: usersData | undefined, nullText: string):JSX.Element => {
+  const userSpan = (user: db_User | undefined, nullText: string):JSX.Element => {
       if(user) {
           return <>{user.role === 'admin' ? <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span> : ''}&nbsp;<Link to={`/uzytkownicy/${user.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{user.name} {user.surname}</span></Link></>
       }
@@ -109,7 +77,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
             <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5>{faultStatusJSX(`${props.faultAndCarData.faultData.status}`)}</p>
             {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
             <p className="mb-0"><h5 className="font-bold inline-block">Usterka zgłoszona przez:&nbsp;</h5>{userSpan(userObject, `#BŁĄD`)}</p>
-            <p className="mb-2"><h5 className="font-bold inline-block">Data zgłoszenia usterki:&nbsp;</h5>{dateFormatter(props.faultAndCarData.faultData.createdAt)}</p>
+            <p className="mb-2"><h5 className="font-bold inline-block">Data zgłoszenia usterki:&nbsp;</h5>{dateFormatter(props.faultAndCarData.faultData.createdAt.toString())}</p>
             {props.faultAndCarData.faultData.status !== 'pending' ?
             <>
             {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}

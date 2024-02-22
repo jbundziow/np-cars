@@ -1,17 +1,10 @@
 import { Link } from "react-router-dom";
 import CarRowInTable from "../../general/CarRowInTable";
-
-type carBasicData = {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-  }
+import { db_Car_basic } from "../../../types/db_types";
 
 
 interface MakeAReservationTableRowProps {
-    carData: carBasicData | undefined,
+    carData: db_Car_basic;
   }
 
 const MakeAReservationTableRow = (props: MakeAReservationTableRowProps) => {

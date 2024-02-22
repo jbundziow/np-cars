@@ -6,17 +6,13 @@ import DOMAIN_NAME from "../../utilities/domainName";
 import RentalsReturnCarTable from "../../components/rentals/return/RentalsReturnCarTable";
 import fetchData from "../../utilities/fetchData";
 import useAuth from "../../hooks/useAuth";
+import { ApiResponse } from "../../types/common";
 
 
 interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
 
 const ReturnACar = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

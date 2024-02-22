@@ -1,16 +1,10 @@
+import { db_Car_basic } from "../../../types/db_types";
 import MakeAReservationTableRow from "./MakeAReservationTableRow";
 
 
-type carBasicData = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-}
 
 interface MakeAReservationTableProps {
-  data: carBasicData[] | [];
+  data: db_Car_basic[] | [];
 }
 
 const MakeAReservationTable = (props: MakeAReservationTableProps) => {

@@ -6,6 +6,7 @@ import DOMAIN_NAME from "../../utilities/domainName";
 import ReportFaultFormContainer from '../../components/faults/report/ReportFaultFormContainer';
 import fetchData from "../../utilities/fetchData";
 import { useParams } from "react-router-dom";
+import { ApiResponse } from "../../types/common";
 
 
 
@@ -13,11 +14,7 @@ interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
+
 
 const ReportFaultForm = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

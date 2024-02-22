@@ -6,6 +6,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import RentalsReturnCarForm from "../../components/rentals/return/RentalsReturnCarForm";
 import fetchData from "../../utilities/fetchData";
+import { ApiResponse } from "../../types/common";
 
 
 
@@ -13,11 +14,6 @@ interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
 
 const ReturnACarForm = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

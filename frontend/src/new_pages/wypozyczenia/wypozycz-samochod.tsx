@@ -5,6 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import RentalsTable from "../../components/rentals/rent/RentalsTable";
 import fetchData from "../../utilities/fetchData";
+import { ApiResponse } from "../../types/common";
 
 type carBasicData = {
   id: number,
@@ -18,11 +19,7 @@ interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
+
 
 const RentACar = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

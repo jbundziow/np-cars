@@ -1,16 +1,11 @@
 import { Link } from "react-router-dom";
 import CarRowInTable from "../../general/CarRowInTable";
+import { db_Car_basic } from "../../../types/db_types";
 
-type carBasicData = {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-  }
+
 
 interface RentalsReturnCarTableRowProps {
-    carsData: carBasicData[];
+    carsData: db_Car_basic[] | [];
     rentalCarId: number;
     rentDate: string;
     rentalID: number;

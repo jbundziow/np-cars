@@ -5,6 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import MakeAReservationTable from "../../components/reservations/make/MakeAReservationTable";
 import fetchData from "../../utilities/fetchData";
+import { ApiResponse } from "../../types/common";
 
 
 
@@ -12,11 +13,6 @@ interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
 
 const MakeAReservation = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

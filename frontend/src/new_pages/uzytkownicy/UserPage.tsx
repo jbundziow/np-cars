@@ -10,16 +10,13 @@ import Loader from '../../common/Loader';
 import OperationResult from '../../components/general/OperationResult';
 import BarChart from '../../components/general/charts/BarChart';
 import useAuth from '../../hooks/useAuth';
+import { ApiResponse } from '../../types/common';
 
 interface Props {
   documentTitle: string;
 }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
+
 
 const UserPage = (props: Props) => {
   useEffect(() => {document.title = `${props.documentTitle}`}, []);

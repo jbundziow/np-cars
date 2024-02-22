@@ -6,35 +6,23 @@ import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
 import formatDate from "../../../utilities/formatDate";
 import { Link } from "react-router-dom";
+import { db_Car_basic } from "../../../types/db_types";
+import { FormPageStatus } from "../../../types/enums";
+import { warnings } from "../../../types/common";
 
 
-enum PageStatus {
-  FillingTheForm,
-  FormWasSentCorrectly,
-  ErrorWithSendingForm,
-  FailOnSendingForm
-}
 
-type dataSchema = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-}
+
 
 interface MakeAReservationFormContainerProps {
-    data: dataSchema;
+    data: db_Car_basic;
 }
 
 const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps) => {
-  type warnings = {
-    pl: string,
-    en: string,
-  } 
+
 
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
-  const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
+  const [pageState, setPageState] = useState<FormPageStatus>(FormPageStatus.FillingTheForm)
 
   const [travelDestination, setTravelDestination] = useState<string>('');
   const [value, setValue] = useState<DateValueType>({
@@ -63,21 +51,21 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
       });
 
       if (response.ok) {
-        setPageState(PageStatus.FormWasSentCorrectly);
+        setPageState(FormPageStatus.FormWasSentCorrectly);
       } else {
         const responseJSON = await response.json();
         if(responseJSON.status === 'fail') {
-          setPageState(PageStatus.FailOnSendingForm);
+          setPageState(FormPageStatus.FailOnSendingForm);
           setWarnings(responseJSON.data);
 
         }
         else {
-        setPageState(PageStatus.ErrorWithSendingForm);
+        setPageState(FormPageStatus.ErrorWithSendingForm);
         }
       }
     }
     catch (error) {
-      setPageState(PageStatus.ErrorWithSendingForm);
+      setPageState(FormPageStatus.ErrorWithSendingForm);
     }
   };
 
@@ -99,7 +87,7 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
             <div className='col-span-3'>
             
               <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
-                  {pageState === PageStatus.FillingTheForm ?
+                  {pageState === FormPageStatus.FillingTheForm ?
                     <form onSubmit={submitHandler}>
                       <div className='mb-5'>
                         <label className="mb-3 block text-black dark:text-white">
@@ -147,14 +135,14 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
                       </div>
                     </form>
                   :
-                  pageState === PageStatus.FormWasSentCorrectly ?
+                  pageState === FormPageStatus.FormWasSentCorrectly ?
                     <OperationResult status={'success'} title={'Pomyślnie dokonano rezerwacji 👍'} description={'Będzie ona teraz widoczna dla innych użytkowników.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/rezerwacje/moje-rezerwacje`}/>
                   :
-                  pageState === PageStatus.ErrorWithSendingForm ?
-                  <OperationResult status={'error'} title={'Wystąpił błąd podczas składania rezerwacji 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  pageState === FormPageStatus.ErrorWithSendingForm ?
+                  <OperationResult status={'error'} title={'Wystąpił błąd podczas składania rezerwacji 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
                   :
-                  pageState === PageStatus.FailOnSendingForm ?
-                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas składania rezerwacji 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  pageState === FormPageStatus.FailOnSendingForm ?
+                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas składania rezerwacji 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
                   :
                   ''
                   }

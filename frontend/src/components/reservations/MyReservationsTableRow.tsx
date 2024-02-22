@@ -3,28 +3,14 @@ import ModalWarning from "../general/ModalWarning";
 import { useState } from "react";
 import DOMAIN_NAME from "../../utilities/domainName";
 import CarRowInTable from "../general/CarRowInTable";
+import { db_Car_basic, db_Reservation } from "../../types/db_types";
 
-type carBasicData = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-}
 
-type reservationDataType = {
-    id: number,
-    carID: number,
-    userID: number,
-    lastEditedByModeratorOfID: number | null,
-    dateFrom: Date,
-    dateTo: Date,
-    travelDestination: string
-  }
+
 
 interface MyReservationsTableRowProps {
-    carData: carBasicData | undefined;
-    reservationData: reservationDataType;
+    carData: db_Car_basic;
+    reservationData: db_Reservation;
   }
 
 const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
@@ -42,7 +28,7 @@ const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
               credentials: 'include',
               body: JSON.stringify({reservationID: props.reservationData.id}),
             });
-            //TODO: update parent component
+
             setReservationDeleted(true)
           }
           catch (error) {

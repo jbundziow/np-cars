@@ -4,73 +4,27 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import TwoWeeksReservations from "../../reservations/overview/TwoWeeksReservations";
 import { Link } from "react-router-dom";
+import { warnings } from "../../../types/common";
+import { FormPageStatus } from "../../../types/enums";
+import { db_Car_basic, db_Rental, db_User } from "../../../types/db_types";
+import { reservationTypeAtSpecificDate } from "../../../types/api";
 
 
-
-enum PageStatus {
-  FillingTheForm,
-  FormWasSentCorrectly,
-  ErrorWithSendingForm,
-  FailOnSendingForm
-}
-
-type carDataSchema = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-}
-
-type lastRentalDataSchema = {
-  id: number,
-  carID: number,
-  userID: number,
-  returnUserID: number | null,
-  lastEditedByModeratorOfID: number | null,
-  carMileageBefore: number,
-  carMileageAfter: number | null,
-  distance: number | null,
-  travelDestination: string | null,
-  placeID: number | null,
-  dateFrom: Date,
-  dateTo: Date | null,
-}
-
-type lastRentalUserDataSchema = {
-  id: number,
-  gender: 'male' | 'female',
-  name: string,
-  surname: string,
-  employedAs: string,
-  avatarPath: string | null,
-  role: 'admin' | 'user' | 'banned',
-}
-
-type reservationType = {
-  date: Date,
-  reservation: boolean,
-  userID: number | null,
-  userName: string | null,
-}
 
 interface MakeARentalFormContainerProps {
-  carData: carDataSchema,
-  lastRentalData: lastRentalDataSchema | null,
-  lastRentalUserData: lastRentalUserDataSchema | null,
+  carData: db_Car_basic,
+  lastRentalData: db_Rental | null,
+  lastRentalUserData: db_User | null,
   numberOfFutureReservations: number | undefined,
-  twoWeeksReservations: reservationType[] | [];
+  twoWeeksReservations: reservationTypeAtSpecificDate[] | [];
 }
 
 const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
-  type warnings = {
-    pl: string,
-    en: string,
-  } 
+
 
 
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
-  const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
+  const [pageState, setPageState] = useState<FormPageStatus>(FormPageStatus.FillingTheForm)
 
   //
   let showCarAlreadyRentedAlert: boolean = false;
@@ -140,20 +94,20 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
       });
 
       if (response.ok) {
-        setPageState(PageStatus.FormWasSentCorrectly);
+        setPageState(FormPageStatus.FormWasSentCorrectly);
       } else {
         const responseJSON = await response.json();
         if(responseJSON.status === 'fail') {
-          setPageState(PageStatus.FailOnSendingForm);
+          setPageState(FormPageStatus.FailOnSendingForm);
           setWarnings(responseJSON.data);
         }
         else {
-        setPageState(PageStatus.ErrorWithSendingForm);
+        setPageState(FormPageStatus.ErrorWithSendingForm);
         }
       }
     }
     catch (error) {
-      setPageState(PageStatus.ErrorWithSendingForm);
+      setPageState(FormPageStatus.ErrorWithSendingForm);
     }
   };
 
@@ -176,7 +130,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
             <div className='col-span-3'>
             
               <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
-                  {pageState === PageStatus.FillingTheForm ?
+                  {pageState === FormPageStatus.FillingTheForm ?
                     
                     
                     
@@ -260,14 +214,14 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                       
                     </form>
                   :
-                  pageState === PageStatus.FormWasSentCorrectly ?
+                  pageState === FormPageStatus.FormWasSentCorrectly ?
                     <OperationResult status={'success'} title={'Pomyślnie dokonano wypożyczenia samochodu 👍'} description={'Pamiętaj o dokonaniu zwrotu po zakończeniu podróży.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/wypozyczenia/oddaj-samochod`}/>
                   :
-                  pageState === PageStatus.ErrorWithSendingForm ?
-                  <OperationResult status={'error'} title={'Wystąpił błąd podczas wypożyczania samochodu 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  pageState === FormPageStatus.ErrorWithSendingForm ?
+                  <OperationResult status={'error'} title={'Wystąpił błąd podczas wypożyczania samochodu 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
                   :
-                  pageState === PageStatus.FailOnSendingForm ?
-                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas wypożyczania samochodu 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  pageState === FormPageStatus.FailOnSendingForm ?
+                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas wypożyczania samochodu 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
                   :
                   ''
                   }

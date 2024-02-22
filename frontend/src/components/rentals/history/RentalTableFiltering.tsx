@@ -2,40 +2,15 @@ import { useState } from "react";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { SelectValue , Option } from "react-tailwindcss-select/dist/components/type";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
+import { db_Car_basic, db_Place, db_User } from "../../../types/db_types";
 
-type carBasicData = {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-  }
-  
 
-  type usersData = {
-    id: number,
-    email: string,
-    gender: 'male' | 'female',
-    name: string,
-    surname: string,
-    employedAs: string,
-    avatarPath: string | null,
-    role: 'unconfirmed' | 'banned' | 'admin' | 'user',
-  }
-
-  type placesData = {
-    id: number,
-    projectCode: string,
-    placeName: string,
-    projectName: string,
-    status: 'active' | 'banned',
-  }
 
 
 type RentalTableFilteringProps = {
-    allCarsBasicData: carBasicData[] | [],
-    usersData: usersData[] | [],
-    placesData: placesData[] | [],
+    allCarsBasicData: db_Car_basic[] | [],
+    usersData: db_User[] | [],
+    placesData: db_Place[] | [],
     setFilters: Function
     setCurrentPage: Function
 }

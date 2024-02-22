@@ -5,17 +5,14 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import ActualRentalsTable from "../../components/rentals/actual/ActualRentalsTable";
+import { ApiResponse } from "../../types/common";
 
 
 interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
+
 
 const ActualRentals = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

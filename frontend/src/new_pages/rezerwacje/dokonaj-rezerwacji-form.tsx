@@ -6,6 +6,7 @@ import DOMAIN_NAME from "../../utilities/domainName";
 import MakeAReservationFormContainer from '../../components/reservations/make/MakeAReservationFormContainer';
 import fetchData from "../../utilities/fetchData";
 import { useParams } from "react-router-dom";
+import { ApiResponse } from "../../types/common";
 
 
 
@@ -13,11 +14,6 @@ interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
 
 const MakeAReservationForm = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

@@ -6,6 +6,7 @@ import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import useAuth from '../../hooks/useAuth'
 import MyReservationsTable from "../../components/reservations/MyReservationsTable";
+import { ApiResponse } from "../../types/common";
 
 
 
@@ -13,11 +14,7 @@ interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
+
 
 const MyReservations = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

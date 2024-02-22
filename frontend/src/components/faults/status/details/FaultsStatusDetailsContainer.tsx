@@ -1,21 +1,14 @@
 import { Link } from "react-router-dom";
 import FaultsStatusDetailsAccordion from "./FaultsStatusDetailsAccordion";
+import { db_Car_basic } from "../../../../types/db_types";
 
 type faultsDataArr = {
   id: number,
   title: string,
 }
 
-type carDataObj = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-}
-
 type dataSchema = {
-  carData: carDataObj,
+  carData: db_Car_basic,
   pending: faultsDataArr[],
   accepted: faultsDataArr[],
   finished: faultsDataArr[],

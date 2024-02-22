@@ -7,16 +7,13 @@ import DOMAIN_NAME from "../../utilities/domainName";
 
 import FaultsStatusDetailsContainer from '../../components/faults/status/details/FaultsStatusDetailsContainer'
 import fetchData from "../../utilities/fetchData";
+import { ApiResponse } from "../../types/common";
 
 interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
+
 
 const RepairsStatusDetails = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

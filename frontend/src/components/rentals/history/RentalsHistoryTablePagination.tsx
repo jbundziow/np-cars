@@ -1,10 +1,4 @@
-type Pagination = {
-  totalCount: number,
-  totalPages: number,
-  currentPage: number,
-  hasPreviousPage: boolean,
-  hasNextPage: boolean,
-}
+import { Pagination } from "../../../types/common";
 
 
 type RentalsHistoryTablePaginationProps = {

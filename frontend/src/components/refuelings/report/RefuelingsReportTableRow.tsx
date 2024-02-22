@@ -1,16 +1,10 @@
 import { Link } from "react-router-dom";
 import CarRowInTable from "../../general/CarRowInTable";
+import { db_Car_basic } from "../../../types/db_types";
 
-interface carBasicData {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-  }
 
 interface RefuelingsReportTableRowProps {
-    carData: carBasicData | undefined;
+    carData: db_Car_basic;
   }
 
 const RefuelingsReportTableRow = (props: RefuelingsReportTableRowProps) => {

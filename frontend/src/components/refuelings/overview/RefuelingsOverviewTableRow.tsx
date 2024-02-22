@@ -1,17 +1,11 @@
+import { db_Car_basic } from '../../../types/db_types';
 import CarRowInTable from '../../general/CarRowInTable';
 import FuelLevelBar from './FuelLevelBar';
 
 
-interface carBasicData {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-  }
 
 interface RefuelingsOverviewTableRowProps {
-    carData: carBasicData | undefined;
+    carData: db_Car_basic;
     lastRefueling: number;
     predictedFuelLevel: number;
   }

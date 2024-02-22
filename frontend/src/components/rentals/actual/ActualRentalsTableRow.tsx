@@ -1,48 +1,16 @@
+import { db_Car_basic, db_Rental, db_User } from "../../../types/db_types";
 import { dateFormatterAsObject } from "../../../utilities/dateFormatter";
 import CarRowInTable from "../../general/CarRowInTable";
 import StyledSpan from "../../general/spanElements/StyledSpan";
 import UserSpan from "../../general/spanElements/UserSpan";
 
+type carDataAndNumberOfFutureReservations = db_Car_basic & {numberOfFutureReservations: number};
 
-type carData = {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-    numberOfFutureReservations: number,
-  }
-  
-  type userData = {
-    id: number,
-    email: string,
-    gender: 'male' | 'female',
-    name: string,
-    surname: string,
-    employedAs: string,
-    avatarPath: string | null,
-    role: 'unconfirmed' | 'banned' | 'admin' | 'user',
-  }
-  
-  type rentalData = {
-    id: number,
-    carID: number,
-    userID: number,
-    returnUserID: number,
-    lastEditedByModeratorOfID: number,
-    carMileageBefore: number,
-    carMileageAfter: number | null,
-    distance: number | null,
-    travelDestination: string | null,
-    placeID: number | null,
-    dateFrom: Date,
-    dateTo: Date | null,
-  }
 
 interface ActualRentalsTableRowProps {
-    carData: carData | undefined;
-    userData: userData | undefined;
-    rentalData: rentalData;
+    carData: carDataAndNumberOfFutureReservations | undefined;
+    userData: db_User | undefined;
+    rentalData: db_Rental | undefined;
   }
 
 const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
@@ -64,7 +32,7 @@ const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
     <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
         <p className="inline-flex py-2 px-4 text-xs md:text-base text-black dark:text-white text-xs sm:text-base">
-        {props.rentalData.travelDestination ? props.rentalData.travelDestination : <StyledSpan text={'Nie wpisano'} color={'warning'}/>}
+        {props.rentalData?.travelDestination ? props.rentalData.travelDestination : <StyledSpan text={'Nie wpisano'} color={'warning'}/>}
         </p>
         </div>
     </td>
@@ -79,8 +47,8 @@ const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
     <td className=" border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
             <p className='dark:text-white text-black text-xs sm:text-base text-center'>
-                <span className="block">{`${props.rentalData.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).date}` : 'brak'}`}</span>
-                <span className="block">{`${props.rentalData.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).time}` : ''}`}</span>
+                <span className="block">{`${props.rentalData?.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).date}` : 'brak'}`}</span>
+                <span className="block">{`${props.rentalData?.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).time}` : ''}`}</span>
             </p>
         </div>
     </td>

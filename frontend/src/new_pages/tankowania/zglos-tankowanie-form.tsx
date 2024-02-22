@@ -6,15 +6,10 @@ import RefuelingReportForm from '../../components/refuelings/report/RefuelingRep
 import fetchData from '../../utilities/fetchData';
 import OperationResult from '../../components/general/OperationResult';
 import DOMAIN_NAME from "../../utilities/domainName";
+import { ApiResponse } from "../../types/common";
 
   interface Props {
       documentTitle: string;
-  }
-
-  interface ApiResponse {
-    status: 'success' | 'fail' | 'error',
-    data?: any,
-    message?: any,
   }
 
 
@@ -50,7 +45,7 @@ const ReportRefuelingForm = (props: Props) => {
       <>
       <Breadcrumb pageName="Zgłoś zatankowanie samochodu" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <RefuelingReportForm carID={data1?.data.id} carFullname={`${data1?.data.brand} ${data1?.data.model}`} carImg={data1?.data.imgPath}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <RefuelingReportForm carData={data1?.data} /> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
      
       </>
     );

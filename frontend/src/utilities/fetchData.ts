@@ -1,19 +1,4 @@
-type Pagination = {
-  totalCount: number,
-  totalPages: number,
-  currentPage: number,
-  hasPreviousPage: boolean,
-  hasNextPage: boolean,
-}
-
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  totalDistance?: number,
-  data?: any,
-  pagination?: Pagination,
-  message?: any,
-}
-
+import { ApiResponse } from "../types/common";
 
 
 const fetchData = async (url: string, setFailData: Function, isFail: Function, isError: Function ): Promise<ApiResponse> => {

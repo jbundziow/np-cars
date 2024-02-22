@@ -1,33 +1,28 @@
+import { reservationTypeAtSpecificDate } from "../../../types/api";
+import { Polish_weekdays } from "../../../types/common";
 import TwoWeeksReservationsCell from "./TwoWeeksReservationsCell";
 
-type weekdaysType = 'pon.' | 'wt.' | 'śr.' | 'czw.' | 'pt.' | 'sob.' | 'ndz.';
 
 
 type newReservationType = {
-  day: weekdaysType,
+  day: Polish_weekdays,
   date: Date,
   isBooked: boolean,
   name: string | null,
 }
 
-type reservationType = {
-  date: Date,
-  reservation: boolean,
-  userID: number | null,
-  userName: string | null,
-}
 
 interface TwoWeeksReservationsProps {
-    twoWeeksData:reservationType[]
+    twoWeeksData:reservationTypeAtSpecificDate[]
   }
 
 const TwoWeeksReservations = (props: TwoWeeksReservationsProps) => {
 
-  const dateToDayOfTheWeek = (date: Date): weekdaysType => {
+  const dateToDayOfTheWeek = (date: Date): Polish_weekdays => {
     date = new Date(date);
     const dayOfTheWeek = date.getDay();
     
-    const weekdays: weekdaysType[] = ['ndz.','pon.','wt.','śr.','czw.','pt.','sob.'];
+    const weekdays: Polish_weekdays[] = ['ndz.','pon.','wt.','śr.','czw.','pt.','sob.'];
     return weekdays[dayOfTheWeek];
   }
 

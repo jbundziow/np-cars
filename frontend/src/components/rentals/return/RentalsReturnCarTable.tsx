@@ -1,34 +1,11 @@
+import { db_Car_basic, db_Rental } from "../../../types/db_types";
 import { dateFormatter } from "../../../utilities/dateFormatter";
 import RentalsReturnCarTableRow from "./RentalsReturnCarTableRow";
 
-type carBasicData = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-}
-
-type rentalData = {
-  id: number,
-  carID: number,
-  userID: number,
-  returnUserID: null,
-  lastEditedByModeratorOfID: number | null,
-  carMileageBefore: number,
-  carMileageAfter: null,
-  distance: number | null,
-  travelDestination: string | null,
-  placeID: number | null,
-  dateFrom: Date,
-  dateTo: Date | null,
-  createdAt: Date,
-  updatedAt: Date,
-}
 
 type RentalsReturnCarTableProps = {
-  rentalsData: rentalData[]
-  carsData: carBasicData[]
+  rentalsData: db_Rental[] | [];
+  carsData: db_Car_basic[] | [];
 }
 
 

@@ -6,16 +6,12 @@ import DOMAIN_NAME from "../../utilities/domainName";
 
 import FaultsStatusContainer from '../../components/faults/status/FaultsStatusContainer';
 import fetchData from "../../utilities/fetchData";
+import { ApiResponse } from "../../types/common";
 
 interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
 
 const RepairsStatus = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

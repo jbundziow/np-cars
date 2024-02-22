@@ -1,7 +1,8 @@
+import { Polish_weekdays} from "../../../types/common";
 
 
 interface TwoWeeksReservationsCellProps {
-  day: 'pon.' | 'wt.' | 'śr.' | 'czw.' | 'pt.' | 'sob.' | 'ndz.',
+  day: Polish_weekdays
   date: Date,
   isBooked: boolean,
   name: string | null,

@@ -1,23 +1,17 @@
 import { Link } from 'react-router-dom';
 import CarRowInTable from '../../general/CarRowInTable';
+import { db_Car_basic } from '../../../types/db_types';
 
-type carData = {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-    numberOfFutureReservations: number,
-  }
+type CarBasicDataAndNumberOfFutureReservations = db_Car_basic & {numberOfFutureReservations: number};
 
 interface RentalsTableRowProps {
-    carData: carData | undefined;
+    carData: CarBasicDataAndNumberOfFutureReservations | undefined;
     amountOfReservations: number;
   }
 
 const RentalsTableRow = (props: RentalsTableRowProps) => {
 
-    const carStatusJSX = (status: carData["availabilityStatus"] | undefined):JSX.Element => {
+    const carStatusJSX = (status: db_Car_basic["availabilityStatus"] | undefined):JSX.Element => {
 
         let result:JSX.Element = <p>Błąd</p>;
         switch (status) {

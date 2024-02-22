@@ -1,15 +1,9 @@
+import { db_Car_basic } from "../../../types/db_types";
 import RefuelingsReportTableRow from "./RefuelingsReportTableRow";
 
-interface carBasicData {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-}
 
 interface RefuelingsReportTableProps {
-  carData: carBasicData[];
+  carData: db_Car_basic[] | [];
 }
 
 const RefuelingsReportTable = (props: RefuelingsReportTableProps) => {

@@ -1,16 +1,12 @@
+import { db_Car_basic } from "../../../types/db_types";
 import RentalsTableRow from "./RentalsTableRow";
 
-type carData = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-  numberOfFutureReservations: number,
-}
+
+
+type CarBasicDataAndNumberOfFutureReservations = db_Car_basic & {numberOfFutureReservations: number};
 
 interface RentalsTableProps {
-  data: carData[] | [];
+  data: CarBasicDataAndNumberOfFutureReservations[] | [];
 }
 
 const RentalsTable = (props: RentalsTableProps) => {

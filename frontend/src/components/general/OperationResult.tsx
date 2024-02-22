@@ -1,10 +1,7 @@
 import { MouseEventHandler } from "react";
 import { Link } from "react-router-dom"
+import { warnings } from "../../types/common";
 
-type warnings = {
-  pl: string,
-  en: string,
-} 
 
 interface OperationResultProps {
   status: 'success' | 'warning' | 'error',

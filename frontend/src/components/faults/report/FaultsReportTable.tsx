@@ -1,18 +1,13 @@
+import { db_Car_basic } from "../../../types/db_types";
 import FaultsReportTableRow from "./FaultsReportTableRow";
 
-type dataSchema = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-  pending: number,
-  accepted: number,
-  finished: number,
-  cancelled: number,
-}
+
+
+type faultsNumbersAndCarBasicData = db_Car_basic & {pending: number, accepted: number, finished: number, cancelled: number}
+
+
 interface FaultsReportTableProps {
-  data:dataSchema[];
+  data:faultsNumbersAndCarBasicData[];
 }
 
 const FaultsReportTable = (props: FaultsReportTableProps) => {

@@ -1,35 +1,15 @@
+import { reservationTypeAtSpecificDate } from "../../../types/api";
+import { db_Car_basic } from "../../../types/db_types";
 import CarRowInTable from "../../general/CarRowInTable";
 import TwoWeeksReservations from "./TwoWeeksReservations";
 
 
 
-
-
-
-type reservationType = {
-    date: Date,
-    reservation: boolean,
-    userID: number | null,
-    userName: string | null,
-  }
-
-type carBasicData = {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-    reservations: reservationType[]
-}
-
 interface ReservationsOverviewTableRowProps {
-    carData: carBasicData | undefined;
-    twoWeeksData: reservationType[];
+    carData: db_Car_basic;
+    twoWeeksData: reservationTypeAtSpecificDate[];
   }
 
-  
-
-  
 
 
 const ReservationsOverviewTableRow = (props: ReservationsOverviewTableRowProps) => {

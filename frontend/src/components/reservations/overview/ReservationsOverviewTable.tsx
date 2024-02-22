@@ -1,22 +1,13 @@
 import ReservationsOverviewTableRow from "./ReservationsOverviewTableRow";
+import { db_Car_basic } from "../../../types/db_types";
+import { reservationTypeAtSpecificDate } from "../../../types/api";
 
-type reservationType = {
-  date: Date,
-  reservation: boolean,
-  userID: number | null,
-  userName: string | null,
-}
 
-type carBasicData = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-  reservations: reservationType[]
-}
+
+type CarBasicDataAndReservationsArray = db_Car_basic & {reservations:reservationTypeAtSpecificDate[]};
+
 interface ReservationsOverviewTableProps {
-  data: carBasicData[] | [];
+  data: CarBasicDataAndReservationsArray[] | [];
 }
 
 

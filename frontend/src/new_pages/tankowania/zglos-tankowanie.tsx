@@ -5,15 +5,10 @@ import RefuelingsReportTable from '../../components/refuelings/report/Refuelings
 import fetchData from '../../utilities/fetchData';
 import OperationResult from '../../components/general/OperationResult';
 import DOMAIN_NAME from "../../utilities/domainName";
+import { ApiResponse } from "../../types/common";
 
   interface Props {
       documentTitle: string;
-  }
-
-  interface ApiResponse {
-    status: 'success' | 'fail' | 'error',
-    data?: any,
-    message?: any,
   }
 
 

@@ -1,34 +1,22 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
 import DOMAIN_NAME from "../../../utilities/domainName";
+import { FormPageStatus } from "../../../types/enums";
+import { warnings } from "../../../types/common";
+import { db_Car_basic } from "../../../types/db_types";
 
-enum PageStatus {
-  FillingTheForm,
-  FormWasSentCorrectly,
-  ErrorWithSendingForm,
-  FailOnSendingForm
-}
 
-type dataSchema = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged',
-}
+
 
 interface ReportFaultFormContainerProps {
-    data: dataSchema;
+    data: db_Car_basic;
 }
 
 const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
-  type warnings = {
-    pl: string,
-    en: string,
-  } 
+
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
 
-  const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
+  const [pageState, setPageState] = useState<FormPageStatus>(FormPageStatus.FillingTheForm)
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('')
 
@@ -46,22 +34,22 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
       });
 
       if (response.ok) {
-        setPageState(PageStatus.FormWasSentCorrectly);
+        setPageState(FormPageStatus.FormWasSentCorrectly);
         setTitle('');
         setDescription('');
       } else {
         const responseJSON = await response.json();
         if(responseJSON.status === 'fail') {
-          setPageState(PageStatus.FailOnSendingForm);
+          setPageState(FormPageStatus.FailOnSendingForm);
           setWarnings(responseJSON.data);
         }
         else {
-        setPageState(PageStatus.ErrorWithSendingForm);
+        setPageState(FormPageStatus.ErrorWithSendingForm);
         }
       }
     }
     catch (error) {
-      setPageState(PageStatus.ErrorWithSendingForm);
+      setPageState(FormPageStatus.ErrorWithSendingForm);
     }
   };
 
@@ -78,7 +66,7 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
             <div className='col-span-3'>
             
               <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
-                  {pageState === PageStatus.FillingTheForm ?
+                  {pageState === FormPageStatus.FillingTheForm ?
                     <form onSubmit={submitHandler}>
                       <div className='mb-5'>
                         <label className="mb-3 block text-black dark:text-white">
@@ -116,14 +104,14 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
                       </div>
                     </form>
                   :
-                  pageState === PageStatus.FormWasSentCorrectly ?
+                  pageState === FormPageStatus.FormWasSentCorrectly ?
                     <OperationResult status={'success'} title={'Usterka została zgłoszona pomyślnie 👍'} description={'Zostanie teraz rozpatrzona przez moderatora.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/usterki/status-napraw/${props.data.id}`}/>
                   :
-                  pageState === PageStatus.ErrorWithSendingForm ?
-                  <OperationResult status={'error'} title={'Wystąpił błąd podczas dodawania usterki 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  pageState === FormPageStatus.ErrorWithSendingForm ?
+                  <OperationResult status={'error'} title={'Wystąpił błąd podczas dodawania usterki 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
                   :
-                  pageState === PageStatus.FailOnSendingForm ?
-                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas dodawania usterki 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(PageStatus.FillingTheForm)}/>
+                  pageState === FormPageStatus.FailOnSendingForm ?
+                  <OperationResult status={'warning'} title={'Wystąpiły błędy podczas dodawania usterki 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
                   :
                   ''
                   }

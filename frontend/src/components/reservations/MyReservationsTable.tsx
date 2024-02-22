@@ -1,27 +1,12 @@
+import { db_Car_basic, db_Reservation } from "../../types/db_types";
 import MyReservationsTableRow from "./MyReservationsTableRow";
 
-type carBasicData = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-}
 
-type reservationData = {
-  id: number,
-  carID: number,
-  userID: number,
-  lastEditedByModeratorOfID: number | null,
-  dateFrom: Date,
-  dateTo: Date,
-  travelDestination: string
-}
 
 
 type MyReservationsTableProps = {
-  reservationsData: reservationData[],
-  allCarsBasicData: carBasicData[],
+  reservationsData: db_Reservation[] | [],
+  allCarsBasicData: db_Car_basic[] | [],
 }
 
 

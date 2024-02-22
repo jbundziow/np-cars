@@ -6,16 +6,13 @@ import DOMAIN_NAME from "../../utilities/domainName";
 
 import ReservationsOverviewTable from "../../components/reservations/overview/ReservationsOverviewTable";
 import fetchData from "../../utilities/fetchData";
+import { ApiResponse } from "../../types/common";
 
 interface Props {
     documentTitle: string;
   }
 
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
+
 
 const ReservationsOverview = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);

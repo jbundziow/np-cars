@@ -1,5 +1,3 @@
-
-
 export type Pagination = {
     totalCount: number,
     totalPages: number,
@@ -9,7 +7,7 @@ export type Pagination = {
   }
 
   
-  
+
 export interface ApiResponse {
     status: 'success' | 'fail' | 'error',
     totalDistance?: number,
@@ -17,3 +15,14 @@ export interface ApiResponse {
     pagination?: Pagination,
     message?: any,
   }
+
+
+
+  export type warnings = {
+    pl: string,
+    en: string,
+  } 
+
+
+
+  export type Polish_weekdays = 'pon.' | 'wt.' | 'śr.' | 'czw.' | 'pt.' | 'sob.' | 'ndz.';

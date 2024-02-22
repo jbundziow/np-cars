@@ -2,62 +2,16 @@ import { useState } from "react";
 import RentalsHistoryTable from "./RentalsHistoryTable";
 import RentalTableFiltering from "./RentalTableFiltering";
 import { TECollapse } from "tw-elements-react";
+import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
+import { Pagination } from "../../../types/common";
 
-type carBasicData = {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-  }
-  
-  type rentalsData = {
-    id: number,
-    carID: number,
-    userID: number,
-    returnUserID: number,
-    lastEditedByModeratorOfID: number,
-    carMileageBefore: number,
-    carMileageAfter: number | null,
-    distance: number | null,
-    travelDestination: string | null,
-    placeID: number | null,
-    dateFrom: Date,
-    dateTo: Date | null,
-  }
 
-  type usersData = {
-    id: number,
-    email: string,
-    gender: 'male' | 'female',
-    name: string,
-    surname: string,
-    employedAs: string,
-    avatarPath: string | null,
-    role: 'unconfirmed' | 'banned' | 'admin' | 'user',
-  }
-
-  type placesData = {
-    id: number,
-    projectCode: string,
-    placeName: string,
-    projectName: string,
-    status: 'active' | 'banned',
-  }
-
-  type Pagination = {
-    totalCount: number,
-    totalPages: number,
-    currentPage: number,
-    hasPreviousPage: boolean,
-    hasNextPage: boolean,
-  }
 
 type RentalsHistoryProps = {
-    rentalsData: rentalsData[] | [],
-    allCarsBasicData: carBasicData[] | [],
-    usersData: usersData[] | [],
-    placesData: placesData[] | [],
+    rentalsData: db_Rental[] | [],
+    allCarsBasicData: db_Car_basic[] | [],
+    usersData: db_User[] | [],
+    placesData: db_Place[] | [],
     setFilters: Function,
     setCurrentPage: (pageNumber: number) => void,
     paginationData: Pagination,

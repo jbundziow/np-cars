@@ -1,6 +1,5 @@
 
 
-
 interface FuelLevelProps {
     level: number; //0-100%
   }

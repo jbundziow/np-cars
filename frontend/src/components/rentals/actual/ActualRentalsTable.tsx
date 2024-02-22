@@ -1,46 +1,14 @@
+import { db_Car_basic, db_Rental, db_User } from "../../../types/db_types";
 import ActualRentalsTableRow from "./ActualRentalsTableRow";
 
-type carData = {
-  id: number,
-  brand: string,
-  model: string,
-  imgPath: string,
-  availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-  numberOfFutureReservations: number,
-}
 
-type userData = {
-  id: number,
-  email: string,
-  gender: 'male' | 'female',
-  name: string,
-  surname: string,
-  employedAs: string,
-  avatarPath: string | null,
-  role: 'unconfirmed' | 'banned' | 'admin' | 'user',
-}
-
-type rentalData = {
-  id: number,
-  carID: number,
-  userID: number,
-  returnUserID: number,
-  lastEditedByModeratorOfID: number,
-  carMileageBefore: number,
-  carMileageAfter: number | null,
-  distance: number | null,
-  travelDestination: string | null,
-  placeID: number | null,
-  dateFrom: Date,
-  dateTo: Date | null,
-}
-
+type carDataAndNumberOfFutureReservations = db_Car_basic & {numberOfFutureReservations: number};
 
 
 interface ActualRentalsTableProps {
-  carsData: carData[] | [];
-  usersData: userData[] | [];
-  pendingRentals: rentalData[] | [];
+  carsData: carDataAndNumberOfFutureReservations[] | [];
+  usersData: db_User[] | [];
+  pendingRentals: db_Rental[] | [];
 }
 
 const ActualRentalsTable = (props: ActualRentalsTableProps) => {

@@ -5,6 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import RentalsHistory from "../../components/rentals/history/RentalsHistory";
+import { ApiResponse, Pagination } from "../../types/common";
 
 
 
@@ -12,35 +13,12 @@ interface Props {
     documentTitle: string;
   }
 
-type Pagination = {
-  totalCount: number,
-  totalPages: number,
-  currentPage: number,
-  hasPreviousPage: boolean,
-  hasNextPage: boolean,
-}
-
-interface ApiResponse {
-  status: 'success' | 'fail' | 'error',
-  data?: any,
-  message?: any,
-}
-
-interface ApiResponseRentalsHistory {
-  status: 'success' | 'fail' | 'error',
-  totalDistance?: number,
-  data?: any,
-  pagination?: Pagination,
-  message?: any,
-}
-
-
 const RentalsArchive = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
     
 
-    const [data1, setData1] = useState<ApiResponseRentalsHistory>();  //rentals data of current user
+    const [data1, setData1] = useState<ApiResponse>();  //rentals data of current user
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
     const [data3, setData3] = useState<ApiResponse>();  //all users data
     const [data4, setData4] = useState<ApiResponse>();  //all places data
@@ -59,7 +37,7 @@ const RentalsArchive = (props: Props) => {
 
     useEffect(() => {
       const getData = async () => {
-        const res1 = await fetchData(`${DOMAIN_NAME}/rentals?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponseRentalsHistory)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${DOMAIN_NAME}/rentals?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) setPaginationData(res1.pagination)
         if(res1.totalDistance !== undefined && res1.totalDistance !== null) setTotalDistance(res1.totalDistance)

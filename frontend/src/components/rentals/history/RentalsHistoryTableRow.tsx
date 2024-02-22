@@ -3,84 +3,23 @@ import { Link } from "react-router-dom";
 import UserSpan from "../../general/spanElements/UserSpan";
 import PlaceSpan from "../../general/spanElements/PlaceSpan";
 import StyledSpan from "../../general/spanElements/StyledSpan";
+import { db_Place, db_Rental, db_User } from "../../../types/db_types";
 
-type rentalDataType = {
-    id: number,
-    carID: number,
-    userID: number,
-    returnUserID: number,
-    lastEditedByModeratorOfID: number,
-    carMileageBefore: number,
-    carMileageAfter: number | null,
-    distance: number | null,
-    travelDestination: string | null,
-    placeID: number | null,
-    dateFrom: Date,
-    dateTo: Date | null,
-  }
 
-  type usersData = {
-    id: number,
-    email: string,
-    gender: 'male' | 'female',
-    name: string,
-    surname: string,
-    employedAs: string,
-    avatarPath: string | null,
-    role: 'unconfirmed' | 'banned' | 'admin' | 'user',
-  }
-
-  type placesData = {
-    id: number,
-    projectCode: string,
-    placeName: string,
-    projectName: string,
-    status: 'active' | 'banned',
-  }
 
 interface RentalsHistoryTableRowProps {
     carID: number;
     carBrand: string;
     carModel: string;
     carImg: string;
-    rentalData: rentalDataType;
-    usersData: usersData[] | [],
-    placesData: placesData[] | [],
+    rentalData: db_Rental;
+    usersData: db_User[] | [],
+    placesData: db_Place[] | [],
   }
 
 const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
 
 
-    // const styledSpan = (text: string, color: 'warning' | 'danger'):JSX.Element => {
-    //     let result:JSX.Element = <span>ERR#</span>;
-    //     switch (color) {
-    //         case 'danger':
-    //             result = <span className="inline-flex text-center rounded-full bg-danger bg-opacity-10 py-1 px-3 font-medium text-danger">{text}</span>
-    //             break;
-    //         case 'warning':
-    //             result = <span className="inline-flex text-center rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{text}</span>
-    //             break;
-    //     }
-    //     return result;
-    // }
-
-    // const userSpan = (user: usersData | undefined, nullText: string):JSX.Element => {
-    //     if(user) {
-    //         return <p className="whitespace-nowrap">{user.role === 'admin' ? <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span> : ''}&nbsp;<Link to={`/uzytkownicy/${user.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{user.name} {user.surname}</span></Link></p>
-    //     }
-    //     else {
-    //         return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
-    //     }
-    // }
-
-    // const placeSpan = (place: placesData | undefined, nullText: string):JSX.Element => {
-    //     if(place) {
-    //         return <Link to={`/projekty/${place.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{place.projectCode}</span></Link>
-    //     }
-    //     else {
-    //         return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
-    //     }
-    // }
     const rentalUserObject = props.usersData.find(user => user.id === props.rentalData.userID);
     const returnUserObject = props.usersData.find(user => user.id === props.rentalData.returnUserID);
     const acknowledgedByModeratorObject = props.usersData.find(user => user.id === props.rentalData.lastEditedByModeratorOfID)

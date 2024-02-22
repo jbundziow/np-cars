@@ -1,33 +1,26 @@
 
-export type db_Car_basic = {
-    id: number,
-    brand: string,
-    model: string,
-    imgPath: string,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
+export interface db_Car_basic {
+    id: number;
+    brand: string;
+    model: string;
+    imgPath: string;
+    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned';
 }
 
 
-
-export type db_Car = {
-    id: number,
-    brand: string,
-    model: string,
-    type: 'passengerCar' | 'bus' | 'truck',
-    imgPath: string,
-    plateNumber: string,
-    hasFuelCard: boolean,
-    fuelCardPIN: string | null,
-    fuelType: 'diesel' | 'petrol',
-    tankCapacity: number, //liters
-    loadCapacity: number, //kilograms
-    nextInspectionDate: Date,
-    nextInsuranceDate: Date,
-    availabilityStatus: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned',
-    availabilityDescription: string | null,
-    
-    createdAt: Date,
-    updatedAt: Date,
+export interface db_Car extends db_Car_basic {
+    type: 'passengerCar' | 'bus' | 'truck';
+    plateNumber: string;
+    hasFuelCard: boolean;
+    fuelCardPIN: string | null;
+    fuelType: 'diesel' | 'petrol';
+    tankCapacity: number; //liters
+    loadCapacity: number; //kilograms
+    nextInspectionDate: Date;
+    nextInsuranceDate: Date;
+    availabilityDescription: string | null;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 
@@ -84,7 +77,7 @@ export type db_Refueling = {
 
 
 
-export type db_Faults = {
+export type db_Fault = {
     id: number,
     carID: number,
     userID: number,
@@ -102,7 +95,7 @@ export type db_Faults = {
 
 
 
-export type db_Places = {
+export type db_Place = {
     id: number,
     projectCode: string,
     placeName: string,
@@ -115,7 +108,7 @@ export type db_Places = {
 
 
 
-export type db_Users = {
+export type db_User = {
     id: number,
     email: string,
     // password: string,
