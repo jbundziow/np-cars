@@ -33,7 +33,7 @@ type userSpanProps = {
         <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span>
         :
         props.userObj.role === 'banned' ?
-        <span className="rounded-lg bg-danger bg-opacity-10 py-0 px-1 font-medium text-danger cursor-default">Zabnowany</span>
+        <span className="rounded-lg bg-danger bg-opacity-10 py-0 px-1 font-medium text-danger cursor-default">Zbanowany</span>
         : ''}
         &nbsp;
         <Link to={`/uzytkownicy/${props.userObj.id}`} target={props.linkTarget}>
