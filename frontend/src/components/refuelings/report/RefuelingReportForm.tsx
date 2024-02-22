@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 
 interface RefuelingReportFormProps {
     carID: number;
@@ -14,7 +15,9 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
   
           <div className='p-5 pt-0'>
           <img src={props.carImg} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
+          <Link to={`/samochody/${props.carID}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
           <p className='text-black dark:text-white pb-2 text-lg'>{props.carFullname}</p>
+          </Link>
           </div>
 
           

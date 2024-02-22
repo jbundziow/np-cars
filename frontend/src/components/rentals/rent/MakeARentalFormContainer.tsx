@@ -3,6 +3,7 @@ import OperationResult from "../../general/OperationResult";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import TwoWeeksReservations from "../../reservations/overview/TwoWeeksReservations";
+import { Link } from "react-router-dom";
 
 
 
@@ -166,7 +167,9 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
           <div className='p-5 pt-0'>
           <img src={props.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
+          <Link to={`/samochody/${props.carData.id}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
           <p className='text-black dark:text-white pb-2 text-lg'>{props.carData.brand}&nbsp;{props.carData.model}</p>
+          </Link>
           </div>
 
           

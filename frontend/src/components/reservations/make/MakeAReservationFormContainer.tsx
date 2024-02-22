@@ -5,6 +5,7 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
 import formatDate from "../../../utilities/formatDate";
+import { Link } from "react-router-dom";
 
 
 enum PageStatus {
@@ -85,11 +86,13 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
 
     return (
         <>
-        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4"> 
   
           <div className='p-5 pt-0'>
           <img src={props.data.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
+          <Link to={`/samochody/${props.data.id}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
           <p className='text-black dark:text-white pb-2 text-lg'>{props.data.brand}&nbsp;{props.data.model}</p>
+          </Link>
           </div>
 
           

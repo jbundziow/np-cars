@@ -1,6 +1,7 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
 import DOMAIN_NAME from "../../../utilities/domainName";
+import { Link } from "react-router-dom";
 
 
 enum PageStatus {
@@ -97,7 +98,9 @@ const RentalsReturnCarFormContainer = (props: RentalsReturnCarFormContainerProps
   
           <div className='p-5 pt-0'>
           <img src={props.carBasicData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
+          <Link to={`/samochody/${props.carBasicData.id}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
           <p className='text-black dark:text-white pb-2 text-lg'>{props.carBasicData.brand}&nbsp;{props.carBasicData.model}</p>
+          </Link>
           </div>
 
           

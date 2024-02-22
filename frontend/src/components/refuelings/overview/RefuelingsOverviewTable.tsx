@@ -1,6 +1,6 @@
 import RefuelingsOverviewTableRow from "./RefuelingsOverviewTableRow";
 
-interface carData {
+interface carBasicData {
   id: number,
   brand: string,
   model: string,
@@ -9,7 +9,7 @@ interface carData {
 }
 
 interface RefuelingsOverviewTableProps {
-  carData: carData[];
+  carData: carBasicData[];
 }
 
 const RefuelingsOverviewTable = (props: RefuelingsOverviewTableProps) => {
@@ -34,7 +34,7 @@ const RefuelingsOverviewTable = (props: RefuelingsOverviewTableProps) => {
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
                 {props.carData.map(car => (
-                  <RefuelingsOverviewTableRow carID={car.id} carBrand={car.brand} carModel={car.model} carImg={car.imgPath} lastRefueling={999} predictedFuelLevel={50}/>
+                  <RefuelingsOverviewTableRow carData={car} lastRefueling={999} predictedFuelLevel={50}/>
                 ))}
             </tbody>
           </table>
