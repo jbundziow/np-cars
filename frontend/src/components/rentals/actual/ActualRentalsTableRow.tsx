@@ -1,4 +1,8 @@
 import { dateFormatterAsObject } from "../../../utilities/dateFormatter";
+import CarRowInTable from "../../general/CarRowInTable";
+import StyledSpan from "../../general/spanElements/StyledSpan";
+import UserSpan from "../../general/spanElements/UserSpan";
+
 
 type carData = {
     id: number,
@@ -44,19 +48,6 @@ interface ActualRentalsTableRowProps {
 const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
 
 
-    const styledSpan = (text: string, color: 'warning' | 'danger'):JSX.Element => {
-        let result:JSX.Element = <span>ERR#</span>;
-        switch (color) {
-            case 'danger':
-                result = <span className="inline-flex text-center rounded-full bg-danger bg-opacity-10 py-1 px-3 font-medium text-danger">{text}</span>
-                break;
-            case 'warning':
-                result = <span className="inline-flex text-center rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{text}</span>
-                break;
-        }
-        return result;
-    }
-
 
     return (
     <>
@@ -65,18 +56,7 @@ const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
 
 
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
-        <div className="col-span-3 flex items-center">
-        <div className="flex flex-col sm:gap-4 xl:flex-row xl:items-center">
-            <div className=" w-22 sm:w-32 rounded-md">
-            <img 
-            className="rounded-md block"
-            src={props.carData?.imgPath} alt="Zdjęcie samochodu" />
-            </div>
-            <h5 className="font-medium text-xs sm:text-base text-black dark:text-white">
-            {`${props.carData?.brand} ${props.carData?.model}`}
-            </h5>
-        </div>
-        </div>
+        <CarRowInTable id={props.carData?.id} brand={props.carData?.brand} model={props.carData?.model} imgPath={props.carData?.imgPath} linkTarget={'_self'}/>
     </td>
 
 
@@ -84,7 +64,7 @@ const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
     <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
         <p className="inline-flex py-2 px-4 text-xs md:text-base text-black dark:text-white">
-        {props.rentalData.travelDestination ? props.rentalData.travelDestination : styledSpan('Nie wpisano', 'warning')}
+        {props.rentalData.travelDestination ? props.rentalData.travelDestination : <StyledSpan text={'Nie wpisano'} color={'warning'}/>}
         </p>
         </div>
     </td>
@@ -92,7 +72,7 @@ const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
 
 
     <td className=" border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <p className="inline-flex py-2 px-4 text-xs md:text-base text-black dark:text-white">{`${props.userData?.name} ${props.userData?.surname}`}</p>
+        <UserSpan userObj={props.userData} nullText={'Brak danych'} linkTarget={'_self'} />
     </td>
 
 

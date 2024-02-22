@@ -1,5 +1,8 @@
 import { dateFormatterAsObject } from "../../../utilities/dateFormatter";
 import { Link } from "react-router-dom";
+import UserSpan from "../../general/spanElements/UserSpan";
+import PlaceSpan from "../../general/spanElements/PlaceSpan";
+import StyledSpan from "../../general/spanElements/StyledSpan";
 
 type rentalDataType = {
     id: number,
@@ -48,36 +51,36 @@ interface RentalsHistoryTableRowProps {
 const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
 
 
-    const styledSpan = (text: string, color: 'warning' | 'danger'):JSX.Element => {
-        let result:JSX.Element = <span>ERR#</span>;
-        switch (color) {
-            case 'danger':
-                result = <span className="inline-flex text-center rounded-full bg-danger bg-opacity-10 py-1 px-3 font-medium text-danger">{text}</span>
-                break;
-            case 'warning':
-                result = <span className="inline-flex text-center rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{text}</span>
-                break;
-        }
-        return result;
-    }
+    // const styledSpan = (text: string, color: 'warning' | 'danger'):JSX.Element => {
+    //     let result:JSX.Element = <span>ERR#</span>;
+    //     switch (color) {
+    //         case 'danger':
+    //             result = <span className="inline-flex text-center rounded-full bg-danger bg-opacity-10 py-1 px-3 font-medium text-danger">{text}</span>
+    //             break;
+    //         case 'warning':
+    //             result = <span className="inline-flex text-center rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{text}</span>
+    //             break;
+    //     }
+    //     return result;
+    // }
 
-    const userSpan = (user: usersData | undefined, nullText: string):JSX.Element => {
-        if(user) {
-            return <p className="whitespace-nowrap">{user.role === 'admin' ? <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span> : ''}&nbsp;<Link to={`/uzytkownicy/${user.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{user.name} {user.surname}</span></Link></p>
-        }
-        else {
-            return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
-        }
-    }
+    // const userSpan = (user: usersData | undefined, nullText: string):JSX.Element => {
+    //     if(user) {
+    //         return <p className="whitespace-nowrap">{user.role === 'admin' ? <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span> : ''}&nbsp;<Link to={`/uzytkownicy/${user.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{user.name} {user.surname}</span></Link></p>
+    //     }
+    //     else {
+    //         return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
+    //     }
+    // }
 
-    const placeSpan = (place: placesData | undefined, nullText: string):JSX.Element => {
-        if(place) {
-            return <Link to={`/projekty/${place.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{place.projectCode}</span></Link>
-        }
-        else {
-            return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
-        }
-    }
+    // const placeSpan = (place: placesData | undefined, nullText: string):JSX.Element => {
+    //     if(place) {
+    //         return <Link to={`/projekty/${place.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{place.projectCode}</span></Link>
+    //     }
+    //     else {
+    //         return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
+    //     }
+    // }
     const rentalUserObject = props.usersData.find(user => user.id === props.rentalData.userID);
     const returnUserObject = props.usersData.find(user => user.id === props.rentalData.returnUserID);
     const acknowledgedByModeratorObject = props.usersData.find(user => user.id === props.rentalData.lastEditedByModeratorOfID)
@@ -94,8 +97,8 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
             className="rounded-md block"
             src={props.carImg} alt="Zdjęcie samochodu" />
             </div>
-            <Link to={`/samochody/${[props.carID]}`} target="_blank">
-            <h5 className="font-medium text-xs xl:text-sm text-black dark:text-white underline decoration-[0.5px] underline-offset-1">
+            <Link to={`/samochody/${[props.carID]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1">
+            <h5 className="font-medium text-xs xl:text-sm text-black dark:text-white">
             {`${props.carBrand} ${props.carModel}`}
             </h5>
             </Link>
@@ -104,7 +107,7 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{userSpan(rentalUserObject, 'brak')}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={rentalUserObject} nullText={'brak'} linkTarget={'_blank'}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
@@ -125,37 +128,37 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.carMileageBefore || props.rentalData.distance === 0 ? `${props.rentalData.carMileageBefore}` : styledSpan('brak', 'danger')}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.carMileageBefore || props.rentalData.distance === 0 ? `${props.rentalData.carMileageBefore}` : <StyledSpan color={'danger'} text={'brak'}/>}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.carMileageAfter || props.rentalData.distance === 0 ? `${props.rentalData.carMileageAfter}` : styledSpan('brak', 'warning')}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.carMileageAfter || props.rentalData.distance === 0 ? `${props.rentalData.carMileageAfter}` : <StyledSpan color={'warning'} text={'brak'}/>}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.distance || props.rentalData.distance === 0 ? `${props.rentalData.distance}` : styledSpan('brak', 'warning')}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.distance || props.rentalData.distance === 0 ? `${props.rentalData.distance}` : <StyledSpan color={'warning'} text={'brak'}/>}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.travelDestination && props.rentalData.travelDestination !== '' ? `${props.rentalData.travelDestination}` : styledSpan('brak', 'warning')}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.travelDestination && props.rentalData.travelDestination !== '' ? `${props.rentalData.travelDestination}` : <StyledSpan color={'warning'} text={'brak'}/>}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{userSpan(returnUserObject, 'brak')}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={returnUserObject} nullText={'brak'} linkTarget={'_blank'}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{userSpan(acknowledgedByModeratorObject, 'Nie')}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={acknowledgedByModeratorObject} nullText={'Nie'} linkTarget={'_blank'}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{placeSpan(placeObject, 'Nie')}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><PlaceSpan placeObj={placeObject} nullText={'Nie'} linkTarget={'_blank'}/></p>
         </div>
     </td>
 
