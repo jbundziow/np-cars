@@ -37,9 +37,8 @@ const RentalsTable = (props: RentalsTableProps) => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-              {props.data.map(carData => 
-                <RentalsTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carStatus={carData.availabilityStatus} carImg={carData.imgPath} amountOfReservations={carData.numberOfFutureReservations}/>
-                )}
+              {props.data.map(carData => <RentalsTableRow carData={carData} amountOfReservations={carData.numberOfFutureReservations}/> )}
+              
             </tbody>
           </table>
         </div>

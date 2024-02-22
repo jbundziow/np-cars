@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import CarRowInTable from "../../general/CarRowInTable";
 
 type carBasicData = {
     id: number,
@@ -24,18 +25,7 @@ const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
     <>
     <tr className="hover:bg-gray-2 dark:hover:bg-meta-4">
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
-        <div className="col-span-3 flex items-center">
-        <div className="flex flex-col sm:gap-4 xl:flex-row xl:items-center">
-            <div className=" w-22 sm:w-32 rounded-md">
-            <img 
-            className="rounded-md block"
-            src={car?.imgPath} alt="Zdjęcie samochodu" />
-            </div>
-            <h5 className="font-medium text-xs sm:text-base text-black dark:text-white">
-            {`${car?.brand} ${car?.model}`}
-            </h5>
-        </div>
-        </div>
+        <CarRowInTable id={car?.id} brand={car?.brand} model={car?.model} imgPath={car?.imgPath} linkTarget={'_self'}/>
     </td>
     <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">

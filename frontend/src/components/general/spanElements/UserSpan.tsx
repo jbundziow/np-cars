@@ -16,6 +16,7 @@ type userSpanProps = {
     userObj: usersData | undefined,
     nullText: string,
     linkTarget: '_blank' | '_self'
+    no_wrap: boolean
   }
   
   
@@ -27,7 +28,7 @@ type userSpanProps = {
       <>
       {props.userObj
       ?
-      <span className="whitespace-nowrap">
+      <span className={props.no_wrap ? 'whitespace-nowrap' : 'whitespace-normal'}>
         {props.userObj.role === 'admin' ?
         <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span>
         :

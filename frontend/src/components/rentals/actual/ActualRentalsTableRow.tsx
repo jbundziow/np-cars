@@ -63,7 +63,7 @@ const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
 
     <td className="hidden md:table-cell border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className="inline-flex py-2 px-4 text-xs md:text-base text-black dark:text-white">
+        <p className="inline-flex py-2 px-4 text-xs md:text-base text-black dark:text-white text-xs sm:text-base">
         {props.rentalData.travelDestination ? props.rentalData.travelDestination : <StyledSpan text={'Nie wpisano'} color={'warning'}/>}
         </p>
         </div>
@@ -72,13 +72,13 @@ const ActualRentalsTableRow = (props: ActualRentalsTableRowProps) => {
 
 
     <td className=" border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <UserSpan userObj={props.userData} nullText={'Brak danych'} linkTarget={'_self'} />
+        <p className="text-xs sm:text-base"><UserSpan userObj={props.userData} nullText={'Brak danych'} linkTarget={'_self'} no_wrap={false} /></p>
     </td>
 
 
     <td className=" border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-            <p className='dark:text-white text-black text-xs md:text-base text-center'>
+            <p className='dark:text-white text-black text-xs sm:text-base text-center'>
                 <span className="block">{`${props.rentalData.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).date}` : 'brak'}`}</span>
                 <span className="block">{`${props.rentalData.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).time}` : ''}`}</span>
             </p>

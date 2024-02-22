@@ -107,7 +107,7 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={rentalUserObject} nullText={'brak'} linkTarget={'_blank'}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={rentalUserObject} nullText={'brak'} linkTarget={'_blank'} no_wrap={true}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
@@ -148,12 +148,12 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={returnUserObject} nullText={'brak'} linkTarget={'_blank'}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={returnUserObject} nullText={'brak'} linkTarget={'_blank'} no_wrap={true}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={acknowledgedByModeratorObject} nullText={'Nie'} linkTarget={'_blank'}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={acknowledgedByModeratorObject} nullText={'Nie'} linkTarget={'_blank'} no_wrap={true}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
