@@ -30,7 +30,7 @@ const MyReservationsTable = (props: MyReservationsTableProps) => {
 
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
-        {props.reservationsData.length !== 0 ?
+        {props.reservationsData && props.reservationsData.length !== 0 ?
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <thead>
@@ -59,7 +59,7 @@ const MyReservationsTable = (props: MyReservationsTableProps) => {
               {props.reservationsData.map(reservation => {
                 const carData = props.allCarsBasicData.find(car => car.id === reservation.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
                 return (
-                <MyReservationsTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} reservationData={reservation} />
+                <MyReservationsTableRow carData={carData} reservationData={reservation} />
                 );
                }
               )}

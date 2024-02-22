@@ -28,6 +28,7 @@ const MakeARentalForm = (props: Props) => {
     const [data2, setData2] = useState<number>(); //number of future reservations
     const [data3, setData3] = useState<ApiResponse>(); //last rental data
     const [data4, setData4] = useState<ApiResponse>(); //last rental user data
+    const [data5, setData5] = useState<ApiResponse>(); //two weeks reservations data for car
 
     const [failData, setFailData] = useState<ApiResponse>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -38,7 +39,6 @@ const MakeARentalForm = (props: Props) => {
 
     useEffect(() => {
       const getData = async () => {   
-       
       
       const res1 = await fetchData(`${DOMAIN_NAME}/cars/${params.carid}?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
@@ -51,6 +51,11 @@ const MakeARentalForm = (props: Props) => {
           if(res3.status === 'success' && res3.data !== null) {
             const res4 = await fetchData(`${DOMAIN_NAME}/users/${res3.data.userID}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
             setData4(res4);
+            if(res4.status === 'success' && res4.data !== null) {
+              const res5 = await fetchData(`${DOMAIN_NAME}/reservations/twoweeks/cars/${params.carid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+              setData5(res5);
+              
+            }
           }
         }
       }
@@ -69,12 +74,11 @@ const MakeARentalForm = (props: Props) => {
 
 
     
-    
+
     return (
       <>
       <Breadcrumb pageName="Wypożycz samochód" />
-      
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <MakeARentalFormContainer carData={data1?.data} numberOfFutureReservations={data2} lastRentalData={data3?.data} lastRentalUserData={data4?.data} /> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <MakeARentalFormContainer carData={data1?.data} numberOfFutureReservations={data2} lastRentalData={data3?.data} lastRentalUserData={data4?.data} twoWeeksReservations={data5?.data} /> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };

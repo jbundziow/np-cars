@@ -2,6 +2,7 @@ import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
+import TwoWeeksReservations from "../../reservations/overview/TwoWeeksReservations";
 
 
 
@@ -45,11 +46,19 @@ type lastRentalUserDataSchema = {
   role: 'admin' | 'user' | 'banned',
 }
 
+type reservationType = {
+  date: Date,
+  reservation: boolean,
+  userID: number | null,
+  userName: string | null,
+}
+
 interface MakeARentalFormContainerProps {
   carData: carDataSchema,
   lastRentalData: lastRentalDataSchema | null,
   lastRentalUserData: lastRentalUserDataSchema | null,
   numberOfFutureReservations: number | undefined,
+  twoWeeksReservations: reservationType[] | [];
 }
 
 const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
@@ -57,6 +66,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
     pl: string,
     en: string,
   } 
+
 
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
   const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
@@ -169,6 +179,15 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                     
                     <form onSubmit={submitHandler} className='p-2'>
 
+
+                      <div className="flex justify-center items-center w-full pb-4 md:pb-0">
+                        <div className="w-[80%] flex flex-col justify-center items-center">
+                          <p className="py-4 md:py-2 font-medium text-center">Rezerwacje na najbliższe 14 dni:</p>
+                            <TwoWeeksReservations twoWeeksData={props.twoWeeksReservations}/>
+                        </div>
+                      </div>
+
+
                       <div className='mb-5'>
                       {showCarAlreadyRentedAlert ?
                       <OperationResult status={'error'} title={'UWAGA! To auto nie zostało jeszcze zwrócone przez poprzedniego użytkownika!'} description={`Po uzupełnieniu poniższych danych oraz po kliknięciu "Wypożycz samochód" JEDNOCZEŚNIE zwrócisz to auto za użytkownika ${props.lastRentalUserData?.name.toUpperCase()} ${props.lastRentalUserData?.surname.toUpperCase()} oraz dokonasz nowego wypożyczenia na swoje konto. Wpisany przez Ciebie "przebieg początkowy" będzie jednocześnie "przebiegiem końcowym" użytkownika ${props.lastRentalUserData?.name.toUpperCase()} ${props.lastRentalUserData?.surname.toUpperCase()}.`} showButton={false}/>
@@ -231,6 +250,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                           Wypożycz samochód
                         </button>
                       </div>
+                      
                       
                       
                       

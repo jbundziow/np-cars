@@ -164,7 +164,7 @@ class Reservation {
       return await ReservationModel.findAll({
         where: {
           [Op.and]: [
-            { DateFrom: { [Op.lt]: getFormattedDate(new Date()) } },
+            { DateTo: { [Op.lt]: getFormattedDate(new Date()) } },
             { carID: carID }
           ],
         },
@@ -175,7 +175,7 @@ class Reservation {
       return await ReservationModel.findAll({
         where: {
           [Op.and]: [
-            { DateFrom: { [Op.gte]: getFormattedDate(new Date()) } },
+            { DateTo: { [Op.gte]: getFormattedDate(new Date()) } },
             { carID: carID }
           ],
         },
