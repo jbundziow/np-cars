@@ -8,6 +8,7 @@ import useAuth from '../../hooks/useAuth';
 import { stats_UserDistanceInYear, stats_UserDistanceInYear_oneMonthSchema } from '../../types/stats';
 
 
+
 type UserPageProps = {
   userData: db_User;
   statsData: stats_UserDistanceInYear;
@@ -18,10 +19,12 @@ type UserPageProps = {
 const UserPage = (props: UserPageProps) => {
 
   const { auth } = useAuth();
-  
+
+
 
   return (
-
+  
+      
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div>
         <div className="relative z-20 h-35 md:h-65">
@@ -113,7 +116,9 @@ const UserPage = (props: UserPageProps) => {
             </div>
 
           <div className="md:my-10 md:mx-10">
-          <BarChart key={props.statsData.key} title={'Przejechane kilometry'} data={props.statsData.distance.map((obj: stats_UserDistanceInYear_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
+
+          {/* key={props.statsData.key} */}
+          <BarChart title={'Przejechane kilometry'} data={props.statsData.distance.map((obj: stats_UserDistanceInYear_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
           </div>
 
           </div>

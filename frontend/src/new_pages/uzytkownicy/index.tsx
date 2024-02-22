@@ -45,6 +45,7 @@ const UserMainpage = (props: Props) => {
       }
       getData()
     }, [params.userid, filterValue])
+
     
 
     return (

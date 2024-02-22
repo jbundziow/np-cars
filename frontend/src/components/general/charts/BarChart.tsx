@@ -1,5 +1,5 @@
 import { ApexOptions } from 'apexcharts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 interface BarChartState {
@@ -16,6 +16,9 @@ type BarChartProps = {
 }
 
 const BarChart = (props: BarChartProps) => {
+
+  
+
   const [state, setState] = useState<BarChartState>({
     series: [
       {
@@ -24,6 +27,24 @@ const BarChart = (props: BarChartProps) => {
       },
     ],
   });
+
+
+
+  
+  //handle props.data change and update chart
+  useEffect(() => {
+    setState({series: [
+                {
+                  name: '',
+                  data: props.data,
+                },
+              ],
+    })
+  }, [props.data]);
+  //
+
+
+
 
   const options: ApexOptions = {
     colors: ['#3C50E0'],
