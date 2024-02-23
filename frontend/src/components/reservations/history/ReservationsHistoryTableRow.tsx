@@ -59,35 +59,7 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-            <p className='dark:text-white text-black text-xs xl:text-sm text-center'>
-                <span className="block">{`${props.rentalData.dateTo ? `${dateFormatterAsObject(props.rentalData.dateTo.toString()).date}` : 'brak'}`}</span>
-                <span className="block">{`${props.rentalData.dateTo ? `${dateFormatterAsObject(props.rentalData.dateTo.toString()).time}` : ''}`}</span>
-            </p>
-        </div>
-    </td>
-    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.carMileageBefore || props.rentalData.distance === 0 ? `${props.rentalData.carMileageBefore}` : <StyledSpan color={'danger'} text={'brak'}/>}</p>
-        </div>
-    </td>
-    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.carMileageAfter || props.rentalData.distance === 0 ? `${props.rentalData.carMileageAfter}` : <StyledSpan color={'warning'} text={'brak'}/>}</p>
-        </div>
-    </td>
-    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.distance || props.rentalData.distance === 0 ? `${props.rentalData.distance}` : <StyledSpan color={'warning'} text={'brak'}/>}</p>
-        </div>
-    </td>
-    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <div className="flex justify-center">
         <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.travelDestination && props.rentalData.travelDestination !== '' ? `${props.rentalData.travelDestination}` : <StyledSpan color={'warning'} text={'brak'}/>}</p>
-        </div>
-    </td>
-    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={returnUserObject} nullText={'brak'} linkTarget={'_blank'} no_wrap={true}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
@@ -97,7 +69,23 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><PlaceSpan placeObj={placeObject} nullText={'Nie'} linkTarget={'_blank'}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.id}</p>
+        </div>
+    </td>
+    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+        <div className="flex justify-center">
+        <p className='dark:text-white text-black text-xs xl:text-sm text-center'>
+            <span className="block">{`${props.rentalData.createdAt ? `${dateFormatterAsObject(props.rentalData.createdAt.toString()).date}` : 'brak'}`}</span>
+            <span className="block">{`${props.rentalData.createdAt ? `${dateFormatterAsObject(props.rentalData.createdAt.toString()).time}` : ''}`}</span>
+        </p>
+        </div>
+    </td>
+    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+        <div className="flex justify-center">
+        <p className='dark:text-white text-black text-xs xl:text-sm text-center'>
+            <span className="block">{`${props.rentalData.updatedAt ? `${dateFormatterAsObject(props.rentalData.updatedAt.toString()).date}` : 'brak'}`}</span>
+            <span className="block">{`${props.rentalData.updatedAt ? `${dateFormatterAsObject(props.rentalData.updatedAt.toString()).time}` : ''}`}</span>
+        </p>
         </div>
     </td>
 

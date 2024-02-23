@@ -2,7 +2,7 @@ import { useState } from "react";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { SelectValue , Option } from "react-tailwindcss-select/dist/components/type";
 import Datepicker, { DateValueType } from "react-tailwindcss-datepicker";
-import { db_Car_basic, db_Place, db_User } from "../../../types/db_types";
+import { db_Car_basic, db_User } from "../../../types/db_types";
 
 
 
@@ -10,7 +10,6 @@ import { db_Car_basic, db_Place, db_User } from "../../../types/db_types";
 type ReservationTableFilteringProps = {
     allCarsBasicData: db_Car_basic[] | [],
     usersData: db_User[] | [],
-    placesData: db_Place[] | [],
     setFilters: Function
     setCurrentPage: Function
 }
@@ -21,18 +20,10 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
 
     const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
     const [selectedUserIDs, setSelectedUserIDs] = useState<SelectValue>(null);
-    const [rentalDateFrom, setRentalDateFrom] = useState<DateValueType>(null);
-    const [rentalDateTo, setRentalDateTo] = useState<DateValueType>(null);
-    const [carMileageBefore_FROM, setCarMileageBefore_FROM] = useState<number | ''>('');
-    const [carMileageBefore_TO, setCarMileageBefore_TO] = useState<number | ''>('');
-    const [carMileageAfter_FROM, setCarMileageAfter_FROM] = useState<number | ''>('');
-    const [carMileageAfter_TO, setCarMileageAfter_TO] = useState<number | ''>('');
-    const [distance_FROM, setDistance_FROM] = useState<number | ''>('');
-    const [distance_TO, setDistance_TO] = useState<number | ''>('');
+    const [reservationDatesRange, setReservationDatesRange] = useState<DateValueType>(null);
     const [travelDestination, setTravelDestination] = useState<string>('');
-    const [selectedReturnedByUser, setSelectedReturnedByUser] = useState<SelectValue>(null);
-    const [acknowledgedByModerator, setAcknowledgedByModerator] = useState<string>('');
-    const [selectedPlace, setSelectedPlace] = useState<SelectValue>(null);
+    const [wasEditedByModerator, setWasEditedByModerator] = useState<string>('');
+    const [selectedModerator, setSelectedModerator] = useState<SelectValue>(null);
 
     const carOptions = props.allCarsBasicData.map(car => ({
         value: car.id.toString(),
@@ -44,10 +35,12 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
         label: `${user.name} ${user.surname}`
     }));
 
-    const placeOptions = props.placesData.map(place => ({
-        value: place.id.toString(),
-        label: `${place.projectCode}`
-    }));
+    const userAdminOptions = props.usersData
+        .filter(user => user.role === 'admin')
+        .map(user => ({
+            value: user.id.toString(),
+            label: `${user.name} ${user.surname}`
+        }));
 
 
 
@@ -65,38 +58,25 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
             selectedUserIDs.forEach((obj: Option) => userIDs.push(Number(obj.value)))
         }
 
-        const returnUserIDs: number[] = [];
-        if(selectedReturnedByUser !== null && Array.isArray(selectedReturnedByUser)) {
-            selectedReturnedByUser.forEach((obj: Option) => returnUserIDs.push(Number(obj.value)))
+        const adminUserIDs: number[] = [];
+        if(selectedModerator !== null && Array.isArray(selectedModerator)) {
+            selectedModerator.forEach((obj: Option) => adminUserIDs.push(Number(obj.value)))
         }
 
-        const placeIDs: number[] = [];
-        if(selectedPlace !== null && Array.isArray(selectedPlace)) {
-            selectedPlace.forEach((obj: Option) => placeIDs.push(Number(obj.value)))
-        }
 
         //<select>
-        let acknowledgedByModeratorValue: undefined | boolean;
-        if(acknowledgedByModerator === 'false') {acknowledgedByModeratorValue = false}
-        else if(acknowledgedByModerator === 'true') {acknowledgedByModeratorValue = true}
+        let wasEditedByModeratorValue: undefined | boolean;
+        if(wasEditedByModerator === 'false') {wasEditedByModeratorValue = false}
+        else if(wasEditedByModerator === 'true') {wasEditedByModeratorValue = true}
 
         const filtersObj = {
             carIDs: carIDs,
             userIDs: userIDs,
-            returnUserIDs: returnUserIDs,
-            placeIDs: placeIDs,
-            editedByModerator: acknowledgedByModeratorValue,
-            carMileageBefore_from: carMileageBefore_FROM,
-            carMileageBefore_to: carMileageBefore_TO,
-            carMileageAfter_from: carMileageAfter_FROM,
-            carMileageAfter_to: carMileageAfter_TO,
-            distance_from: distance_FROM,
-            distance_to: distance_TO,
+            reservationDatesRange_from: reservationDatesRange?.startDate,
+            reservationDatesRange_to: reservationDatesRange?.endDate,
             travelDestination: travelDestination,
-            dateFrom_from: rentalDateFrom?.startDate,
-            dateFrom_to: rentalDateFrom?.endDate,
-            dateTo_from: rentalDateTo?.startDate,
-            dateTo_to: rentalDateTo?.endDate
+            wasEditedByModerator: wasEditedByModeratorValue,
+            moderatorIDs: adminUserIDs,
         }
 
         const queryString: string = encodeURIComponent(JSON.stringify(filtersObj));
@@ -107,20 +87,13 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
 
 
     const resetFilters = () => {
+    
         setSelectedCars(null);
         setSelectedUserIDs(null);
-        setRentalDateFrom(null);
-        setRentalDateTo(null);
-        setCarMileageBefore_FROM('');
-        setCarMileageBefore_TO('');
-        setCarMileageAfter_FROM('');
-        setCarMileageAfter_TO('');
-        setDistance_FROM('');
-        setDistance_TO('');
+        setReservationDatesRange(null)
         setTravelDestination('');
-        setSelectedReturnedByUser(null);
-        setAcknowledgedByModerator('');
-        setSelectedPlace(null);
+        setWasEditedByModerator('');
+        setSelectedModerator(null);
         
         props.setFilters(null);
         props.setCurrentPage(1);
@@ -144,7 +117,7 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
 
                     <div className="mx-2 my-5 sm:mx-5">
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                        Wypożyczone przez użytkownika:
+                        Właściciel rezerwacji:
                     </label>
                     <MultiselectInput isSearchable={true} value={selectedUserIDs} setValue={(value: SelectValue) => (setSelectedUserIDs(value))} options={userOptions} />
                     </div>
@@ -153,15 +126,15 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
 
                     <div className='mx-2 my-5 sm:mx-5'>
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                        Data wypożyczenia:
+                        Zakres dat rezerwacji:
                     </label>
                     <Datepicker
                         i18n={"pl"}
                         separator={"do"}
                         displayFormat={"DD/MM/YYYY"}
                         startWeekOn="mon"
-                        value={rentalDateFrom}
-                        onChange={(value: DateValueType) => (setRentalDateFrom(value))}
+                        value={reservationDatesRange}
+                        onChange={(value: DateValueType) => (setReservationDatesRange(value))}
                         inputClassName="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base" 
 
                         showShortcuts={false}
@@ -175,118 +148,6 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
                     </div>
 
 
-                    <div className='mx-2 my-5 sm:mx-5'>
-                    <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                        Data zwrotu:
-                    </label>
-                    <Datepicker
-                        i18n={"pl"}
-                        separator={"do"}
-                        displayFormat={"DD/MM/YYYY"}
-                        startWeekOn="mon"
-                        value={rentalDateTo}
-                        onChange={(value: DateValueType) => (setRentalDateTo(value))}
-                        inputClassName="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base" 
-
-                        showShortcuts={false}
-                        showFooter={false}
-                        configs={{footer: {
-                          cancel: "Anuluj", 
-                          apply: "Potwierdź" 
-                          }
-                        }}
-                        />
-                    </div>
-
-
-                    <div className="mx-2 my-5 sm:mx-5">
-                        <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                            Przebieg początkowy [km]:
-                        </label>
-                        <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-10">
-
-                            <div className="sm:col-span-1 sm:gap-3 flex flex-row justify-center items-center">
-                            <p className="w-1/5 text-black dark:text-white text-xs sm:text-base md:text-sm lg:text-base">Od:</p>
-                            <input
-                                type="number"
-                                placeholder={`...`}
-                                className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
-                                value={carMileageBefore_FROM}
-                                onChange={(e)=>(setCarMileageBefore_FROM(Number(e.target.value)))}
-                                onKeyDown={(e)=>{
-                                    const { key } = e;
-                                    if ((key === 'Backspace' || key === 'Delete') && carMileageBefore_FROM === 0) {
-                                        setCarMileageBefore_FROM('');
-                                      }
-                                }}
-
-                            />
-                            </div>
-
-                            <div className="sm:col-span-1 sm:gap-3 flex flex-row justify-center items-center">
-                            <p className="w-1/5 text-black dark:text-white text-xs sm:text-base md:text-sm lg:text-base">Do:</p>
-                            <input
-                                type="number"
-                                placeholder={`...`}
-                                className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
-                                value={carMileageBefore_TO}
-                                onChange={(e)=>(setCarMileageBefore_TO(Number(e.target.value)))}
-                                onKeyDown={(e)=>{
-                                    const { key } = e;
-                                    if ((key === 'Backspace' || key === 'Delete') && carMileageBefore_TO === 0) {
-                                        setCarMileageBefore_TO('');
-                                      }
-                                }}
-                            />
-                            </div>
-
-                        </div>
-                    </div>
-
-
-
-                    <div className="mx-2 my-5 sm:mx-5">
-                        <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                            Przebieg końcowy [km]:
-                        </label>
-                        <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-10">
-
-                            <div className="sm:col-span-1 sm:gap-3 flex flex-row justify-center items-center">
-                            <p className="w-1/5 text-black dark:text-white text-xs sm:text-base md:text-sm lg:text-base">Od:</p>
-                            <input
-                                type="number"
-                                placeholder={`...`}
-                                className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
-                                value={carMileageAfter_FROM}
-                                onChange={(e)=>(setCarMileageAfter_FROM(Number(e.target.value)))}
-                                onKeyDown={(e)=>{
-                                    const { key } = e;
-                                    if ((key === 'Backspace' || key === 'Delete') && carMileageAfter_FROM === 0) {
-                                        setCarMileageAfter_FROM('');
-                                      }
-                                }}
-                            />
-                            </div>
-
-                            <div className="sm:col-span-1 sm:gap-3 flex flex-row justify-center items-center">
-                            <p className="w-1/5 text-black dark:text-white text-xs sm:text-base md:text-sm lg:text-base">Do:</p>
-                            <input
-                                type="number"
-                                placeholder={`...`}
-                                className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
-                                value={carMileageAfter_TO}
-                                onChange={(e)=>(setCarMileageAfter_TO(Number(e.target.value)))}
-                                onKeyDown={(e)=>{
-                                    const { key } = e;
-                                    if ((key === 'Backspace' || key === 'Delete') && carMileageAfter_TO === 0) {
-                                        setCarMileageAfter_TO('');
-                                      }
-                                }}
-                            />
-                            </div>
-
-                        </div>
-                    </div>
 
 
                 </div>
@@ -294,48 +155,7 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
                 <div className="col-span-2">
 
 
-                <div className="mx-2 my-5 sm:mx-5">
-                        <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                            Przejechany dystans [km]:
-                        </label>
-                        <div className="flex flex-col gap-4 sm:grid sm:grid-cols-2 sm:gap-10">
 
-                            <div className="sm:col-span-1 sm:gap-3 flex flex-row justify-center items-center">
-                            <p className="w-1/5 text-black dark:text-white text-xs sm:text-base md:text-sm lg:text-base">Od:</p>
-                            <input
-                                type="number"
-                                placeholder={`...`}
-                                className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
-                                value={distance_FROM}
-                                onChange={(e)=>(setDistance_FROM(Number(e.target.value)))}
-                                onKeyDown={(e)=>{
-                                    const { key } = e;
-                                    if ((key === 'Backspace' || key === 'Delete') && distance_FROM === 0) {
-                                        setDistance_FROM('');
-                                      }
-                                }}
-                            />
-                            </div>
-
-                            <div className="sm:col-span-1 sm:gap-3 flex flex-row justify-center items-center">
-                            <p className="w-1/5 text-black dark:text-white text-xs sm:text-base md:text-sm lg:text-base">Do:</p>
-                            <input
-                                type="number"
-                                placeholder={`...`}
-                                className="w-4/5 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 md:px-2 lg:px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-base md:text-sm lg:text-base"
-                                value={distance_TO}
-                                onChange={(e)=>(setDistance_TO(Number(e.target.value)))}
-                                onKeyDown={(e)=>{
-                                    const { key } = e;
-                                    if ((key === 'Backspace' || key === 'Delete') && distance_TO === 0) {
-                                        setDistance_TO('');
-                                      }
-                                }}
-                            />
-                            </div>
-
-                        </div>
-                    </div>
 
 
 
@@ -356,15 +176,7 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
 
                     <div className="mx-2 my-5 sm:mx-5">
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                        Zwrócone przez użytkownika:
-                    </label>
-                    <MultiselectInput isSearchable={true} value={selectedReturnedByUser} setValue={(value: SelectValue) => (setSelectedReturnedByUser(value))} options={userOptions} />
-                    </div>
-
-
-                    <div className="mx-2 my-5 sm:mx-5">
-                    <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                        Zatwierdzone przez moderatora:
+                        Edytowane przez moderatora:
                     </label>
                     <div className="relative z-1 bg-white dark:bg-form-input">
                         <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
@@ -373,8 +185,8 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
                         </span>
                         <select
                         className="relative z-1 w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-13 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary sm:text-base"
-                        value={acknowledgedByModerator}
-                        onChange={(e)=>setAcknowledgedByModerator(e.target.value)}
+                        value={wasEditedByModerator}
+                        onChange={(e)=>setWasEditedByModerator(e.target.value)}
                         >
                         <option value="" selected>Wybierz...</option>
                         <option value="true">Tak</option>
@@ -386,10 +198,12 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
 
                     <div className="mx-2 my-5 sm:mx-5">
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                        Przypisany numer projektu:
+                        Dane moderatora:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedPlace} setValue={(value: SelectValue) => (setSelectedPlace(value))} options={placeOptions} />
+                    <MultiselectInput isSearchable={true} value={selectedModerator} setValue={(value: SelectValue) => (setSelectedModerator(value))} options={userAdminOptions} />
                     </div>
+
+
                 
                     
                     <div className="mx-2 mt-14 mb-5 sm:mx-5">

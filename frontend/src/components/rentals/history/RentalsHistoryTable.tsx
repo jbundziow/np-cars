@@ -62,6 +62,15 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Przypisany numer projektu
                 </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  ID
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Utworzono w bazie danych
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Ostatnia edycja w bazie danych
+                </th>
                 
                 
               </tr>
@@ -79,7 +88,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                }
               )}
               <tr>
-              <td>
+              <td className="pt-3">
                 <div className="flex justify-center">
                   <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łączna ilość wyników: {props.paginationData.totalCount}</p>
                 </div>  
@@ -89,13 +98,13 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
               <td></td>
               <td></td>
               <td></td>
-              <td className="pt-5">
+              <td className="pt-3">
                 <div className="flex justify-center">
                   <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma w tabeli: {totalDistanceInVisibleTable} km</p>
                 </div>  
               </td>
               <td></td>
-              <td className="pt-5">
+              <td className="pt-3">
                 <div className="flex justify-center">
                   <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łączna suma dla zapytania: {props.totalDistance} km</p>
                 </div>  
