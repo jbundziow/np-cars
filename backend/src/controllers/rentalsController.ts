@@ -288,7 +288,7 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
 
 
 
-export const fetchAllRentals_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if(!req.query.filters) {
         res.status(400).json({status: 'fail', data: [{en: `No query param 'filters' passed.`, pl: `Nie przekazano 'filters' w parametrach zapytania.`}]})
         return;
