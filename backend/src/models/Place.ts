@@ -2,6 +2,7 @@ const {DataTypes} = require('sequelize');
 
 
 
+import { Op } from "sequelize";
 import sequelize from "../database/database";
 const PlaceModel = sequelize.define('Place', {
     id: {
@@ -58,15 +59,25 @@ class Place {
         })
     }
 
-    static async fetchAll() {
-        return await PlaceModel.findAll()
+    static async fetchAll(showBanned: boolean) {
+        if(showBanned) {
+            return await PlaceModel.findAll()
+        }
+        else {
+            return await PlaceModel.findAll({where: {status: { [Op.ne]: 'banned' }}})
+        }
+  
     }
 
-    static async fetchOne(id: number) {
+    static async fetchOne(id: number, showBanned: boolean) {
+      if(showBanned) {
         return await PlaceModel.findOne({ where: { id: id } })
+      }
+      else {
+          return await PlaceModel.findOne({where: { id: id, status: { [Op.ne]: 'banned' }}})
+      }
     }
+
 }
-
-
 
 export default Place;

@@ -1,0 +1,120 @@
+import { Pagination } from "../../../types/common";
+import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
+import ReservationsHistoryTablePagination from "./ReservationsHistoryTablePagination";
+import ReservationsHistoryTableRow from "./ReservationsHistoryTableRow";
+
+
+
+type ReservationsHistoryTableProps = {
+  rentalsData: db_Rental[] | [],
+  allCarsBasicData: db_Car_basic[] | [],
+  usersData: db_User[] | [],
+  placesData: db_Place[] | [],
+  setCurrentPage: (pageNumber: number) => void;
+  paginationData: Pagination,
+  totalDistance: number,
+}
+
+
+const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
+
+
+    let totalDistanceInVisibleTable = 0;
+
+    return (
+      <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
+        {props.rentalsData.length !== 0 ?
+        <>
+        <div className="max-w-full overflow-x-auto special-scrollbar mb-3 pb-5">
+          <table className="w-full table-auto">
+            <thead>
+              <tr className="bg-gray-2 text-left dark:bg-meta-4">
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Samochód
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Wypożyczone przez użytkownika
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Data wypożyczenia
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Data zwrotu
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Przebieg początkowy [km]
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Przebieg końcowy [km]
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Przejechany dystans [km]
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Cel podróży
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Zawrócone przez użytkownika
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Zatwierdzone przez moderatora?
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Przypisany numer projektu
+                </th>
+                
+                
+              </tr>
+            </thead>
+            <tbody>
+            <div className='py-2' />
+            
+               {/* INSERT ROWS HERE */}
+              {props.rentalsData.map(rental => {
+                const carData = props.allCarsBasicData.find(car => car.id === rental.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
+                if(typeof rental.distance === 'number') {totalDistanceInVisibleTable += rental.distance;}
+                return (
+                <ReservationsHistoryTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} rentalData={rental} usersData={props.usersData} placesData={props.placesData}/>
+                );
+               }
+              )}
+              <tr>
+              <td>
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łączna ilość wyników: {props.paginationData.totalCount}</p>
+                </div>  
+              </td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td className="pt-5">
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Suma w tabeli: {totalDistanceInVisibleTable} km</p>
+                </div>  
+              </td>
+              <td></td>
+              <td className="pt-5">
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łączna suma dla zapytania: {props.totalDistance} km</p>
+                </div>  
+              </td>
+              <td></td>
+              <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <ReservationsHistoryTablePagination pagination={props.paginationData} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+
+    </>
+        :
+        <p className="text-black dark:text-white text-md text-center mb-4">Brak danych do wyświetlenia.</p>
+        }
+      </div>
+    );
+  };
+  
+  export default ReservationsHistoryTable;

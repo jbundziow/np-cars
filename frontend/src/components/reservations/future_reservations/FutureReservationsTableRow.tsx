@@ -37,6 +37,9 @@ const FutureReservationsTableRow = (props: FutureReservationsTableRowProps) => {
           }
     }
 
+
+
+
     return (
     <>
     <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Usuń rezerwację'} bodyText={`Czy na pewno chcesz usunąć tę rezerwację? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteReservation() }/>
@@ -69,3 +72,4 @@ const FutureReservationsTableRow = (props: FutureReservationsTableRowProps) => {
   };
   
   export default FutureReservationsTableRow;
+
