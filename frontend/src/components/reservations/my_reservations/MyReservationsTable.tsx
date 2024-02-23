@@ -1,4 +1,4 @@
-import { db_Car_basic, db_Reservation } from "../../types/db_types";
+import { db_Car_basic, db_Reservation } from "../../../types/db_types";
 import MyReservationsTableRow from "./MyReservationsTableRow";
 
 

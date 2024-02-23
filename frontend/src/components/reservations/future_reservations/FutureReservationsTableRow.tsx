@@ -1,19 +1,20 @@
-import formatDate from "../../utilities/formatDate";
-import ModalWarning from "../general/ModalWarning";
+import formatDate from "../../../utilities/formatDate";
+import ModalWarning from "../../general/ModalWarning";
 import { useState } from "react";
-import DOMAIN_NAME from "../../utilities/domainName";
-import CarRowInTable from "../general/CarRowInTable";
-import { db_Car_basic, db_Reservation } from "../../types/db_types";
+import DOMAIN_NAME from "../../../utilities/domainName";
+import CarRowInTable from "../../general/CarRowInTable";
+import { db_Car_basic, db_Reservation } from "../../../types/db_types";
+import UserSpan from "../../general/spanElements/UserSpan";
 
 
 
 
-interface MyReservationsTableRowProps {
+interface FutureReservationsTableRowProps {
     carData: db_Car_basic;
     reservationData: db_Reservation;
   }
 
-const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
+const FutureReservationsTableRow = (props: FutureReservationsTableRowProps) => {
 
     const [reservationDeleted, setReservationDeleted] = useState<boolean>(false);
 
@@ -46,22 +47,17 @@ const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
+        <p className='dark:text-white text-black text-xs sm:text-base'>####################</p>
+        </div>
+    </td>
+    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+        <div className="flex justify-center">
         <p className='dark:text-white text-black text-xs sm:text-base'><span className="whitespace-nowrap">{`${formatDate(new Date(props.reservationData.dateFrom))}`}</span> - <span className="whitespace-nowrap">{`${formatDate(new Date(props.reservationData.dateTo))}`}</span></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
         <p className='dark:text-white text-black text-xs sm:text-base'>{props.reservationData.travelDestination}</p>
-        </div>
-    </td>
-    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <div className="flex items-center space-x-3.5">
-        <button
-        onClick={() => setShowWarningModal(true)}
-        className='inline-flex items-center justify-center rounded-full bg-danger py-1 sm:py-2 px-4 sm:px-7 text-center text-xs sm:text-base font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
-        >
-        Usuń rezerwację
-        </button>
         </div>
     </td>
     </tr>
@@ -72,4 +68,4 @@ const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
     );
   };
   
-  export default MyReservationsTableRow;
+  export default FutureReservationsTableRow;

@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+const FutureReservations = lazy(() => import('../new_pages/rezerwacje/przyszle-rezerwacje'));
 const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
 const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje/index'));
 const MakeAReservation = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji'));
@@ -89,6 +90,11 @@ const coreRoutes = [
     path: '/rezerwacje/moje-rezerwacje',
     title: 'Moje rezerwacje',
     component: MyReservations,
+  },
+  {
+    path: '/rezerwacje/przyszle-rezerwacje',
+    title: 'Zestawienie przyszłych rezerwacji',
+    component: FutureReservations,
   },
   {
     path: '/rezerwacje/archiwum',

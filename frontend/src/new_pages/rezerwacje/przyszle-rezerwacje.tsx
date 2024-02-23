@@ -5,7 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import useAuth from '../../hooks/useAuth'
-import MyReservationsTable from "../../components/reservations/my_reservations/MyReservationsTable";
+import FutureReservationsTable from "../../components/reservations/future_reservations/FutureReservationsTable";
 import { ApiResponse } from "../../types/common";
 
 
@@ -16,7 +16,7 @@ interface Props {
 
 
 
-const MyReservations = (props: Props) => {
+const FutureReservations = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
     
@@ -45,11 +45,11 @@ const MyReservations = (props: Props) => {
 
     return (
       <>
-      <Breadcrumb pageName="Moje rezerwacje" />
+      <Breadcrumb pageName="Zestawienie przyszłych rezerwacji" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <MyReservationsTable reservationsData={data1?.data.reservations} allCarsBasicData={data1?.data.allCarsData}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <FutureReservationsTable reservationsData={data1?.data.reservations} allCarsBasicData={data1?.data.allCarsData}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };
   
-  export default MyReservations;
+  export default FutureReservations;
