@@ -3,7 +3,7 @@ import { NextFunction, Request, Response, response } from 'express'
 import Rental from '../models/Rental';
 import Car from '../models/Car';
 import User from '../models/User';
-import { addOneNullRentalByNormalUserSchema, addOneRentalByNormalUserSchema, filtersObjSchema, returnCarByNormalUserSchema } from '../models/validation/RentalsSchemas';
+import { addOneNullRentalByNormalUserSchema, addOneRentalByNormalUserSchema, filtersObjRentalSchema, returnCarByNormalUserSchema } from '../models/validation/RentalsSchemas';
 import { isDateString } from '../utilities/functions/isDateString';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValuesFromObject';
@@ -309,7 +309,7 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
             const receivedQueryString = req.query.filters.toString();
             let filtersObj = JSON.parse(receivedQueryString);
             filtersObj = removeEmptyValuesFromObject(filtersObj)
-            await filtersObjSchema.validateAsync(filtersObj)
+            await filtersObjRentalSchema.validateAsync(filtersObj)
             const response = await Rental.fetchAllRentalsWithFilters(filtersObj, pageSize, pageNumber)
             res.status(200).json({status: 'success', data: response.records, pagination: response.pagination, totalDistance: response.totalDistance})
 

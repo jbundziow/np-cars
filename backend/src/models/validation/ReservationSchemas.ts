@@ -45,5 +45,35 @@ const dateOnlyValidator = (date: string) :boolean => {
     return result;
 }
 
-export { addOneReservationSchema, dateOnlyValidator };
+
+
+const filtersObjReservationSchema = Joi.object({
+    carIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+
+    userIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+
+    reservationDatesRange_from: Joi.date()
+        .optional(),
+
+    reservationDatesRange_to: Joi.date()
+        .optional(),
+
+    travelDestination: Joi.string()
+        .min(1)
+        .optional(),
+
+    wasEditedByModerator: Joi.boolean()
+        .optional(),
+    
+    moderatorIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+});
+
+
+export { addOneReservationSchema, dateOnlyValidator, filtersObjReservationSchema };
 

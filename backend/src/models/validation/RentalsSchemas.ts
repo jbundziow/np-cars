@@ -140,7 +140,7 @@ const returnCarByNormalUserSchema = Joi.object({
 })
 
 
-const filtersObjSchema = Joi.object({
+const filtersObjRentalSchema = Joi.object({
     carIDs: Joi.array()
         .items(Joi.number().positive().integer())
         .optional(),
@@ -202,5 +202,5 @@ const filtersObjSchema = Joi.object({
 });
 
 
-export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema, addOneNullRentalByNormalUserSchema, filtersObjSchema};
+export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema, addOneNullRentalByNormalUserSchema, filtersObjRentalSchema};
 

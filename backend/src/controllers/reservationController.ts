@@ -4,12 +4,42 @@ import { NextFunction, Request, Response, response } from 'express'
 import Reservation from '../models/Reservation';
 import Car from '../models/Car';
 import User from '../models/User';
-import { addOneReservationSchema, dateOnlyValidator } from '../models/validation/ReservationSchemas';
+import { addOneReservationSchema, dateOnlyValidator, filtersObjReservationSchema } from '../models/validation/ReservationSchemas';
 import { getNextTwoWeeksDatesArr } from '../utilities/functions/getNextTwoWeeksDatesArr';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 import { getFormattedDate } from '../utilities/functions/getFormattedDate';
+import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValuesFromObject';
 
+export const fetchAllReservationsWithFilters_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    if(!req.query.filters) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'filters' passed.`, pl: `Nie przekazano 'filters' w parametrach zapytania.`}]})
+        return;
+    }
+    if(!req.query.pagenumber || isNaN(Number(req.query.pagenumber))) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'pagenumber' passed or it is not a number.`, pl: `Nie przekazano 'pagenumber' w parametrach zapytania lub nie jest to cyfra.`}]})
+        return;
+    }
+    if(!req.query.pagesize || isNaN(Number(req.query.pagesize))) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'pagesize' passed or it is not a number.`, pl: `Nie przekazano 'pagesize' w parametrach zapytania lub nie jest to cyfra.`}]})
+        return;
+    }
 
+        try {
+            const pageNumber = Number(req.query.pagenumber);
+            const pageSize = Number(req.query.pagesize);
+
+            const receivedQueryString = req.query.filters.toString();
+            let filtersObj = JSON.parse(receivedQueryString);
+            filtersObj = removeEmptyValuesFromObject(filtersObj)
+            await filtersObjReservationSchema.validateAsync(filtersObj)
+            const response = await Reservation.fetchAllReservationsWithFilters(filtersObj, pageSize, pageNumber)
+            res.status(200).json({status: 'success', data: response.records, pagination: response.pagination})
+        }
+        catch(e) {
+            console.log(e);
+            res.status(500).json({status: 'error', message: e})
+        }
+}
 
 
 export const addOneReservation_POST_user = async (req: Request, res: Response, next: NextFunction) => {

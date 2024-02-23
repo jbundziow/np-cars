@@ -80,7 +80,8 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
         }
 
         const queryString: string = encodeURIComponent(JSON.stringify(filtersObj));
-        props.setFilters(queryString);
+        console.log(queryString);
+        // props.setFilters(queryString);
         props.setCurrentPage(1);
     }
 
@@ -186,7 +187,12 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
                         <select
                         className="relative z-1 w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-13 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary sm:text-base"
                         value={wasEditedByModerator}
-                        onChange={(e)=>setWasEditedByModerator(e.target.value)}
+                        onChange={(e)=>{
+                            setWasEditedByModerator(e.target.value);
+                            if(e.target.value === 'false' || e.target.value === '') {
+                                setSelectedModerator(null);
+                            }
+                        }}
                         >
                         <option value="" selected>Wybierz...</option>
                         <option value="true">Tak</option>
@@ -195,14 +201,14 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
                     </div>
                     </div>
 
-
-                    <div className="mx-2 my-5 sm:mx-5">
+                    
+                    <div className={`mx-2 my-5 sm:mx-5 ${wasEditedByModerator === 'true' ? 'visible' : 'invisible'}`}>
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Dane moderatora:
                     </label>
                     <MultiselectInput isSearchable={true} value={selectedModerator} setValue={(value: SelectValue) => (setSelectedModerator(value))} options={userAdminOptions} />
                     </div>
-
+                    
 
                 
                     

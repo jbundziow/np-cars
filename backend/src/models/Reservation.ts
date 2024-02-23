@@ -188,6 +188,85 @@ class Reservation {
       });
     }
     }
+
+
+
+
+    
+    static async fetchAllReservationsWithFilters (filters:any, pageSize: number, pageNumber: number) {
+      const whereClause: any = {};
+
+      //arrays
+      if (filters.carIDs && filters.carIDs.length > 0) {
+        whereClause.carID = { [Op.in]: filters.carIDs };
+      }
+      if (filters.userIDs && filters.userIDs.length > 0) {
+        whereClause.userID = { [Op.in]: filters.userIDs };
+      }
+      if (filters.moderatorIDs && filters.moderatorIDs.length > 0) {
+        whereClause.lastEditedByModeratorOfID = { [Op.in]: filters.moderatorIDs };
+      }
+
+
+      //booleans
+      if (filters.wasEditedByModerator !== undefined && typeof filters.wasEditedByModerator === 'boolean') {
+        if (filters.wasEditedByModerator) {
+          whereClause.lastEditedByModeratorOfID = { [Op.ne]: null }; //true
+        } else {
+          whereClause.lastEditedByModeratorOfID = { [Op.eq]: null }; //false
+        }
+      }
+
+
+      //strings (case-insensitive search)
+      if(filters.travelDestination) {
+        whereClause.travelDestination = { [Op.and]: [
+          sequelize.where(sequelize.fn('LOWER', sequelize.col('travelDestination')), 'LIKE', `%${filters.travelDestination.toLowerCase()}%`)
+        ] };
+      }
+
+
+      //from/to dates 
+      if(filters.reservationDatesRange_from) {
+        whereClause.dateFrom = { [Op.gte]: new Date(filters.reservationDatesRange_from) }
+      }
+
+      if(filters.reservationDatesRange_to) {
+        whereClause.dateTo = { [Op.lte]: new Date(filters.reservationDatesRange_to) }
+      }
+
+
+      const totalCount = await ReservationModel.count({
+          where: whereClause,
+      });
+
+
+      const totalPages = Math.ceil(totalCount / pageSize);
+
+
+      const offset = (pageNumber - 1) * pageSize;
+
+
+      const records = await ReservationModel.findAll({
+          where: whereClause,
+          limit: pageSize,
+          offset: offset,
+          order: [['createdAt', 'DESC']] //sort from the newest
+      });
+
+
+
+      return {
+          records,
+          pagination: {
+            totalCount: totalCount,
+            totalPages: totalPages,
+            currentPage: pageNumber,
+            hasPreviousPage: pageNumber > 1,
+            hasNextPage: pageNumber < totalPages
+          }
+      };
+  }
     
 }
 
