@@ -1,29 +1,26 @@
 import { dateFormatterAsObject } from "../../../utilities/dateFormatter";
 import { Link } from "react-router-dom";
 import UserSpan from "../../general/spanElements/UserSpan";
-import PlaceSpan from "../../general/spanElements/PlaceSpan";
 import StyledSpan from "../../general/spanElements/StyledSpan";
-import { db_Place, db_Rental, db_User } from "../../../types/db_types";
+import { db_Reservation, db_User } from "../../../types/db_types";
+import formatDate from "../../../utilities/formatDate";
 
 
 
-interface RentalsHistoryTableRowProps {
+interface ReservationsHistoryTableRowProps {
     carID: number;
     carBrand: string;
     carModel: string;
     carImg: string;
-    rentalData: db_Rental;
+    reservationData: db_Reservation;
     usersData: db_User[] | [],
-    placesData: db_Place[] | [],
   }
 
-const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
+const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) => {
 
 
-    const rentalUserObject = props.usersData.find(user => user.id === props.rentalData.userID);
-    const returnUserObject = props.usersData.find(user => user.id === props.rentalData.returnUserID);
-    const acknowledgedByModeratorObject = props.usersData.find(user => user.id === props.rentalData.lastEditedByModeratorOfID)
-    const placeObject = props.placesData.find(place => place.id === props.rentalData.placeID)
+    const reservationUserObject = props.usersData.find(user => user.id === props.reservationData.userID);
+    const lastEditedByModeratorUserObject = props.usersData.find(user => user.id === props.reservationData.lastEditedByModeratorOfID)
     
     return (
     <>
@@ -46,45 +43,51 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={rentalUserObject} nullText={'brak'} linkTarget={'_blank'} no_wrap={true}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={reservationUserObject} nullText={'brak'} linkTarget={'_blank'} no_wrap={true}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-            <p className='dark:text-white text-black text-xs xl:text-sm text-center'>
-                <span className="block">{`${props.rentalData.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).date}` : 'brak'}`}</span>
-                <span className="block">{`${props.rentalData.dateFrom ? `${dateFormatterAsObject(props.rentalData.dateFrom.toString()).time}` : ''}`}</span>
+            <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>
+                <span className="whitespace-nowrap">{`${formatDate(new Date(props.reservationData.dateFrom))}`}</span>
             </p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.travelDestination && props.rentalData.travelDestination !== '' ? `${props.rentalData.travelDestination}` : <StyledSpan color={'warning'} text={'brak'}/>}</p>
+            <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>
+                <span className="whitespace-nowrap">{`${formatDate(new Date(props.reservationData.dateTo))}`}</span>
+            </p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={acknowledgedByModeratorObject} nullText={'Nie'} linkTarget={'_blank'} no_wrap={true}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.reservationData.travelDestination && props.reservationData.travelDestination !== '' ? `${props.reservationData.travelDestination}` : <StyledSpan color={'warning'} text={'brak'}/>}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.rentalData.id}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={lastEditedByModeratorUserObject} nullText={'Nie'} linkTarget={'_blank'} no_wrap={true}/></p>
+        </div>
+    </td>
+    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+        <div className="flex justify-center">
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.reservationData.id}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
         <p className='dark:text-white text-black text-xs xl:text-sm text-center'>
-            <span className="block">{`${props.rentalData.createdAt ? `${dateFormatterAsObject(props.rentalData.createdAt.toString()).date}` : 'brak'}`}</span>
-            <span className="block">{`${props.rentalData.createdAt ? `${dateFormatterAsObject(props.rentalData.createdAt.toString()).time}` : ''}`}</span>
+            <span className="block">{`${props.reservationData.createdAt ? `${dateFormatterAsObject(props.reservationData.createdAt.toString()).date}` : 'brak'}`}</span>
+            <span className="block">{`${props.reservationData.createdAt ? `${dateFormatterAsObject(props.reservationData.createdAt.toString()).time}` : ''}`}</span>
         </p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
         <p className='dark:text-white text-black text-xs xl:text-sm text-center'>
-            <span className="block">{`${props.rentalData.updatedAt ? `${dateFormatterAsObject(props.rentalData.updatedAt.toString()).date}` : 'brak'}`}</span>
-            <span className="block">{`${props.rentalData.updatedAt ? `${dateFormatterAsObject(props.rentalData.updatedAt.toString()).time}` : ''}`}</span>
+            <span className="block">{`${props.reservationData.updatedAt ? `${dateFormatterAsObject(props.reservationData.updatedAt.toString()).date}` : 'brak'}`}</span>
+            <span className="block">{`${props.reservationData.updatedAt ? `${dateFormatterAsObject(props.reservationData.updatedAt.toString()).time}` : ''}`}</span>
         </p>
         </div>
     </td>
@@ -94,4 +97,4 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     );
   };
   
-  export default RentalsHistoryTableRow;
+  export default ReservationsHistoryTableRow;

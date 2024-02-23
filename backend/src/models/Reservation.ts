@@ -226,14 +226,13 @@ class Reservation {
       }
 
 
-      //from/to dates 
-      if(filters.reservationDatesRange_from) {
-        whereClause.dateFrom = { [Op.gte]: new Date(filters.reservationDatesRange_from) }
+      if (filters.reservationDatesRange_from && filters.reservationDatesRange_to) {
+        whereClause.dateFrom = {
+          [Op.gte]: filters.reservationDatesRange_from,
+          [Op.lte]: filters.reservationDatesRange_to
+        };
       }
 
-      if(filters.reservationDatesRange_to) {
-        whereClause.dateTo = { [Op.lte]: new Date(filters.reservationDatesRange_to) }
-      }
 
 
       const totalCount = await ReservationModel.count({

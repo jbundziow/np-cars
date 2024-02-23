@@ -1,29 +1,25 @@
 import { Pagination } from "../../../types/common";
-import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
+import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import ReservationsHistoryTablePagination from "./ReservationsHistoryTablePagination";
 import ReservationsHistoryTableRow from "./ReservationsHistoryTableRow";
 
 
 
 type ReservationsHistoryTableProps = {
-  rentalsData: db_Rental[] | [],
+  reservationsData: db_Reservation[] | [],
   allCarsBasicData: db_Car_basic[] | [],
   usersData: db_User[] | [],
-  placesData: db_Place[] | [],
   setCurrentPage: (pageNumber: number) => void;
   paginationData: Pagination,
-  totalDistance: number,
 }
 
 
 const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
 
 
-    let totalDistanceInVisibleTable = 0;
-
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
-        {props.rentalsData.length !== 0 ?
+        {props.reservationsData && props.reservationsData.length > 0 ?
         <>
         <div className="max-w-full overflow-x-auto special-scrollbar mb-3 pb-5">
           <table className="w-full table-auto">
@@ -36,7 +32,10 @@ const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
                   Właściciel rezewacji
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
-                  Zakres dat rezerwacji
+                  Rezerwacja od
+                </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Rezerwacja do
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Cel podróży
@@ -61,11 +60,11 @@ const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
             <div className='py-2' />
             
                {/* INSERT ROWS HERE */}
-              {props.rentalsData.map(rental => {
-                const carData = props.allCarsBasicData.find(car => car.id === rental.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
-                if(typeof rental.distance === 'number') {totalDistanceInVisibleTable += rental.distance;}
+              {props.reservationsData.map(reservation => {
+                const carData = props.allCarsBasicData.find(car => car.id === reservation.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
+                
                 return (
-                <ReservationsHistoryTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} rentalData={rental} usersData={props.usersData} placesData={props.placesData}/>
+                <ReservationsHistoryTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} reservationData={reservation} usersData={props.usersData}/>
                 );
                }
               )}

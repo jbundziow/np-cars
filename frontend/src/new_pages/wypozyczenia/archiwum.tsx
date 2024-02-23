@@ -18,7 +18,7 @@ const RentalsArchive = (props: Props) => {
 
     
 
-    const [data1, setData1] = useState<ApiResponse>();  //rentals data of current user
+    const [data1, setData1] = useState<ApiResponse>();  //rentals data from backend
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
     const [data3, setData3] = useState<ApiResponse>();  //all users data
     const [data4, setData4] = useState<ApiResponse>();  //all places data
@@ -39,7 +39,7 @@ const RentalsArchive = (props: Props) => {
       const getData = async () => {
         const res1 = await fetchData(`${DOMAIN_NAME}/rentals?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
-        if(res1.pagination) setPaginationData(res1.pagination)
+        if(res1.pagination) {setPaginationData(res1.pagination)}
         if(res1.totalDistance !== undefined && res1.totalDistance !== null) setTotalDistance(res1.totalDistance)
         
         if(res1.status==='success') {

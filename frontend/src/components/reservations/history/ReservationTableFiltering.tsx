@@ -80,8 +80,8 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
         }
 
         const queryString: string = encodeURIComponent(JSON.stringify(filtersObj));
-        console.log(queryString);
-        // props.setFilters(queryString);
+
+        props.setFilters(queryString);
         props.setCurrentPage(1);
     }
 

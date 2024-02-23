@@ -2,20 +2,18 @@ import { useState } from "react";
 import ReservationsHistoryTable from "./ReservationsHistoryTable";
 import ReservationTableFiltering from "./ReservationTableFiltering";
 import { TECollapse } from "tw-elements-react";
-import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
+import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import { Pagination } from "../../../types/common";
 
 
 
 type ReservationsHistoryProps = {
-    rentalsData: db_Rental[] | [],
+    reservationsData: db_Reservation[] | [],
     allCarsBasicData: db_Car_basic[] | [],
     usersData: db_User[] | [],
-    placesData: db_Place[] | [],
     setFilters: Function,
     setCurrentPage: (pageNumber: number) => void,
     paginationData: Pagination,
-    totalDistance: number,
   }
 
 const ReservationsHistory = (props: ReservationsHistoryProps) => {
@@ -77,12 +75,12 @@ const ReservationsHistory = (props: ReservationsHistoryProps) => {
                     className="!mt-0 !rounded-b-none !shadow-none !overflow-visible"
                 >
                     <div>
-                        <ReservationTableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setFilters={(val: string) => props.setFilters(val)} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+                        <ReservationTableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setFilters={(val: string) => props.setFilters(val)} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
                     </div>
                 </TECollapse>
                 </div>
             </div>
-            <ReservationsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalDistance={props.totalDistance}/>
+            <ReservationsHistoryTable reservationsData={props.reservationsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} />
         </div>
         </>
     )

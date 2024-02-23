@@ -46,7 +46,11 @@ const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs sm:text-base'><span className="whitespace-nowrap">{`${formatDate(new Date(props.reservationData.dateFrom))}`}</span> - <span className="whitespace-nowrap">{`${formatDate(new Date(props.reservationData.dateTo))}`}</span></p>
+        <p className='dark:text-white text-black text-xs sm:text-base'>
+          <span className="whitespace-nowrap">{`${formatDate(new Date(props.reservationData.dateFrom))}`}</span>
+          {` - `}
+          <span className="whitespace-nowrap">{`${formatDate(new Date(props.reservationData.dateTo))}`}</span>
+        </p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
