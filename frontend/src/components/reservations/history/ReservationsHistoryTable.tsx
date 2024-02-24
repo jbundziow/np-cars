@@ -64,7 +64,7 @@ const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
                 const carData = props.allCarsBasicData.find(car => car.id === reservation.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
                 
                 return (
-                <ReservationsHistoryTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} reservationData={reservation} usersData={props.usersData}/>
+                <ReservationsHistoryTableRow carData={carData} reservationData={reservation} usersData={props.usersData}/>
                 );
                }
               )}

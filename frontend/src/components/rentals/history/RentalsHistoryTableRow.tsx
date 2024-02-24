@@ -3,15 +3,12 @@ import { Link } from "react-router-dom";
 import UserSpan from "../../general/spanElements/UserSpan";
 import PlaceSpan from "../../general/spanElements/PlaceSpan";
 import StyledSpan from "../../general/spanElements/StyledSpan";
-import { db_Place, db_Rental, db_User } from "../../../types/db_types";
+import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
 
 
 
 interface RentalsHistoryTableRowProps {
-    carID: number;
-    carBrand: string;
-    carModel: string;
-    carImg: string;
+    carData: db_Car_basic;
     rentalData: db_Rental;
     usersData: db_User[] | [],
     placesData: db_Place[] | [],
@@ -34,11 +31,11 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
             <div className=" w-22 sm:w-32 rounded-md">
             <img 
             className="rounded-md block"
-            src={props.carImg} alt="Zdjęcie samochodu" />
+            src={props.carData.imgPath} alt="Zdjęcie samochodu" />
             </div>
-            <Link to={`/samochody/${[props.carID]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1">
+            <Link to={`/samochody/${[props.carData.id]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1">
             <h5 className="font-medium text-xs xl:text-sm text-black dark:text-white">
-            {`${props.carBrand} ${props.carModel}`}
+            {`${props.carData.brand} ${props.carData.model}`}
             </h5>
             </Link>
         </div>

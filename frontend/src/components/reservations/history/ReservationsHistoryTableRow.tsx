@@ -2,16 +2,13 @@ import { dateFormatterAsObject } from "../../../utilities/dateFormatter";
 import { Link } from "react-router-dom";
 import UserSpan from "../../general/spanElements/UserSpan";
 import StyledSpan from "../../general/spanElements/StyledSpan";
-import { db_Reservation, db_User } from "../../../types/db_types";
+import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import formatDate from "../../../utilities/formatDate";
 
 
 
 interface ReservationsHistoryTableRowProps {
-    carID: number;
-    carBrand: string;
-    carModel: string;
-    carImg: string;
+    carData: db_Car_basic;
     reservationData: db_Reservation;
     usersData: db_User[] | [],
   }
@@ -31,11 +28,11 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
             <div className=" w-22 sm:w-32 rounded-md">
             <img 
             className="rounded-md block"
-            src={props.carImg} alt="Zdjęcie samochodu" />
+            src={props.carData.imgPath} alt="Zdjęcie samochodu" />
             </div>
-            <Link to={`/samochody/${[props.carID]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1">
+            <Link to={`/samochody/${[props.carData.id]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1">
             <h5 className="font-medium text-xs xl:text-sm text-black dark:text-white">
-            {`${props.carBrand} ${props.carModel}`}
+            {`${props.carData.brand} ${props.carData.model}`}
             </h5>
             </Link>
         </div>

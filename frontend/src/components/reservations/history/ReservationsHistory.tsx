@@ -4,6 +4,7 @@ import ReservationTableFiltering from "./ReservationTableFiltering";
 import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import { Pagination } from "../../../types/common";
+import Loader from "../../../common/Loader";
 
 
 
@@ -14,6 +15,7 @@ type ReservationsHistoryProps = {
     setFilters: Function,
     setCurrentPage: (pageNumber: number) => void,
     paginationData: Pagination,
+    loadingTable: boolean,
   }
 
 const ReservationsHistory = (props: ReservationsHistoryProps) => {
@@ -80,7 +82,9 @@ const ReservationsHistory = (props: ReservationsHistoryProps) => {
                 </TECollapse>
                 </div>
             </div>
+            {props.loadingTable ? <Loader/> :
             <ReservationsHistoryTable reservationsData={props.reservationsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} />
+            }
         </div>
         </>
     )

@@ -29,14 +29,18 @@ const RentalsArchive = (props: Props) => {
 
 
     const [failData, setFailData] = useState<ApiResponse>();
-    const [loading, setLoading] = useState<boolean>(true);
     const [isFail, setFail] = useState<boolean>(false)
     const [isError, setError] = useState<boolean>(false);
     
 
+    const [loadingTable, setLoadingTable] = useState<boolean>(true); //EVERY TIME WHEN updating table
+    const [loadingData, setLoadingData] = useState<boolean>(true); //ONLY first fetching data
+
 
     useEffect(() => {
       const getData = async () => {
+        setLoadingTable(true)
+
         const res1 = await fetchData(`${DOMAIN_NAME}/rentals?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) {setPaginationData(res1.pagination)}
@@ -55,7 +59,8 @@ const RentalsArchive = (props: Props) => {
           }
         }
 
-      setLoading(false)
+      setLoadingTable(false)
+      setLoadingData(false)
       }
       getData()
     }, [filters, currentPage])
@@ -65,7 +70,7 @@ const RentalsArchive = (props: Props) => {
       <>
       <Breadcrumb pageName="Archiwum wypożyczeń" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data} usersData={data3?.data} placesData={data4?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData} totalDistance={totalDistance}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loadingData ? <Loader/> : (!isFail && !isError) ? <RentalsHistory allCarsBasicData={data2?.data} rentalsData={data1?.data} usersData={data3?.data} placesData={data4?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData} totalDistance={totalDistance} loadingTable={loadingTable}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };

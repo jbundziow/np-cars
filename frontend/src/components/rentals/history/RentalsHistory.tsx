@@ -4,6 +4,7 @@ import RentalTableFiltering from "./RentalTableFiltering";
 import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
 import { Pagination } from "../../../types/common";
+import Loader from "../../../common/Loader";
 
 
 
@@ -16,6 +17,7 @@ type RentalsHistoryProps = {
     setCurrentPage: (pageNumber: number) => void,
     paginationData: Pagination,
     totalDistance: number,
+    loadingTable: boolean,
   }
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
@@ -82,7 +84,9 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                 </TECollapse>
                 </div>
             </div>
+            {props.loadingTable ? <Loader/> :
             <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalDistance={props.totalDistance}/>
+            }
         </div>
         </>
     )

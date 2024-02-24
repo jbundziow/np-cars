@@ -83,7 +83,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                 const carData = props.allCarsBasicData.find(car => car.id === rental.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
                 if(typeof rental.distance === 'number') {totalDistanceInVisibleTable += rental.distance;}
                 return (
-                <RentalsHistoryTableRow carID={carData.id} carBrand={carData.brand} carModel={carData.model} carImg={carData.imgPath} rentalData={rental} usersData={props.usersData} placesData={props.placesData}/>
+                <RentalsHistoryTableRow carData={carData} rentalData={rental} usersData={props.usersData} placesData={props.placesData}/>
                 );
                }
               )}

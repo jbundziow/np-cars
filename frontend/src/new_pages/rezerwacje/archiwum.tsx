@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import Loader from "../../common/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import { ApiResponse, Pagination } from "../../types/common";
 import ReservationsHistory from "../../components/reservations/history/ReservationsHistory";
+import Loader from "../../common/Loader";
 
 
 
@@ -27,14 +27,16 @@ const ReservationArchive = (props: Props) => {
 
 
     const [failData, setFailData] = useState<ApiResponse>();
-    const [loading, setLoading] = useState<boolean>(true);
     const [isFail, setFail] = useState<boolean>(false)
     const [isError, setError] = useState<boolean>(false);
     
-
+    const [loadingTable, setLoadingTable] = useState<boolean>(true); //EVERY TIME WHEN updating table
+    const [loadingData, setLoadingData] = useState<boolean>(true); //ONLY first fetching data
 
     useEffect(() => {
       const getData = async () => {
+        setLoadingTable(true)
+        
         const res1 = await fetchData(`${DOMAIN_NAME}/reservations?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) {setPaginationData(res1.pagination)}
@@ -48,7 +50,8 @@ const ReservationArchive = (props: Props) => {
           }
         }
 
-      setLoading(false)
+      setLoadingTable(false)
+      setLoadingData(false)
       }
       getData()
     }, [filters, currentPage])
@@ -58,7 +61,7 @@ const ReservationArchive = (props: Props) => {
       <>
       <Breadcrumb pageName="Archiwum rezerwacji" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <ReservationsHistory allCarsBasicData={data2?.data} reservationsData={data1?.data} usersData={data3?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loadingData ? <Loader/> : (!isFail && !isError) ? <ReservationsHistory allCarsBasicData={data2?.data} reservationsData={data1?.data} usersData={data3?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData} loadingTable={loadingTable}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };
