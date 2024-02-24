@@ -5,6 +5,8 @@ import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
 import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
+import GenerateExcel from "../../general/GenerateExcel";
+import DOMAIN_NAME from "../../../utilities/domainName";
 
 
 
@@ -18,6 +20,7 @@ type RentalsHistoryProps = {
     paginationData: PaginationType,
     totalDistance: number,
     loadingTable: boolean,
+    filters: string,
   }
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
@@ -85,7 +88,10 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                 </div>
             </div>
             {props.loadingTable ? <Loader/> :
+            <>
             <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalDistance={props.totalDistance}/>
+            <GenerateExcel url={`${DOMAIN_NAME}/rentals?filters=${props.filters}&pagenumber=1&pagesize=9999`}/>
+            </>
             }
         </div>
         </>
