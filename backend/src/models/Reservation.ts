@@ -225,12 +225,29 @@ class Reservation {
         ] };
       }
 
-
+      //from/to dates. Correct passed format is 'YYYY-MM-DD'
       if (filters.reservationDatesRange_from && filters.reservationDatesRange_to) {
-        whereClause.dateFrom = {
-          [Op.gte]: filters.reservationDatesRange_from,
-          [Op.lte]: filters.reservationDatesRange_to
-        };
+        //converting eg. '2024-03-24' into '2024-03-24T00:00:00.000Z'
+        filters.reservationDatesRange_from = new Date(filters.reservationDatesRange_from).toISOString(); 
+        filters.reservationDatesRange_to = new Date(filters.reservationDatesRange_to).toISOString();
+
+        whereClause[Op.or] = [
+          // case 1
+          {
+            [Op.and]: [
+              { dateFrom: { [Op.lte]: filters.reservationDatesRange_to } },
+              { dateTo: { [Op.gte]: filters.reservationDatesRange_from } }
+            ]
+          },
+          // case 2
+          {
+            dateFrom: { [Op.between]: [filters.reservationDatesRange_from, filters.reservationDatesRange_to] }
+          },
+          // case 3
+          {
+            dateTo: { [Op.between]: [filters.reservationDatesRange_from, filters.reservationDatesRange_to] }
+          }
+        ];
       }
 
 
