@@ -1,13 +1,14 @@
-import { Pagination } from "../../../types/common";
+import { Pagination } from "../../types/common";
 
 
-type RentalsHistoryTablePaginationProps = {
+
+type PaginationProps = {
   pagination: Pagination,
   setCurrentPage: (pageNumber: number) => void;
 }
 
 
-const RentalsHistoryTablePagination = (props: RentalsHistoryTablePaginationProps) => {
+const Pagination = (props: PaginationProps) => {
 
 
     const handleClick = (pageNumber: number) => {
@@ -27,7 +28,7 @@ const RentalsHistoryTablePagination = (props: RentalsHistoryTablePaginationProps
     };
   
     return (
-      <nav aria-label="Page navigation" className="flex justify-center select-none">
+      <nav aria-label="Page navigation" className="select-none">
         <ul className="list-style-none flex">
 
 
@@ -71,4 +72,4 @@ const RentalsHistoryTablePagination = (props: RentalsHistoryTablePaginationProps
     );
   };
   
-  export default RentalsHistoryTablePagination;
+  export default Pagination;

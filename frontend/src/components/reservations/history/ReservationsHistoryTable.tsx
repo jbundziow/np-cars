@@ -1,6 +1,5 @@
-import { Pagination } from "../../../types/common";
 import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
-import ReservationsHistoryTablePagination from "./ReservationsHistoryTablePagination";
+import Pagination from "../../general/Pagination";
 import ReservationsHistoryTableRow from "./ReservationsHistoryTableRow";
 
 
@@ -86,7 +85,9 @@ const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
           </table>
         </div>
 
-        <ReservationsHistoryTablePagination pagination={props.paginationData} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+        <div className="flex justify-center">
+        <Pagination pagination={props.paginationData} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+        </div>
 
     </>
         :
