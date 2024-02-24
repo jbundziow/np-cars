@@ -1,4 +1,4 @@
-export type Pagination = {
+export type PaginationType = {
     totalCount: number,
     totalPages: number,
     currentPage: number,
@@ -12,7 +12,7 @@ export interface ApiResponse {
     status: 'success' | 'fail' | 'error',
     totalDistance?: number,
     data?: any,
-    pagination?: Pagination,
+    pagination?: PaginationType,
     message?: any,
   }
 

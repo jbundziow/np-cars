@@ -1,3 +1,4 @@
+import { PaginationType } from "../../../types/common";
 import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import Pagination from "../../general/Pagination";
 import ReservationsHistoryTableRow from "./ReservationsHistoryTableRow";
@@ -9,7 +10,7 @@ type ReservationsHistoryTableProps = {
   allCarsBasicData: db_Car_basic[] | [],
   usersData: db_User[] | [],
   setCurrentPage: (pageNumber: number) => void;
-  paginationData: Pagination,
+  paginationData: PaginationType,
 }
 
 

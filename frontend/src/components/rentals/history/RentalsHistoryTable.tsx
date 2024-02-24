@@ -1,3 +1,4 @@
+import { PaginationType } from "../../../types/common";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
 import Pagination from "../../general/Pagination";
 import RentalsHistoryTableRow from "./RentalsHistoryTableRow";
@@ -10,7 +11,7 @@ type RentalsHistoryTableProps = {
   usersData: db_User[] | [],
   placesData: db_Place[] | [],
   setCurrentPage: (pageNumber: number) => void;
-  paginationData: Pagination,
+  paginationData: PaginationType,
   totalDistance: number,
 }
 

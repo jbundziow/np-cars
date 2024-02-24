@@ -1,9 +1,10 @@
-import { Pagination } from "../../types/common";
+import { PaginationType } from "../../types/common";
+
 
 
 
 type PaginationProps = {
-  pagination: Pagination,
+  pagination: PaginationType,
   setCurrentPage: (pageNumber: number) => void;
 }
 

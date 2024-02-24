@@ -3,7 +3,7 @@ import RentalsHistoryTable from "./RentalsHistoryTable";
 import RentalTableFiltering from "./RentalTableFiltering";
 import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
-import { Pagination } from "../../../types/common";
+import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
 
 
@@ -15,7 +15,7 @@ type RentalsHistoryProps = {
     placesData: db_Place[] | [],
     setFilters: Function,
     setCurrentPage: (pageNumber: number) => void,
-    paginationData: Pagination,
+    paginationData: PaginationType,
     totalDistance: number,
     loadingTable: boolean,
   }

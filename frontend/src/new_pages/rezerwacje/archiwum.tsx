@@ -3,7 +3,7 @@ import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
 import DOMAIN_NAME from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
-import { ApiResponse, Pagination } from "../../types/common";
+import { ApiResponse, PaginationType } from "../../types/common";
 import ReservationsHistory from "../../components/reservations/history/ReservationsHistory";
 import Loader from "../../common/Loader";
 
@@ -23,7 +23,7 @@ const ReservationArchive = (props: Props) => {
     const [data3, setData3] = useState<ApiResponse>();  //all users data
     const [filters, setFilters] = useState<string>('%7B%7D'); //%7B%7D is an empty object {}
     const [currentPage, setCurrentPage] = useState<number>(1) //current page for pagination
-    const [paginationData, setPaginationData] = useState<Pagination>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false}) //pagination data
+    const [paginationData, setPaginationData] = useState<PaginationType>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false}) //pagination data
 
 
     const [failData, setFailData] = useState<ApiResponse>();
@@ -36,7 +36,7 @@ const ReservationArchive = (props: Props) => {
     useEffect(() => {
       const getData = async () => {
         setLoadingTable(true)
-        
+
         const res1 = await fetchData(`${DOMAIN_NAME}/reservations?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) {setPaginationData(res1.pagination)}

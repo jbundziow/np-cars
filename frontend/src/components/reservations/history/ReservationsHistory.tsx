@@ -3,7 +3,7 @@ import ReservationsHistoryTable from "./ReservationsHistoryTable";
 import ReservationTableFiltering from "./ReservationTableFiltering";
 import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
-import { Pagination } from "../../../types/common";
+import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
 
 
@@ -14,7 +14,7 @@ type ReservationsHistoryProps = {
     usersData: db_User[] | [],
     setFilters: Function,
     setCurrentPage: (pageNumber: number) => void,
-    paginationData: Pagination,
+    paginationData: PaginationType,
     loadingTable: boolean,
   }
 
