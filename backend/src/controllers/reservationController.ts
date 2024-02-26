@@ -103,7 +103,7 @@ export const deleteOneReservation_DELETE_user = async (req: Request, res: Respon
 
     try {
         const isReservationExist = await Reservation.fetchOne(Number(data.reservationID))
-        const {id: userID} = await identifyUserId(req.cookies.jwt);
+        const {id: userID, role: userRole} = await identifyUserId(req.cookies.jwt);
         const isUserExist = await User.fetchOne(userID, false)
 
         if(!isReservationExist) {
@@ -114,7 +114,7 @@ export const deleteOneReservation_DELETE_user = async (req: Request, res: Respon
             res.status(400).json({status: 'fail', data: [{en: `The user of id: ${userID} does not exist in the database.`, pl: `Użytkownik o ID: ${userID} nie istnieje w bazie danych.`}]})
             return;
         }
-        if(isReservationExist.dataValues.userID !== userID) {
+        if(isReservationExist.dataValues.userID !== userID && userRole !== 'admin') { //admin can delete all reservations
             res.status(400).json({status: 'fail', data: [{en: `You cannot delete a reservation that does not belong to you`, pl: `Nie możesz usunąć rezerwacji, która nie należy do Ciebie.`}]})
             return; 
         }
