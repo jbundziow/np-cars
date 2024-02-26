@@ -90,7 +90,7 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
             {props.loadingTable ? <Loader/> :
             <>
             <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalDistance={props.totalDistance}/>
-            <GenerateRentalExcel url={`${DOMAIN_NAME}/rentals?filters=${props.filters}&pagenumber=1&pagesize=9999`}/>
+            <GenerateRentalExcel url={`${DOMAIN_NAME}/rentals?filters=${props.filters}&pagenumber=1&pagesize=9999&sortfromoldest=true`}/>
             </>
             }
         </div>

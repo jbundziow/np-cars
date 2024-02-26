@@ -193,7 +193,7 @@ class Reservation {
 
 
     
-    static async fetchAllReservationsWithFilters (filters:any, pageSize: number, pageNumber: number) {
+    static async fetchAllReservationsWithFilters (filters:any, pageSize: number, pageNumber: number, sortFromOldest: boolean) {
       const whereClause: any = {};
 
       //arrays
@@ -273,11 +273,14 @@ class Reservation {
       const offset = (pageNumber - 1) * pageSize;
 
 
+      let sortDirection: 'ASC' | 'DESC' = 'DESC';
+      if(sortFromOldest === true) {sortDirection = 'ASC'}
+
       const records = await ReservationModel.findAll({
           where: whereClause,
           limit: pageSize,
           offset: offset,
-          order: [['createdAt', 'DESC']] //sort from the newest
+          order: [['createdAt', sortDirection]] //sort from the newest
       });
 
 

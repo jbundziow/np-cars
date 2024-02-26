@@ -24,6 +24,9 @@ export const fetchAllReservationsWithFilters_GET_user = async (req: Request, res
         return;
     }
 
+    let sortFromOldest = false;
+    if(req.query.sortfromoldest && req.query.sortfromoldest === 'true') {sortFromOldest = true}
+
         try {
             const pageNumber = Number(req.query.pagenumber);
             const pageSize = Number(req.query.pagesize);
@@ -32,7 +35,7 @@ export const fetchAllReservationsWithFilters_GET_user = async (req: Request, res
             let filtersObj = JSON.parse(receivedQueryString);
             filtersObj = removeEmptyValuesFromObject(filtersObj)
             await filtersObjReservationSchema.validateAsync(filtersObj)
-            const response = await Reservation.fetchAllReservationsWithFilters(filtersObj, pageSize, pageNumber)
+            const response = await Reservation.fetchAllReservationsWithFilters(filtersObj, pageSize, pageNumber, sortFromOldest)
             res.status(200).json({status: 'success', data: response.records, pagination: response.pagination})
         }
         catch(e) {

@@ -201,7 +201,7 @@ class Rental {
     }
 
 
-    static async fetchAllRentalsWithFilters (filters:any, pageSize: number, pageNumber: number) {
+    static async fetchAllRentalsWithFilters (filters:any, pageSize: number, pageNumber: number, sortFromOldest: boolean) {
         const whereClause: any = {};
 
         //arrays
@@ -314,12 +314,14 @@ class Rental {
 
         const offset = (pageNumber - 1) * pageSize;
 
+        let sortDirection: 'ASC' | 'DESC' = 'DESC';
+        if(sortFromOldest === true) {sortDirection = 'ASC'}
 
         const records = await RentalModel.findAll({
             where: whereClause,
             limit: pageSize,
             offset: offset,
-            order: [['createdAt', 'DESC']] //sort from the newest
+            order: [['createdAt', sortDirection]] //'DESC' = sort from the newest; 'ASC' = sort from the oldest
         });
 
         

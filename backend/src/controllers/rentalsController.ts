@@ -302,6 +302,9 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
         return;
     }
 
+    let sortFromOldest = false;
+    if(req.query.sortfromoldest && req.query.sortfromoldest === 'true') {sortFromOldest = true}
+
         try {
             const pageNumber = Number(req.query.pagenumber);
             const pageSize = Number(req.query.pagesize);
@@ -310,7 +313,7 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
             let filtersObj = JSON.parse(receivedQueryString);
             filtersObj = removeEmptyValuesFromObject(filtersObj)
             await filtersObjRentalSchema.validateAsync(filtersObj)
-            const response = await Rental.fetchAllRentalsWithFilters(filtersObj, pageSize, pageNumber)
+            const response = await Rental.fetchAllRentalsWithFilters(filtersObj, pageSize, pageNumber, sortFromOldest)
             res.status(200).json({status: 'success', data: response.records, pagination: response.pagination, totalDistance: response.totalDistance})
 
         }

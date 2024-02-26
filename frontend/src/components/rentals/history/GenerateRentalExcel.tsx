@@ -4,6 +4,7 @@ import { CSVLink } from "react-csv";
 import fetchData from "../../../utilities/fetchData";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
+import { dateFormatter } from "../../../utilities/dateFormatter";
 
 
 type GenerateRentalExcelProps = {
@@ -12,35 +13,7 @@ type GenerateRentalExcelProps = {
   
   
   export default function GenerateRentalExcel(props: GenerateRentalExcelProps) {
-    // const [data1, setData1] = useState<ApiResponse>();  //rentals data from backend
 
-    // useEffect(() => {
-    //     const getData = async () => {
-
-    //         try {
-    //             const response1 = await fetch(props.url, {
-    //                 method: 'GET',
-    //                 credentials: 'include'
-    //             });
-    //             const responseJSON = await response1.json();
-        
-    //             if(responseJSON.status === 'success') {
-    //               setData1({status: 'success', data: responseJSON});
-
-    //               const response2 = await fetch(props.url, {
-    //                 method: 'GET',
-    //                 credentials: 'include'
-    //               });
-    //               const response2JSON = await response2.json();
-    //             }
-    //         }
-            
-    //         catch(err: any) {
-    //             ;
-    //             }
-    //     }
-    //     getData()
-    //   }, [])
 
     const [data1, setData1] = useState<ApiResponse>();  //rentals data from backend
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
@@ -115,6 +88,16 @@ type GenerateRentalExcelProps = {
         {label: 'Ostatnia edycja w bazie danych', key: 'updatedAt'},
       ]
 
+      const prettyLink  = {
+        backgroundColor: '#8dc63f',
+        fontSize: 14,
+        fontWeight: 500,
+        height: 52,
+        padding: '0 48px',
+        borderRadius: 5,
+        color: '#fff'
+      };
+
 
 let transformedData = [];
 if(data1?.data && data2?.data && data3?.data && data4?.data) {
@@ -127,15 +110,15 @@ if(data1?.data && data2?.data && data3?.data && data4?.data) {
 
     return {
       ...rental,
-      carID: carObject ? `${carObject.brand} ${carObject.model}` : 'brak', // transform carID
-      userID: rentalUserObject ? `${rentalUserObject.name} ${rentalUserObject.surname}` : 'brak', // transform userID
-      returnUserID: returnUserObject ? `${returnUserObject.name} ${returnUserObject.surname}` : 'brak', // transform returnUserID
-      lastEditedByModeratorOfID: acknowledgedByModeratorObject ? `${acknowledgedByModeratorObject.name} ${acknowledgedByModeratorObject.surname}` : 'brak', // transform lastEditedByModeratorOfID
-      placeID: placeObject ? placeObject.projectCode : 'brak', // transform placeID
-      dateFrom: new Date(rental.dateFrom).toLocaleDateString(), // transform dateFrom
-      // dateTo: new Date(rental.dateTo).toLocaleDateString(), // transform dateTo
-      createdAt: new Date(rental.createdAt).toLocaleDateString(), // transform createdAt
-      updatedAt: new Date(rental.updatedAt).toLocaleDateString(), // transform updatedAt
+      carID: carObject ? `${carObject.brand} ${carObject.model}` : '',
+      userID: rentalUserObject ? `${rentalUserObject.name} ${rentalUserObject.surname}` : '',
+      returnUserID: returnUserObject ? `${returnUserObject.name} ${returnUserObject.surname}` : '',
+      lastEditedByModeratorOfID: acknowledgedByModeratorObject ? `${acknowledgedByModeratorObject.name} ${acknowledgedByModeratorObject.surname}` : 'NIE',
+      placeID: placeObject ? placeObject.projectCode : '',
+      dateFrom: dateFormatter(rental.dateFrom.toString()),
+      dateTo: rental.dateTo ? dateFormatter(rental.dateTo.toString()) : '',
+      createdAt: dateFormatter(rental.createdAt.toString()),
+      updatedAt: dateFormatter(rental.updatedAt.toString()),      
     };
   });
 }
@@ -143,7 +126,13 @@ if(data1?.data && data2?.data && data3?.data && data4?.data) {
     return (
         <div>
         <h1>GenerateExcel</h1>
-        <CSVLink data={transformedData} headers={headers} separator={";"}>
+        <CSVLink
+        data={transformedData}
+        headers={headers}
+        separator={";"}
+        filename={"wypozyczenia.csv"}
+        style={prettyLink}
+        >
         Download me
       </CSVLink>;
         </div>
