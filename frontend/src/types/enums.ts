@@ -4,3 +4,10 @@ export enum FormPageStatus {
     ErrorWithSendingForm,
     FailOnSendingForm
   }
+
+
+  export enum generateExcelPageState {
+    initial,
+    loading,
+    ready,
+  }

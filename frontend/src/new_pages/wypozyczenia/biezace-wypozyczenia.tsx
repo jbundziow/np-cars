@@ -50,7 +50,7 @@ const ActualRentals = (props: Props) => {
 
     return (
       <>
-      <Breadcrumb pageName="Bieżące wypożyczenia" />
+      <Breadcrumb pageName="Bieżące wypożyczenia wszystkich użytkowników" />
 
       {loading === true ? <Loader/> : (!isFail && !isError) ? <ActualRentalsTable pendingRentals={data1?.data} carsData={data2?.data} usersData={data3?.data} /> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       

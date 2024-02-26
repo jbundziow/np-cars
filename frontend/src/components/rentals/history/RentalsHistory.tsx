@@ -6,7 +6,6 @@ import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_ty
 import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
 import GenerateRentalExcel from "./GenerateRentalExcel";
-import DOMAIN_NAME from "../../../utilities/domainName";
 
 
 
@@ -25,6 +24,9 @@ type RentalsHistoryProps = {
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
 
+
+ 
+
     const [activeElement, setActiveElement] = useState("");
 
     const handleClick = (value: string) => {
@@ -35,6 +37,7 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
       }
     };
 
+    
 
     return (
         <>
@@ -90,7 +93,9 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
             {props.loadingTable ? <Loader/> :
             <>
             <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalDistance={props.totalDistance}/>
-            <GenerateRentalExcel url={`${DOMAIN_NAME}/rentals?filters=${props.filters}&pagenumber=1&pagesize=9999&sortfromoldest=true`}/>
+
+            <GenerateRentalExcel filters={props.filters}/>
+
             </>
             }
         </div>
