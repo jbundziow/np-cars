@@ -1,4 +1,4 @@
-import { db_Car_basic, db_Reservation } from "../../../types/db_types";
+import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import FutureReservationsTableRow from "./FutureReservationsTableRow";
 
 
@@ -7,6 +7,7 @@ import FutureReservationsTableRow from "./FutureReservationsTableRow";
 type FutureReservationsTableProps = {
   reservationsData: db_Reservation[] | [],
   allCarsBasicData: db_Car_basic[] | [],
+  usersData: db_User[] | [],
 }
 
 
@@ -41,9 +42,10 @@ const FutureReservationsTable = (props: FutureReservationsTableProps) => {
             
                {/* INSERT ROWS HERE */}
               {props.reservationsData.map(reservation => {
-                const carData = props.allCarsBasicData.find(car => car.id === reservation.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
+                const carData = props.allCarsBasicData.find(car => car.id === reservation.carID);
+                const userData = props.usersData.find((user: db_User) => user.id === reservation.userID)
                 return (
-                <FutureReservationsTableRow carData={carData} reservationData={reservation} />
+                <FutureReservationsTableRow carData={carData} reservationData={reservation} userData={userData} />
                 );
                }
               )}

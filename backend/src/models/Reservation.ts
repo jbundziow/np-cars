@@ -249,6 +249,16 @@ class Reservation {
           }
         ];
       }
+      else if(filters.reservationDatesRange_from && !filters.reservationDatesRange_to) {
+        //converting eg. '2024-03-24' into '2024-03-24T00:00:00.000Z'
+        filters.reservationDatesRange_from = new Date(filters.reservationDatesRange_from).toISOString(); 
+        whereClause.dateTo = { [Op.gte]: filters.reservationDatesRange_from };
+      }
+      else if(!filters.reservationDatesRange_from && filters.reservationDatesRange_to) {
+        //converting eg. '2024-03-24' into '2024-03-24T00:00:00.000Z'
+        filters.reservationDatesRange_to = new Date(filters.reservationDatesRange_to).toISOString();
+        whereClause.dateFrom = { [Op.lte]: filters.reservationDatesRange_to };
+      }
 
 
 
