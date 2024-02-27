@@ -523,7 +523,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                                 (isActive && '!text-white')
                               }
                             >
-                              Archiwum
+                              Archiwum tankowań
                             </NavLink>
                           </li>
 

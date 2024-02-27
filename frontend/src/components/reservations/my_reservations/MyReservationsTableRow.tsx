@@ -43,7 +43,7 @@ const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
             
           }
           catch (error) {
-            ;
+            setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania rezerwacji. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
           }
     }
 

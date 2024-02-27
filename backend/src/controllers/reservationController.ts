@@ -120,7 +120,7 @@ export const deleteOneReservation_DELETE_user = async (req: Request, res: Respon
         }
 
         const dateToday = new Date(getFormattedDate(new Date())) //date today but in format "2024-02-12T00:00:00.000Z". Hours, minutes, seconds set to 0.
-        if(isReservationExist.dataValues.dateTo < dateToday) {
+        if(isReservationExist.dataValues.dateTo < dateToday && userRole !== 'admin') {
             res.status(400).json({status: 'fail', data: [{en: `You cannot delete past reservations. Only administrator has permissions to do it.`, pl: `Nie możesz usuwać przeszłych rezerwacji. Tylko administrator może to zrobić.`}]})
             return; 
         }

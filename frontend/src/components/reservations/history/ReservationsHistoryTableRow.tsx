@@ -10,6 +10,7 @@ import { useState } from "react";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
+import useAuth from "../../../hooks/useAuth";
 
 
 
@@ -48,12 +49,12 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
             
           }
           catch (error) {
-            ;
+            setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania rezerwacji. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
           }
     }
 
 
-    
+    const { auth } = useAuth();
 
     const reservationUserObject = props.usersData.find(user => user.id === props.reservationData.userID);
     const lastEditedByModeratorUserObject = props.usersData.find(user => user.id === props.reservationData.lastEditedByModeratorOfID)
@@ -130,12 +131,16 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
         </p>
         </div>
     </td>
+    {auth.userRole === 'admin' ?
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-end space-x-3.5">
             <EditButton linkTo={`/rezerwacje/edycja/${props.reservationData.id}`} linkTarget="_blank"/>
             <DeleteButton onClick={() => {setShowWarningModal(true)}}/>
         </div>
     </td>
+    :
+    null
+    }
 
     </tr>
     :

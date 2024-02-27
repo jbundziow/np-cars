@@ -1,3 +1,4 @@
+import useAuth from "../../../hooks/useAuth";
 import { PaginationType } from "../../../types/common";
 import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import Pagination from "../../general/Pagination";
@@ -14,8 +15,10 @@ type ReservationsHistoryTableProps = {
 }
 
 
+
 const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
 
+  const { auth } = useAuth();
 
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
@@ -52,9 +55,13 @@ const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Ostatnia edycja w bazie danych
                 </th>
+                {auth.userRole === 'admin' ?
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Działania
                 </th>
+                :
+                null
+                }
                 
                 
               </tr>
@@ -84,7 +91,7 @@ const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
               <td></td>
               <td></td>
               <td></td>
-              <td></td>
+              {auth.userRole === 'admin' ? <td></td> : null}
               </tr>
             </tbody>
           </table>
