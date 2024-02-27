@@ -18,6 +18,10 @@ const RefuelingModel = sequelize.define('Refueling', {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
+      refuelingDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+      },
       lastEditedByModeratorOfID: {
         type: DataTypes.INTEGER,
         allowNull: true,
@@ -55,7 +59,7 @@ const RefuelingModel = sequelize.define('Refueling', {
         allowNull: true,
       },
       isAcknowledgedByModerator: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.INTEGER,
         allowNull: true,
       },
 })
@@ -73,6 +77,7 @@ class Refueling {
         private id: number | null,
         private carID: number,
         private userID: number,
+        private refuelingDate: Date,
         private lastEditedByModeratorOfID: number | null,
         private carMileage: number,
         private averageConsumption: null, //count by backend
@@ -90,6 +95,7 @@ class Refueling {
           id: this.id,
           carID: this.carID,
           userID: this.userID,
+          refuelingDate: this.refuelingDate,
           lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
           carMileage: this.carMileage,
           averageConsumption: this.averageConsumption,
