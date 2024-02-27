@@ -26,7 +26,7 @@ const PlaceModel = sequelize.define('Place', {
         allowNull: false,
       },
       status: {
-        type: DataTypes.ENUM('active', 'banned'),
+        type: DataTypes.ENUM('active', 'closed', 'banned'),
         allowNull: false
       },
 
@@ -46,7 +46,7 @@ class Place {
         private projectCode: string,
         private placeName: string,
         private projectName: string,
-        private status: 'active' | 'banned',
+        private status: 'active' | 'closed' | 'banned',
         ) {}
 
     async addOnePlace() {

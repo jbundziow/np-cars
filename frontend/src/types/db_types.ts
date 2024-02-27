@@ -100,7 +100,7 @@ export type db_Place = {
     projectCode: string,
     placeName: string,
     projectName: string,
-    status: 'active' | 'banned',
+    status: 'active' | 'closed' | 'banned',
     
     createdAt: Date,
     updatedAt: Date,

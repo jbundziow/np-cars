@@ -1,7 +1,6 @@
 const {DataTypes} = require('sequelize');
 
 
-
 import sequelize from "../database/database";
 const RefuelingModel = sequelize.define('Refueling', {
     id: {
@@ -31,13 +30,29 @@ const RefuelingModel = sequelize.define('Refueling', {
         type: DataTypes.REAL,
         allowNull: false,
       },
+      averageConsumption: {
+        type: DataTypes.REAL,
+        allowNull: true,
+      },
       costBrutto: {
+        type: DataTypes.REAL,
+        allowNull: true,
+      },
+      costPerLiter: {
         type: DataTypes.REAL,
         allowNull: true,
       },
       isFuelCardUsed: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
+      },
+      moneyReturned: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true,
+      },
+      invoiceNumber: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       isAcknowledgedByModerator: {
         type: DataTypes.BOOLEAN,
@@ -60,9 +75,13 @@ class Refueling {
         private userID: number,
         private lastEditedByModeratorOfID: number | null,
         private carMileage: number,
+        private averageConsumption: null, //count by backend
         private numberOfLiters: number,
         private costBrutto: number | null,
+        private costPerLiter: null, //count by backend
         private isFuelCardUsed: boolean,
+        private moneyReturned: boolean | null,
+        private invoiceNumber: string | null,
         private isAcknowledgedByModerator: boolean | null,
         ) {}
 
@@ -73,28 +92,32 @@ class Refueling {
           userID: this.userID,
           lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
           carMileage: this.carMileage,
+          averageConsumption: this.averageConsumption,
           numberOfLiters: this.numberOfLiters,
           costBrutto: this.costBrutto,
+          costPerLiter: this.costPerLiter,
           isFuelCardUsed: this.isFuelCardUsed,
+          moneyReturned: this.moneyReturned,
+          invoiceNumber: this.invoiceNumber,
           isAcknowledgedByModerator: this.isAcknowledgedByModerator,
         })
     }
 
-    async updateOneRefueling() {
-      await RefuelingModel.update({
-        // id: this.id,
-        // carID: this.carID,
-        userID: this.userID,
-        lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
-        carMileage: this.carMileage,
-        numberOfLiters: this.numberOfLiters,
-        costBrutto: this.costBrutto,
-        isFuelCardUsed: this.isFuelCardUsed,
-        isAcknowledgedByModerator: this.isAcknowledgedByModerator,
-      },
-      {where: {id: this.id}}
-      )
-    }
+    // async updateOneRefueling() {
+    //   await RefuelingModel.update({
+    //     // id: this.id,
+    //     // carID: this.carID,
+    //     userID: this.userID,
+    //     lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+    //     carMileage: this.carMileage,
+    //     numberOfLiters: this.numberOfLiters,
+    //     costBrutto: this.costBrutto,
+    //     isFuelCardUsed: this.isFuelCardUsed,
+    //     isAcknowledgedByModerator: this.isAcknowledgedByModerator,
+    //   },
+    //   {where: {id: this.id}}
+    //   )
+    // }
 
     static async fetchAll() {
         return await RefuelingModel.findAll()
@@ -109,17 +132,17 @@ class Refueling {
         where: {
           carID: carid,
         },
-        order: [['id', 'DESC']],
+        order: [['carMileage', 'DESC']],
       })
     }
 
-    static async acknowledgeRefuelingByModerator(refuelingID: number, value: boolean) {
-      return await RefuelingModel.update({
-        acknowledgeRefuelingByModerator: value
-      },
-      {where: {id: refuelingID}},
-      );
-    }
+    // static async acknowledgeRefuelingByModerator(refuelingID: number, value: boolean) {
+    //   return await RefuelingModel.update({
+    //     acknowledgeRefuelingByModerator: value
+    //   },
+    //   {where: {id: refuelingID}},
+    //   );
+    // }
 
 
 }
