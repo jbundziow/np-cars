@@ -1,6 +1,8 @@
+import { Link } from "react-router-dom"
 
 type EditButtonProps = {
-    onClick: () => void
+    linkTo: string,
+    linkTarget: '_blank' | '_self'
   }
   
   
@@ -8,7 +10,7 @@ type EditButtonProps = {
 
 
     return (
-        <button className="hover:text-primary" onClick={props.onClick}>
+        <Link className="hover:text-primary" to={props.linkTo} target={props.linkTarget}>
             <svg
             className="fill-current"
             width="18"
@@ -22,6 +24,6 @@ type EditButtonProps = {
                 fill=""
             />
             </svg>
-        </button>
+        </Link>
     )
   }

@@ -4,12 +4,12 @@ import UserSpan from "../../general/spanElements/UserSpan";
 import StyledSpan from "../../general/spanElements/StyledSpan";
 import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import formatDate from "../../../utilities/formatDate";
-import EditButton from "../../general/buttons/editButton";
+import EditButton from "../../general/buttons/EditButton";
 import DeleteButton from "../../general/buttons/DeleteButton";
 import { useState } from "react";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
-import Alert from "../../general/buttons/Alert";
+import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 
 
 
@@ -25,6 +25,8 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
     const [rowDeleted, setRowDeleted] = useState<boolean>(false);
 
     const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
+    const [alertOptions, setAlertOptions] = useState<alertOptionsObject>({showAlert: false, color: 'danger', text: '#ERR#', dismiss_button: false, autohide: true, delay_ms: 1, key: 1});
+
     const deleteReservation = async () => {
         try {
             const response = await fetch(`${DOMAIN_NAME}/reservations`, {
@@ -36,7 +38,13 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
               body: JSON.stringify({reservationID: props.reservationData.id}),
             });
             const responseJSON = await response.json();
-            if(responseJSON.status === 'success') {setRowDeleted(true)}
+            if(responseJSON.status === 'success') {
+                setRowDeleted(true)
+                setAlertOptions(({showAlert: true, color: 'success', text: 'Pomyślnie usunięto rezerwację.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+            }
+            else {
+                setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania rezerwacji. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+            }
             
           }
           catch (error) {
@@ -45,7 +53,7 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
     }
 
 
-    const [x, setX] = useState<boolean>(false);
+    
 
     const reservationUserObject = props.usersData.find(user => user.id === props.reservationData.userID);
     const lastEditedByModeratorUserObject = props.usersData.find(user => user.id === props.reservationData.lastEditedByModeratorOfID)
@@ -53,7 +61,7 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
     return (
     <>
     <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Usuń rezerwację'} bodyText={`Czy na pewno chcesz usunąć tę rezerwację? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteReservation() }/>
-    {x ? <Alert/> : <></>}
+    <FixedAlert options={alertOptions}/>
     {!rowDeleted ? 
     <tr className="hover:bg-gray-2 dark:hover:bg-meta-4 text-center">
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
@@ -124,7 +132,7 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-end space-x-3.5">
-            <EditButton onClick={()=>{console.log('edit'); setX(true)}}/>
+            <EditButton linkTo={`/rezerwacje/edycja/${props.reservationData.id}`} linkTarget="_blank"/>
             <DeleteButton onClick={() => {setShowWarningModal(true)}}/>
         </div>
     </td>
