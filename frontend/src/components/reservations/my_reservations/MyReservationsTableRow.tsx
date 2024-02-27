@@ -8,6 +8,7 @@ import { db_Car_basic, db_Reservation } from "../../../types/db_types";
 
 
 
+
 interface MyReservationsTableRowProps {
     carData: db_Car_basic;
     reservationData: db_Reservation;
@@ -20,7 +21,7 @@ const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
     const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
     const deleteReservation = async () => {
         try {
-            await fetch(`${DOMAIN_NAME}/reservations`, {
+            const response = await fetch(`${DOMAIN_NAME}/reservations`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',
@@ -28,8 +29,9 @@ const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
               credentials: 'include',
               body: JSON.stringify({reservationID: props.reservationData.id}),
             });
-
-            setReservationDeleted(true)
+            const responseJSON = await response.json();
+            if(responseJSON.status === 'success') {setReservationDeleted(true)}
+            
           }
           catch (error) {
             ;
