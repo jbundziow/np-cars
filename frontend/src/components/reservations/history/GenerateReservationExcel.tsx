@@ -3,22 +3,23 @@ import { ApiResponse } from "../../../types/common";
 import { CSVLink } from "react-csv";
 import fetchData from "../../../utilities/fetchData";
 import DOMAIN_NAME from "../../../utilities/domainName";
-import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
+import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import { dateFormatter } from "../../../utilities/dateFormatter";
 import { generateExcelPageState } from "../../../types/enums";
+import formatDate from "../../../utilities/formatDate";
 
 
-type GenerateRentalExcelProps = {
+type GenerateReservationExcelProps = {
     filters: string,
   }
   
   
-  export default function GenerateRentalExcel(props: GenerateRentalExcelProps) {
+  export default function GenerateRentalExcel(props: GenerateReservationExcelProps) {
 
 
 
 
-    const [transformedData, setTransformedData] = useState<db_Rental[] | []>([])
+    const [transformedData, setTransformedData] = useState<db_Reservation[] | []>([])
 
     // @ts-ignore //failData is never used
     const [failData, setFailData] = useState<ApiResponse>();
@@ -39,35 +40,31 @@ type GenerateRentalExcelProps = {
       const getData = async () => {
         setPageState(generateExcelPageState.loading)
 
-        const res1 = await fetchData(`${DOMAIN_NAME}/rentals?filters=${props.filters}&pagenumber=1&pagesize=9999&sortfromoldest=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${DOMAIN_NAME}/reservations?filters=${props.filters}&pagenumber=1&pagesize=9999&sortfromoldest=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         if(res1.status==='success') {
           const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           if(res2.status==='success') {
             const res3 = await fetchData(`${DOMAIN_NAME}/users?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-            if(res3.status==='success') {
-              const res4 = await fetchData(`${DOMAIN_NAME}/places?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-              
+            
 
 
-                const transformedData = res1.data.map((rental: db_Rental) => {
 
-                const carObject: db_Car_basic | undefined = res2.data.find((car: db_Car_basic) => car.id === rental.carID);
-                const rentalUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === rental.userID);
-                const returnUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === rental.returnUserID);
-                const acknowledgedByModeratorObject: db_User | undefined = res3.data.find((user: db_User) => user.id === rental.lastEditedByModeratorOfID)
-                const placeObject: db_Place | undefined = res4.data.find((place: db_Place) => place.id === rental.placeID)
+                const transformedData = res1.data.map((reservation: db_Reservation) => {
+
+                const carObject: db_Car_basic | undefined = res2.data.find((car: db_Car_basic) => car.id === reservation.carID);
+                const reservationUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === reservation.userID);
+                const moderatorUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === reservation.lastEditedByModeratorOfID)
+
 
                 return {
-                  ...rental,
+                  ...reservation,
                   carID: carObject ? `${carObject.brand} ${carObject.model}` : '',
-                  userID: rentalUserObject ? `${rentalUserObject.name} ${rentalUserObject.surname}` : '',
-                  returnUserID: returnUserObject ? `${returnUserObject.name} ${returnUserObject.surname}` : '',
-                  lastEditedByModeratorOfID: acknowledgedByModeratorObject ? `${acknowledgedByModeratorObject.name} ${acknowledgedByModeratorObject.surname}` : '',
-                  placeID: placeObject ? placeObject.projectCode : '',
-                  dateFrom: dateFormatter(rental.dateFrom.toString()),
-                  dateTo: rental.dateTo ? dateFormatter(rental.dateTo.toString()) : '',
-                  createdAt: dateFormatter(rental.createdAt.toString()),
-                  updatedAt: dateFormatter(rental.updatedAt.toString()),      
+                  userID: reservationUserObject ? `${reservationUserObject.name} ${reservationUserObject.surname}` : '',
+                  lastEditedByModeratorOfID: moderatorUserObject ? `${moderatorUserObject.name} ${moderatorUserObject.surname}` : '',
+                  dateFrom: formatDate(new Date(reservation.dateFrom)),
+                  dateTo: formatDate(new Date(reservation.dateTo)),
+                  createdAt: dateFormatter(reservation.createdAt.toString()),
+                  updatedAt: dateFormatter(reservation.updatedAt.toString()),      
                 };
 
               });
@@ -79,8 +76,7 @@ type GenerateRentalExcelProps = {
 
               setTimeout(() => { setPageState(generateExcelPageState.ready) }, 500)
               
-              
-            }
+            
           }
         }
       
@@ -89,16 +85,11 @@ type GenerateRentalExcelProps = {
 
       const headers = [
         {label: 'Samochód', key: 'carID'},
-        {label: 'Wypożyczone przez użytkownika', key: 'userID'},
-        {label: 'Data wypożyczenia', key: 'dateFrom'},
-        {label: 'Data zwrotu', key: 'dateTo'},
-        {label: 'Przebieg początkowy [km]', key: 'carMileageBefore'},
-        {label: 'Przebieg końcowy [km]', key: 'carMileageAfter'},
-        {label: 'Przejechany dystans [km]', key: 'distance'},
+        {label: 'Właściciel rezerwacji', key: 'userID'},
+        {label: 'Edycja przez moderatora', key: 'lastEditedByModeratorOfID'},
+        {label: 'Rezerwacja od', key: 'dateFrom'},
+        {label: 'Rezerwacja do', key: 'dateTo'},
         {label: 'Cel podróży', key: 'travelDestination'},
-        {label: 'Zawrócone przez użytkownika', key: 'returnUserID'},
-        {label: 'Zatwierdzone przez moderatora', key: 'lastEditedByModeratorOfID'},
-        {label: 'Przypisany numer projektu', key: 'placeID'},
         {label: 'ID', key: 'id'},
         {label: 'Utworzono w bazie danych', key: 'createdAt'},
         {label: 'Ostatnia edycja w bazie danych', key: 'updatedAt'},
@@ -151,7 +142,7 @@ type GenerateRentalExcelProps = {
           data={transformedData}
           headers={headers}
           separator={";"}
-          filename={"wypozyczenia.csv"}
+          filename={"rezerwacje.csv"}
 
           >{csv_SVG}Gotowe! Pobierz plik</CSVLink>
           </button>

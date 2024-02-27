@@ -5,6 +5,7 @@ import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
+import GenerateReservationExcel from "./GenerateReservationExcel";
 
 
 
@@ -16,6 +17,7 @@ type ReservationsHistoryProps = {
     setCurrentPage: (pageNumber: number) => void,
     paginationData: PaginationType,
     loadingTable: boolean,
+    filters: string,
   }
 
 const ReservationsHistory = (props: ReservationsHistoryProps) => {
@@ -83,7 +85,12 @@ const ReservationsHistory = (props: ReservationsHistoryProps) => {
                 </div>
             </div>
             {props.loadingTable ? <Loader/> :
+            <>
             <ReservationsHistoryTable reservationsData={props.reservationsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} />
+
+            <GenerateReservationExcel filters={props.filters}/>
+            
+            </>
             }
         </div>
         </>

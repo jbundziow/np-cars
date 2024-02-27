@@ -61,7 +61,7 @@ const ReservationArchive = (props: Props) => {
       <>
       <Breadcrumb pageName="Archiwum rezerwacji" />
 
-      {loadingData ? <Loader/> : (!isFail && !isError) ? <ReservationsHistory allCarsBasicData={data2?.data} reservationsData={data1?.data} usersData={data3?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData} loadingTable={loadingTable}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loadingData ? <Loader/> : (!isFail && !isError) ? <ReservationsHistory allCarsBasicData={data2?.data} reservationsData={data1?.data} usersData={data3?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData} loadingTable={loadingTable} filters={filters}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };
