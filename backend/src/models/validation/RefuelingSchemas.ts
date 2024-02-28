@@ -91,6 +91,89 @@ const updateOneRefuelingByModeratorSchema = Joi.object({
 
 
 
+const filtersObjRefuelingSchema = Joi.object({
+    carIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
 
-export { addOneRefuelingByNormalUserSchema, updateOneRefuelingByModeratorSchema };
+    userIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+    
+    refuelingDateRange_from: Joi.date()
+        .optional(),
+
+    refuelingDateRange_to: Joi.date()
+        .optional(),
+    
+    carMileage_from: Joi.number()
+        .min(0)
+        .optional(),
+
+    carMileage_to: Joi.number()
+        .min(0)
+        .optional(),
+
+    numberOfLiters_from: Joi.number()
+        .min(0)
+        .optional(),
+
+    numberOfLiters_to: Joi.number()
+        .min(0)
+        .optional(),
+
+    averageConsumption_from: Joi.number()
+        .min(0)
+        .optional(),
+
+    averageConsumption_to: Joi.number()
+        .min(0)
+        .optional(),
+
+    costBrutto_from: Joi.number()
+        .min(0)
+        .optional(),
+
+    costBrutto_to: Joi.number()
+        .min(0)
+        .optional(),
+
+    costPerLiter_from: Joi.number()
+        .min(0)
+        .optional(),
+
+    costPerLiter_to: Joi.number()
+        .min(0)
+        .optional(),
+
+    isFuelCardUsed: Joi.boolean()
+        .optional(),
+
+    moneyReturned: Joi.boolean()
+        .optional(),
+
+    invoiceNumber: Joi.string()
+        .min(1)
+        .optional(),
+
+    isAcknowledgedByModerator: Joi.boolean()
+        .optional(),
+
+    isAcknowledgedByModeratorIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+
+    lastEditedByModerator: Joi.boolean()
+        .optional(),
+
+    lastEditedByModeratorIDs: Joi.array()
+        .items(Joi.number().positive().integer())
+        .optional(),
+
+});
+
+
+
+
+export { addOneRefuelingByNormalUserSchema, updateOneRefuelingByModeratorSchema, filtersObjRefuelingSchema };
 

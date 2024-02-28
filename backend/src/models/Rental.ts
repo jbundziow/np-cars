@@ -163,8 +163,11 @@ class Rental {
       return await RentalModel.findOne({
         where: {
           carID: carid,
+          [Op.or]: [
+            { carMileageBefore: { [Op.eq]: sequelize.literal(`(SELECT MAX(carMileageBefore) FROM Rental WHERE carID = ${carid})`) } },
+            { carMileageAfter: { [Op.eq]: sequelize.literal(`(SELECT MAX(carMileageAfter) FROM Rental WHERE carID = ${carid})`) } }
+          ]
         },
-        order: [['id', 'DESC']],
       })
     }
 
