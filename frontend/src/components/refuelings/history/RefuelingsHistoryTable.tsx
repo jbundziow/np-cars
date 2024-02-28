@@ -2,6 +2,7 @@ import useAuth from "../../../hooks/useAuth";
 import { PaginationType } from "../../../types/common";
 import { db_Car_basic, db_Refueling, db_User } from "../../../types/db_types";
 import Pagination from "../../general/Pagination";
+import StyledSpan from "../../general/spanElements/StyledSpan";
 import RefuelingsHistoryTableRow from "./RefuelingsHistoryTableRow";
 
 
@@ -12,6 +13,11 @@ type RefuelingsHistoryTableProps = {
   usersData: db_User[] | [],
   setCurrentPage: (pageNumber: number) => void;
   paginationData: PaginationType,
+
+  totalNumberOfLiters?: number,
+  averageConsumption?: number | null,
+  totalCostBrutto?: number,
+  averageCostPerLiter?: number | null,
 }
 
 
@@ -107,11 +113,31 @@ const RefuelingsHistoryTable = (props: RefuelingsHistoryTableProps) => {
               </td>
               <td></td>
               <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
+              <td className="pt-3 px-5">
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap font-medium bg-primary bg-opacity-20 rounded-full py-1 px-3'>Statystki dla tego zapytania:</p>
+                </div>  
+              </td>
+              <td className="pt-3 px-5">
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łącznie: {props.totalNumberOfLiters} litrów</p>
+                </div>  
+              </td>
+              <td className="pt-3 px-5">
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Średnia: {props.averageConsumption} l/100km</p>
+                </div>  
+              </td>
+              <td className="pt-3 px-5">
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łącznie: {props.totalCostBrutto} zł brutto</p>
+                </div>  
+              </td>
+              <td className="pt-3 px-5">
+                <div className="flex justify-center">
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Średnia: {props.averageCostPerLiter} zł brutto</p>
+                </div>  
+              </td>
               <td></td>
               <td></td>
               <td></td>

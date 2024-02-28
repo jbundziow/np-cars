@@ -81,7 +81,7 @@ export const fetchAllRefuelingsWithFilters_GET_user = async (req: Request, res: 
             filtersObj = removeEmptyValuesFromObject(filtersObj)
             await filtersObjRefuelingSchema.validateAsync(filtersObj)
             const response = await Refueling.fetchAllRefuelingsWithFilters(filtersObj, pageSize, pageNumber, sortFromOldest)
-            res.status(200).json({status: 'success', data: response.records, pagination: response.pagination})
+            res.status(200).json({status: 'success', data: response.records, pagination: response.pagination, totalNumberOfLiters: response.totalNumberOfLiters, averageConsumption: response.averageConsumption, totalCostBrutto: response.totalCostBrutto, averageCostPerLiter: response.averageCostPerLiter})
 
         }
         catch(e) {

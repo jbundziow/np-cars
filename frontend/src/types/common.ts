@@ -10,10 +10,19 @@ export type PaginationType = {
 
 export interface ApiResponse {
     status: 'success' | 'fail' | 'error',
-    totalDistance?: number,
     data?: any,
     pagination?: PaginationType,
     message?: any,
+
+
+    //for rentals
+    totalDistance?: number,
+
+    //for refuelings
+    totalNumberOfLiters?: number,
+    averageConsumption?: number | null,
+    totalCostBrutto?: number,
+    averageCostPerLiter?: number | null,
   }
 
 

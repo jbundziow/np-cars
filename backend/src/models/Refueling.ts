@@ -282,16 +282,16 @@ class Refueling {
 
       //from/to dates [add UTC+1 time (Warsaw, Poland). Correct passed date format is '2024-02-20']
       if(filters.refuelingDateRange_from && filters.refuelingDateRange_to) {
-        whereClause.refuelingDateRange = {
+        whereClause.refuelingDate = {
           [Op.gte]: new Date(`${filters.refuelingDateRange_from}T00:00:00+01:00`),
           [Op.lte]: new Date(`${filters.refuelingDateRange_to}T23:59:59+01:00`)
         }
       }
       else if(filters.refuelingDateRange_from) {
-        whereClause.refuelingDateRange = { [Op.gte]: new Date(`${filters.refuelingDateRange_from}T00:00:00+01:00`) }
+        whereClause.refuelingDate = { [Op.gte]: new Date(`${filters.refuelingDateRange_from}T00:00:00+01:00`) }
       }
       else if(filters.refuelingDateRange_to) {
-        whereClause.refuelingDateRange = { [Op.lte]: new Date(`${filters.refuelingDateRange_to}T23:59:59+01:00`) }
+        whereClause.refuelingDate = { [Op.lte]: new Date(`${filters.refuelingDateRange_to}T23:59:59+01:00`) }
       }
 
 

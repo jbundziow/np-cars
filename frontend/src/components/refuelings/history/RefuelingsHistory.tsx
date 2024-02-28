@@ -18,6 +18,11 @@ type RefuelingsHistoryProps = {
     paginationData: PaginationType,
     loadingTable: boolean,
     filters: string,
+
+    totalNumberOfLiters?: number,
+    averageConsumption?: number | null,
+    totalCostBrutto?: number,
+    averageCostPerLiter?: number | null,
   }
 
 const RefuelingsHistory = (props: RefuelingsHistoryProps) => {
@@ -86,7 +91,7 @@ const RefuelingsHistory = (props: RefuelingsHistoryProps) => {
             </div>
             {props.loadingTable ? <Loader/> :
             <>
-            <RefuelingsHistoryTable refuelingsData={props.refuelingsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} />
+            <RefuelingsHistoryTable refuelingsData={props.refuelingsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalNumberOfLiters={props.totalNumberOfLiters} averageConsumption={props.averageConsumption} totalCostBrutto={props.totalCostBrutto} averageCostPerLiter={props.averageCostPerLiter}/>
 
             <GenerateRefuelingExcel filters={props.filters}/>
             
