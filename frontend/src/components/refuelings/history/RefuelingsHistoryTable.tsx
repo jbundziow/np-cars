@@ -2,7 +2,6 @@ import useAuth from "../../../hooks/useAuth";
 import { PaginationType } from "../../../types/common";
 import { db_Car_basic, db_Refueling, db_User } from "../../../types/db_types";
 import Pagination from "../../general/Pagination";
-import StyledSpan from "../../general/spanElements/StyledSpan";
 import RefuelingsHistoryTableRow from "./RefuelingsHistoryTableRow";
 
 

@@ -81,7 +81,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
       if (travelDestination !== '') {
         travelDestinationSubmit = travelDestination;
       }
-      console.log(travelDestinationSubmit);
+      
 
       const response = await fetch(`${DOMAIN_NAME}/rentals`, {
         method: 'POST',

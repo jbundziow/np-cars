@@ -164,8 +164,13 @@ class Rental {
         where: {
           carID: carid,
           [Op.or]: [
-            { carMileageBefore: { [Op.eq]: sequelize.literal(`(SELECT MAX(carMileageBefore) FROM Rental WHERE carID = ${carid})`) } },
-            { carMileageAfter: { [Op.eq]: sequelize.literal(`(SELECT MAX(carMileageAfter) FROM Rental WHERE carID = ${carid})`) } }
+            { 
+              [Op.and]: [
+                { carMileageAfter: { [Op.eq]: sequelize.literal(`(SELECT MAX(carMileageAfter) FROM Rentals WHERE carID = ${carid})`) } },
+                { carMileageBefore: { [Op.eq]: sequelize.literal(`(SELECT MAX(carMileageBefore) FROM Rentals WHERE carID = ${carid})`) } },
+              ]
+            },
+            { carMileageAfter: null },
           ]
         },
       })
