@@ -485,7 +485,7 @@ const RefuelingTableFiltering = (props: RefuelingTableFilteringProps) => {
                         <option value="false">Nie</option>
                         </select>
                     </div>
-                    </div>
+                </div>
 
 
 
