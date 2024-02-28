@@ -3,10 +3,9 @@ import { ApiResponse } from "../../../types/common";
 import { CSVLink } from "react-csv";
 import fetchData from "../../../utilities/fetchData";
 import DOMAIN_NAME from "../../../utilities/domainName";
-import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
+import { db_Car_basic, db_Refueling, db_User } from "../../../types/db_types";
 import { dateFormatter } from "../../../utilities/dateFormatter";
 import { generateExcelPageState } from "../../../types/enums";
-import formatDate from "../../../utilities/formatDate";
 
 
 type GenerateRefuelingExcelProps = {
@@ -19,7 +18,7 @@ type GenerateRefuelingExcelProps = {
 
 
 
-    const [transformedData, setTransformedData] = useState<db_Reservation[] | []>([])
+    const [transformedData, setTransformedData] = useState<db_Refueling[] | []>([])
 
     // @ts-ignore //failData is never used
     const [failData, setFailData] = useState<ApiResponse>();
@@ -40,7 +39,7 @@ type GenerateRefuelingExcelProps = {
       const getData = async () => {
         setPageState(generateExcelPageState.loading)
 
-        const res1 = await fetchData(`${DOMAIN_NAME}/reservations?filters=${props.filters}&pagenumber=1&pagesize=9999&sortfromoldest=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=${props.filters}&pagenumber=1&pagesize=9999&sortfromoldest=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         if(res1.status==='success') {
           const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           if(res2.status==='success') {
@@ -49,22 +48,33 @@ type GenerateRefuelingExcelProps = {
 
 
 
-                const transformedData = res1.data.map((reservation: db_Reservation) => {
+                const transformedData = res1.data.map((refueling: db_Refueling) => {
 
-                const carObject: db_Car_basic | undefined = res2.data.find((car: db_Car_basic) => car.id === reservation.carID);
-                const reservationUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === reservation.userID);
-                const moderatorUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === reservation.lastEditedByModeratorOfID)
-
+                const carObject: db_Car_basic | undefined = res2.data.find((car: db_Car_basic) => car.id === refueling.carID);
+                const refuelingUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === refueling.userID);
+                const isAcknowledgedByModeratorUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === refueling.isAcknowledgedByModerator)
+                const lastEditedByModeratorUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === refueling.lastEditedByModeratorOfID)
+                  console.log(refueling.averageConsumption);
+                  console.log(refueling.costPerLiter);
 
                 return {
-                  ...reservation,
+                  ...refueling,
                   carID: carObject ? `${carObject.brand} ${carObject.model}` : '',
-                  userID: reservationUserObject ? `${reservationUserObject.name} ${reservationUserObject.surname}` : '',
-                  lastEditedByModeratorOfID: moderatorUserObject ? `${moderatorUserObject.name} ${moderatorUserObject.surname}` : '',
-                  dateFrom: formatDate(new Date(reservation.dateFrom)),
-                  dateTo: formatDate(new Date(reservation.dateTo)),
-                  createdAt: dateFormatter(reservation.createdAt.toString()),
-                  updatedAt: dateFormatter(reservation.updatedAt.toString()),      
+                  userID: refuelingUserObject ? `${refuelingUserObject.name} ${refuelingUserObject.surname}` : '',
+                  refuelingDate: dateFormatter(refueling.refuelingDate.toString()),
+                  numberOfLiters: refueling.numberOfLiters.toLocaleString("pl-PL"),
+                  averageConsumption: refueling.averageConsumption ? refueling.averageConsumption.toLocaleString("pl-PL") : '',
+                  costBrutto: refueling.costBrutto ? refueling.costBrutto.toLocaleString("pl-PL") : '',
+                  costPerLiter: refueling.costPerLiter ? refueling.costPerLiter.toLocaleString("pl-PL") : '',
+                  isFuelCardUsed: refueling.isFuelCardUsed ? 'Tak' : 'Nie',
+                  moneyReturned: refueling.moneyReturned === null ? 'Nie dotyczy' : refueling.moneyReturned === true ? 'Tak' : 'Nie',
+
+                  isAcknowledgedByModerator: isAcknowledgedByModeratorUserObject ? `${isAcknowledgedByModeratorUserObject.name} ${isAcknowledgedByModeratorUserObject.surname}` : '',  
+
+                  createdAt: dateFormatter(refueling.createdAt.toString()),
+                  updatedAt: dateFormatter(refueling.updatedAt.toString()),
+
+                  lastEditedByModeratorOfID: lastEditedByModeratorUserObject ? `${lastEditedByModeratorUserObject.name} ${lastEditedByModeratorUserObject.surname}` : '',      
                 };
 
               });
@@ -85,14 +95,21 @@ type GenerateRefuelingExcelProps = {
 
       const headers = [
         {label: 'Samochód', key: 'carID'},
-        {label: 'Właściciel rezerwacji', key: 'userID'},
-        {label: 'Edycja przez moderatora', key: 'lastEditedByModeratorOfID'},
-        {label: 'Rezerwacja od', key: 'dateFrom'},
-        {label: 'Rezerwacja do', key: 'dateTo'},
-        {label: 'Cel podróży', key: 'travelDestination'},
+        {label: 'Kto zatankował?', key: 'userID'},
+        {label: 'Data i godzina tankowania', key: 'refuelingDate'},
+        {label: 'Przebieg w momencie tankowania [km]', key: 'carMileage'},
+        {label: 'Ilość zatankowanego paliwa [l]', key: 'numberOfLiters'},
+        {label: 'Średnie spalanie [l/100km]', key: 'averageConsumption'},
+        {label: 'Całkowiata kwota tankowania [zł brutto]', key: 'costBrutto'},
+        {label: 'Cena za litr paliwa [zł brutto]', key: 'costPerLiter'},
+        {label: 'Czy użyto kartę paliwową?', key: 'isFuelCardUsed'},
+        {label: 'Czy zwrócono koszty tankowania?', key: 'moneyReturned'},
+        {label: 'Numer faktury', key: 'invoiceNumber'},
+        {label: 'Tankowanie potwierdzone przez moderatora?', key: 'isAcknowledgedByModerator'},
         {label: 'ID', key: 'id'},
         {label: 'Utworzono w bazie danych', key: 'createdAt'},
         {label: 'Ostatnia edycja w bazie danych', key: 'updatedAt'},
+        {label: 'Czy edytowano dane dotyczące tego tankowania przez moderatora?', key: 'lastEditedByModeratorOfID'},
       ]
 
 
@@ -142,7 +159,7 @@ type GenerateRefuelingExcelProps = {
           data={transformedData}
           headers={headers}
           separator={";"}
-          filename={"rezerwacje.csv"}
+          filename={"tankowania.csv"}
 
           >{csv_SVG}Gotowe! Pobierz plik</CSVLink>
           </button>
