@@ -6,6 +6,15 @@ import { warnings } from "../../../types/common";
 import { useState } from "react";
 import DOMAIN_NAME from "../../../utilities/domainName";
 
+interface RefuelingDataToAPI {
+  carMileage: number | '';
+  numberOfLiters: number | '';
+  costBrutto: number | '';
+  isFuelCardUsed: boolean;
+  refuelingDate?: Date;
+  moneyReturn?: boolean | null;
+}
+
 interface RefuelingReportFormProps {
     carData: db_Car_basic;
 }
@@ -31,20 +40,31 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    const submittedRefuelingData: RefuelingDataToAPI = {
+      refuelingDate: new Date(),
+      carMileage: carMileage,
+      numberOfLiters: numberOfLiters,
+      costBrutto: costBrutto,
+      isFuelCardUsed: isFuelCardUsed,
+      moneyReturn: null,
+    };
+    if (selectOtherDate) {submittedRefuelingData.refuelingDate = refuelingDate}
+    if (!isFuelCardUsed) {submittedRefuelingData.moneyReturn = moneyReturn}
+    console.log(submittedRefuelingData);
+
     try {
-      const response = await fetch(`${DOMAIN_NAME}/xxxxxxx`, {
+      const response = await fetch(`${DOMAIN_NAME}/${props.carData.id}xxxxxxx`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
         credentials: 'include',
-        body: JSON.stringify({}),
+        body: JSON.stringify(submittedRefuelingData),
       });
 
       if (response.ok) {
         setPageState(FormPageStatus.FormWasSentCorrectly);
-        // setTitle('');
-        // setDescription('');
+
       } else {
         const responseJSON = await response.json();
         if(responseJSON.status === 'fail') {
@@ -224,7 +244,7 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
                   </form>
                   :
                   pageState === FormPageStatus.FormWasSentCorrectly ?
-                    <OperationResult status={'success'} title={'Dodano tankowanie 👍'} description={'Dane zostały pomyślnie zapisane w bazie danych. Dziękujemy!'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/tankowania/zglos-tankowanie/${props.carData.id}`}/>
+                    <OperationResult status={'success'} title={'Dodano tankowanie 👍'} description={'Dane zostały pomyślnie zapisane w bazie danych. Dziękujemy!'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/tankowania/zglos-tankowanie/moje-tankowania`}/>
                   :
                   pageState === FormPageStatus.ErrorWithSendingForm ?
                   <OperationResult status={'error'} title={'Wystąpił błąd podczas dodawania tankowania 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>

@@ -1,4 +1,5 @@
 import { lazy } from 'react';
+
 const FutureReservations = lazy(() => import('../new_pages/rezerwacje/przyszle-rezerwacje'));
 const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
 const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje/index'));
@@ -9,6 +10,7 @@ const ReservationArchive = lazy(() => import('../new_pages/rezerwacje/archiwum')
 const RefuelingOverview = lazy(() => import('../new_pages/tankowania/index'));
 const ReportRefueling = lazy(() => import('../new_pages/tankowania/zglos-tankowanie'));
 const ReportRefuelingForm = lazy(() => import('../new_pages/tankowania/zglos-tankowanie-form'));
+const MyRefuelings = lazy(() => import('../new_pages/tankowania/moje-tankowania'));
 const RefuelingArchive = lazy(() => import('../new_pages/tankowania/archiwum'));
 const FaultsArchive = lazy(() => import('../new_pages/usterki/archiwum'));
 const RepairsStatus = lazy(() => import('../new_pages/usterki/status-napraw'));
@@ -118,6 +120,11 @@ const coreRoutes = [
     path: '/tankowania/zglos-tankowanie/:carid',
     title: 'Zgłoś zatankowanie samochodu',
     component: ReportRefuelingForm,
+  },
+  {
+    path: '/tankowania/moje-tankowania',
+    title: 'Moje tankowania',
+    component: MyRefuelings,
   },
   {
     path: '/tankowania/archiwum',
