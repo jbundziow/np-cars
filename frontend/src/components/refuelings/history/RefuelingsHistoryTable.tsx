@@ -44,13 +44,13 @@ const RefuelingsHistoryTable = (props: RefuelingsHistoryTableProps) => {
                   Ilość zatankowanego paliwa [l]
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
-                  Średnie spalanie
+                  Średnie spalanie [l/100km]
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                  Całkowiata kwota tankowania [zł brutto]
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
-                 Cena za litr paliwa [zł]
+                 Cena za litr paliwa [zł brutto]
                 </th>
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                  Czy użyto kartę paliwową?
