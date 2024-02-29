@@ -36,10 +36,10 @@ const MyRefuelingsTable = (props: MyRefuelingsTableProps) => {
                     Przebieg w momencie tankowania [km]
                   </th>
                   <th className="py-4 px-4 font-medium text-xs sm:text-sm lg:text-base text-black dark:text-white xl:pl-11">
-                    Ilość zatankowanego paliwa [l]
+                    Całkowiata kwota tankowania [zł brutto]
                   </th>
                   <th className="py-4 px-4 font-medium text-xs sm:text-sm lg:text-base text-black dark:text-white xl:pl-11">
-                    Całkowiata kwota tankowania [zł brutto]
+                    Czy należy zwrócić Ci koszty tankowania?
                   </th>
                   {/* {hidden md:table-cell} */}
                   <th className="py-4 px-4 font-medium text-xs sm:text-sm lg:text-base text-black dark:text-white">

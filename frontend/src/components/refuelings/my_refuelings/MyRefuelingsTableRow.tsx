@@ -72,15 +72,14 @@ const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs sm:text-sm lg:text-base'>{props.refuelingData.numberOfLiters}</p>
+        <p className='dark:text-white text-black text-xs sm:text-sm lg:text-base'>{props.refuelingData.costBrutto ? props.refuelingData.costBrutto : <StyledSpan color={'warning'} text={'Brak danych'}/>}</p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs sm:text-sm lg:text-base'>{props.refuelingData.costBrutto ? props.refuelingData.costBrutto : <StyledSpan color={'warning'} text={'Brak danych'}/>}</p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'>{props.refuelingData.moneyReturned === null ? <StyledSpan color={'success'} text={'Nie dotyczy'}/> : props.refuelingData.moneyReturned === true ? <StyledSpan color={'success'} text={'Nie'}/> : <StyledSpan color={'danger'} text={'Tak'}/>}</p>
         </div>
     </td>
-
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex items-center space-x-3.5">
         <button
