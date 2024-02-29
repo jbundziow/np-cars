@@ -14,6 +14,9 @@ const addOneRefuelingByNormalUserSchema = Joi.object({
         .positive()
         .required(),
 
+    refuelingDate: Joi.date()
+        .required(),
+
     lastEditedByModeratorOfID: Joi.number()
         .valid(null),
 
@@ -28,18 +31,33 @@ const addOneRefuelingByNormalUserSchema = Joi.object({
         .max(2500)
         .required(),
 
+    averageConsumption: Joi.number()
+        .valid(null),
+
     costBrutto: Joi.number()
         .positive()
         .max(30000)
         .optional()
         .allow(null),
 
+    costPerLiter: Joi.number()
+        .valid(null), 
+
     isFuelCardUsed: Joi.boolean()
         .required(),
 
+    moneyReturned: Joi.boolean()
+        .when('isFuelCardUsed', {
+            is: true,
+            then: Joi.valid(null),
+            otherwise: Joi.boolean().required(),
+        }),
+
+    invoiceNumber: Joi.string()
+        .valid(null),
+
     isAcknowledgedByModerator: Joi.boolean()
-        .valid(false)
-        .required(),
+        .valid(null)
 })
 
 

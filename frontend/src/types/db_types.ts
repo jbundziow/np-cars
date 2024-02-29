@@ -69,7 +69,7 @@ export type db_Refueling = {
     carMileage: number,
     numberOfLiters: number,
     averageConsumption: number | null,
-    costBrutto: number | null,
+    costBrutto: number,
     costPerLiter: number | null,
     isFuelCardUsed: boolean,
     moneyReturned: boolean | null,

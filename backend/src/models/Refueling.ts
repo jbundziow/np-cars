@@ -41,11 +41,11 @@ const RefuelingModel = sequelize.define('Refueling', {
       },
       costBrutto: {
         type: DataTypes.REAL,
-        allowNull: true,
+        allowNull: false,
       },
       costPerLiter: {
         type: DataTypes.REAL,
-        allowNull: true,
+        allowNull: false,
       },
       isFuelCardUsed: {
         type: DataTypes.BOOLEAN,
@@ -81,15 +81,22 @@ class Refueling {
         private refuelingDate: Date,
         private lastEditedByModeratorOfID: number | null,
         private carMileage: number,
-        private averageConsumption: null, //count by backend
+        private averageConsumption: number | null, //count by backend
         private numberOfLiters: number,
-        private costBrutto: number | null,
-        private costPerLiter: null, //count by backend
+        private costBrutto: number,
+        private costPerLiter: number | null, //count by backend
         private isFuelCardUsed: boolean,
         private moneyReturned: boolean | null,
         private invoiceNumber: string | null,
         private isAcknowledgedByModerator: boolean | null,
         ) {}
+
+    changeAverageConsumption(averageConsumption: number) {
+      this.averageConsumption = averageConsumption;
+    }
+    changeCostPerLiter(costPerLiter: number) {
+      this.costPerLiter = costPerLiter;
+    }
 
     async addOneRefueling() {
         await RefuelingModel.create({
