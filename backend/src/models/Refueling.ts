@@ -379,6 +379,24 @@ class Refueling {
   }
 
 
+
+  static async fetchAverageConsumptionOfCar (carid: number) {
+    const response = await RefuelingModel.findAll({
+      where: {
+        carID: carid,
+        averageConsumption: {
+          [Op.not]: null
+        },
+      },
+      attributes: [[sequelize.fn('AVG', sequelize.col('averageConsumption')), 'calculatedAverageConsumption']],
+    });
+
+    
+    return response[0].dataValues.calculatedAverageConsumption;
+  }
+
+  
+
 }
 
 export default Refueling;

@@ -4,6 +4,7 @@ import { NextFunction, Request, Response, response } from 'express'
 import Refueling from '../models/Refueling';
 import Car from '../models/Car';
 import User from '../models/User'
+import Rental from '../models/Rental'
 import { addOneRefuelingByNormalUserSchema, filtersObjRefuelingSchema } from '../models/validation/RefuelingSchemas';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValuesFromObject';
@@ -35,8 +36,18 @@ export const addOneRefueling_POST_user = async (req: Request, res: Response, nex
         
             const newRefueling = new Refueling(null, Number(req.params.carid), userID, data.refuelingDate, null, data.carMileage, null, data.numberOfLiters, data.costBrutto, null, data.isFuelCardUsed, data.moneyReturned, null, null);
             await addOneRefuelingByNormalUserSchema.validateAsync(newRefueling);
-            const lastRefueling = await Refueling.fetchLastRefuelingOfCar(Number(req.params.carid));
 
+            const lastRentalOfCar = await Rental.fetchLastRentalOfCar(Number(req.params.carid));
+            if(lastRentalOfCar) {
+                const actualCarMileage: number = lastRentalOfCar.dataValues.carMileageAfter || lastRentalOfCar.dataValues.carMileageBefore;
+                if(actualCarMileage - 5000 > data.carMileage) {
+                    res.status(400).json({status: 'fail', data: [{en: `Entered mileage: ${data.carMileage} is much lower than the mileage entered during the last rental of this car: ${actualCarMileage}. The permissible difference is 5000 km.`, pl: `Wpisany przebieg: ${data.carMileage} jest dużo mniejszy niż przebieg wpisany podczas ostatniego wypożyczenia tego samochodu: ${actualCarMileage}. Dopuszczalna różnica to 5000 km.`}]} )
+                    return;
+                }
+
+            }
+
+            const lastRefueling = await Refueling.fetchLastRefuelingOfCar(Number(req.params.carid));
             if(lastRefueling) {
                 if(lastRefueling.dataValues.carMileage >= data.carMileage) {
                     res.status(400).json({status: 'fail', data: [{en: `Entered mileage: ${data.carMileage} can not be less than mileage entered while last refueling this car: ${lastRefueling.dataValues.carMileage}.`, pl: `Wpisany przebieg: ${data.carMileage} nie może być mniejszy niż przebieg wpisany podczas ostatniego tankowania tego samochodu: ${lastRefueling.dataValues.carMileage}.`}]})
@@ -98,4 +109,65 @@ export const fetchAllRefuelingsWithFilters_GET_user = async (req: Request, res: 
         catch(e) {
             res.status(500).json({status: 'error', message: e})
         }
+}
+
+
+
+
+
+
+
+
+
+
+
+export const fetchLastRefuelingAndFuelLevelOfAllCars_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+
+    interface oneCarResponseData {
+        carID: number,
+        carBrand: string,
+        carModel: string,
+        lastRefuelingWasKmAgo: number | null,
+        predictedFuelLevel: number | null,
+    }
+
+    const allCarsBasicData = await Car.fetchAll(false);
+
+    if(!allCarsBasicData || allCarsBasicData.length < 1) {
+        res.status(400).json({status: 'fail', data: [{en: `No cars found in the database.`, pl: `Nie znaleziono żadnych samochodów w bazie danych.`}]})
+        return;
+    }
+
+    let response: oneCarResponseData[] = [];
+
+    for await (const carObj of allCarsBasicData) {
+        const lastRefuelingOfCar = await Refueling.fetchLastRefuelingOfCar(carObj.dataValues.id);
+        const lastRentalOfCar = await Rental.fetchLastRentalOfCar(carObj.dataValues.id);
+        const averageConsumption = await Refueling.fetchAverageConsumptionOfCar(carObj.dataValues.id);
+        
+        let data: oneCarResponseData = {
+            carID: carObj.dataValues.id,
+            carBrand: carObj.dataValues.brand,
+            carModel: carObj.dataValues.model,
+            lastRefuelingWasKmAgo: null,
+            predictedFuelLevel: null,
+        }
+
+        if(lastRefuelingOfCar && lastRentalOfCar) {
+            const actualCarMileage = lastRentalOfCar.dataValues.carMileageAfter || lastRentalOfCar.dataValues.carMileageBefore;
+            const lastRefuelingCarMileage = lastRefuelingOfCar.dataValues.carMileage;
+            const lastRefuelingWasKmAgo = actualCarMileage - lastRefuelingCarMileage;
+            if(lastRefuelingWasKmAgo >= 0) { data.lastRefuelingWasKmAgo = lastRefuelingWasKmAgo }
+
+            if(averageConsumption && carObj.dataValues.tankCapacity) {
+                const totalFuelUsed = (actualCarMileage - lastRefuelingCarMileage) / 100 * averageConsumption ; //[liters]
+                const predictedFuelLevel = (carObj.dataValues.tankCapacity - totalFuelUsed) / carObj.dataValues.tankCapacity * 100;
+                if(predictedFuelLevel >= 0 && predictedFuelLevel <= 100) { data.predictedFuelLevel = Number(predictedFuelLevel.toFixed(2)) }
+            }
+        }
+        response.push(data);
+    }
+
+    res.status(200).json({status: 'success', data: response})
+
 }
