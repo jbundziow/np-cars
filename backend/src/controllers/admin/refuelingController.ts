@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, response } from 'express'
 import Refueling from '../../models/Refueling';
 import Car from '../../models/Car';
 import User from '../../models/User'
-import { addOneRefuelingByAdminUserSchema, updateOneRefuelingByModeratorSchema } from '../../models/validation/RefuelingSchemas';
+import { addOneRefuelingByAdminUserSchema, editOneRefuelingByAdminUserSchema } from '../../models/validation/RefuelingSchemas';
 import identifyUserId from '../../utilities/functions/JWT/identifyUserId';
 
 
@@ -80,6 +80,55 @@ export const addOneRefueling_POST_admin = async (req: Request, res: Response, ne
 }
 
 
+
+
+export const editOneRefueling = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+
+    if (!req.params.refuelingID || isNaN(Number(req.params.refuelingID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refueling ID.', pl: 'Podano złe ID tankowania.'}]})
+        return;
+    }
+
+    try {
+        const {id: adminID} = await identifyUserId(req.cookies.jwt);
+        const isRefuelingExist = await Refueling.fetchOne(Number(req.params.refuelingID));
+        if(!isRefuelingExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The refueling of id: ${Number(req.params.refuelingID)} does not exist in the database.`, pl: `Tankowanie o ID: ${Number(req.params.refuelingID)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const previousRefueling = await Refueling.findPreviousRefueling(isRefuelingExist.dataValues.carID, isRefuelingExist.dataValues.carMileage);
+        const nextRefueling = await Refueling.findNextRefueling(isRefuelingExist.dataValues.carID, isRefuelingExist.dataValues.carMileage);
+
+        const refuelingToUpdate = new Refueling(Number(req.params.refuelingID), isRefuelingExist.dataValues.carID, data.userID, data.refuelingDate, adminID, data.carMileage, null, data.numberOfLiters, data.costBrutto, null, data.isFuelCardUsed, data.moneyReturned, data.invoiceNumber, data.isAcknowledgedByModerator);
+        await editOneRefuelingByAdminUserSchema.validateAsync(refuelingToUpdate);
+
+        if(previousRefueling && nextRefueling) {
+            //carmileage need to be in range
+            //count new avg consumption
+            //update next refueling avarageConsumption
+        }
+        else if(previousRefueling && !nextRefueling) {
+            //just edit refueling, count new avg consumption, but carmileage need to remain greater than previous refueling
+        }
+        else if(!previousRefueling && nextRefueling){
+            //just edit refueling and avgConsumption is null, but carmileage need to remain lower than previous refueling
+        }
+        else {
+            //the only one refueling in the table for that car
+            //just edit and avg consumption is null
+        }
+        
+
+        
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({status: 'error', message: err})
+    }
+
+}
 
 
 
