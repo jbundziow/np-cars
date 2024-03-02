@@ -31,12 +31,15 @@ const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
                 'Content-Type': 'application/json; charset=utf-8',
               },
               credentials: 'include',
-              body: JSON.stringify({refuelingID: props.refuelingData.id}),
+              body: JSON.stringify({refuelingID: props.refuelingData.id, carID: props.carData.id}),
             });
             const responseJSON = await response.json();
             if(responseJSON.status === 'success') {
               setRefuelingDeleted(true)
               setAlertOptions(({showAlert: true, color: 'success', text: 'Pomyślnie usunięto dane dotyczące tego tankowania.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+            }
+            else if(responseJSON.status === 'fail') {
+              setAlertOptions(({showAlert: true, color: 'danger', text: `Wystąpił błąd: ${responseJSON.data[0].pl}`, dismiss_button: true, autohide: true, delay_ms: 7000, key: Math.random()}))
             }
             else {
               setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania tankowania. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))

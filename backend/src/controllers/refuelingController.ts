@@ -107,7 +107,6 @@ export const fetchAllRefuelingsWithFilters_GET_user = async (req: Request, res: 
 
         }
         catch(e) {
-            console.log((e as Error).message);
             res.status(500).json({status: 'error', message: e})
         }
 }
@@ -132,45 +131,143 @@ export const fetchLastRefuelingAndFuelLevelOfAllCars_GET_user = async (req: Requ
         lastRefuelingWasKmAgo: number | null,
         predictedFuelLevel: number | null,
     }
+    try {
+        const allCarsBasicData = await Car.fetchAll(false);
 
-    const allCarsBasicData = await Car.fetchAll(false);
+        if(!allCarsBasicData || allCarsBasicData.length < 1) {
+            res.status(400).json({status: 'fail', data: [{en: `No cars found in the database.`, pl: `Nie znaleziono żadnych samochodów w bazie danych.`}]})
+            return;
+        }
 
-    if(!allCarsBasicData || allCarsBasicData.length < 1) {
-        res.status(400).json({status: 'fail', data: [{en: `No cars found in the database.`, pl: `Nie znaleziono żadnych samochodów w bazie danych.`}]})
+        let response: oneCarResponseData[] = [];
+
+        for await (const carObj of allCarsBasicData) {
+            const lastRefuelingOfCar = await Refueling.fetchLastRefuelingOfCar(carObj.dataValues.id);
+            const lastRentalOfCar = await Rental.fetchLastRentalOfCar(carObj.dataValues.id);
+            const averageConsumption = await Refueling.fetchAverageConsumptionOfCar(carObj.dataValues.id);
+            
+            let data: oneCarResponseData = {
+                carID: carObj.dataValues.id,
+                carBrand: carObj.dataValues.brand,
+                carModel: carObj.dataValues.model,
+                imgPath: carObj.dataValues.imgPath,
+                lastRefuelingWasKmAgo: null,
+                predictedFuelLevel: null,
+            }
+
+            if(lastRefuelingOfCar && lastRentalOfCar) {
+                const actualCarMileage = lastRentalOfCar.dataValues.carMileageAfter || lastRentalOfCar.dataValues.carMileageBefore;
+                const lastRefuelingCarMileage = lastRefuelingOfCar.dataValues.carMileage;
+                const lastRefuelingWasKmAgo = actualCarMileage - lastRefuelingCarMileage;
+                if(lastRefuelingWasKmAgo >= 0) { data.lastRefuelingWasKmAgo = lastRefuelingWasKmAgo }
+
+                if(averageConsumption && carObj.dataValues.tankCapacity) {
+                    const totalFuelUsed = (actualCarMileage - lastRefuelingCarMileage) / 100 * averageConsumption ; //[liters]
+                    const predictedFuelLevel = (carObj.dataValues.tankCapacity - totalFuelUsed) / carObj.dataValues.tankCapacity * 100;
+                    if(predictedFuelLevel >= 0 && predictedFuelLevel <= 100) { data.predictedFuelLevel = Number(predictedFuelLevel.toFixed(2)) }
+                }
+            }
+            response.push(data);
+        }
+
+        res.status(200).json({status: 'success', data: response})
+    }
+    catch(e) {
+        res.status(500).json({status: 'error', message: e})
+    }
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const deleteLastRefueling_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+
+    const data = req.body;
+    if (!data.refuelingID || isNaN(Number(data.refuelingID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refueling ID.', pl: 'Podano złe ID tankowania.'}]})
         return;
     }
 
-    let response: oneCarResponseData[] = [];
-
-    for await (const carObj of allCarsBasicData) {
-        const lastRefuelingOfCar = await Refueling.fetchLastRefuelingOfCar(carObj.dataValues.id);
-        const lastRentalOfCar = await Rental.fetchLastRentalOfCar(carObj.dataValues.id);
-        const averageConsumption = await Refueling.fetchAverageConsumptionOfCar(carObj.dataValues.id);
-        
-        let data: oneCarResponseData = {
-            carID: carObj.dataValues.id,
-            carBrand: carObj.dataValues.brand,
-            carModel: carObj.dataValues.model,
-            imgPath: carObj.dataValues.imgPath,
-            lastRefuelingWasKmAgo: null,
-            predictedFuelLevel: null,
-        }
-
-        if(lastRefuelingOfCar && lastRentalOfCar) {
-            const actualCarMileage = lastRentalOfCar.dataValues.carMileageAfter || lastRentalOfCar.dataValues.carMileageBefore;
-            const lastRefuelingCarMileage = lastRefuelingOfCar.dataValues.carMileage;
-            const lastRefuelingWasKmAgo = actualCarMileage - lastRefuelingCarMileage;
-            if(lastRefuelingWasKmAgo >= 0) { data.lastRefuelingWasKmAgo = lastRefuelingWasKmAgo }
-
-            if(averageConsumption && carObj.dataValues.tankCapacity) {
-                const totalFuelUsed = (actualCarMileage - lastRefuelingCarMileage) / 100 * averageConsumption ; //[liters]
-                const predictedFuelLevel = (carObj.dataValues.tankCapacity - totalFuelUsed) / carObj.dataValues.tankCapacity * 100;
-                if(predictedFuelLevel >= 0 && predictedFuelLevel <= 100) { data.predictedFuelLevel = Number(predictedFuelLevel.toFixed(2)) }
-            }
-        }
-        response.push(data);
+    if (!data.carID || isNaN(Number(data.carID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
+        return;
     }
 
-    res.status(200).json({status: 'success', data: response})
+
+    try {
+        const isCarExist = await Car.fetchOne(Number(data.carID), false)
+        const {id: userID} = await identifyUserId(req.cookies.jwt);
+        const isUserExist = await User.fetchOne(userID, false);
+
+        if(!isCarExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The car of id: ${Number(data.carID)} does not exist in the database.`, pl: `Samochód o ID: ${Number(data.carID)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        if (!isUserExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The user of id: ${userID} does not exist in the database.`, pl: `Użytkownik o ID: ${userID} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const lastRefuelingOfCar = await Refueling.fetchLastRefuelingOfCar(Number(data.carID));
+        
+        if(!lastRefuelingOfCar) {
+            res.status(400).json({status: 'fail', data: [{en: `No refueling found for the car of ID: ${Number(data.carID)}.`, pl: `Nie znaleziono tankowania dla samochodu o ID: ${Number(data.carID)}.`}]})
+            return;
+        }
+
+        if(lastRefuelingOfCar.dataValues.id !== Number(data.refuelingID)) {
+            res.status(400).json({status: 'fail', data: [{en: `The refueling of ID: ${Number(data.refuelingID)} is not the last refueling of the car of ID: ${Number(data.carID)}.`, pl: `Tankowanie o ID: ${Number(data.refuelingID)} nie jest ostatnim tankowaniem samochodu o ID: ${Number(data.carID)}.`}]})
+            return;
+        }
+
+        if(lastRefuelingOfCar.dataValues.userID !== userID) {
+            res.status(400).json({status: 'fail', data: [{en: `You are not allowed to delete this refueling. It does not belongs to you.`, pl: `Nie masz uprawnień do usunięcia tego tankowania. Nie należy do Ciebie.`}]})
+            return;
+        }
+
+        const lastRefuelingOfUser = await Refueling.fetchLastRefuelingOfUser(userID);
+        if(!lastRefuelingOfUser) {
+            res.status(400).json({status: 'fail', data: [{en: `No refueling found for the user of ID: ${userID}.`, pl: `Nie znaleziono tankowania dla użytkownika o ID: ${userID}.`}]})
+            return;
+        }
+        else {
+            if(lastRefuelingOfUser.dataValues.id !== Number(data.refuelingID)) {
+                res.status(400).json({status: 'fail', data: [{en: `The refueling of ID: ${Number(data.refuelingID)} is not the last refueling of the user of ID: ${userID}. The user can delete only his last refueling.`, pl: `Tankowanie o ID: ${Number(data.refuelingID)} nie jest ostatnim tankowaniem użytkownika o ID: ${userID}. Użytkownik może usunąć tylko ostatnie swoje tankowanie.`}]})
+                return;
+            }
+        }
+
+        
+        const refuelingDate = new Date(lastRefuelingOfCar.dataValues.refuelingDate);
+        const today_from = new Date().setHours(0, 0, 0, 0);
+        const today_to = new Date().setHours(23, 59, 59, 999);
+        if(refuelingDate < new Date(today_from) || refuelingDate > new Date(today_to)) {
+            res.status(400).json({ status: 'fail', data: [{ en: `As a user, you can only delete the refueling you made today..`, pl: `Jako użytkownik możesz usunąć tylko tankowanie, którego dokonałeś dzisiaj.` }] })
+            return;
+        }
+
+
+
+        const response = await Refueling.deleteRefueling(Number(data.refuelingID));
+        res.status(200).json({status: 'success', data: response})
+
+    }
+    catch(e) {
+        res.status(500).json({status: 'error', message: e})
+    }
 
 }

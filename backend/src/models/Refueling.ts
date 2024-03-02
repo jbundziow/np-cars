@@ -150,6 +150,15 @@ class Refueling {
       })
     }
 
+    static async fetchLastRefuelingOfUser(userid: number) { //of any car
+      return await RefuelingModel.findOne({
+        where: {
+          userID: userid,
+        },
+        order: [['id', 'DESC']],
+      })
+    }
+
     // static async acknowledgeRefuelingByModerator(refuelingID: number, value: boolean) {
     //   return await RefuelingModel.update({
     //     acknowledgeRefuelingByModerator: value
@@ -403,6 +412,28 @@ class Refueling {
   }
 
   
+
+
+
+
+  static async deleteRefueling(id: number) {
+    const refueling = await Refueling.fetchOne(id);
+
+    if (refueling) {
+      return await refueling.destroy();
+    }
+    else {
+      throw new Error('Refueling not found.');
+    }
+
+  }
+
+
+
+
+
+
+
 
 }
 
