@@ -53,10 +53,10 @@ const MyRefuelingsTable = (props: MyRefuelingsTableProps) => {
               <div className='py-2' />
               
                 {/* INSERT ROWS HERE */}
-                {props.refuelingsData.map(refueling => {
+                {props.refuelingsData.map((refueling, index) => {
                   const carData = props.allCarsBasicData.find(car => car.id === refueling.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
                   return (
-                  <MyRefuelingsTableRow carData={carData} refuelingData={refueling} />
+                  <MyRefuelingsTableRow carData={carData} refuelingData={refueling} index={index} />
                   );
                 }
                 )}

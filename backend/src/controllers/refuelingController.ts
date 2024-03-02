@@ -57,7 +57,7 @@ export const addOneRefueling_POST_user = async (req: Request, res: Response, nex
                 newRefueling.changeAverageConsumption(averageConsumption);
             }
             else {
-                //average consumption === null (it is alrady set in the constructor)
+                //average consumption = null\\ (it is already set in the constructor)
             }
             const costPerLiter: number = Number((data.costBrutto / data.numberOfLiters).toFixed(2));
             newRefueling.changeCostPerLiter(costPerLiter);

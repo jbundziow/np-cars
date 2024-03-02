@@ -14,6 +14,7 @@ import StyledSpan from "../../general/spanElements/StyledSpan";
 interface MyRefuelingsTableRowProps {
     carData: db_Car_basic;
     refuelingData: db_Refueling;
+    index: number;
   }
 
 const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
@@ -84,6 +85,7 @@ const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+      {props.index === 0 ?
         <div className="flex items-center space-x-3.5">
         <button
         onClick={() => setShowWarningModal(true)}
@@ -92,6 +94,9 @@ const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
         Usuń tankowanie
         </button>
         </div>
+      :
+      null
+      }
     </td>
     </tr>
     :

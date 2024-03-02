@@ -43,6 +43,9 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
                 setRowDeleted(true)
                 setAlertOptions(({showAlert: true, color: 'success', text: 'Pomyślnie usunięto rezerwację.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
             }
+            else if(responseJSON.status === 'fail') {
+                setAlertOptions(({showAlert: true, color: 'danger', text: `Wystąpił błąd: ${responseJSON.data[0].pl}`, dismiss_button: true, autohide: true, delay_ms: 7000, key: Math.random()}))
+              }
             else {
                 setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania rezerwacji. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
             }
