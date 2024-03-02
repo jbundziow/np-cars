@@ -335,11 +335,18 @@ class Refueling {
 
 
       let averageConsumption = null;
-      let totalAverageConsumption = await RefuelingModel.sum('averageConsumption', {
-        where: whereClause
+      const db_averageConsumption = await RefuelingModel.findAll({
+        where: {
+          ...whereClause,
+          averageConsumption: {
+            [Op.not]: null
+          }
+        },
+        attributes: [[sequelize.fn('AVG', sequelize.col('averageConsumption')), 'calculatedAverageConsumption']],
       });
-      if(totalAverageConsumption !== null && totalCount !== 0) {
-        averageConsumption = totalAverageConsumption / totalCount;
+
+      if (db_averageConsumption.length > 0 && db_averageConsumption[0].dataValues.calculatedAverageConsumption !== null) {
+        averageConsumption = db_averageConsumption[0].dataValues.calculatedAverageConsumption;
       }
       
 
@@ -391,7 +398,7 @@ class Refueling {
       attributes: [[sequelize.fn('AVG', sequelize.col('averageConsumption')), 'calculatedAverageConsumption']],
     });
 
-    
+
     return response[0].dataValues.calculatedAverageConsumption;
   }
 

@@ -124,7 +124,7 @@ const RefuelingsHistoryTable = (props: RefuelingsHistoryTableProps) => {
               </td>
               <td className="pt-3 px-5">
                 <div className="flex justify-center">
-                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Średnia: {props.averageConsumption} l/100km</p>
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Średnia: {props.averageConsumption ? `${props.averageConsumption} l/100km` : 'brak danych'}</p>
                 </div>  
               </td>
               <td className="pt-3 px-5">

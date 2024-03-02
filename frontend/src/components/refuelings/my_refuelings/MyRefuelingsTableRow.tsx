@@ -84,7 +84,7 @@ const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
         <div className="flex items-center space-x-3.5">
         <button
         onClick={() => setShowWarningModal(true)}
-        className='inline-flex items-center justify-center rounded-full bg-danger py-1 sm:py-2 px-4 sm:px-7 text-center text-xs sm:text-base font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
+        className='inline-flex items-center justify-center rounded-full bg-danger py-1 sm:py-2 px-4 sm:px-7 text-center text-xs font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
         >
         Usuń tankowanie
         </button>

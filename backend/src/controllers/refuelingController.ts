@@ -107,6 +107,7 @@ export const fetchAllRefuelingsWithFilters_GET_user = async (req: Request, res: 
 
         }
         catch(e) {
+            console.log((e as Error).message);
             res.status(500).json({status: 'error', message: e})
         }
 }
@@ -127,6 +128,7 @@ export const fetchLastRefuelingAndFuelLevelOfAllCars_GET_user = async (req: Requ
         carID: number,
         carBrand: string,
         carModel: string,
+        imgPath: string,
         lastRefuelingWasKmAgo: number | null,
         predictedFuelLevel: number | null,
     }
@@ -149,6 +151,7 @@ export const fetchLastRefuelingAndFuelLevelOfAllCars_GET_user = async (req: Requ
             carID: carObj.dataValues.id,
             carBrand: carObj.dataValues.brand,
             carModel: carObj.dataValues.model,
+            imgPath: carObj.dataValues.imgPath,
             lastRefuelingWasKmAgo: null,
             predictedFuelLevel: null,
         }

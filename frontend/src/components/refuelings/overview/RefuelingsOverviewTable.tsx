@@ -1,18 +1,25 @@
-import { db_Car_basic } from "../../../types/db_types";
 import RefuelingsOverviewTableRow from "./RefuelingsOverviewTableRow";
 
-
+interface RefuelingStatistics {
+  carID: number,
+  carBrand: string,
+  carModel: string,
+  imgPath: string,
+  lastRefuelingWasKmAgo: number | null,
+  predictedFuelLevel: number | null,
+}
 
 interface RefuelingsOverviewTableProps {
-  carData: db_Car_basic[];
+  data: RefuelingStatistics[];
 }
 
 const RefuelingsOverviewTable = (props: RefuelingsOverviewTableProps) => {
     return (
       <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
         <div className="max-w-full overflow-x-auto">
-          {props.carData && props.carData.length > 0
+          {props.data && props.data.length > 0
           ?
+          <div>
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
@@ -30,11 +37,17 @@ const RefuelingsOverviewTable = (props: RefuelingsOverviewTableProps) => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-                {props.carData.map(car => (
-                  <RefuelingsOverviewTableRow carData={car} lastRefueling={999} predictedFuelLevel={50}/>
+                {props.data.map(item => (
+                  <RefuelingsOverviewTableRow data={item}/>
                 ))}
             </tbody>
           </table>
+            <div className="pt-5 pb-2 md:px-5">
+              <p className="text-black dark:text-[#aeb7c0] text-xs md:text-sm"><span className="font-bold">UWAGA!</span> Przywidywana ilość paliwa jest wyliczana jedynie orientacyjnie i może się różnić od rzeczywistej ilości paliwa w zbiorniku. Wyliczenia będą miały sens jedynie w przypadku, gdy <strong>ostatnie tankowanie było do pełna</strong> oraz gdy aktualny przebieg odpowiada przebiegowi wpisanemu podczas ostatniego wypożyczenia.</p>
+              <p className="text-black dark:text-[#aeb7c0] text-xs md:text-sm mt-1">Pod uwagę brany jest ostatnio wpisany przebieg tankowania, przebieg z ostatniego wypożyczenia, średnie spalanie samochodu oraz pojemność zbiornika paliwa.</p>
+            </div>
+          </div>
+          
           :
           <p className="text-black dark:text-white text-md text-center mb-4">Nie odznaleziono żadnych aut w bazie danych.</p>   
           }

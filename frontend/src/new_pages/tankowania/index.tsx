@@ -26,7 +26,7 @@ const RefuelingOverview = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
        
-      const res1 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${DOMAIN_NAME}/refuelings/cars/level`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
       setLoading(false)
@@ -38,7 +38,7 @@ const RefuelingOverview = (props: Props) => {
       <>
       <Breadcrumb pageName="Przegląd zatankowania aut" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <RefuelingOverviewTable carData={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <RefuelingOverviewTable data={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
      
       </>
     );
