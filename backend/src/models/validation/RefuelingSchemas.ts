@@ -61,6 +61,73 @@ const addOneRefuelingByNormalUserSchema = Joi.object({
 })
 
 
+const addOneRefuelingByAdminUserSchema = Joi.object({
+    id: Joi.number()
+        .valid(null),
+
+    carID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    userID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    refuelingDate: Joi.date()
+        .required(),
+
+    lastEditedByModeratorOfID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    carMileage: Joi.number()
+        .integer()
+        .positive()
+        .max(2000000)
+        .required(),
+
+    numberOfLiters: Joi.number()
+        .positive()
+        .max(2500)
+        .required(),
+
+    averageConsumption: Joi.number()
+        .valid(null),
+
+    costBrutto: Joi.number()
+        .positive()
+        .max(30000)
+        .optional()
+        .allow(null),
+
+    costPerLiter: Joi.number()
+        .valid(null), 
+
+    isFuelCardUsed: Joi.boolean()
+        .required(),
+
+    moneyReturned: Joi.boolean()
+        .when('isFuelCardUsed', {
+            is: true,
+            then: Joi.valid(null),
+            otherwise: Joi.boolean().required(),
+        }),
+
+    invoiceNumber: Joi.string()
+        .min(1)
+        .max(50)
+        .required()
+        .valid(null),
+
+    isAcknowledgedByModerator: Joi.boolean()
+        .required()
+        .valid(null)
+})
+
+
 const updateOneRefuelingByModeratorSchema = Joi.object({
     id: Joi.number()
         .integer()
@@ -193,5 +260,5 @@ const filtersObjRefuelingSchema = Joi.object({
 
 
 
-export { addOneRefuelingByNormalUserSchema, updateOneRefuelingByModeratorSchema, filtersObjRefuelingSchema };
+export { addOneRefuelingByNormalUserSchema, addOneRefuelingByAdminUserSchema, updateOneRefuelingByModeratorSchema, filtersObjRefuelingSchema };
 

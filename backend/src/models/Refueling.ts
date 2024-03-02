@@ -117,6 +117,55 @@ class Refueling {
         })
     }
 
+
+
+
+    
+    async addOneRefuelingAndUpdateNext(nextRefuelingID: number) {
+      let addedRecord;
+      try {
+        await sequelize.transaction(async (t) => {
+          addedRecord = await RefuelingModel.create({
+            id: this.id,
+            carID: this.carID,
+            userID: this.userID,
+            refuelingDate: this.refuelingDate,
+            lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+            carMileage: this.carMileage,
+            averageConsumption: this.averageConsumption,
+            numberOfLiters: this.numberOfLiters,
+            costBrutto: this.costBrutto,
+            costPerLiter: this.costPerLiter,
+            isFuelCardUsed: this.isFuelCardUsed,
+            moneyReturned: this.moneyReturned,
+            invoiceNumber: this.invoiceNumber,
+            isAcknowledgedByModerator: this.isAcknowledgedByModerator,
+          },
+          { transaction: t }
+          )
+
+          const nextRefueling: any = await RefuelingModel.findByPk(nextRefuelingID, { transaction: t });
+          if (nextRefueling) {
+            // update average consumption of next refueling
+            const NextRefuelingAverageConsumption: number = Number(((nextRefueling.dataValues.numberOfLiters / (nextRefueling.dataValues.carMileage - this.carMileage)) * 100).toFixed(2));
+                nextRefueling.averageConsumption = NextRefuelingAverageConsumption;
+                await nextRefueling.save({ transaction: t });
+          } else {
+            throw new Error('Next refueling not found.');
+          }
+        })
+        return addedRecord;
+      }
+        catch (error) {
+          throw new Error('Error while updating next refueling and adding the new one.')
+        }
+    }
+
+
+
+
+
+
     // async updateOneRefueling() {
     //   await RefuelingModel.update({
     //     // id: this.id,
@@ -427,6 +476,46 @@ class Refueling {
     }
 
   }
+
+
+
+
+
+
+
+  static async findPreviousRefueling(carid: number, carmileage: number) {
+    return await RefuelingModel.findOne({
+        where: {
+            carID: carid,
+            carMileage: {
+                [Op.lt]: carmileage
+            }
+        },
+        order: [['carMileage', 'DESC']]
+    });
+  }
+
+
+
+  static async findNextRefueling(carid: number, carmileage: number) {
+    return await RefuelingModel.findOne({
+        where: {
+            carID: carid,
+            carMileage: {
+                [Op.gt]: carmileage
+            }
+        },
+        order: [['carMileage', 'ASC']]
+    });
+  }
+
+
+
+
+
+
+  
+
 
 
 
