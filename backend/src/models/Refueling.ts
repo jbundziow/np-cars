@@ -1,7 +1,8 @@
 const {DataTypes} = require('sequelize');
 
 
-import { Op } from "sequelize";
+
+import { Op, Transaction } from "sequelize";
 import sequelize from "../database/database";
 const RefuelingModel = sequelize.define('Refueling', {
     id: {
@@ -118,13 +119,33 @@ class Refueling {
     }
 
 
+    async updateOneRefueling() {
+      await RefuelingModel.update({
+        // id: this.id,
+        // carID: this.carID,
+        userID: this.userID,
+        refuelingDate: this.refuelingDate,
+        lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+        carMileage: this.carMileage,
+        averageConsumption: this.averageConsumption,
+        numberOfLiters: this.numberOfLiters,
+        costBrutto: this.costBrutto,
+        costPerLiter: this.costPerLiter,
+        isFuelCardUsed: this.isFuelCardUsed,
+        moneyReturned: this.moneyReturned,
+        invoiceNumber: this.invoiceNumber,
+        isAcknowledgedByModerator: this.isAcknowledgedByModerator,
+      },
+      { where: {id: this.id} },
+      )
+  }
 
 
     
     async addOneRefuelingAndUpdateNext(nextRefuelingID: number) {
       let addedRecord;
       try {
-        await sequelize.transaction(async (t) => {
+        await sequelize.transaction(async (t: Transaction) => {
           addedRecord = await RefuelingModel.create({
             id: this.id,
             carID: this.carID,
@@ -165,22 +186,124 @@ class Refueling {
 
 
 
+    async updateOneRefuelingAndUpdateNext(nextRefuelingID: number) {
+      let addedRecord;
+      try {
+        await sequelize.transaction(async (t: Transaction) => {
+          addedRecord = await RefuelingModel.update({
+            // id: this.id,
+            // carID: this.carID,
+            userID: this.userID,
+            refuelingDate: this.refuelingDate,
+            lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+            carMileage: this.carMileage,
+            averageConsumption: this.averageConsumption,
+            numberOfLiters: this.numberOfLiters,
+            costBrutto: this.costBrutto,
+            costPerLiter: this.costPerLiter,
+            isFuelCardUsed: this.isFuelCardUsed,
+            moneyReturned: this.moneyReturned,
+            invoiceNumber: this.invoiceNumber,
+            isAcknowledgedByModerator: this.isAcknowledgedByModerator,
+          },
+          {
+            where: { id: this.id },
+            transaction: t
+          }
+          )
 
-    // async updateOneRefueling() {
-    //   await RefuelingModel.update({
-    //     // id: this.id,
-    //     // carID: this.carID,
-    //     userID: this.userID,
-    //     lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
-    //     carMileage: this.carMileage,
-    //     numberOfLiters: this.numberOfLiters,
-    //     costBrutto: this.costBrutto,
-    //     isFuelCardUsed: this.isFuelCardUsed,
-    //     isAcknowledgedByModerator: this.isAcknowledgedByModerator,
-    //   },
-    //   {where: {id: this.id}}
-    //   )
-    // }
+          const nextRefueling: any = await RefuelingModel.findByPk(nextRefuelingID, { transaction: t });
+          if (nextRefueling) {
+            // update average consumption of next refueling
+            const NextRefuelingAverageConsumption: number = Number(((nextRefueling.dataValues.numberOfLiters / (nextRefueling.dataValues.carMileage - this.carMileage)) * 100).toFixed(2));
+                nextRefueling.averageConsumption = NextRefuelingAverageConsumption;
+                await nextRefueling.save({ transaction: t });
+          } else {
+            throw new Error('Next refueling not found.');
+          }
+        })
+        return addedRecord;
+      }
+        catch (error) {
+          throw new Error('Error while updating current and next refueling.')
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+    static async deleteOneRefuelingAndUpdateNext(currentRefuelingID: number, nextRefuelingID: number, setAverageConsumptionToNull: boolean) {
+      try {
+        await sequelize.transaction(async (t: Transaction) => {
+          
+          const currentRefueling = await RefuelingModel.findByPk(currentRefuelingID, { transaction: t });
+
+          if (currentRefueling) {
+            await currentRefueling.destroy({ transaction: t });
+          }
+          else {
+            throw new Error('Refueling not found');
+          }
+
+          const nextRefueling: any = await RefuelingModel.findByPk(nextRefuelingID, { transaction: t });
+          if (nextRefueling) {
+            // update average consumption of next refueling
+            let NextRefuelingAverageConsumption: number | null = null;
+            if(!setAverageConsumptionToNull) {
+              NextRefuelingAverageConsumption = Number(((nextRefueling.dataValues.numberOfLiters / (nextRefueling.dataValues.carMileage - currentRefueling.dataValues.carMileage)) * 100).toFixed(2));
+            }
+                nextRefueling.averageConsumption = NextRefuelingAverageConsumption;
+                await nextRefueling.save({ transaction: t });
+          } else {
+            throw new Error('Next refueling not found.');
+          }
+        })
+        return 'Refueling successfully deleted and next refueling updated.';
+      }
+        catch (error) {
+          throw new Error('Error while updating current and next refueling.')
+        }
+    }
+
+
+
+
+
+
+
+    static async deleteRefueling(id: number) {
+      const refueling = await Refueling.fetchOne(id);
+
+      if (refueling) {
+        return await refueling.destroy();
+      }
+      else {
+        throw new Error('Refueling not found');
+      }
+  
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     static async fetchAll() {
         return await RefuelingModel.findAll()
@@ -208,13 +331,24 @@ class Refueling {
       })
     }
 
-    // static async acknowledgeRefuelingByModerator(refuelingID: number, value: boolean) {
-    //   return await RefuelingModel.update({
-    //     acknowledgeRefuelingByModerator: value
-    //   },
-    //   {where: {id: refuelingID}},
-    //   );
-    // }
+
+
+
+
+
+
+
+
+    static async acknowledgeRefuelingByModerator(refuelingID: number, moderatorID: number) {
+      return await RefuelingModel.update({
+        acknowledgeRefuelingByModerator: moderatorID
+      },
+      {where: {id: refuelingID}},
+      );
+    }
+
+
+
 
 
 
@@ -463,19 +597,6 @@ class Refueling {
   
 
 
-
-
-  static async deleteRefueling(id: number) {
-    const refueling = await Refueling.fetchOne(id);
-
-    if (refueling) {
-      return await refueling.destroy();
-    }
-    else {
-      throw new Error('Refueling not found.');
-    }
-
-  }
 
 
 

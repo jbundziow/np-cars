@@ -82,46 +82,86 @@ export const addOneRefueling_POST_admin = async (req: Request, res: Response, ne
 
 
 
-export const editOneRefueling = async (req: Request, res: Response, next: NextFunction) => {
+
+
+
+
+
+
+
+
+export const editOneRefueling_PUT_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
 
-    if (!req.params.refuelingID || isNaN(Number(req.params.refuelingID))) {
+    if (!req.params.refuelingid || isNaN(Number(req.params.refuelingid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refueling ID.', pl: 'Podano złe ID tankowania.'}]})
         return;
     }
 
     try {
         const {id: adminID} = await identifyUserId(req.cookies.jwt);
-        const isRefuelingExist = await Refueling.fetchOne(Number(req.params.refuelingID));
+        const isRefuelingExist = await Refueling.fetchOne(Number(req.params.refuelingid));
         if(!isRefuelingExist) {
-            res.status(400).json({status: 'fail', data: [{en: `The refueling of id: ${Number(req.params.refuelingID)} does not exist in the database.`, pl: `Tankowanie o ID: ${Number(req.params.refuelingID)} nie istnieje w bazie danych.`}]})
+            res.status(400).json({status: 'fail', data: [{en: `The refueling of id: ${Number(req.params.refuelingid)} does not exist in the database.`, pl: `Tankowanie o ID: ${Number(req.params.refuelingid)} nie istnieje w bazie danych.`}]})
             return;
         }
 
         const previousRefueling = await Refueling.findPreviousRefueling(isRefuelingExist.dataValues.carID, isRefuelingExist.dataValues.carMileage);
         const nextRefueling = await Refueling.findNextRefueling(isRefuelingExist.dataValues.carID, isRefuelingExist.dataValues.carMileage);
 
-        const refuelingToUpdate = new Refueling(Number(req.params.refuelingID), isRefuelingExist.dataValues.carID, data.userID, data.refuelingDate, adminID, data.carMileage, null, data.numberOfLiters, data.costBrutto, null, data.isFuelCardUsed, data.moneyReturned, data.invoiceNumber, data.isAcknowledgedByModerator);
+        const refuelingToUpdate = new Refueling(Number(req.params.refuelingid), isRefuelingExist.dataValues.carID, data.userID, data.refuelingDate, adminID, data.carMileage, null, data.numberOfLiters, data.costBrutto, null, data.isFuelCardUsed, data.moneyReturned, data.invoiceNumber, data.isAcknowledgedByModerator);
         await editOneRefuelingByAdminUserSchema.validateAsync(refuelingToUpdate);
+
+        const costPerLiter: number = Number((data.costBrutto / data.numberOfLiters).toFixed(2));
+        refuelingToUpdate.changeCostPerLiter(costPerLiter);
 
         if(previousRefueling && nextRefueling) {
             //carmileage need to be in range
+            if(data.carMileage <= previousRefueling.dataValues.carMileage || data.carMileage >= nextRefueling.dataValues.carMileage) {
+                res.status(400).json({status: 'fail', data: [{en: `The mileage entered ${data.carMileage} is not within the range between the previous refueling ${previousRefueling.dataValues.carMileage}km and the next refueling ${nextRefueling.dataValues.carMileage}km. If you need to go beyond this range, your only option is to delete this fueling and add it as a new fueling.`, pl: `Wpisany przebieg ${data.carMileage} nie mieści się w zakresie pomiędzy poprzednim tankowaniem ${previousRefueling.dataValues.carMileage}km a następnym tankowaniem ${nextRefueling.dataValues.carMileage}km. Jeśli musisz wyjść poza ten zakres, to jedyną opcją jest usunięcie tego tankowania i dodanie go jako nowe tankowanie.`}]} )
+                return;
+            }
+
             //count new avg consumption
+            const averageConsumption: number = Number(((data.numberOfLiters / (data.carMileage - previousRefueling.dataValues.carMileage)) * 100).toFixed(2));
+            refuelingToUpdate.changeAverageConsumption(averageConsumption);
+
             //update next refueling avarageConsumption
+            refuelingToUpdate.updateOneRefuelingAndUpdateNext(nextRefueling.dataValues.id);
+        
         }
         else if(previousRefueling && !nextRefueling) {
-            //just edit refueling, count new avg consumption, but carmileage need to remain greater than previous refueling
+            //carmileage need to remain greater than previous refueling
+            if(data.carMileage <= previousRefueling.dataValues.carMileage) {
+                res.status(400).json({status: 'fail', data: [{en: `The entered mileage ${data.carMileage}km is less than the previous refueling mileage ${previousRefueling.dataValues.carMileage}km. If you need to go beyond this range, your only option is to delete this fueling and add it as a new fueling.`, pl: `Wpisany przebieg ${data.carMileage}km jest mniejszy niż przebieg poprzedniego tankowania ${previousRefueling.dataValues.carMileage}km. Jeśli musisz wyjść poza ten zakres, to jedyną opcją jest usunięcie tego tankowania i dodanie go jako nowe tankowanie.`}]} )
+                return;
+            }
+
+            //count new avg consumption
+            const averageConsumption: number = Number(((data.numberOfLiters / (data.carMileage - previousRefueling.dataValues.carMileage)) * 100).toFixed(2));
+            refuelingToUpdate.changeAverageConsumption(averageConsumption);
+
+            //just edit current refueling
+            refuelingToUpdate.updateOneRefueling();
+
+
         }
         else if(!previousRefueling && nextRefueling){
-            //just edit refueling and avgConsumption is null, but carmileage need to remain lower than previous refueling
+            //carmileage need to remain less than next refueling
+            if(data.carMileage >= nextRefueling.dataValues.carMileage) {
+                res.status(400).json({status: 'fail', data: [{en: `The entered mileage ${data.carMileage}km is greater than the next refueling mileage ${nextRefueling.dataValues.carMileage}km. If you need to go beyond this range, your only option is to delete this fueling and add it as a new fueling.`, pl: `Wpisany przebieg ${data.carMileage}km jest większy niż przebieg następnego tankowania ${nextRefueling.dataValues.carMileage}km. Jeśli musisz wyjść poza ten zakres, to jedyną opcją jest usunięcie tego tankowania i dodanie go jako nowe tankowanie.`}]} )
+                return;
+            }
+            //averageConsumption is null, this is the first refueling in the table for that car
+            //but update averageRefueling in the next refueling
+            refuelingToUpdate.updateOneRefuelingAndUpdateNext(nextRefueling.dataValues.id); 
         }
         else {
             //the only one refueling in the table for that car
             //just edit and avg consumption is null
+            refuelingToUpdate.updateOneRefueling();
         }
-        
 
-        
     }
     catch (err) {
         console.log(err);
@@ -140,97 +180,88 @@ export const editOneRefueling = async (req: Request, res: Response, next: NextFu
 
 
 
-// export const updateOneRefueling = async (req: Request, res: Response, next: NextFunction) => {
-// //     //TODO: ONLY LOGGED USER AND WITH ROLE ADMIN CAN UPDATE REFUELING
-// //     //TODO: PASS CORRECT USER ID
-//     const data = req.body;
-//     if (!data.id || isNaN(Number(data.id))) {
-//         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refueling ID.', pl: 'Podano złe ID tankowania.'}]})
-//         return;
-//     }
-//     else if (!data.carID || isNaN(Number(data.carID))) {
-//         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
-//         return;
-//     }
-//     else if (!data.userID || isNaN(Number(data.userID))) {
-//         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
-//         return;
-//     }
-   
-//     try {
-//         const isCarExist = await Car.fetchOne(Number(data.carID));
-//         const isUserExist = await User.fetchOne(Number(data.userID));
-//         const isRefuelingExist = await Refueling.fetchOne(Number(data.id));
-//         if(isCarExist && isUserExist && isRefuelingExist) {
-
-//             //pass moderatorID only if he provides changes
-//             let moderatorID: number | null = null;
-//             if(isRefuelingExist.dataValues.userID !== data.userID || isRefuelingExist.dataValues.carMileage !== data.carMileage || isRefuelingExist.dataValues.numberOfLiters !== data.numberOfLiters || isRefuelingExist.dataValues.costBrutto !== data.costBrutto || isRefuelingExist.dataValues.isFuelCardUsed !== data.isFuelCardUsed) {
-//                 // TODO: PASS HERE A LOGGED MODERATOR ID THAT PROVIDE CHANGES!!!!!!!!
-//                 moderatorID = 11; 
-//             }
-
-//             //ATTENTION! id and carID cannot be changed
-//             const refueling = new Refueling(data.id, data.carID, data.userID, moderatorID, data.carMileage, data.numberOfLiters, data.costBrutto, data.isFuelCardUsed, isRefuelingExist.dataValues.isAcknowledgedByModerator);
-//             await updateOneRefuelingByModeratorSchema.validateAsync(refueling);
-
-//             const lastRefueling = await Refueling.fetchLastRefuelingOfCar(Number(data.carID));
-//             if(lastRefueling) {
-//                 if(lastRefueling.dataValues.carMileage >= data.carMileage) {
-//                     res.status(400).json({status: 'fail', data: [{en: `Entered mileage ${data.carMileage} can not be less than mileage entered while last refueling ${lastRefueling.dataValues.carMileage}.`, pl: `Wpisany przebieg ${data.carMileage} nie może być mniejszy niż przebieg wpisany podczas ostatniego tankowania ${lastRefueling.dataValues.carMileage}.`}]})
-//                     return;
-//                 }
-//             }
-//             const response = await refueling.updateOneRefueling();
-//             res.status(200).json({status: 'success', data: response})
-//             }
-//         else {
-//             if(!isCarExist) {
-//                 res.status(400).json({status: 'fail', data: [{en: `The car of id: ${data.carID} does not exist in the database.`, pl: `Samochód o ID: ${data.carID} nie istnieje w bazie danych.`}]})
-//                 return;
-//             }
-//             else if (!isUserExist) {
-//                 res.status(400).json({status: 'fail', data: [{en: `The user of id: ${data.userID} does not exist in the database.`, pl: `Użytkownik o ID: ${data.userID} nie istnieje w bazie danych.`}]})
-//                 return;
-//             }
-//             else if (!isRefuelingExist) {
-//                 res.status(400).json({status: 'fail', data: [{en: `The refueling of id: ${data.id} does not exist in the database.`, pl: `Tankowanie o ID: ${data.id} nie istnieje w bazie danych.`}]})
-//                 return;
-//             }
-//         }
-//         }
-//         catch (err) {
-//             res.status(500).json({status: 'error', message: err})
-//         }
-// }
 
 
-// export const acknowledgeOneRefueling = async (req: Request, res: Response, next: NextFunction) => {
-//     const data = req.body;
-//     if (!data.refuelingID || isNaN(Number(data.refuelingID))) {
-//         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refuelling ID, which you want to change.', pl: 'Podano złe ID tankowania, które chcesz zmienić.'}]})
-//         return;
-//     }
-//     else if (!data.value || typeof data.value !== 'boolean') {
-//         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong value to update. It must be boolean type.', pl: 'Podano złą wartość do aktualizacji tankowania. Musi być typu boolean.'}]})
-//         return;
-//     }
+export const deleteOneRefueling_DELETE_admin = async (req: Request, res: Response, next: NextFunction) => {
 
-//     try {
-//         const isRefuelingExist = Refueling.fetchOne(Number(data.refuelingID));
-//         if(!isRefuelingExist) {
-//             res.status(400).json({status: 'fail', data: [{en: `Refueling of ID: ${data.refuelingID} does not exist in the database.`, pl: `Tankowanie o ID: ${data.refuelingID} nie istnieje w bazie danych.`}]})
-//             return;
-//         }
-//         else {
-//             const result = await Refueling.acknowledgeRefuelingByModerator(data.refuelingID, data.value);
-//             //TODO: CHECK IF UPDATEDCOUNT === 1
-//             res.status(200).json({status: 'success', data: result});
-//         }
-//     }
-//     catch (err) {
-//         res.status(500).json({status: 'error', message: err})
-//     }
+    if (!req.params.refuelingid || isNaN(Number(req.params.refuelingid))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refueling ID.', pl: 'Podano złe ID tankowania.'}]})
+        return;
+    }
 
-// }
+    try {
+        const isRefuelingExist = await Refueling.fetchOne(Number(req.params.refuelingid));
+        if(!isRefuelingExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The refueling of id: ${Number(req.params.refuelingid)} does not exist in the database.`, pl: `Tankowanie o ID: ${Number(req.params.refuelingid)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const previousRefueling = await Refueling.findPreviousRefueling(isRefuelingExist.dataValues.carID, isRefuelingExist.dataValues.carMileage);
+        const nextRefueling = await Refueling.findNextRefueling(isRefuelingExist.dataValues.carID, isRefuelingExist.dataValues.carMileage);
+
+
+        if(previousRefueling && nextRefueling) {
+            //delete current, update next
+            Refueling.deleteOneRefuelingAndUpdateNext(Number(req.params.refuelingid), nextRefueling.dataValues.id, false);
+        }
+        else if(previousRefueling && !nextRefueling) {
+            //just delete current
+            Refueling.deleteRefueling(Number(req.params.refuelingid));
+        }
+        else if(!previousRefueling && nextRefueling){
+            //delete and update in next avg consumption to null
+            Refueling.deleteOneRefuelingAndUpdateNext(Number(req.params.refuelingid), nextRefueling.dataValues.id, true);
+        }
+        else {
+            //just delete current
+            Refueling.deleteRefueling(Number(req.params.refuelingid));
+        }
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({status: 'error', message: err})
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const acknowledgeOneRefueling_PUT_admin = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+    if (!data.refuelingid || isNaN(Number(data.refuelingid))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refuelling ID, which you want to change.', pl: 'Podano złe ID tankowania, które chcesz zmienić.'}]})
+        return;
+    }
+
+    const {id: adminID} = await identifyUserId(req.cookies.jwt);
+
+    try {
+        const isRefuelingExist = Refueling.fetchOne(Number(data.refuelingid));
+        if(!isRefuelingExist) {
+            res.status(400).json({status: 'fail', data: [{en: `Refueling of ID: ${data.refuelingID} does not exist in the database.`, pl: `Tankowanie o ID: ${data.refuelingID} nie istnieje w bazie danych.`}]})
+            return;
+        }
+        else {
+            const result = await Refueling.acknowledgeRefuelingByModerator(data.refuelingID, adminID);
+            res.status(200).json({status: 'success', data: result});
+        }
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
+
+}
 
