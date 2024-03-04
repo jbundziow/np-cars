@@ -179,7 +179,7 @@ const RefuelingTableFiltering = (props: RefuelingTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Samochód:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedCars} setValue={(value: SelectValue) => (setSelectedCars(value))} options={carOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedCars} setValue={(value: SelectValue) => (setSelectedCars(value))} options={carOptions} />
                     </div>
 
 
@@ -189,7 +189,7 @@ const RefuelingTableFiltering = (props: RefuelingTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Kto zatankował?
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedUserIDs} setValue={(value: SelectValue) => (setSelectedUserIDs(value))} options={userOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedUserIDs} setValue={(value: SelectValue) => (setSelectedUserIDs(value))} options={userOptions} />
                     </div>
 
 
@@ -561,7 +561,7 @@ const RefuelingTableFiltering = (props: RefuelingTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Dane moderatora potwierdzającego tankowanie:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedAcknowledgementModerator} setValue={(value: SelectValue) => (setSelectedAcknowledgementModerator(value))} options={userAdminOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedAcknowledgementModerator} setValue={(value: SelectValue) => (setSelectedAcknowledgementModerator(value))} options={userAdminOptions} />
                     </div>
 
 
@@ -602,7 +602,7 @@ const RefuelingTableFiltering = (props: RefuelingTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Dane edytującego moderatora:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedEditorModerator} setValue={(value: SelectValue) => (setSelectedEditorModerator(value))} options={userAdminOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedEditorModerator} setValue={(value: SelectValue) => (setSelectedEditorModerator(value))} options={userAdminOptions} />
                     </div>
 
 

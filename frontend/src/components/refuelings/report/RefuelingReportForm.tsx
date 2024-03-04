@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
-import { db_Car_basic } from "../../../types/db_types";
+import { db_Car_basic, db_User } from "../../../types/db_types";
 import OperationResult from "../../general/OperationResult";
 import { FormPageStatus } from "../../../types/enums";
-import { warnings } from "../../../types/common";
+import { AuthType, warnings } from "../../../types/common";
 import { useState } from "react";
 import DOMAIN_NAME from "../../../utilities/domainName";
+import MultiselectInput from "../../general/input_elements/MultiselectInput";
+import { Option } from "react-tailwindcss-select/dist/components/type";
 
-interface RefuelingDataToAPI {
+interface RefuelingUserDataToAPI {
   carMileage: number | '';
   numberOfLiters: number | '';
   costBrutto: number | '';
@@ -15,8 +17,22 @@ interface RefuelingDataToAPI {
   moneyReturned?: boolean | null;
 }
 
+interface RefuelingAdminDataToAPI {
+  userID: number;
+  carMileage: number | '';
+  numberOfLiters: number | '';
+  costBrutto: number | '';
+  isFuelCardUsed: boolean;
+  refuelingDate?: Date;
+  moneyReturned?: boolean | null;
+  invoiceNumber: string | null;
+  isAcknowledgedByModerator: number | null;
+}
+
 interface RefuelingReportFormProps {
     carData: db_Car_basic;
+    usersData: db_User[];
+    auth: AuthType;
 }
 
 const RefuelingReportForm = (props: RefuelingReportFormProps) => {
@@ -27,6 +43,16 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
 
   const [pageState, setPageState] = useState<FormPageStatus>(FormPageStatus.FillingTheForm)
 
+  //admin
+  const [isAnotherUserDoneRefueling, setIsAnotherUserDoneRefueling] = useState<boolean>(false);
+  const [selectedUserID, setSelectedUserID] = useState<Option>({value: '', label: ''});
+
+  const [invoiceNumber, setInvoiceNumber] = useState<string>('');
+
+  const [isConfirmedByAdmin, SetIsConfirmedByAdmin] = useState<boolean>(false);
+  //end admin
+
+
   const [selectOtherDate, setSelectOtherDate] = useState<boolean>(false);
   const [refuelingDate, setRefuelingDate] = useState<Date>(new Date());
   const [carMileage, setCarMileage] = useState<number | ''>('');
@@ -34,13 +60,33 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
   const [costBrutto, setCostBrutto] = useState<number | ''>('');
   const [isFuelCardUsed, setIsFuelCardUsed] = useState<boolean>(true);
   const [moneyReturned, setMoneyReturned] = useState<boolean>(false);
+
+
+
+  const userOptions = props.usersData
+  .filter(user => user.id !== Number(props.auth.userID))
+  .map(user => ({
+    value: user.id.toString(),
+    label: `${user.name} ${user.surname}`
+  }));
   
 
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const submittedRefuelingData: RefuelingDataToAPI = {
+    if(props.auth.userRole === 'admin') {
+      await adminSubmitForm();
+    }
+    else {
+      await userSubmitForm();
+    }
+    
+  };
+
+
+  const userSubmitForm = async () => {
+    const submittedRefuelingData: RefuelingUserDataToAPI = {
       refuelingDate: new Date(),
       carMileage: carMileage,
       numberOfLiters: numberOfLiters,
@@ -50,7 +96,7 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
     };
     if (selectOtherDate) {submittedRefuelingData.refuelingDate = refuelingDate}
     if (!isFuelCardUsed) {submittedRefuelingData.moneyReturned = moneyReturned}
-    console.log(submittedRefuelingData);
+    
 
     try {
       const response = await fetch(`${DOMAIN_NAME}/refuelings/${props.carData.id}`, {
@@ -79,7 +125,56 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
     catch (error) {
       setPageState(FormPageStatus.ErrorWithSendingForm);
     }
-  };
+  }
+
+
+  const adminSubmitForm = async () => {
+    const submittedRefuelingData: RefuelingAdminDataToAPI = {
+      userID: Number(props.auth.userID),
+      refuelingDate: new Date(),
+      carMileage: carMileage,
+      numberOfLiters: numberOfLiters,
+      costBrutto: costBrutto,
+      isFuelCardUsed: isFuelCardUsed,
+      moneyReturned: null,
+      invoiceNumber: invoiceNumber,
+      isAcknowledgedByModerator: null,
+    };
+    if(selectedUserID.value !== '') {submittedRefuelingData.userID = Number(selectedUserID.value)}
+    if (selectOtherDate) {submittedRefuelingData.refuelingDate = refuelingDate}
+    if (!isFuelCardUsed) {submittedRefuelingData.moneyReturned = moneyReturned}
+    if(invoiceNumber === '') {submittedRefuelingData.invoiceNumber = null}
+    if(isConfirmedByAdmin) {submittedRefuelingData.isAcknowledgedByModerator = Number(props.auth.userID)}
+    
+
+    try {
+      const response = await fetch(`${DOMAIN_NAME}/admin/refuelings/${props.carData.id}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        credentials: 'include',
+        body: JSON.stringify(submittedRefuelingData),
+      });
+
+      if (response.ok) {
+        setPageState(FormPageStatus.FormWasSentCorrectly);
+
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setPageState(FormPageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
+        }
+        else {
+        setPageState(FormPageStatus.ErrorWithSendingForm);
+        }
+      }
+    }
+    catch (error) {
+      setPageState(FormPageStatus.ErrorWithSendingForm);
+    }
+  }
 
 
     return (
@@ -99,6 +194,55 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
               <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
                   {pageState === FormPageStatus.FillingTheForm ?
                   <form className="m-0 lg:m-5" onSubmit={submitHandler}>
+
+ 
+
+
+                    {props.auth.userRole === 'admin' ?
+                    <div className="mb-5">
+                    <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
+                      Kto dokonał tankowania?
+                    </label>
+                    <div className="relative z-1 bg-white dark:bg-form-input">
+                        <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"/></svg>
+                        </span>
+                        <select
+                        className="relative z-1 w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-13 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary sm:text-base"
+                        value={isAnotherUserDoneRefueling.toString()}
+                        onChange={(e)=>{
+                          setIsAnotherUserDoneRefueling(e.target.value === 'true');
+                          if (e.target.value === 'false') {setSelectedUserID({value: '', label: ''})}
+                        }}
+                        >
+                        <option value="false">Ja</option>
+                        <option value="true">Inny użytkownik</option>
+                        </select>
+                    </div>
+                    </div>
+                    :
+                    null
+                    }
+
+
+
+
+                    {isAnotherUserDoneRefueling ?
+                    <div className='mb-5'>
+                      <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
+                          Kto zatankował?
+                      </label>
+                      <MultiselectInput isSearchable={true} isMultiple={false} value={selectedUserID} setValue={(value: Option) => (setSelectedUserID(value))} options={userOptions} />
+                    </div>
+                    :
+                    null
+                    }
+                    
+
+
+
+
+
 
                     <div className="mb-5">
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
@@ -245,6 +389,46 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
                           <option value="false">Tak</option>
                           <option value="true">Nie</option>
                         </select>
+                        </div>
+                      </div>
+                      :
+                      null
+                      }
+
+
+                      {props.auth.userRole === 'admin' ?
+                        <div className='mb-5'>
+                        <label className="mb-3 block text-black dark:text-white">
+                          Numer faktury (pole nieobowiązkowe):
+                        </label>
+                        <input
+                          type="text"
+                          value={invoiceNumber}
+                          onChange={(e)=>setInvoiceNumber(e.target.value)}
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        />
+                        </div>
+                      :
+                      null
+                      }
+
+                      {props.auth.userRole === 'admin' ?
+                      <div className="col-span-1 flex flex-col sm:flex-row mb-10 sm:mb-5">
+                        <label className="block text-black dark:text-white col-span-2 sm:self-center mb-3 sm:mb-0">
+                          Czy chcesz, aby dodając to tankowanie jednocześnie potwierdzić je jako administrator?
+                        </label>
+
+                        <div className="sm:ml-3 relative z-20 bg-white dark:bg-form-input">
+                          <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
+                          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>
+                          </span>
+                          <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 mr-8 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                          value={isConfirmedByAdmin.toString()}
+                          onChange={(e)=>SetIsConfirmedByAdmin(e.target.value === 'true')}
+                          >
+                            <option value="false">Nie</option>
+                            <option value="true">Tak</option>
+                          </select>
                         </div>
                       </div>
                       :

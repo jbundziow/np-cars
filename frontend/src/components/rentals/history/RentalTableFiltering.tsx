@@ -137,7 +137,7 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Samochód:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedCars} setValue={(value: SelectValue) => (setSelectedCars(value))} options={carOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedCars} setValue={(value: SelectValue) => (setSelectedCars(value))} options={carOptions} />
                     </div>
 
 
@@ -146,7 +146,7 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Wypożyczone przez użytkownika:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedUserIDs} setValue={(value: SelectValue) => (setSelectedUserIDs(value))} options={userOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedUserIDs} setValue={(value: SelectValue) => (setSelectedUserIDs(value))} options={userOptions} />
                     </div>
 
 
@@ -358,7 +358,7 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Zwrócone przez użytkownika:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedReturnedByUser} setValue={(value: SelectValue) => (setSelectedReturnedByUser(value))} options={userOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedReturnedByUser} setValue={(value: SelectValue) => (setSelectedReturnedByUser(value))} options={userOptions} />
                     </div>
 
 
@@ -388,7 +388,7 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Przypisany numer projektu:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedPlace} setValue={(value: SelectValue) => (setSelectedPlace(value))} options={placeOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedPlace} setValue={(value: SelectValue) => (setSelectedPlace(value))} options={placeOptions} />
                     </div>
                 
                     

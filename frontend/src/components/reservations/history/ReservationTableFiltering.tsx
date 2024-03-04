@@ -111,7 +111,7 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Samochód:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedCars} setValue={(value: SelectValue) => (setSelectedCars(value))} options={carOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedCars} setValue={(value: SelectValue) => (setSelectedCars(value))} options={carOptions} />
                     </div>
 
 
@@ -120,7 +120,7 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Właściciel rezerwacji:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedUserIDs} setValue={(value: SelectValue) => (setSelectedUserIDs(value))} options={userOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedUserIDs} setValue={(value: SelectValue) => (setSelectedUserIDs(value))} options={userOptions} />
                     </div>
 
 
@@ -206,7 +206,7 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
                     <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
                         Dane moderatora:
                     </label>
-                    <MultiselectInput isSearchable={true} value={selectedModerator} setValue={(value: SelectValue) => (setSelectedModerator(value))} options={userAdminOptions} />
+                    <MultiselectInput isSearchable={true} isMultiple={true} value={selectedModerator} setValue={(value: SelectValue) => (setSelectedModerator(value))} options={userAdminOptions} />
                     </div>
                     
 

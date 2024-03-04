@@ -4,6 +4,7 @@ import { SelectValue } from "react-tailwindcss-select/dist/components/type";
 
 type MultiselectInputProps = {
     isSearchable: boolean,
+    isMultiple: boolean
     value: SelectValue,
     setValue: Function,
     options: {value:string, label:string}[]
@@ -15,7 +16,7 @@ const MultiselectInput = (props: MultiselectInputProps) => {
     return (
         <Select
         primaryColor="indigo"
-        isMultiple={true}
+        isMultiple={props.isMultiple}
         isSearchable={props.isSearchable}
         placeholder={`Wybierz...`}
         searchInputPlaceholder={`Zacznij pisać...`}

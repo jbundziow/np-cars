@@ -37,8 +37,7 @@ const addOneRefuelingByNormalUserSchema = Joi.object({
     costBrutto: Joi.number()
         .positive()
         .max(30000)
-        .optional()
-        .allow(null),
+        .required(),
 
     costPerLiter: Joi.number()
         .valid(null), 
@@ -56,7 +55,7 @@ const addOneRefuelingByNormalUserSchema = Joi.object({
     invoiceNumber: Joi.string()
         .valid(null),
 
-    isAcknowledgedByModerator: Joi.boolean()
+    isAcknowledgedByModerator: Joi.number()
         .valid(null)
 })
 
@@ -100,8 +99,7 @@ const addOneRefuelingByAdminUserSchema = Joi.object({
     costBrutto: Joi.number()
         .positive()
         .max(30000)
-        .optional()
-        .allow(null),
+        .required(),
 
     costPerLiter: Joi.number()
         .valid(null), 
@@ -120,11 +118,11 @@ const addOneRefuelingByAdminUserSchema = Joi.object({
         .min(1)
         .max(50)
         .required()
-        .valid(null),
+        .allow(null),
 
-    isAcknowledgedByModerator: Joi.boolean()
+    isAcknowledgedByModerator: Joi.number()
         .required()
-        .valid(null)
+        .allow(null)
 })
 
 
@@ -172,8 +170,7 @@ const editOneRefuelingByAdminUserSchema = Joi.object({
     costBrutto: Joi.number()
         .positive()
         .max(30000)
-        .optional()
-        .allow(null),
+        .required(),
 
     costPerLiter: Joi.number()
         .valid(null), 
@@ -192,11 +189,11 @@ const editOneRefuelingByAdminUserSchema = Joi.object({
         .min(1)
         .max(50)
         .required()
-        .valid(null),
+        .allow(null),
 
-    isAcknowledgedByModerator: Joi.boolean()
+    isAcknowledgedByModerator: Joi.number()
         .required()
-        .valid(null)
+        .allow(null)
 })
 
 

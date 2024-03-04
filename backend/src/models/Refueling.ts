@@ -513,7 +513,7 @@ class Refueling {
           where: whereClause,
           limit: pageSize,
           offset: offset,
-          order: [['createdAt', sortDirection]] //'DESC' = sort from the newest; 'ASC' = sort from the oldest
+          order: [['refuelingDate', sortDirection]] //'DESC' = sort from the newest; 'ASC' = sort from the oldest
       });
 
       

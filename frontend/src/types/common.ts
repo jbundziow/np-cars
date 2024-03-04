@@ -35,3 +35,11 @@ export interface ApiResponse {
 
 
   export type Polish_weekdays = 'pon.' | 'wt.' | 'śr.' | 'czw.' | 'pt.' | 'sob.' | 'ndz.';
+
+
+  export type UserRoles = 'unconfirmed' | 'banned' | 'admin' | 'user';
+
+  export type AuthType = {
+    userID: string,
+    userRole: UserRoles,
+  }
