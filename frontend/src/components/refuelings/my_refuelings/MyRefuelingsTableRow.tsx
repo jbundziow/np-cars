@@ -6,6 +6,7 @@ import { db_Car_basic, db_Refueling } from "../../../types/db_types";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 import { dateFormatterAsObject } from "../../../utilities/dateFormatter";
 import StyledSpan from "../../general/spanElements/StyledSpan";
+import useAuth from "../../../hooks/useAuth";
 
 
 
@@ -18,6 +19,8 @@ interface MyRefuelingsTableRowProps {
   }
 
 const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
+
+    const { auth } = useAuth();
 
     const [refuelingDeleted, setRefuelingDeleted] = useState<boolean>(false);
 
@@ -84,6 +87,8 @@ const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
         <p className='dark:text-white text-black text-xs xl:text-sm'>{props.refuelingData.moneyReturned === null ? <StyledSpan color={'success'} text={'Nie dotyczy'}/> : props.refuelingData.moneyReturned === true ? <StyledSpan color={'success'} text={'Nie'}/> : <StyledSpan color={'danger'} text={'Tak'}/>}</p>
         </div>
     </td>
+
+    {auth.userRole !== 'admin' ?
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
       {props.index === 0 ?
         <div className="flex items-center space-x-3.5">
@@ -98,6 +103,10 @@ const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
       null
       }
     </td>
+    :
+    null
+    }
+
     </tr>
     :
     <></>

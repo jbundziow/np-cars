@@ -1,3 +1,4 @@
+import useAuth from "../../../hooks/useAuth";
 import { PaginationType } from "../../../types/common";
 import { db_Car_basic, db_Refueling } from "../../../types/db_types";
 import Pagination from "../../general/Pagination";
@@ -16,6 +17,8 @@ type MyRefuelingsTableProps = {
 
 
 const MyRefuelingsTable = (props: MyRefuelingsTableProps) => {
+
+  const { auth } = useAuth();
 
 
     return (
@@ -41,10 +44,13 @@ const MyRefuelingsTable = (props: MyRefuelingsTableProps) => {
                   <th className="py-4 px-4 font-medium text-xs sm:text-sm lg:text-base text-black dark:text-white xl:pl-11">
                     Czy należy zwrócić Ci koszty tankowania?
                   </th>
-                  {/* {hidden md:table-cell} */}
+                  {auth.userRole !== 'admin' ?
                   <th className="py-4 px-4 font-medium text-xs sm:text-sm lg:text-base text-black dark:text-white">
                     Działania
                   </th>
+                  :
+                  null
+                  }
                   
                   
                 </tr>

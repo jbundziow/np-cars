@@ -53,7 +53,7 @@ const FutureReservationsTable = (props: FutureReservationsTableProps) => {
           </table>
         </div>
         :
-        <p className="text-black dark:text-white text-md text-center mb-4">W tej chwili nie masz żadnych zaplanowanych rezerwacji.</p>
+        <p className="text-black dark:text-white text-md text-center mb-4">W tej chwili nie istnieją żadne zaplanowane rezerwacje.</p>
         }
       </div>
     );
