@@ -261,7 +261,7 @@ export const deleteLastRefueling_GET_user = async (req: Request, res: Response, 
         const today_from = new Date().setHours(0, 0, 0, 0);
         const today_to = new Date().setHours(23, 59, 59, 999);
         if(refuelingDate < new Date(today_from) || refuelingDate > new Date(today_to)) {
-            res.status(400).json({ status: 'fail', data: [{ en: `As a user, you can only delete the refueling you made today..`, pl: `Jako użytkownik możesz usunąć tylko tankowanie, którego dokonałeś dzisiaj.` }] })
+            res.status(400).json({ status: 'fail', data: [{ en: `As a user, you can only delete the refueling you made today.`, pl: `Jako użytkownik możesz usunąć tylko tankowanie, którego dokonałeś dzisiaj.` }] })
             return;
         }
 

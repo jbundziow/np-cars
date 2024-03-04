@@ -31,7 +31,7 @@ interface RefuelingAdminDataToAPI {
 
 interface RefuelingReportFormProps {
     carData: db_Car_basic;
-    usersData: db_User[];
+    usersData: db_User[] | undefined;
     auth: AuthType;
 }
 
@@ -61,15 +61,15 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
   const [isFuelCardUsed, setIsFuelCardUsed] = useState<boolean>(true);
   const [moneyReturned, setMoneyReturned] = useState<boolean>(false);
 
-
-
-  const userOptions = props.usersData
+  let userOptions: {value: string, label: string}[] | [] = [];
+  if(props.usersData) {
+  userOptions = props.usersData
   .filter(user => user.id !== Number(props.auth.userID))
   .map(user => ({
     value: user.id.toString(),
     label: `${user.name} ${user.surname}`
   }));
-  
+  }
 
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
