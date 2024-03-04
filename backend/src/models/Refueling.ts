@@ -238,7 +238,7 @@ class Refueling {
 
 
 
-    static async deleteOneRefuelingAndUpdateNext(currentRefuelingID: number, nextRefuelingID: number, setAverageConsumptionToNull: boolean) {
+    static async deleteOneRefuelingAndUpdateNext(currentRefuelingID: number, nextRefuelingID: number, previousRefuelingID: number| null, setAverageConsumptionToNull: boolean) {
       try {
         await sequelize.transaction(async (t: Transaction) => {
           
@@ -255,8 +255,9 @@ class Refueling {
           if (nextRefueling) {
             // update average consumption of next refueling
             let NextRefuelingAverageConsumption: number | null = null;
-            if(!setAverageConsumptionToNull) {
-              NextRefuelingAverageConsumption = Number(((nextRefueling.dataValues.numberOfLiters / (nextRefueling.dataValues.carMileage - currentRefueling.dataValues.carMileage)) * 100).toFixed(2));
+            if(!setAverageConsumptionToNull && previousRefuelingID !== null) {
+              const previousRefueling: any = await RefuelingModel.findByPk(previousRefuelingID, { transaction: t });
+              NextRefuelingAverageConsumption = Number(((nextRefueling.dataValues.numberOfLiters / (nextRefueling.dataValues.carMileage - previousRefueling.dataValues.carMileage)) * 100).toFixed(2));
             }
                 nextRefueling.averageConsumption = NextRefuelingAverageConsumption;
                 await nextRefueling.save({ transaction: t });

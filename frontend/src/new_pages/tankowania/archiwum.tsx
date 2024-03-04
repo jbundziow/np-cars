@@ -49,7 +49,7 @@ const RefuelingArchive = (props: Props) => {
         if(res1.pagination) {setPaginationData(res1.pagination)}
 
         if(res1.totalNumberOfLiters) {setTotalNumberOfLiters(res1.totalNumberOfLiters)}
-        if(res1.averageConsumption) {setAverageConsumption(res1.averageConsumption)}
+        if(res1.averageConsumption) {setAverageConsumption(res1.averageConsumption)} else {setAverageConsumption(null)}
         if(res1.totalCostBrutto) {setTotalCostBrutto(res1.totalCostBrutto)}
         if(res1.averageCostPerLiter) {setAverageCostPerLiter(res1.averageCostPerLiter)}
         

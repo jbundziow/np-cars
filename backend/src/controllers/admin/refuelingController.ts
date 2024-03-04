@@ -211,23 +211,24 @@ export const deleteOneRefueling_DELETE_admin = async (req: Request, res: Respons
         const previousRefueling = await Refueling.findPreviousRefueling(isRefuelingExist.dataValues.carID, isRefuelingExist.dataValues.carMileage);
         const nextRefueling = await Refueling.findNextRefueling(isRefuelingExist.dataValues.carID, isRefuelingExist.dataValues.carMileage);
 
-
+        let result;
         if(previousRefueling && nextRefueling) {
             //delete current, update next
-            Refueling.deleteOneRefuelingAndUpdateNext(Number(req.params.refuelingid), nextRefueling.dataValues.id, false);
+            result = Refueling.deleteOneRefuelingAndUpdateNext(Number(req.params.refuelingid), nextRefueling.dataValues.id, previousRefueling.dataValues.id , false);
         }
         else if(previousRefueling && !nextRefueling) {
             //just delete current
-            Refueling.deleteRefueling(Number(req.params.refuelingid));
+            result = Refueling.deleteRefueling(Number(req.params.refuelingid));
         }
         else if(!previousRefueling && nextRefueling){
             //delete and update in next avg consumption to null
-            Refueling.deleteOneRefuelingAndUpdateNext(Number(req.params.refuelingid), nextRefueling.dataValues.id, true);
+            result = Refueling.deleteOneRefuelingAndUpdateNext(Number(req.params.refuelingid), nextRefueling.dataValues.id, null,  true);
         }
         else {
             //just delete current
-            Refueling.deleteRefueling(Number(req.params.refuelingid));
+            result = Refueling.deleteRefueling(Number(req.params.refuelingid));
         }
+        res.status(200).json({status: 'success', data: result})
 
     }
     catch (err) {
