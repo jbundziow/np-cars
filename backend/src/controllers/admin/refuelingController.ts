@@ -127,6 +127,7 @@ export const editOneRefueling_PUT_admin = async (req: Request, res: Response, ne
         const costPerLiter: number = Number((data.costBrutto / data.numberOfLiters).toFixed(2));
         refuelingToUpdate.changeCostPerLiter(costPerLiter);
 
+        let result;
         if(previousRefueling && nextRefueling) {
             //carmileage need to be in range
             if(data.carMileage <= previousRefueling.dataValues.carMileage || data.carMileage >= nextRefueling.dataValues.carMileage) {
@@ -139,7 +140,7 @@ export const editOneRefueling_PUT_admin = async (req: Request, res: Response, ne
             refuelingToUpdate.changeAverageConsumption(averageConsumption);
 
             //update next refueling avarageConsumption
-            refuelingToUpdate.updateOneRefuelingAndUpdateNext(nextRefueling.dataValues.id);
+            result = await refuelingToUpdate.updateOneRefuelingAndUpdateNext(nextRefueling.dataValues.id);
         
         }
         else if(previousRefueling && !nextRefueling) {
@@ -154,7 +155,7 @@ export const editOneRefueling_PUT_admin = async (req: Request, res: Response, ne
             refuelingToUpdate.changeAverageConsumption(averageConsumption);
 
             //just edit current refueling
-            refuelingToUpdate.updateOneRefueling();
+            result = await refuelingToUpdate.updateOneRefueling();
 
 
         }
@@ -166,13 +167,14 @@ export const editOneRefueling_PUT_admin = async (req: Request, res: Response, ne
             }
             //averageConsumption is null, this is the first refueling in the table for that car
             //but update averageRefueling in the next refueling
-            refuelingToUpdate.updateOneRefuelingAndUpdateNext(nextRefueling.dataValues.id); 
+            result = await refuelingToUpdate.updateOneRefuelingAndUpdateNext(nextRefueling.dataValues.id); 
         }
         else {
             //the only one refueling in the table for that car
             //just edit and avg consumption is null
-            refuelingToUpdate.updateOneRefueling();
+            result = await refuelingToUpdate.updateOneRefueling();
         }
+        res.status(200).json({status: 'success', data: result})
 
     }
     catch (err) {

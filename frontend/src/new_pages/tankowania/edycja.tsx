@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loader from "../../common/Loader";
 import Breadcrumb from '../../components/Breadcrumb';
-import RefuelingReportForm from '../../components/refuelings/report/RefuelingReportForm';
 import fetchData from '../../utilities/fetchData';
 import OperationResult from '../../components/general/OperationResult';
 import DOMAIN_NAME from "../../utilities/domainName";
 import { ApiResponse } from "../../types/common";
 import useAuth from "../../hooks/useAuth";
+import RefuelingEditForm from "../../components/refuelings/edit/RefuelingEditForm";
 
   interface Props {
       documentTitle: string;
@@ -18,6 +18,7 @@ const EditRefuelingForm = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
     const params = useParams();
+    const { auth } = useAuth();
 
     const [data1, setData1] = useState<ApiResponse>(); //refueling data
     const [data2, setData2] = useState<ApiResponse>(); //basic car data
@@ -57,7 +58,7 @@ const EditRefuelingForm = (props: Props) => {
       <>
       <Breadcrumb pageName="Edycja tankowania" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <p>EDYCJA</p> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <RefuelingEditForm refuelingData={data1?.data} carData={data2?.data} usersData={data3?.data} auth={auth}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
      
       </>
     );

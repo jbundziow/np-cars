@@ -5,6 +5,14 @@ export enum FormPageStatus {
     FailOnSendingForm
   }
 
+export enum EditFormPageStatus {
+    FillingTheForm,
+    DataSuccessfullyEdited,
+    DataSuccessfullyDeleted,
+    ErrorWithSendingForm,
+    FailOnSendingForm
+  }
+
 
   export enum generateExcelPageState {
     initial,
