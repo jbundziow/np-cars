@@ -33,6 +33,11 @@ export const addOneRefueling_POST_user = async (req: Request, res: Response, nex
             return;
         }
 
+        if (new Date(data.refuelingDate) > new Date())  {
+            res.status(400).json({status: 'fail', data: [{en: `The refueling date cannot be in the future.`, pl: `Data tankowania nie może być w przyszłości.`}]})
+            return;
+        }
+
         
             const newRefueling = new Refueling(null, Number(req.params.carid), userID, data.refuelingDate, null, data.carMileage, null, data.numberOfLiters, data.costBrutto, null, data.isFuelCardUsed, data.moneyReturned, null, null);
             await addOneRefuelingByNormalUserSchema.validateAsync(newRefueling);

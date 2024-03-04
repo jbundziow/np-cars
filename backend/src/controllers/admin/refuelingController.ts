@@ -42,6 +42,13 @@ export const addOneRefueling_POST_admin = async (req: Request, res: Response, ne
             return;
         }
 
+        if (new Date(data.refuelingDate) > new Date())  {
+            res.status(400).json({status: 'fail', data: [{en: `The refueling date cannot be in the future.`, pl: `Data tankowania nie może być w przyszłości.`}]})
+            return;
+        }
+
+        
+
         
             const newRefueling = new Refueling(null, Number(req.params.carid), Number(data.userID), data.refuelingDate, adminID, data.carMileage, null, data.numberOfLiters, data.costBrutto, null, data.isFuelCardUsed, data.moneyReturned, data.invoiceNumber, data.isAcknowledgedByModerator);
             await addOneRefuelingByAdminUserSchema.validateAsync(newRefueling);
@@ -111,6 +118,11 @@ export const editOneRefueling_PUT_admin = async (req: Request, res: Response, ne
 
         const refuelingToUpdate = new Refueling(Number(req.params.refuelingid), isRefuelingExist.dataValues.carID, data.userID, data.refuelingDate, adminID, data.carMileage, null, data.numberOfLiters, data.costBrutto, null, data.isFuelCardUsed, data.moneyReturned, data.invoiceNumber, data.isAcknowledgedByModerator);
         await editOneRefuelingByAdminUserSchema.validateAsync(refuelingToUpdate);
+
+        if (new Date(data.refuelingDate) > new Date())  {
+            res.status(400).json({status: 'fail', data: [{en: `The refueling date cannot be in the future.`, pl: `Data tankowania nie może być w przyszłości.`}]})
+            return;
+        }
 
         const costPerLiter: number = Number((data.costBrutto / data.numberOfLiters).toFixed(2));
         refuelingToUpdate.changeCostPerLiter(costPerLiter);
