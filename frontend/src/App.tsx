@@ -7,7 +7,8 @@ import Homepage from './new_pages/Homepage';
 import SignIn from './new_pages/authentication/SignIn';
 import SignUp from './new_pages/authentication/SignUp';
 import Loader from './common/Loader';
-import routes from './routes';
+import routes from './routes/index';
+import adminRoutes from './routes/admin';
 import RequireAuth from './components/RequireAuth';
 import AuthLayout from './layout/AuthLayout';
 import Unauthorized from './new_pages/authentication/Unauthorized';
@@ -66,8 +67,22 @@ function App() {
         </Route>
 
         {/* TODO: protected routes only for admins */}
-        {/* <Route element={<RequireAuth allowedRoles={['admin']} />}>
-        </Route> */}
+        <Route element={<RequireAuth allowedRoles={['admin']} />}>
+          <Route element={<DefaultLayout />}>
+            <Route index element={<Homepage documentTitle={'Strona główna' + websiteTitle} />} />
+            {adminRoutes.map(({ path, component: Component, title }) => (
+              <Route
+                path={path}
+                element={
+                  <Suspense fallback={<Loader />}>
+                    <Component documentTitle={title + websiteTitle}/>
+                  </Suspense>
+                }
+              />
+            ))}
+          </Route>
+        </Route>
+
 
       </Routes>
     </>

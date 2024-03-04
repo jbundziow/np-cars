@@ -1,5 +1,6 @@
 import { lazy } from 'react';
 
+
 const FutureReservations = lazy(() => import('../new_pages/rezerwacje/przyszle-rezerwacje'));
 const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
 const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje/index'));

@@ -198,7 +198,7 @@ export const fetchLastRefuelingAndFuelLevelOfAllCars_GET_user = async (req: Requ
 
 
 
-export const deleteLastRefueling_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+export const deleteLastRefueling_DELETE_user = async (req: Request, res: Response, next: NextFunction) => {
 
     const data = req.body;
     if (!data.refuelingID || isNaN(Number(data.refuelingID))) {
@@ -275,4 +275,32 @@ export const deleteLastRefueling_GET_user = async (req: Request, res: Response, 
         res.status(500).json({status: 'error', message: e})
     }
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+export const fetchOneRefueling_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    const refuelingID = req.params.refuelingid;
+    if (!refuelingID || isNaN(Number(refuelingID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refueling ID.', pl: 'Podano złe ID tankowania.'}]})
+        return;
+    }
+
+    const refueling = await Refueling.fetchOne(Number(refuelingID));
+    if(refueling) {
+        res.status(200).json({status: 'success', data: refueling})
+    }
+    else {
+        res.status(400).json({status: 'fail', data: [{en: `Refueling of ID: ${req.params.refuelingid} is not found in the database.`, pl: `Tankowanie o ID: ${req.params.refuelingid} nie zostało znalezione w bazie danych.`}]})
+        return;
+    }
 }
