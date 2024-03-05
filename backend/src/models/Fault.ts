@@ -79,7 +79,7 @@ class Fault {
           title: this.title,
           description: this.description,
           status: this.status,
-          resultDesctiption: this.resultDescription,
+          resultDescription: this.resultDescription,
           repairCost: this.repairCost,
         })
     }
@@ -94,7 +94,7 @@ class Fault {
         title: this.title,
         description: this.description,
         status: this.status,
-        resultDesctiption: this.resultDescription,
+        resultDescription: this.resultDescription,
         repairCost: this.repairCost,
       },
       { where: {id: this.id} },

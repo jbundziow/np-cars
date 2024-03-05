@@ -2,13 +2,14 @@ import { Link } from "react-router-dom";
 import { db_Car_basic, db_Fault, db_User } from "../../../types/db_types";
 import OperationResult from "../../general/OperationResult";
 import { EditFormPageStatus } from "../../../types/enums";
-import { AuthType, warnings } from "../../../types/common";
+import { warnings } from "../../../types/common";
 import { useState } from "react";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { Option } from "react-tailwindcss-select/dist/components/type";
 import ModalWarning from "../../general/ModalWarning";
 import { dateFormatter } from "../../../utilities/dateFormatter";
+import useAuth from "../../../hooks/useAuth";
 
 type faultDataSchema = {
   carData: db_Car_basic,
@@ -22,7 +23,7 @@ interface FaultEditFormProps {
 
 const FaultEditForm = (props: FaultEditFormProps) => {
 
-
+  const { auth } = useAuth();
 
 
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
@@ -50,7 +51,6 @@ const FaultEditForm = (props: FaultEditFormProps) => {
   const [status, setStatus] = useState<string>(props.faultAndCarBasicData.faultData.status);
   const [resultDescription, setResultDescription] = useState<string | null>(props.faultAndCarBasicData.faultData.resultDescription);
   const [repairCost, setRepairCost] = useState<number | '' | null>(props.faultAndCarBasicData.faultData.repairCost);
-  const [moderatorID, setModeratorID] = useState<number | null>(props.faultAndCarBasicData.faultData.moderatorID);
 
 
 
@@ -69,78 +69,83 @@ const FaultEditForm = (props: FaultEditFormProps) => {
 
   const editFault = async () => {
 
-    // const finalInvoiceNumber = invoiceNumber === '' ? null : invoiceNumber;
-    // const finalMoneyReturned = isFuelCardUsed ? null : moneyReturned;
-    // const editedRefuelingData = {
-    //   userID: Number(userID.value),
-    //   refuelingDate: refuelingDate,
-    //   carMileage: carMileage,
-    //   numberOfLiters: numberOfLiters,
-    //   costBrutto: costBrutto,
-    //   isFuelCardUsed: isFuelCardUsed,
-    //   moneyReturned: finalMoneyReturned,
-    //   invoiceNumber: finalInvoiceNumber,
-    //   isAcknowledgedByModerator: isAcknowledgedByModerator,
-    // };
+    const finalModeratorID = status === 'pending' ? null : Number(auth.userID);
+    const finalResultDescription = resultDescription === '' || resultDescription === null ? null : resultDescription;
+    const finalRepairCost = repairCost === '' || repairCost === null ? null : repairCost;
+
+    const editedFaultData = {
+      userID: Number(userID.value),
+      moderatorID: finalModeratorID,
+      lastChangeAt: new Date(),
+      title: title,
+      description: description,
+      status: status,
+      resultDescription: finalResultDescription,
+      repairCost: finalRepairCost,
+    };
 
 
-    // try {
-    //   const response = await fetch(`${DOMAIN_NAME}/admin/refuelings/${props.refuelingData.id}`, {
-    //     method: 'PUT',
-    //     headers: {
-    //       'Content-Type': 'application/json; charset=utf-8',
-    //     },
-    //     credentials: 'include',
-    //     body: JSON.stringify(editedRefuelingData),
-    //   });
-    //   if (response.ok) {
-    //     setPageState(EditFormPageStatus.DataSuccessfullyEdited);
+    try {
+      const response = await fetch(`${DOMAIN_NAME}/admin/faults/${props.faultAndCarBasicData.faultData.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        credentials: 'include',
+        body: JSON.stringify(editedFaultData),
+      });
+      if (response.ok) {
+        setPageState(EditFormPageStatus.DataSuccessfullyEdited);
 
-    //   } else {
-    //     const responseJSON = await response.json();
-    //     if(responseJSON.status === 'fail') {
-    //       setPageState(EditFormPageStatus.FailOnSendingForm);
-    //       setWarnings(responseJSON.data);
-    //     }
-    //     else {
-    //     setPageState(EditFormPageStatus.ErrorWithSendingForm);
-    //     }
-    //   }
-    // }
-    // catch (error) {
-    //   setPageState(EditFormPageStatus.ErrorWithSendingForm);
-    // }
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setPageState(EditFormPageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
+        }
+        else {
+        setPageState(EditFormPageStatus.ErrorWithSendingForm);
+        }
+      }
+    }
+    catch (error) {
+      setPageState(EditFormPageStatus.ErrorWithSendingForm);
+    }
     
   };
 
+
+
+
+
+
   const deleteFault = async () => {
-    // try {
-    //       const response = await fetch(`${DOMAIN_NAME}/admin/refuelings/${props.refuelingData.id}`, {
-    //         method: 'DELETE',
-    //         headers: {
-    //           'Content-Type': 'application/json; charset=utf-8',
-    //         },
-    //         credentials: 'include',
-    //       });
+    try {
+          const response = await fetch(`${DOMAIN_NAME}/admin/faults/${props.faultAndCarBasicData.faultData.id}`, {
+            method: 'DELETE',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+            credentials: 'include',
+          });
     
-    //       if (response.ok) {
-    //         console.log('ok');
-    //         setPageState(EditFormPageStatus.DataSuccessfullyDeleted);
+          if (response.ok) {
+            setPageState(EditFormPageStatus.DataSuccessfullyDeleted);
     
-    //       } else {
-    //         const responseJSON = await response.json();
-    //         if(responseJSON.status === 'fail') {
-    //           setPageState(EditFormPageStatus.FailOnSendingForm);
-    //           setWarnings(responseJSON.data);
-    //         }
-    //         else {
-    //         setPageState(EditFormPageStatus.ErrorWithSendingForm);
-    //         }
-    //       }
-    //     }
-    //     catch (error) {
-    //       setPageState(EditFormPageStatus.ErrorWithSendingForm);
-    //     }
+          } else {
+            const responseJSON = await response.json();
+            if(responseJSON.status === 'fail') {
+              setPageState(EditFormPageStatus.FailOnSendingForm);
+              setWarnings(responseJSON.data);
+            }
+            else {
+            setPageState(EditFormPageStatus.ErrorWithSendingForm);
+            }
+          }
+        }
+        catch (error) {
+          setPageState(EditFormPageStatus.ErrorWithSendingForm);
+        }
   }
 
 
@@ -205,10 +210,7 @@ const FaultEditForm = (props: FaultEditFormProps) => {
                           </span>
                           <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 mr-8 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                           value={status}
-                          onChange={(e)=>{
-                            setStatus(e.target.value);
-                            if(e.target.value === 'pending') { setModeratorID(null) }
-                          }}
+                          onChange={(e)=>{setStatus(e.target.value)}}
                           >
                             <option value="pending">Do akceptacji</option>
                             <option value="accepted">W trakcie</option>
@@ -271,6 +273,7 @@ const FaultEditForm = (props: FaultEditFormProps) => {
                     </label>
                     <input
                       type="text"
+                      required
                       value={title ? title : ''}
                       onChange={(e)=>setTitle(e.target.value)}
                       className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"

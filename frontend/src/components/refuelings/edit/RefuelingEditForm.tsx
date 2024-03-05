@@ -115,6 +115,10 @@ const RefuelingEditForm = (props: RefuelingEditFormProps) => {
     
   };
 
+
+
+
+  
   const deleteRefueling = async () => {
     try {
           const response = await fetch(`${DOMAIN_NAME}/admin/refuelings/${props.refuelingData.id}`, {
@@ -126,7 +130,6 @@ const RefuelingEditForm = (props: RefuelingEditFormProps) => {
           });
     
           if (response.ok) {
-            console.log('ok');
             setPageState(EditFormPageStatus.DataSuccessfullyDeleted);
     
           } else {

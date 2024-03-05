@@ -7,6 +7,7 @@ import UserSpan from "../../general/spanElements/UserSpan";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import { useState } from "react";
+import ModalWarning from "../../general/ModalWarning";
 
 
 type faultDataSchema = {
@@ -21,6 +22,8 @@ interface FaultDetailsContainerProps {
 
 
 const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
+
+  const [showWarningConfirmModal, setShowWarningConfirmModal] = useState<boolean>(false);
 
   
 
@@ -87,6 +90,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
     return (
       <>
       <FixedAlert options={alertOptions}/>
+      <ModalWarning showModal={showWarningConfirmModal} setShowModal={(state: boolean) => setShowWarningConfirmModal(state)} title= {'Zatwierdź zmianę statusu'} bodyText={`Czy na pewno chcesz zatwierdzić zmianę statusu tej usterki na "W trakcie"?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, zatwierdzam'} callback={ async () => await confirmFault() }/>
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
 
         <div className='p-5 pt-0'>
@@ -128,7 +132,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
             <div className="mb-1 border rounded-md p-2 w-full md:w-[90%] dark:bg-form-input">
             {props.faultAndCarData.faultData.resultDescription ? <p>{props.faultAndCarData.faultData.resultDescription}</p> : <p className='text-danger'>Brak komentarza.</p>}
             </div>
-            {props.faultAndCarData.faultData.status === 'finished' &&  auth.userRole === 'admin' && props.faultAndCarData.faultData.repairCost ?
+            {props.faultAndCarData.faultData.status === 'finished' &&  auth.userRole === 'admin' && props.faultAndCarData.faultData.repairCost !== null ?
             <p className="mt-4 mb-1"><h5 className="font-bold inline-block">Koszt naprawy:&nbsp;</h5>{props.faultAndCarData.faultData.repairCost} zł [netto]</p>
             :
             null
@@ -144,7 +148,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
               <button
               hidden={buttonHidden}
               className={`flex flex-col w-full sm:w-10/12 md:w-1/3 justify-center items-center rounded bg-success p-3 font-medium text-gray hover:opacity-90 text-sm" ${buttonHidden ? 'invisible' : 'visible'}`}
-              onClick={() => confirmFault()}
+              onClick={() => setShowWarningConfirmModal(true)}
               >
                 Zmień status usterki na<span>"W trakcie"</span>
               </button>

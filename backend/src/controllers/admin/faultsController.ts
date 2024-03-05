@@ -2,7 +2,7 @@ import { NextFunction, Request, Response, response } from 'express'
 import identifyUserId from '../../utilities/functions/JWT/identifyUserId';
 import Fault from '../../models/Fault';
 import User from '../../models/User';
-import { editOneRefuelingByAdminUserSchema } from '../../models/validation/RefuelingSchemas';
+import { editOneFaultByAdminSchema } from '../../models/validation/FaultsSchemas';
 
 
 
@@ -35,9 +35,8 @@ export const editOneFault_PUT_admin = async (req: Request, res: Response, next: 
             res.status(400).json({status: 'fail', data: [{en: `The user of id: ${Number(data.userID)} does not exist in the database.`, pl: `Użytkownik o ID: ${Number(data.userID)} nie istnieje w bazie danych.`}]})
             return;
         }
-
-        const faultToUpdate = new Fault(Number(req.params.faultid), isFaultExist.dataValues.carID, data.userID, adminID, new Date(), data.title, data.description, data.status, data.resultDescription, data.repairCost);
-        await editOneRefuelingByAdminUserSchema.validateAsync(faultToUpdate);
+        const faultToUpdate = new Fault(Number(req.params.faultid), isFaultExist.dataValues.carID, data.userID, adminID, new Date(), data.title, data.description, data.status, data.resultDescription, (data.repairCost > 0 ? data.repairCost.toFixed(2) : data.repairCost));
+        await editOneFaultByAdminSchema.validateAsync(faultToUpdate);
 
         const result = await faultToUpdate.updateOneFault();
         res.status(200).json({status: 'success', data: result})

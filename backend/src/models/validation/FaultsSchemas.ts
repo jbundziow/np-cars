@@ -21,12 +21,12 @@ const addOneFaultByUserSchema = Joi.object({
     moderatorID: Joi.number()
         .integer()
         .positive()
-        .allow(null)
+        .valid(null)
         .optional(),
 
     lastChangeAt: Joi.date()
         .iso()
-        .allow(null)
+        .valid(null)
         .optional(),
 
     title: Joi.string()
@@ -40,19 +40,19 @@ const addOneFaultByUserSchema = Joi.object({
         .required(),
 
     status: Joi.string()
-        .valid('pending', 'accepted', 'finished', 'cancelled')
+        .valid('pending')
         .required(),
 
     resultDescription: Joi.string()
         .min(1)
         .max(1000)
-        .allow(null)
+        .valid(null)
         .optional(),
 
     repairCost: Joi.number()
         .max(50000)
         .positive()
-        .allow(null)
+        .valid(null)
         .optional(),
 
 })
@@ -107,7 +107,7 @@ const editOneFaultByAdminSchema = Joi.object({
 
     repairCost: Joi.number()
         .max(300000)
-        .positive()
+        .min(0)
         .allow(null)
         .optional(),
 })
