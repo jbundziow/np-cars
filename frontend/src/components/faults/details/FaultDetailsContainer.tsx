@@ -4,6 +4,9 @@ import { dateFormatter } from "../../../utilities/dateFormatter";
 import useAuth from "../../../hooks/useAuth";
 import { db_Car_basic, db_Fault, db_User } from "../../../types/db_types";
 import UserSpan from "../../general/spanElements/UserSpan";
+import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
+import DOMAIN_NAME from "../../../utilities/domainName";
+import { useState } from "react";
 
 
 type faultDataSchema = {
@@ -41,17 +44,49 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
     return result;
   }
 
-
-
-
-
   const userObject = props.usersData.find(user => user.id === props.faultAndCarData.faultData.userID);
   const moderatorObject = props.usersData.find(user => user.id === props.faultAndCarData.faultData.moderatorID);
   const { auth } = useAuth();
 
 
+
+  const [faultDeleted, setFaultDeleted] = useState<boolean>(false);
+  const [buttonHidden, setButtonHidden] = useState<boolean>(props.faultAndCarData.faultData.status === 'pending' || faultDeleted === true ? false : true)
+  const [alertOptions, setAlertOptions] = useState<alertOptionsObject>({showAlert: false, color: 'danger', text: '#ERR#', dismiss_button: false, autohide: true, delay_ms: 1, key: 1});
+
+  const confirmFault = async () => {
+      try {
+          const response = await fetch(`${DOMAIN_NAME}/admin/faults/confirm`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json; charset=utf-8',
+            },
+            credentials: 'include',
+            body: JSON.stringify({faultid: props.faultAndCarData.faultData.id}),
+          });
+          const responseJSON = await response.json();
+          if(responseJSON.status === 'success') {
+              setFaultDeleted(true)
+              setButtonHidden(true)
+              setAlertOptions(({showAlert: true, color: 'success', text: 'Pomyślnie zmieniono status usterki.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+          }
+          else if(responseJSON.status === 'fail') {
+              setAlertOptions(({showAlert: true, color: 'danger', text: `Wystąpił błąd: ${responseJSON.data[0].pl}`, dismiss_button: true, autohide: true, delay_ms: 7000, key: Math.random()}))
+            }
+          else {
+              setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas zmiany statusu usterki. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+          }
+          
+        }
+        catch (error) {
+          setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas zmiany statusu usterki. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+        }
+  }
+
+
     return (
       <>
+      <FixedAlert options={alertOptions}/>
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
 
         <div className='p-5 pt-0'>
@@ -68,7 +103,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
         <div className='col-span-3'>
         <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
             <h1 className="text-3xl font-bold mb-3">{props.faultAndCarData.faultData.title}</h1>
-            <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5>{faultStatusJSX(`${props.faultAndCarData.faultData.status}`)}</p>
+            <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5>{faultStatusJSX(faultDeleted ? 'accepted' : props.faultAndCarData.faultData.status)}</p>
             {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
             <p className="mb-0"><h5 className="font-bold inline-block">Usterka zgłoszona przez:&nbsp;</h5><UserSpan userObj={userObject} nullText={"#ERR#"} linkTarget={'_self'} no_wrap={false}/></p>
             <p className="mb-2"><h5 className="font-bold inline-block">Data zgłoszenia usterki:&nbsp;</h5>{dateFormatter(props.faultAndCarData.faultData.createdAt.toString())}</p>
@@ -106,9 +141,13 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
 
             {auth.userRole === 'admin' ?
             <div className='flex flex-col md:flex-row justify-center items-center mt-10 mb-4 mx-2 gap-10'>
-              <Link to={`/usterki/zmiana-statusu/${props.faultAndCarData.faultData.id}`} className="flex w-full sm:w-10/12 md:w-1/3 justify-center rounded bg-success p-3 font-medium text-gray hover:opacity-90">
-                Zmień status usterki
-              </Link>
+              <button
+              hidden={buttonHidden}
+              className={`flex flex-col w-full sm:w-10/12 md:w-1/3 justify-center items-center rounded bg-success p-3 font-medium text-gray hover:opacity-90 text-sm" ${buttonHidden ? 'invisible' : 'visible'}`}
+              onClick={() => confirmFault()}
+              >
+                Zmień status usterki na<span>"W trakcie"</span>
+              </button>
               <Link to={`/usterki/edycja/${props.faultAndCarData.faultData.id}`} className="flex w-full sm:w-10/12 md:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:opacity-90">
                 Edytuj dane usterki
               </Link>

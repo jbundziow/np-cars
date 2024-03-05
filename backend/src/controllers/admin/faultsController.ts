@@ -106,7 +106,9 @@ export const deleteOneFault_DELETE_admin = async (req: Request, res: Response, n
 
 export const acknowledgeOneFault_PUT_admin = async (req: Request, res: Response, next: NextFunction) => {
     
-    if (!req.params.faultid || isNaN(Number(req.params.faultid))) {
+    const data = req.body;
+
+    if (!data.faultid || isNaN(Number(data.faultid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong fault ID.', pl: 'Podano złe ID usterki.'}]})
         return;
     }
@@ -116,14 +118,18 @@ export const acknowledgeOneFault_PUT_admin = async (req: Request, res: Response,
     try {
         const {id: adminID} = await identifyUserId(req.cookies.jwt);
 
-        const isFaultExist = await Fault.fetchOne(Number(req.params.faultid));
+        const isFaultExist = await Fault.fetchOne(Number(data.faultid));
         if(!isFaultExist) {
-            res.status(400).json({status: 'fail', data: [{en: `The fault of id: ${Number(req.params.faultid)} does not exist in the database.`, pl: `Usterka o ID: ${Number(req.params.faultid)} nie istnieje w bazie danych.`}]})
+            res.status(400).json({status: 'fail', data: [{en: `The fault of id: ${Number(data.faultid)} does not exist in the database.`, pl: `Usterka o ID: ${Number(data.faultid)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+        if(isFaultExist.dataValues.status !== 'pending') {
+            res.status(400).json({status: 'fail', data: [{en: `The fault of id: ${Number(data.faultid)} does not have status "pending".`, pl: `Usterka o ID: ${Number(data.faultid)} nie ma aktualnie statusu "Do akceptacji".`}]})
             return;
         }
 
         
-        const result = await Fault.acknowledgeFaultByModerator(Number(req.params.faultid), adminID);
+        const result = await Fault.acknowledgeFaultByModerator(Number(data.faultid), adminID);
         res.status(200).json({status: 'success', data: result});
         
     }

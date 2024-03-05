@@ -19,8 +19,9 @@ app.put('/refuelings/confirm', acknowledgeOneRefueling_PUT_admin)
 
 
 //faults
+app.put('/faults/confirm', acknowledgeOneFault_PUT_admin)
 app.put('/faults/:faultid', editOneFault_PUT_admin);
 app.delete('/faults/:faultid', deleteOneFault_DELETE_admin)
-app.put('/faults/confirm', acknowledgeOneFault_PUT_admin)
+
 
 export default app;

@@ -103,7 +103,7 @@ class Fault {
 
   static async acknowledgeFaultByModerator(faultID: number, moderatorID: number) {
     return await FaultModel.update({
-      status: 'pending',
+      status: 'accepted',
       moderatorID: moderatorID,
     },
     {where: {id: faultID}},
