@@ -5,8 +5,9 @@ import CarRowInTable from "../../general/CarRowInTable";
 import { db_Car_basic, db_Fault } from "../../../types/db_types";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 import useAuth from "../../../hooks/useAuth";
-import FaultStatusSpan from "../../general/spanElements/faultStatusSpan";
+import FaultStatusSpan from "../../general/spanElements/FaultStatusSpan";
 import { Link } from "react-router-dom";
+import { PaginationType } from "../../../types/common";
 
 
 
@@ -16,6 +17,7 @@ interface MyFaultsTableRowProps {
     carData: db_Car_basic;
     faultData: db_Fault;
     index: number;
+    paginationData: PaginationType,
   }
 
 const MyFaultsTableRow = (props: MyFaultsTableRowProps) => {
@@ -76,25 +78,27 @@ const MyFaultsTableRow = (props: MyFaultsTableRowProps) => {
 
     
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-      {auth.userRole !== 'admin' && props.index === 0 ?
+      <div className="flex flex-row md:flex-col items-center gap-3">
+        {auth.userRole !== 'admin' && props.index === 0 && props.paginationData.currentPage === 1 ?
+          <div className="flex items-center space-x-3.5">
+          <button
+          onClick={() => setShowWarningModal(true)}
+          className='inline-flex items-center justify-center rounded-full bg-danger py-1 sm:py-2 px-4 sm:px-7 text-center text-xs font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
+          >
+          Usuń usterkę
+          </button>
+          </div>
+        :
+        null
+        }
         <div className="flex items-center space-x-3.5">
-        <button
-        onClick={() => setShowWarningModal(true)}
-        className='inline-flex items-center justify-center rounded-full bg-danger py-1 sm:py-2 px-4 sm:px-7 text-center text-xs font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
-        >
-        Usuń usterkę
-        </button>
+          <Link
+          to={`/usterki/${props.faultData.id}`}
+          className='inline-flex items-center justify-center rounded-full bg-primary py-1 sm:py-2 px-4 sm:px-7 text-center text-xs font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
+          >
+          Szczegóły
+          </Link>
         </div>
-      :
-      null
-      }
-      <div className="flex items-center space-x-3.5">
-        <Link
-        to={`/usterki/${props.faultData.id}`}
-        className='inline-flex items-center justify-center rounded-full bg-primary py-1 sm:py-2 px-4 sm:px-7 text-center text-xs font-medium text-white hover:bg-opacity-80 lg:px-6 xl:px-8'
-        >
-        Szczegóły
-        </Link>
       </div>
     </td>
     

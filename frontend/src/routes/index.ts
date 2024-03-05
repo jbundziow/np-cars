@@ -1,6 +1,7 @@
 import { lazy } from 'react';
 
 
+
 const FutureReservations = lazy(() => import('../new_pages/rezerwacje/przyszle-rezerwacje'));
 const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
 const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje/index'));
@@ -13,7 +14,6 @@ const ReportRefueling = lazy(() => import('../new_pages/tankowania/zglos-tankowa
 const ReportRefuelingForm = lazy(() => import('../new_pages/tankowania/zglos-tankowanie-form'));
 const MyRefuelings = lazy(() => import('../new_pages/tankowania/moje-tankowania'));
 const RefuelingArchive = lazy(() => import('../new_pages/tankowania/archiwum'));
-const FaultsArchive = lazy(() => import('../new_pages/usterki/archiwum'));
 const RepairsStatus = lazy(() => import('../new_pages/usterki/status-napraw'));
 const RepairsStatusDetails = lazy(() => import('../new_pages/usterki/status-napraw-details'));
 const FaultDetails = lazy(() => import('../new_pages/usterki/status-usterki'));
@@ -25,6 +25,7 @@ const RentACarForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samoc
 const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod'));
 const ReturnACarForm = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod-form'));
 const ActualRentals = lazy(() => import('../new_pages/wypozyczenia/biezace-wypozyczenia'));
+const UsersList = lazy(() => import('../new_pages/uzytkownicy/zestawienie'));
 const UserMainpage = lazy(() => import('../new_pages/uzytkownicy/index'));
 
 
@@ -165,14 +166,14 @@ const coreRoutes = [
     title: 'Usterki zgłoszone przeze mnie',
     component: MyFaults,
   },
-  {
-    path: '/usterki/archiwum',
-    title: 'Archiwum napraw',
-    component: FaultsArchive,
-  },
 
 
   //uzytkownicy
+  {
+    path: '/uzytkownicy/zestawienie',
+    title: 'Lista użytkowników',
+    component: UsersList,
+  },
   {
     path: '/uzytkownicy/:userid',
     title: 'Profil użytkownika',

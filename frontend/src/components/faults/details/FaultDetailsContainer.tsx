@@ -8,7 +8,7 @@ import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import { useState } from "react";
 import ModalWarning from "../../general/ModalWarning";
-import FaultStatusSpan from "../../general/spanElements/faultStatusSpan";
+import FaultStatusSpan from "../../general/spanElements/FaultStatusSpan";
 
 
 type faultDataSchema = {

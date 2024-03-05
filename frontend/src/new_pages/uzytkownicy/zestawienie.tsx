@@ -5,13 +5,13 @@ interface Props {
     documentTitle: string;
   }
 
-const FaultsArchive = (props: Props) => {
+const UsersList = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
     return (
       <>
-      <Breadcrumb pageName="Archiwum usterek" />
+      <Breadcrumb pageName="Lista wszystkich użytkowników" />
       </>
     );
   };
   
-  export default FaultsArchive
+  export default UsersList

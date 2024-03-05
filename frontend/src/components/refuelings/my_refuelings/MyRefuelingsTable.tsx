@@ -68,6 +68,7 @@ const MyRefuelingsTable = (props: MyRefuelingsTableProps) => {
                 )}
               </tbody>
             </table>
+                <p className='dark:text-white text-black text-xs xl:text-sm my-2 mx-2'>Łączna ilość wyników: {props.paginationData.totalCount}</p>
           </div>
 
           <div className="flex justify-center">

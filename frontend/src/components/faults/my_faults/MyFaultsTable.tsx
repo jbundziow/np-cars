@@ -52,12 +52,13 @@ const MyFaultsTable = (props: MyFaultsTableProps) => {
                 {props.faultsData.map((fault, index) => {
                   const carData = props.carsData.find(car => car.id === fault.carID) || {id: NaN, brand: '#ERROR#', model: '', imgPath: '', availabilityStatus: 'available'};
                   return (
-                  <MyFaultsTableRow carData={carData} faultData={fault} index={index} />
+                  <MyFaultsTableRow carData={carData} faultData={fault} index={index} paginationData={props.paginationData} />
                   );
                 }
                 )}
               </tbody>
             </table>
+                  <p className='dark:text-white text-black text-xs xl:text-sm my-2 mx-2'>Łączna ilość wyników: {props.paginationData.totalCount}</p>
           </div>
 
           <div className="flex justify-center">

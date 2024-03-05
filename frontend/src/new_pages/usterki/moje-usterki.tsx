@@ -37,7 +37,7 @@ const MyFaults = (props: Props) => {
         if(res1.pagination) {setPaginationData(res1.pagination)}
         setData1(res1);
         if(res1.status === 'success') {
-          const res2 = await fetchData(`${DOMAIN_NAME}/cars?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          const res2 = await fetchData(`${DOMAIN_NAME}/cars?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           setData2(res2);
         }
   

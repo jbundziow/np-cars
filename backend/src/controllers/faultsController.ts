@@ -153,7 +153,7 @@ export const fetchAllFaultsOfACar_GET_user = async (req: Request, res: Response,
 
 export const fetchAllCarsWithNumberOfFaults_GET_user = async (req: Request, res: Response, next: NextFunction) => {
         try {
-            const carsData = await Car.fetchAllBasicData(false);
+            const carsData = await Car.fetchAllBasicData(true);
             let carsIDs:number[] = []
             let pending:number[] = [];
             let accepted:number[] = [];
