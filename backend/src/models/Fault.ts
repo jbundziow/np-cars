@@ -84,6 +84,32 @@ class Fault {
         })
     }
 
+    async updateOneFault() {
+      await FaultModel.update({
+        // id: this.id,
+        // carID: this.carID,
+        userID: this.userID,
+        moderatorID: this.moderatorID,
+        lastChangeAt: this.lastChangeAt,
+        title: this.title,
+        description: this.description,
+        status: this.status,
+        resultDesctiption: this.resultDescription,
+        repairCost: this.repairCost,
+      },
+      { where: {id: this.id} },
+      )
+  }
+
+  static async acknowledgeFaultByModerator(faultID: number, moderatorID: number) {
+    return await FaultModel.update({
+      status: 'pending',
+      moderatorID: moderatorID,
+    },
+    {where: {id: faultID}},
+    );
+  }
+
     static async fetchAll() {
         return await FaultModel.findAll()
     }
@@ -112,6 +138,18 @@ class Fault {
     }
     static async fetchAllOfUserBasic(userID: number) {
       return await FaultModel.findAll({ where: { userID: userID }, attributes: ['id', 'carID', 'title', 'status'] })
+    }
+
+
+    static async deleteFault(id: number) {
+      const fault = await Fault.fetchOne(id);
+
+      if (fault) {
+        return await fault.destroy();
+      }
+      else {
+        throw new Error('Fault not found');
+      }
     }
 
 }

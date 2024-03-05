@@ -6,6 +6,12 @@ import Car from '../models/Car'
 import User from '../models/User';
 import { addOneFaultByUserSchema } from '../models/validation/FaultsSchemas';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
+import { getFormattedDate } from '../utilities/functions/getFormattedDate';
+
+
+
+
+
 
 
 
@@ -48,6 +54,18 @@ export const addOneFault_POST_user = async (req: Request, res: Response, next: N
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchOneFault_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.faultid))) {
         try {
@@ -75,6 +93,18 @@ export const fetchOneFault_GET_user = async (req: Request, res: Response, next: 
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong fault ID.', pl: 'Podano złe ID usterki.'}]});
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const fetchAllFaultsOfACar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {
@@ -110,6 +140,17 @@ export const fetchAllFaultsOfACar_GET_user = async (req: Request, res: Response,
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 export const fetchAllCarsWithNumberOfFaults_GET_user = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const carsData = await Car.fetchAllBasicData(false);
@@ -141,7 +182,18 @@ export const fetchAllCarsWithNumberOfFaults_GET_user = async (req: Request, res:
 }
 
 
+
+
+
+
+
+
+
+
+
 export const fetchAllFaultsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    
+
     if (!isNaN(Number(req.params.userid))) {
         try {
             let faultsOfUser;
@@ -164,7 +216,63 @@ export const fetchAllFaultsOfUser_GET_user = async (req: Request, res: Response,
 }
 
 
-//TODO: update fault by admin
-//TODO: edit/delete my own fault
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const deleteOneFault_DELETE_user = async (req: Request, res: Response, next: NextFunction) => {
+
+    if (!req.params.faultid || isNaN(Number(req.params.faultid))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong fault ID.', pl: 'Podano złe ID usterki.'}]})
+        return;
+    }
+
+
+    try {
+        const isFaultExist = await Fault.fetchOne(Number(req.params.faultid));
+        const {id: userID} = await identifyUserId(req.cookies.jwt);
+        const isUserExist = await User.fetchOne(userID, false)
+
+        if(!isFaultExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The fault of id: ${Number(req.params.faultid)} does not exist in the database.`, pl: `Usterka o ID: ${Number(req.params.faultid)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+        if(!isUserExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The user of id: ${userID} does not exist in the database.`, pl: `Użytkownik o ID: ${userID} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        if(isFaultExist.dataValues.userID !== userID) {
+            res.status(400).json({status: 'fail', data: [{en: `You cannot delete a fault that does not belong to you`, pl: `Nie możesz usunąć usterki, która nie należy do Ciebie.`}]})
+            return; 
+        }
+
+        const dateToday = new Date()
+        const oneDayAgo = new Date(dateToday.getTime() - 24 * 60 * 60 * 1000); // subtract 1 day from today's date
+        if (isFaultExist.dataValues.createdAt < oneDayAgo) {
+            res.status(400).json({status: 'fail', data: [{en: `You cannot delete faults older than 1 day. Only administrator has permissions to do it.`, pl: `Nie możesz usuwać usterek starszych niż 1 dzień. Tylko administrator może to zrobić.`}]});
+            return;
+        }
+
+
+        const result = await Fault.deleteFault(Number(req.params.faultid));
+        res.status(200).json({status: 'success', data: result})
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({status: 'error', message: err})
+    }
+
+}
 
 

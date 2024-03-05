@@ -104,12 +104,21 @@ export const editOneRefueling_PUT_admin = async (req: Request, res: Response, ne
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong refueling ID.', pl: 'Podano złe ID tankowania.'}]})
         return;
     }
+    if (!data.userID || isNaN(Number(data.userID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
+        return;
+    }
 
     try {
         const {id: adminID} = await identifyUserId(req.cookies.jwt);
         const isRefuelingExist = await Refueling.fetchOne(Number(req.params.refuelingid));
+        const isUserExist = await User.fetchOne(Number(data.userID), false)
         if(!isRefuelingExist) {
             res.status(400).json({status: 'fail', data: [{en: `The refueling of id: ${Number(req.params.refuelingid)} does not exist in the database.`, pl: `Tankowanie o ID: ${Number(req.params.refuelingid)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+        if (!isUserExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The user of id: ${Number(data.userID)} does not exist in the database.`, pl: `Użytkownik o ID: ${Number(data.userID)} nie istnieje w bazie danych.`}]})
             return;
         }
 
@@ -261,9 +270,10 @@ export const acknowledgeOneRefueling_PUT_admin = async (req: Request, res: Respo
         return;
     }
 
-    const {id: adminID} = await identifyUserId(req.cookies.jwt);
+    
 
     try {
+        const {id: adminID} = await identifyUserId(req.cookies.jwt);
         const isRefuelingExist = Refueling.fetchOne(Number(data.refuelingid));
         if(!isRefuelingExist) {
             res.status(400).json({status: 'fail', data: [{en: `Refueling of ID: ${data.refuelingID} does not exist in the database.`, pl: `Tankowanie o ID: ${data.refuelingID} nie istnieje w bazie danych.`}]})
