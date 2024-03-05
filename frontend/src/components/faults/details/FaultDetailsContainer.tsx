@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { dateFormatter } from "../../../utilities/dateFormatter";
 import useAuth from "../../../hooks/useAuth";
 import { db_Car_basic, db_Fault, db_User } from "../../../types/db_types";
+import UserSpan from "../../general/spanElements/UserSpan";
 
 
 type faultDataSchema = {
@@ -34,21 +35,14 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
             result = <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-success cursor-default">Rozwiązana</span>
             break;
         case 'cancelled':
-            result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Odrzucona</span>
+            result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Anulowana</span>
             break;
     }
     return result;
   }
 
 
-  const userSpan = (user: db_User | undefined, nullText: string):JSX.Element => {
-      if(user) {
-          return <>{user.role === 'admin' ? <span className="rounded-lg bg-success bg-opacity-10 py-0 px-1 font-medium text-success cursor-default">Admin</span> : ''}&nbsp;<Link to={`/uzytkownicy/${user.id}`} target="_blank"><span className="underline decoration-[0.5px] underline-offset-1">{user.name} {user.surname}</span></Link></>
-      }
-      else {
-          return <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 font-medium text-warning">{nullText}</span>
-      }
-  }
+
 
 
   const userObject = props.usersData.find(user => user.id === props.faultAndCarData.faultData.userID);
@@ -76,12 +70,12 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
             <h1 className="text-3xl font-bold mb-3">{props.faultAndCarData.faultData.title}</h1>
             <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5>{faultStatusJSX(`${props.faultAndCarData.faultData.status}`)}</p>
             {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
-            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zgłoszona przez:&nbsp;</h5>{userSpan(userObject, `#BŁĄD`)}</p>
+            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zgłoszona przez:&nbsp;</h5><UserSpan userObj={userObject} nullText={"#ERR#"} linkTarget={'_self'} no_wrap={false}/></p>
             <p className="mb-2"><h5 className="font-bold inline-block">Data zgłoszenia usterki:&nbsp;</h5>{dateFormatter(props.faultAndCarData.faultData.createdAt.toString())}</p>
             {props.faultAndCarData.faultData.status !== 'pending' ?
             <>
             {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
-            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zaakceptowana przez moderatora:&nbsp;</h5>{props.faultAndCarData.faultData.moderatorID === null ? '-' : userSpan(moderatorObject, `#BŁĄD`)}</p>
+            <p className="mb-0"><h5 className="font-bold inline-block">Usterka zaakceptowana przez moderatora:&nbsp;</h5>{props.faultAndCarData.faultData.moderatorID === null ? '-' : <UserSpan userObj={moderatorObject} nullText={"#ERR#"} linkTarget={'_self'} no_wrap={false}/>}</p>
             <p className="mb-6"><h5 className="font-bold inline-block">Data ostatniej zmiany statusu:&nbsp;</h5>{props.faultAndCarData.faultData.lastChangeAt === null ? '-' : dateFormatter(props.faultAndCarData.faultData.lastChangeAt)}</p>
             </>
             :
@@ -108,6 +102,21 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
             :
             null
             }
+
+
+            {auth.userRole === 'admin' ?
+            <div className='flex flex-col md:flex-row justify-center items-center mt-10 mb-4 mx-2 gap-10'>
+              <Link to={`/usterki/zmiana-statusu/${props.faultAndCarData.faultData.id}`} className="flex w-full sm:w-10/12 md:w-1/3 justify-center rounded bg-success p-3 font-medium text-gray hover:opacity-90">
+                Zmień status usterki
+              </Link>
+              <Link to={`/usterki/edycja/${props.faultAndCarData.faultData.id}`} className="flex w-full sm:w-10/12 md:w-1/3 justify-center rounded bg-primary p-3 font-medium text-gray hover:opacity-90">
+                Edytuj dane usterki
+              </Link>
+            </div>
+            :
+            null
+            }
+
         </div>
         </div>
       </div>
