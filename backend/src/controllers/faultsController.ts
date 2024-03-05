@@ -192,21 +192,38 @@ export const fetchAllCarsWithNumberOfFaults_GET_user = async (req: Request, res:
 
 
 export const fetchAllFaultsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+
+    if(!req.query.pagenumber || isNaN(Number(req.query.pagenumber))) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'pagenumber' passed or it is not a number.`, pl: `Nie przekazano 'pagenumber' w parametrach zapytania lub nie jest to cyfra.`}]})
+        return;
+    }
+    if(!req.query.pagesize || isNaN(Number(req.query.pagesize))) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'pagesize' passed or it is not a number.`, pl: `Nie przekazano 'pagesize' w parametrach zapytania lub nie jest to cyfra.`}]})
+        return;
+    }
+
+    let sortFromOldest = false;
+    if(req.query.sortfromoldest && req.query.sortfromoldest === 'true') {sortFromOldest = true}
     
 
     if (!isNaN(Number(req.params.userid))) {
         try {
-            let faultsOfUser;
+            const pageNumber = Number(req.query.pagenumber);
+            const pageSize = Number(req.query.pagesize);
+
             if(req.query.basicdata && req.query.basicdata === 'true') {
-                faultsOfUser = await Fault.fetchAllOfUserBasic(Number(req.params.userid));
+                const faultsOfUser = await Fault.fetchAllOfUserBasic(Number(req.params.userid));
+                res.status(200).json({status: 'success', data: faultsOfUser})
             }
             else {
-                faultsOfUser = await Fault.fetchAllOfUser(Number(req.params.userid));
+                const response = await Fault.fetchAllOfUser(Number(req.params.userid), pageSize, pageNumber, sortFromOldest);
+                res.status(200).json({status: 'success', data: response.records, pagination: response.pagination})
             }
             
-            res.status(200).json({status: 'success', data: faultsOfUser})
+            
         }
         catch(e) {
+            console.log(e);
             res.status(500).json({status: 'error', message: e})
         }
     }

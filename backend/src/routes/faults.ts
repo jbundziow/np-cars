@@ -8,7 +8,7 @@ app.post('/cars/:carid', addOneFault_POST_user);
 app.get('/cars/:carid', fetchAllFaultsOfACar_GET_user);
 app.get('/users/:userid', fetchAllFaultsOfUser_GET_user);
 app.get('/:faultid', fetchOneFault_GET_user);
-app.delete('/faultid', deleteOneFault_DELETE_user)
+app.delete('/:faultid', deleteOneFault_DELETE_user)
 
 
 export default app;

@@ -133,9 +133,47 @@ class Fault {
       return await FaultModel.count({ where: { status: status, carID: carID } })
     }
 
-    static async fetchAllOfUser(userID: number) {
-      return await FaultModel.findAll({ where: { userID: userID } })
+    static async fetchAllOfUser(userID: number, pageSize: number, pageNumber: number, sortFromOldest: boolean) {
+
+      const whereClause = { userID: userID };
+
+      const totalCount = await FaultModel.count({
+        where: whereClause,
+      });
+
+      const totalPages = Math.ceil(totalCount / pageSize);
+
+
+      const offset = (pageNumber - 1) * pageSize;
+
+      let sortDirection: 'ASC' | 'DESC' = 'DESC';
+      if(sortFromOldest === true) {sortDirection = 'ASC'}
+
+      const records = await FaultModel.findAll({
+          where: whereClause,
+          limit: pageSize,
+          offset: offset,
+          order: [['createdAt', sortDirection]] //'DESC' = sort from the newest; 'ASC' = sort from the oldest
+      });
+
+
+
+      return {
+          records,
+          pagination: {
+            totalCount: totalCount,
+            totalPages: totalPages,
+            currentPage: pageNumber,
+            hasPreviousPage: pageNumber > 1,
+            hasNextPage: pageNumber < totalPages
+          }
+    
+
     }
+  }
+
+
+
     static async fetchAllOfUserBasic(userID: number) {
       return await FaultModel.findAll({ where: { userID: userID }, attributes: ['id', 'carID', 'title', 'status'] })
     }

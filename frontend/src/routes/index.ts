@@ -17,6 +17,7 @@ const FaultsArchive = lazy(() => import('../new_pages/usterki/archiwum'));
 const RepairsStatus = lazy(() => import('../new_pages/usterki/status-napraw'));
 const RepairsStatusDetails = lazy(() => import('../new_pages/usterki/status-napraw-details'));
 const FaultDetails = lazy(() => import('../new_pages/usterki/status-usterki'));
+const MyFaults = lazy(() => import('../new_pages/usterki/moje-usterki'));
 const ReportFault = lazy(() => import('../new_pages/usterki/zglos'));
 const ReportFaultForm = lazy(() => import('../new_pages/usterki/zglos-form'));
 const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'));
@@ -158,6 +159,11 @@ const coreRoutes = [
     path: '/usterki/:faultid',
     title: 'Szczegóły dotyczące usterki',
     component: FaultDetails,
+  },
+  {
+    path: 'usterki/moje-usterki',
+    title: 'Usterki zgłoszone przeze mnie',
+    component: MyFaults,
   },
   {
     path: '/usterki/archiwum',

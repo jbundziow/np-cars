@@ -8,6 +8,7 @@ import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import { useState } from "react";
 import ModalWarning from "../../general/ModalWarning";
+import FaultStatusSpan from "../../general/spanElements/faultStatusSpan";
 
 
 type faultDataSchema = {
@@ -26,26 +27,6 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
   const [showWarningConfirmModal, setShowWarningConfirmModal] = useState<boolean>(false);
 
   
-
-  const faultStatusJSX = (status: db_Fault["status"]):JSX.Element => {
-
-    let result:JSX.Element = <span>Błąd</span>;
-    switch (status) {
-        case 'pending':
-            result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Do akceptacji</span>
-            break;
-        case 'accepted':
-            result = <span className="inline-flex rounded-full bg-warning bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-warning cursor-default">W trakcie</span>
-            break;
-        case 'finished':
-            result = <span className="inline-flex rounded-full bg-success bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-success cursor-default">Rozwiązana</span>
-            break;
-        case 'cancelled':
-            result = <span className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Anulowana</span>
-            break;
-    }
-    return result;
-  }
 
   const userObject = props.usersData.find(user => user.id === props.faultAndCarData.faultData.userID);
   const moderatorObject = props.usersData.find(user => user.id === props.faultAndCarData.faultData.moderatorID);
@@ -107,7 +88,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
         <div className='col-span-3'>
         <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">
             <h1 className="text-3xl font-bold mb-3">{props.faultAndCarData.faultData.title}</h1>
-            <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5>{faultStatusJSX(faultDeleted ? 'accepted' : props.faultAndCarData.faultData.status)}</p>
+            <p className="mb-2"><h5 className="font-bold inline-block">Status:&nbsp;</h5><FaultStatusSpan status={(faultDeleted ? 'accepted' : props.faultAndCarData.faultData.status)}/></p>
             {/* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */}
             <p className="mb-0"><h5 className="font-bold inline-block">Usterka zgłoszona przez:&nbsp;</h5><UserSpan userObj={userObject} nullText={"#ERR#"} linkTarget={'_self'} no_wrap={false}/></p>
             <p className="mb-2"><h5 className="font-bold inline-block">Data zgłoszenia usterki:&nbsp;</h5>{dateFormatter(props.faultAndCarData.faultData.createdAt.toString())}</p>
