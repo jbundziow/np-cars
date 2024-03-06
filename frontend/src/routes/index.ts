@@ -27,6 +27,11 @@ const ReturnACarForm = lazy(() => import('../new_pages/wypozyczenia/oddaj-samoch
 const ActualRentals = lazy(() => import('../new_pages/wypozyczenia/biezace-wypozyczenia'));
 const UsersList = lazy(() => import('../new_pages/uzytkownicy/zestawienie'));
 const UserMainpage = lazy(() => import('../new_pages/uzytkownicy/index'));
+const UserSettings = lazy(() => import('../new_pages/uzytkownicy/ustawienia-konta'));
+const CarsList = lazy(() => import('../new_pages/samochody/zestawienie'));
+const CarsInspections = lazy(() => import('../new_pages/samochody/przeglady'));
+const CarsInsurances = lazy(() => import('../new_pages/samochody/ubezpieczenia'));
+const PlacesList = lazy(() => import('../new_pages/projekty/zestawienie'));
 
 
 //TODO: DELETE IT LATER
@@ -175,10 +180,41 @@ const coreRoutes = [
     component: UsersList,
   },
   {
+    path: '/uzytkownicy/ustawienia-konta/:userid',
+    title: 'Ustawienia konta',
+    component: UserSettings,
+  },
+  {
     path: '/uzytkownicy/:userid',
     title: 'Profil użytkownika',
     component: UserMainpage,
   },
+
+  //samochody
+  {
+    path: '/samochody/zestawienie',
+    title: 'Lista samochodów',
+    component: CarsList,
+  },
+  {
+    path: '/samochody/przeglady',
+    title: 'Terminy przeglądów',
+    component: CarsInspections,
+  },
+  {
+    path: '/samochody/ubezpieczenia',
+    title: 'Terminy OC/AC',
+    component: CarsInsurances,
+  },
+
+  //projekty
+  {
+    path: '/projekty/zestawienie',
+    title: 'Lista projektów',
+    component: PlacesList,
+  },
+
+
 
   //TODO: DELETE IT LATER
   // @@@ TEMPLATE TO DELETE BELOW @@@
