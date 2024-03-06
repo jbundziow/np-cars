@@ -81,6 +81,43 @@ const addOneReservationByAdminUserSchema = Joi.object({
 
 
 
+const editOneReservationByAdminUserSchema = Joi.object({
+    id: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    carID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    userID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    lastEditedByModeratorOfID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+        
+    dateFrom: Joi.date()
+        .required(),
+
+    dateTo: Joi.date()
+        .min(Joi.ref('dateFrom'))
+        .required(),
+    
+    travelDestination: Joi.string()
+        .min(1)
+        .max(70)
+        .required(),
+})
+
+
+
+
 
 
 
@@ -122,5 +159,5 @@ const filtersObjReservationSchema = Joi.object({
 });
 
 
-export { addOneReservationByNormalUserSchema, addOneReservationByAdminUserSchema, dateOnlyValidator, filtersObjReservationSchema };
+export { addOneReservationByNormalUserSchema, addOneReservationByAdminUserSchema, editOneReservationByAdminUserSchema, dateOnlyValidator, filtersObjReservationSchema };
 

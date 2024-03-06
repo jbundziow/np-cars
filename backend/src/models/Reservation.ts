@@ -70,6 +70,23 @@ class Reservation {
     }
 
 
+    async editOneReservation() {
+      await ReservationModel.update({
+        // id: this.id,
+        // carID: this.carID,
+        userID: this.userID,
+        lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+        dateFrom: this.dateFrom,
+        dateTo: this.dateTo,
+        travelDestination: this.travelDestination,
+      },
+      {
+        where: { id: this.id }
+      }
+      )
+  }
+
+
 
     static async fetchAll() {
         return await ReservationModel.findAll()
@@ -110,13 +127,29 @@ class Reservation {
 
 
 
-    static async checkReservationsBetweenDates (carID: number, dateFrom: Date, dateTo: Date) {
+    static async checkReservationsBetweenDatesForCar (carID: number, dateFrom: Date, dateTo: Date) {
       return await ReservationModel.findAll({
         where: {
           [Op.and]: [
             { DateFrom: { [Op.lte]: dateTo } },
             { DateTo: { [Op.gte]: dateFrom } },
             { carID: carID }
+          ],
+        },
+      });
+    }
+
+
+
+    static async checkReservationsBetweenDatesForCarAndOtherUsers (carID: number, userID: number, currentReservationID: number,  dateFrom: Date, dateTo: Date) {
+      return await ReservationModel.findAll({
+        where: {
+          [Op.and]: [
+            { DateFrom: { [Op.lte]: dateTo } },
+            { DateTo: { [Op.gte]: dateFrom } },
+            { carID: carID },
+            { userID: { [Op.ne]: userID } },
+            { id: { [Op.ne]: currentReservationID } },
           ],
         },
       });

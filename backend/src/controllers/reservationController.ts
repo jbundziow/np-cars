@@ -10,6 +10,21 @@ import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 import { getFormattedDate } from '../utilities/functions/getFormattedDate';
 import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValuesFromObject';
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchAllReservationsWithFilters_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if(!req.query.filters) {
         res.status(400).json({status: 'fail', data: [{en: `No query param 'filters' passed.`, pl: `Nie przekazano 'filters' w parametrach zapytania.`}]})
@@ -45,6 +60,21 @@ export const fetchAllReservationsWithFilters_GET_user = async (req: Request, res
 }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const addOneReservation_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!data.carID || isNaN(Number(data.carID))) {
@@ -70,7 +100,7 @@ export const addOneReservation_POST_user = async (req: Request, res: Response, n
             
             await addOneReservationByNormalUserSchema.validateAsync(newReservation);
 
-            const isReservationAlreadyExist = await Reservation.checkReservationsBetweenDates(data.carID, new Date(data.dateFrom), new Date(data.dateTo));
+            const isReservationAlreadyExist = await Reservation.checkReservationsBetweenDatesForCar(data.carID, new Date(data.dateFrom), new Date(data.dateTo));
             if (isReservationAlreadyExist && isReservationAlreadyExist.length > 0) {
                 res.status(400).json({status: 'fail', data: [{en: `Reservation for that car is already exist in that period.`, pl: `Rezerwacja dla tego samochodu już istnieje w tym terminie.`}]})
                 return;
@@ -94,6 +124,21 @@ export const addOneReservation_POST_user = async (req: Request, res: Response, n
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const deleteOneReservation_DELETE_user = async (req: Request, res: Response, next: NextFunction) => {
@@ -135,6 +180,24 @@ export const deleteOneReservation_DELETE_user = async (req: Request, res: Respon
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const checkReservationsForOneCarForTheNextTwoWeeks_GET_user = async (req: Request, res: Response, next: NextFunction) => {
@@ -193,6 +256,23 @@ export const checkReservationsForOneCarForTheNextTwoWeeks_GET_user = async (req:
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const checkReservationsForAllCarsForTheNextTwoWeeks_GET_user = async (req: Request, res: Response, next: NextFunction) => {
@@ -260,6 +340,18 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks_GET_user = async (req
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
 export const findAllReservationsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.userid || isNaN(Number(req.params.userid))) {
@@ -290,6 +382,17 @@ export const findAllReservationsOfUser_GET_user = async (req: Request, res: Resp
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
 export const findAllReservationsOfCar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.carid || isNaN(Number(req.params.carid))) {
@@ -316,5 +419,40 @@ export const findAllReservationsOfCar_GET_user = async (req: Request, res: Respo
     }
     catch (err) {
         res.status(500).json({status: 'error', message: err})
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const fetchOneReservation_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    const reservationID = req.params.reservationid;
+    if (!reservationID || isNaN(Number(reservationID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong reservation ID.', pl: 'Podano złe ID rezerwacji.'}]})
+        return;
+    }
+
+    const reservation = await Reservation.fetchOne(Number(reservationID));
+    if(reservation) {
+        res.status(200).json({status: 'success', data: reservation})
+    }
+    else {
+        res.status(400).json({status: 'fail', data: [{en: `Reservation of ID: ${req.params.reservationid} is not found in the database.`, pl: `Rezerwacja o ID: ${req.params.reservationid} nie została znaleziona w bazie danych.`}]})
+        return;
     }
 }
