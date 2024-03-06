@@ -59,7 +59,7 @@ class Reservation {
         
     async addOneReservation() {
         await ReservationModel.create({
-          id: this.id,
+          // id: this.id,
           carID: this.carID,
           userID: this.userID,
           lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,

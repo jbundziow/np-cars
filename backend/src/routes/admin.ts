@@ -2,11 +2,18 @@ import express from 'express'
 import { addOneCar_POST_admin } from '../controllers/admin/carsController';
 import { addOneRefueling_POST_admin, editOneRefueling_PUT_admin, deleteOneRefueling_DELETE_admin, acknowledgeOneRefueling_PUT_admin} from '../controllers/admin/refuelingController';
 import { acknowledgeOneFault_PUT_admin, deleteOneFault_DELETE_admin, editOneFault_PUT_admin } from '../controllers/admin/faultsController';
+import { addOneReservation_POST_admin } from '../controllers/admin/reservationsController';
 
 const app = express.Router();
 
 //cars
 app.post('/cars', addOneCar_POST_admin)
+
+
+
+
+//reservations
+app.post('/reservations', addOneReservation_POST_admin);
 
 
 

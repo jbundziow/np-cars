@@ -4,7 +4,7 @@ import { NextFunction, Request, Response, response } from 'express'
 import Reservation from '../models/Reservation';
 import Car from '../models/Car';
 import User from '../models/User';
-import { addOneReservationSchema, dateOnlyValidator, filtersObjReservationSchema } from '../models/validation/ReservationSchemas';
+import { addOneReservationByNormalUserSchema, dateOnlyValidator, filtersObjReservationSchema } from '../models/validation/ReservationSchemas';
 import { getNextTwoWeeksDatesArr } from '../utilities/functions/getNextTwoWeeksDatesArr';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 import { getFormattedDate } from '../utilities/functions/getFormattedDate';
@@ -51,12 +51,12 @@ export const addOneReservation_POST_user = async (req: Request, res: Response, n
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
         return;
     }
-    else if(!data.dateFrom || !dateOnlyValidator(data.dateFrom)) {
+    if(!data.dateFrom || !dateOnlyValidator(data.dateFrom)) {
         res.status(400).json({status: 'fail', data: [`You have passed a wrong 'dateFrom' format. It should be 'YYYY-MM-DD'.`]});
         res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong 'dateFrom' format. It should be 'YYYY-MM-DD'.`, pl: `Podano zły format daty w zmiennej 'dateFrom'. Prawidłowy format to 'YYYY-MM-DD'.`}]})
         return;
     }
-    else if(!data.dateTo || !dateOnlyValidator(data.dateTo)) {
+    if(!data.dateTo || !dateOnlyValidator(data.dateTo)) {
         res.status(400).json({status: 'fail', data: [{en: `You have passed a wrong 'dateTo' format. It should be 'YYYY-MM-DD'.`, pl: `Podano zły format daty w zmiennej 'dateTo'. Prawidłowy format to 'YYYY-MM-DD'.`}]})
         return;
     }
@@ -66,9 +66,9 @@ export const addOneReservation_POST_user = async (req: Request, res: Response, n
     const {id: userID} = await identifyUserId(req.cookies.jwt);
     const isUserExist = await User.fetchOne(userID, false)
         if(isCarExist && isUserExist) {
-            const newReservation = new Reservation(null, data.carID, userID, data.lastEditedByModeratorOfID, data.dateFrom, data.dateTo, data.travelDestination);
+            const newReservation = new Reservation(null, data.carID, userID, null, data.dateFrom, data.dateTo, data.travelDestination);
             
-            await addOneReservationSchema.validateAsync(newReservation);
+            await addOneReservationByNormalUserSchema.validateAsync(newReservation);
 
             const isReservationAlreadyExist = await Reservation.checkReservationsBetweenDates(data.carID, new Date(data.dateFrom), new Date(data.dateTo));
             if (isReservationAlreadyExist && isReservationAlreadyExist.length > 0) {
@@ -82,9 +82,11 @@ export const addOneReservation_POST_user = async (req: Request, res: Response, n
         else {
             if(!isCarExist) {
                 res.status(400).json({status: 'fail', data: [{en: `The car of id: ${Number(data.carID)} does not exist in the database.`, pl: `Samochód o ID: ${Number(data.carID)} nie istnieje w bazie danych.`}]})
+                return;
             }
             else if (!isUserExist) {
                 res.status(400).json({status: 'fail', data: [{en: `The user of id: ${userID} does not exist in the database.`, pl: `Użytkownik o ID: ${userID} nie istnieje w bazie danych.`}]})
+                return;
             }
         }
     }

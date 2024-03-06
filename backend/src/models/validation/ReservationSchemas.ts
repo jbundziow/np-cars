@@ -1,10 +1,10 @@
 import Joi from 'joi';
 
-const addOneReservationSchema = Joi.object({
+const addOneReservationByNormalUserSchema = Joi.object({
     id: Joi.number()
         .integer()
         .positive()
-        .allow(null)
+        .valid(null)
         .optional(),
 
     carID: Joi.number()
@@ -37,6 +37,53 @@ const addOneReservationSchema = Joi.object({
         .required(),
 
 })
+
+
+
+
+const addOneReservationByAdminUserSchema = Joi.object({
+    id: Joi.number()
+        .integer()
+        .positive()
+        .valid(null)
+        .optional(),
+
+    carID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    userID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    lastEditedByModeratorOfID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+        
+    dateFrom: Joi.date()
+        .min(new Date().setUTCHours(0, 0, 0, 0).valueOf()) //today
+        .required(),
+
+    dateTo: Joi.date()
+        .min(Joi.ref('dateFrom'))
+        .required(),
+    
+    travelDestination: Joi.string()
+        .min(1)
+        .max(70)
+        .required(),
+
+})
+
+
+
+
+
+
+
 
 //checks if string is in format 'YYYY-MM-DD'
 const dateOnlyValidator = (date: string) :boolean => {
@@ -75,5 +122,5 @@ const filtersObjReservationSchema = Joi.object({
 });
 
 
-export { addOneReservationSchema, dateOnlyValidator, filtersObjReservationSchema };
+export { addOneReservationByNormalUserSchema, addOneReservationByAdminUserSchema, dateOnlyValidator, filtersObjReservationSchema };
 
