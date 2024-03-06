@@ -59,15 +59,6 @@ class Place {
         })
     }
 
-    static async fetchAll(showBanned: boolean) {
-        if(showBanned) {
-            return await PlaceModel.findAll()
-        }
-        else {
-            return await PlaceModel.findAll({where: {status: { [Op.ne]: 'banned' }}})
-        }
-  
-    }
 
     static async fetchOne(id: number, showBanned: boolean) {
       if(showBanned) {
@@ -78,6 +69,76 @@ class Place {
       }
     }
 
+
+
+
+    static async fetchAllPlacesWithFilters (filters:any, pageSize: number, pageNumber: number, sortFromOldest: boolean) {
+      const whereClause: any = {};
+
+
+      //strings (case-insensitive search)
+      if(filters.projectCode) {
+        whereClause.projectCode = { [Op.and]: [
+          sequelize.where(sequelize.fn('LOWER', sequelize.col('projectCode')), 'LIKE', `%${filters.projectCode.toLowerCase()}%`)
+        ] };
+      }
+
+      if(filters.placeName) {
+        whereClause.placeName = { [Op.and]: [
+          sequelize.where(sequelize.fn('LOWER', sequelize.col('placeName')), 'LIKE', `%${filters.placeName.toLowerCase()}%`)
+        ] };
+      }
+
+      if(filters.projectName) {
+        whereClause.projectName = { [Op.and]: [
+          sequelize.where(sequelize.fn('LOWER', sequelize.col('projectName')), 'LIKE', `%${filters.projectName.toLowerCase()}%`)
+        ] };
+      }
+
+      //status
+      if(filters.status) {
+        whereClause.status = filters.status;
+      }
+
+
+
+      const totalCount = await PlaceModel.count({
+          where: whereClause,
+      });
+
+
+      const totalPages = Math.ceil(totalCount / pageSize);
+
+
+      const offset = (pageNumber - 1) * pageSize;
+
+
+      let sortDirection: 'ASC' | 'DESC' = 'DESC';
+      if(sortFromOldest === true) {sortDirection = 'ASC'}
+
+      const records = await PlaceModel.findAll({
+          where: whereClause,
+          limit: pageSize,
+          offset: offset,
+          order: [['createdAt', sortDirection]] //sort from the newest
+      });
+
+
+
+      return {
+          records,
+          pagination: {
+            totalCount: totalCount,
+            totalPages: totalPages,
+            currentPage: pageNumber,
+            hasPreviousPage: pageNumber > 1,
+            hasNextPage: pageNumber < totalPages
+          }
+      };
+  }
+    
 }
+
+
 
 export default Place;

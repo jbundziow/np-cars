@@ -73,7 +73,7 @@ const PlacesHistoryTableRow = (props: PlacesHistoryTableRowProps) => {
     </td>
     {auth.userRole === 'admin' ?
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
-        <div className="flex justify-end space-x-3.5">
+        <div className="flex justify-center space-x-3.5">
             <EditButton linkTo={`/projekty/edycja/${props.placeData.id}`} linkTarget="_self"/>
         </div>
     </td>
