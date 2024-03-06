@@ -1,16 +1,11 @@
 import { Link } from "react-router-dom"
+import { db_Place } from "../../../types/db_types"
 
 
-type placesData = {
-    id: number,
-    projectCode: string,
-    placeName: string,
-    projectName: string,
-    status: 'active' | 'banned',
-  }
+
 
 type placeSpanProps = {
-    placeObj: placesData | undefined,
+    placeObj: db_Place | undefined;
     nullText: string,
     linkTarget: '_blank' | '_self'
   }
