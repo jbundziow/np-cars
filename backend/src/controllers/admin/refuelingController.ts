@@ -47,6 +47,13 @@ export const addOneRefueling_POST_admin = async (req: Request, res: Response, ne
             return;
         }
 
+
+        const duplicate = await Refueling.fetchDuplicate(data.carMileage);
+        if(duplicate) {
+            res.status(400).json({status: 'fail', data: [{en: `The refueling with the same mileage already exists.`, pl: `Tankowanie o takim samym przebiegu już istnieje.`}]})
+            return;
+        }
+
         
 
         

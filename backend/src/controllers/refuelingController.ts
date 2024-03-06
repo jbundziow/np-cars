@@ -38,6 +38,13 @@ export const addOneRefueling_POST_user = async (req: Request, res: Response, nex
             return;
         }
 
+
+        const duplicate = await Refueling.fetchDuplicate(data.carMileage);
+        if(duplicate) {
+            res.status(400).json({status: 'fail', data: [{en: `The refueling with the same mileage already exists.`, pl: `Tankowanie o takim samym przebiegu już istnieje.`}]})
+            return;
+        }
+
         
             const newRefueling = new Refueling(null, Number(req.params.carid), userID, data.refuelingDate, null, data.carMileage, null, data.numberOfLiters, data.costBrutto, null, data.isFuelCardUsed, data.moneyReturned, null, null);
             await addOneRefuelingByNormalUserSchema.validateAsync(newRefueling);

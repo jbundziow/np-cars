@@ -335,7 +335,9 @@ class Refueling {
 
 
 
-
+    static async fetchDuplicate(carMileage: number) {
+      return await RefuelingModel.findOne({ where: { carMileage: carMileage } })
+  }
 
 
 
