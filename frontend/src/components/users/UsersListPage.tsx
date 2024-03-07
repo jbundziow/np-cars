@@ -21,7 +21,7 @@ const UsersListPage = (props: UsersListPageProps) => {
       <> 
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-        {props.users.filter(user => user.role !== 'banned').map(user => <CardUser userData={user} primaryButton={{text: 'Szczegóły', link: `/uzytkownicy/${user.id}`}} secondaryButton={{text: 'Edytuj', link: `/uzytkownicy/edycja/${user.id}`}} auth={props.auth}/>)}
+        {props.users.filter(user => user.role !== 'banned').map(user => <CardUser userData={user} primaryButton={{text: 'Szczegóły', link: `/uzytkownicy/${user.id}`}} secondaryButton={{text: 'Edytuj', link: `/uzytkownicy/ustawienia-konta/${user.id}`}} auth={props.auth}/>)}
       </div>
 
 
@@ -35,7 +35,7 @@ const UsersListPage = (props: UsersListPageProps) => {
           
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
             {props.auth.userRole === 'admin' && props.users.filter(user => user.role === 'banned').map(user => 
-              <CardUser userData={user} primaryButton={{text: 'Szczegóły', link: `/uzytkownicy/${user.id}`}} secondaryButton={{text: 'Edytuj', link: `/uzytkownicy/edycja/${user.id}`}} auth={props.auth}/>
+              <CardUser userData={user} primaryButton={{text: 'Szczegóły', link: `/uzytkownicy/${user.id}`}} secondaryButton={{text: 'Edytuj', link: `/uzytkownicy/ustawienia-konta/${user.id}`}} auth={props.auth}/>
             )}
           </div>
         </>
