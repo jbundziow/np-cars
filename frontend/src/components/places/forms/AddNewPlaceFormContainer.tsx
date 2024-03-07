@@ -34,7 +34,7 @@ const AddNewPlaceFormContainer = () => {
 
         try {
 
-        const response = await fetch(`${DOMAIN_NAME}/places`, {
+        const response = await fetch(`${DOMAIN_NAME}/admin/places`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -180,7 +180,7 @@ const AddNewPlaceFormContainer = () => {
                 </form>
                 :
                 pageState === FormPageStatus.FormWasSentCorrectly ?
-                <OperationResult status={'success'} title={'Pomyślnie dodano nowy projekt 👍'} description={'Ma on status "Aktywny" i możesz przypisywać go do wypożyczeń samochodów.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/projekty/zestawienie`}/>
+                <OperationResult status={'success'} title={'Pomyślnie dodano nowy projekt 👍'} description={'Ma on status "Aktywny" i możesz przypisać go do wypożyczeń samochodów.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/projekty/zestawienie`}/>
                 :
                 pageState === FormPageStatus.ErrorWithSendingForm ?
                 <OperationResult status={'error'} title={'Wystąpił błąd podczas dodawania projektu 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>

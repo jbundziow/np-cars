@@ -41,7 +41,7 @@ const EditPlaceFormContainer = (props: EditPlaceFormContainerProps) => {
 
         try {
 
-        const response = await fetch(`${DOMAIN_NAME}/places/${props.place.id}`, {
+        const response = await fetch(`${DOMAIN_NAME}/admin/places/${props.place.id}`, {
             method: 'PUT',
             headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -74,7 +74,7 @@ const EditPlaceFormContainer = (props: EditPlaceFormContainerProps) => {
 
   const deleteProject = async () => {
     try {
-          const response = await fetch(`${DOMAIN_NAME}/places/${props.place.id}`, {
+          const response = await fetch(`${DOMAIN_NAME}/admin/places/${props.place.id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
@@ -198,7 +198,7 @@ const EditPlaceFormContainer = (props: EditPlaceFormContainerProps) => {
 
                         <div className="sm:ml-3 relative z-20 bg-white dark:bg-form-input">
                         <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><path fill="#3C50E0" d="M112 112c0 35.3-28.7 64-64 64V336c35.3 0 64 28.7 64 64H464c0-35.3 28.7-64 64-64V176c-35.3 0-64-28.7-64-64H112zM0 128C0 92.7 28.7 64 64 64H512c35.3 0 64 28.7 64 64V384c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V128zM176 256a112 112 0 1 1 224 0 112 112 0 1 1 -224 0zm80-48c0 8.8 7.2 16 16 16v64h-8c-8.8 0-16 7.2-16 16s7.2 16 16 16h24 24c8.8 0 16-7.2 16-16s-7.2-16-16-16h-8V208c0-8.8-7.2-16-16-16H272c-8.8 0-16 7.2-16 16z"/></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M384 336H192c-8.8 0-16-7.2-16-16V64c0-8.8 7.2-16 16-16l140.1 0L400 115.9V320c0 8.8-7.2 16-16 16zM192 384H384c35.3 0 64-28.7 64-64V115.9c0-12.7-5.1-24.9-14.1-33.9L366.1 14.1c-9-9-21.2-14.1-33.9-14.1H192c-35.3 0-64 28.7-64 64V320c0 35.3 28.7 64 64 64zM64 128c-35.3 0-64 28.7-64 64V448c0 35.3 28.7 64 64 64H256c35.3 0 64-28.7 64-64V416H272v32c0 8.8-7.2 16-16 16H64c-8.8 0-16-7.2-16-16V192c0-8.8 7.2-16 16-16H96V128H64z"/></svg>
                         </span>
                         <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
                         value={status}

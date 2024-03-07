@@ -59,6 +59,17 @@ class Place {
         })
     }
 
+    async updateOnePlace() {
+      await PlaceModel.update({
+        // id: this.id,
+        projectCode: this.projectCode,
+        placeName: this.placeName,
+        projectName: this.projectName,
+        status: this.status
+      },
+      {where: {id: this.id}})
+  }
+
 
     static async fetchOne(id: number, showBanned: boolean) {
       if(showBanned) {
@@ -136,6 +147,28 @@ class Place {
           }
       };
   }
+
+
+
+
+
+
+
+  static async deletePlace(id: number) {
+    const place = await Place.fetchOne(id, true);
+
+    if (place) {
+      return await place.destroy();
+    }
+    else {
+      throw new Error('Place not found');
+    }
+}
+
+
+
+
+
     
 }
 

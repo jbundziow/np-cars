@@ -365,6 +365,10 @@ class Rental {
 
 
 
+    static async fetchNumberOfRentalsAssociatedWithPlace (placeID: number) {
+      return await RentalModel.count({ where: { placeID: placeID } })
+    }
+
 
 
 }

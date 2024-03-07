@@ -43,3 +43,27 @@ export const fetchAllPlacesWithFilters_GET_user = async (req: Request, res: Resp
             res.status(500).json({status: 'error', message: e})
         }
 }
+
+
+
+
+
+
+
+
+export const fetchOnePlace_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    const placeID = req.params.placeid;
+    if (!placeID || isNaN(Number(placeID))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong place ID.', pl: 'Podano złe ID projektu.'}]})
+        return;
+    }
+
+    const place = await Place.fetchOne(Number(placeID), true); //show also banned places
+    if(place) {
+        res.status(200).json({status: 'success', data: place})
+    }
+    else {
+        res.status(400).json({status: 'fail', data: [{en: `Place of ID: ${Number(req.params.placeid)} is not found in the database.`, pl: `Projekt o ID: ${Number(req.params.placeid)} nie został znaleziony w bazie danych.`}]})
+        return;
+    }
+}
