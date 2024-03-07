@@ -1,5 +1,6 @@
 import { useEffect} from 'react';
 import Breadcrumb from '../../components/Breadcrumb';
+import AddNewPlaceFormContainer from '../../components/places/forms/AddNewPlaceFormContainer';
 
 interface Props {
     documentTitle: string;
@@ -10,6 +11,7 @@ const AddPlace = (props: Props) => {
     return (
       <>
       <Breadcrumb pageName="Dodaj nowy projekt" />
+      <AddNewPlaceFormContainer/>
       </>
     );
   };
