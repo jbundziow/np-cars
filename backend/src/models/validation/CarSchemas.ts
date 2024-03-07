@@ -2,10 +2,8 @@ import Joi from 'joi';
 
 const addOneCarSchema = Joi.object({
     id: Joi.number()
-        .integer()
-        .positive()
-        .allow(null)
-        .optional(),
+        .valid(null)
+        .required(),
 
     brand: Joi.string()
         .min(1)
@@ -21,54 +19,134 @@ const addOneCarSchema = Joi.object({
         .valid('passengerCar', 'bus', 'truck')
         .required(),
 
-        imgPath: Joi.string()
+    imgPath: Joi.string()
         .min(1)
         .required(),
 
-        plateNumber: Joi.string()
+    plateNumber: Joi.string()
         .min(1)
-        .max(50)
+        .max(20)
         .required(),
 
-        hasFuelCard: Joi.boolean()
+    hasFuelCard: Joi.boolean()
         .required(),
 
-        fuelCardPIN: Joi.string()
+    fuelCardPIN: Joi.string()
         .pattern(/^(\d{4}|\d{6})$/)
         .allow(null)
         .optional(),
 
-        fuelType: Joi.string()
+    fuelType: Joi.string()
         .valid('diesel', 'petrol')
         .required(),
 
-        tankCapacity: Joi.number()
+    tankCapacity: Joi.number()
         .min(10)
         .max(1600)
         .required(),
 
-        loadCapacity: Joi.number()
+    loadCapacity: Joi.number()
         .min(100)
         .max(40000)
         .required(),
 
-        nextInspectionDate: Joi.date()
+    nextInspectionDate: Joi.date()
         .iso()
         .required(),
 
-        nextInsuranceDate: Joi.date()
+    nextInsuranceDate: Joi.date()
         .iso()
         .required(),
 
-        availabilityStatus: Joi.string()
+    availabilityStatus: Joi.string()
         .valid('available', 'notAvailable', 'rented', 'onService', 'damaged', 'banned')
         .required(),
 
-        availabilityDescription: Joi.string()
+    availabilityDescription: Joi.string()
         .min(1)
         .max(1000)
         .allow(null)
         .optional(),
 })
 
-export { addOneCarSchema };
+
+
+
+
+
+
+const editOneCarSchema = Joi.object({
+    id: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    brand: Joi.string()
+        .min(1)
+        .max(50)
+        .required(),
+
+    model: Joi.string()
+        .min(1)
+        .max(50)
+        .required(),
+
+    type: Joi.string()
+        .valid('passengerCar', 'bus', 'truck')
+        .required(),
+
+    imgPath: Joi.string()
+        .min(1)
+        .required(),
+
+    plateNumber: Joi.string()
+        .min(1)
+        .max(20)
+        .required(),
+
+    hasFuelCard: Joi.boolean()
+        .required(),
+
+    fuelCardPIN: Joi.string()
+        .pattern(/^(\d{4}|\d{6})$/)
+        .allow(null)
+        .optional(),
+
+    fuelType: Joi.string()
+        .valid('diesel', 'petrol')
+        .required(),
+
+    tankCapacity: Joi.number()
+        .min(10)
+        .max(1600)
+        .required(),
+
+    loadCapacity: Joi.number()
+        .min(100)
+        .max(40000)
+        .required(),
+
+    nextInspectionDate: Joi.date()
+        .iso()
+        .required(),
+
+    nextInsuranceDate: Joi.date()
+        .iso()
+        .required(),
+
+    availabilityStatus: Joi.string()
+        .valid('available', 'notAvailable', 'rented', 'onService', 'damaged', 'banned')
+        .required(),
+
+    availabilityDescription: Joi.string()
+        .min(1)
+        .max(1000)
+        .allow(null)
+        .optional(),
+})
+
+
+
+
+
+export { addOneCarSchema, editOneCarSchema };

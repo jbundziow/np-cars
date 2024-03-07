@@ -329,6 +329,45 @@ class Reservation {
           }
       };
   }
+
+
+
+
+
+  static async fetchNumberOfReservationsAssociatedWithUser(userID: number, withoutModerator: boolean) {
+    if(!withoutModerator) {
+      return await ReservationModel.count({
+        where: {
+          [Op.or]: [
+            { userID: userID },
+            { lastEditedByModeratorOfID: userID }
+          ]
+        }
+      });
+    }
+    else {
+      return await ReservationModel.count({
+        where: {
+          userID: userID
+        }
+      });
+    
+    }
+  }
+
+
+
+  static async fetchNumberOfReservationsAssociatedWithCar (carID: number) {
+    return await ReservationModel.count({ where: { carID: carID } })
+  }
+
+
+
+
+
+
+
+
     
 }
 

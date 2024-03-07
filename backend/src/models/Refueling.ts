@@ -638,6 +638,36 @@ class Refueling {
 
 
 
+
+
+
+
+
+
+  static async fetchNumberOfRefuelingsAssociatedWithUser(userID: number, withoutModerator: boolean) {
+    if(!withoutModerator) {
+      return await RefuelingModel.count({
+        where: {
+          [Op.or]: [
+            { userID: userID },
+            { lastEditedByModeratorOfID: userID },
+            { isAcknowledgedByModerator: userID },
+          ]
+        }
+      });
+    }
+    else {
+      return await RefuelingModel.count({
+        where: {
+          userID: userID
+        }
+      });
+    }
+  }
+
+  static async fetchNumberOfRefuelingsAssociatedWithCar (carID: number) {
+    return await RefuelingModel.count({ where: { carID: carID } })
+  }
   
 
 

@@ -2,6 +2,7 @@ const {DataTypes} = require('sequelize');
 
 
 
+import { Op } from "sequelize";
 import sequelize from "../database/database";
 const FaultModel = sequelize.define('Fault', {
     id: {
@@ -189,6 +190,48 @@ class Fault {
         throw new Error('Fault not found');
       }
     }
+
+
+
+
+
+
+
+
+
+
+    static async fetchNumberOfFaultsAssociatedWithUser(userID: number, withoutModerator: boolean) {
+      if(!withoutModerator) {
+        return await FaultModel.count({
+          where: {
+            [Op.or]: [
+              { userID: userID },
+              { moderatorID: userID },
+            ]
+          }
+        });
+      }
+      else {
+        return await FaultModel.count({
+          where: {
+            userID: userID
+          }
+        });
+      }
+    }
+
+    
+
+    static async fetchNumberOfFaultsAssociatedWithCar (carID: number) {
+      return await FaultModel.count({ where: { carID: carID } })
+    }
+
+
+
+
+
+
+
 
 }
 

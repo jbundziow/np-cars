@@ -115,6 +115,29 @@ class Car {
     }
 
 
+    async editOneCar() {
+      await CarModel.update({
+        // id: this.id,
+        brand: this.brand,
+        model: this.model,
+        type: this.type,
+        imgPath: this.imgPath,
+        plateNumber: this.plateNumber,
+        hasFuelCard: this.hasFuelCard,
+        fuelCardPIN: this.fuelCardPIN,
+        fuelType: this.fuelType,
+        tankCapacity: this.tankCapacity,
+        loadCapacity: this.loadCapacity,
+        nextInspectionDate: this.nextInspectionDate,
+        nextInsuranceDate: this.nextInsuranceDate,
+        availabilityStatus: this.availabilityStatus,
+        availabilityDescription: this.availabilityDescription,
+      },
+      {where: {id: this.id}}
+      )
+  }
+
+
     static async fetchAll(showBanned: boolean) {
       if(showBanned) {
         return await CarModel.findAll()
@@ -151,6 +174,29 @@ class Car {
       }
       
     }
+
+
+
+
+
+
+
+    static async deleteCar(id: number) {
+      const car = await Car.fetchOne(id, true);
+
+      if (car) {
+        return await car.destroy();
+      }
+      else {
+        throw new Error('Car not found');
+      }
+    }
+
+
+
+
+
+
 
 }
 

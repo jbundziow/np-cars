@@ -370,6 +370,55 @@ class Rental {
     }
 
 
+    static async fetchNumberOfRentalsAssociatedWithUser(userID: number, withoutReturnUser: boolean, withoutModerator: boolean) {
+      if(!withoutReturnUser && !withoutModerator) {
+        return await RentalModel.count({
+          where: {
+            [Op.or]: [
+              { userID: userID },
+              { returnUserID: userID },
+              { lastEditedByModeratorOfID: userID }
+            ]
+          }
+        });
+      }
+      else if(withoutReturnUser && !withoutModerator) {
+        return await RentalModel.count({
+          where: {
+            [Op.or]: [
+              { userID: userID },
+              { lastEditedByModeratorOfID: userID }
+            ]
+          }
+        });
+      }
+      else if(!withoutReturnUser && withoutModerator) {
+        return await RentalModel.count({
+          where: {
+            [Op.or]: [
+              { userID: userID },
+              { returnUserID: userID },
+            ]
+          }
+        });
+      }
+      else {
+        return await RentalModel.count({
+          where: {
+            userID: userID
+          }
+        });
+      }
+    }
+      
+
+    
+
+    static async fetchNumberOfRentalsAssociatedWithCar (carID: number) {
+      return await RentalModel.count({ where: { carID: carID } })
+    }
+
+
 
 }
 
