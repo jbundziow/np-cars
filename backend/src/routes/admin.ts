@@ -6,10 +6,13 @@ import { addOneReservation_POST_admin, editOneReservation_PUT_admin } from '../c
 import { addOnePlace_POST_admin, deleteOnePlace_PUT_admin, editOnePlace_PUT_admin } from '../controllers/admin/placesController';
 import { acknowledgeOneUser_PUT_admin, deleteOneUser_DELETE_admin, editOneUser_PUT_admin } from '../controllers/admin/usersController';
 
+import multer from 'multer';
+import { storage, fileFilter, limits } from '../utilities/fileUpload/multerConfig';
+
 const app = express.Router();
 
 //cars
-app.post('/cars', addOneCar_POST_admin)
+app.post('/cars', multer({ storage, fileFilter, limits }).single('image'), addOneCar_POST_admin)
 app.put('/cars/:carid', editOneCar_PUT_admin)
 app.delete('/cars/:carid', deleteOneCar_DELETE_admin)
 

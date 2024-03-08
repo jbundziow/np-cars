@@ -2,8 +2,7 @@ import express from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors';
 import cookies from 'cookie-parser';
-import path from 'path';
-import multer from 'multer';
+
 
 
 
@@ -19,7 +18,6 @@ import placesRoutes from './routes/places'
 import statsRoutes from './routes/stats'
 
 import { requireAuthAsAdmin, requireAuthAsUser } from "./middleware/authMiddleware"
-import { storage, fileFilter, limits } from './utilities/fileUpload/multerConfig';
 
 
 require('dotenv').config(); //https://www.npmjs.com/package/dotenv
@@ -48,11 +46,7 @@ app.use(bodyParser.json())
 app.use(cookies())
 
 
-
-app.use(multer({ storage, fileFilter, limits }).single('image')); //image upload
-
-
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static('public'));
 
 
 // *************************************************
