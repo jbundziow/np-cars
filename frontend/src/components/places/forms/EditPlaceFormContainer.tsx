@@ -5,6 +5,7 @@ import { warnings } from "../../../types/common";
 import { EditFormPageStatus } from "../../../types/enums";
 import { db_Place } from "../../../types/db_types";
 import ModalWarning from "../../general/ModalWarning";
+import StyledSpan from "../../general/spanElements/StyledSpan";
 
 
 interface EditPlaceFormContainerProps {
@@ -209,6 +210,28 @@ const EditPlaceFormContainer = (props: EditPlaceFormContainerProps) => {
                             <option value="banned">Zbanowany</option>
                         </select>
                         </div>
+                    </div>
+
+                    <div className="flex flex-col">
+                      <p className="pb-3">Objaśnienia:</p>
+
+                      <div className="flex items-center pb-2">
+                        <StyledSpan color={'success'} text={'\xa0' + '\xa0' + 'Aktywny' + '\xa0' + '\xa0'}/>
+                        <p className="pl-4">projekt możliwy do przypisania do wypożyczeń przez uprawnionego administratora.</p>
+                      </div>
+
+
+                      <div className="flex items-center pb-2">
+                        <StyledSpan color={'warning'} text={'Nieaktywny'}/>
+                        <p className="pl-4">projekt już zakończony i rozliczony. Wlicza się nadal do statystyk, ale nie można go przypisać do aktualnych wypożyczeń.</p>
+                      </div>
+
+
+                      <div className="flex items-center pb-2">
+                        <StyledSpan color={'danger'} text={'Zbanowany'}/>
+                        <p className="pl-4">projekt wycofany, ale nie ma potrzeby aby usuwać go całkowicie z bazy danych. Nie można go przypisać do aktualnych wypożyczeń.</p>
+                      </div>
+
                     </div>
 
 
