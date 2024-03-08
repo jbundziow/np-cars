@@ -30,7 +30,7 @@ const CardUser = (props: CardUserProps) => {
         />
         </div>
         <div className='flex justify-center py-2'>
-        {props.userData.role === 'admin' ? <span className="bg-success p-1 rounded-lg text-xs text-white cursor-default">Admin</span> : props.userData.role === 'banned' ? <span className="bg-danger p-1 rounded-lg text-xs text-white cursor-default">Zbanowany</span> : <span className='h-6'></span>}
+        {props.userData.role === 'admin' ? <span className="bg-success p-1 rounded-lg text-xs text-white cursor-default">Admin</span> : props.userData.role === 'banned' ? <span className="bg-danger p-1 rounded-lg text-xs text-white cursor-default">Zbanowany</span> : props.userData.role === 'unconfirmed' ? <span className="bg-gray p-1 rounded-lg text-xs text-black cursor-default">Niepotwierdzony</span> : <span className='h-6'></span>}
         </div>
           <p className='text-black dark:text-white text-center whitespace-nowrap'>{`${props.userData.name} ${props.userData.surname}`}</p>
           <p className='text-black dark:text-white text-center text-xs py-2 whitespace-nowrap'>{`${props.userData.employedAs}`}</p>

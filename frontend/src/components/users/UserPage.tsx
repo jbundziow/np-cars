@@ -86,6 +86,7 @@ const UserPage = (props: UserPageProps) => {
             <p className="font-medium">{props.userData.employedAs}</p>
             {props.userData.role === 'admin' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Admin</p> : ''}
             {props.userData.role === 'banned' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Użytkownik zbanowany</p> : ''}
+            {props.userData.role === 'unconfirmed' ? <p className="inline-block rounded-full bg-gray bg-opacity-10 py-1 px-3 mt-2 font-bold text-white cursor-default">Użytkownik niepotwierdzony</p> : ''}
 
             
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">

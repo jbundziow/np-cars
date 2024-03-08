@@ -258,6 +258,28 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
                               Usterki samochodów
                             </NavLink>
                           </li>
+                          <li>
+                            <NavLink
+                              to="/potwierdzenia/nowi-uzytkownicy"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Nowi użytkownicy
+                            </NavLink>
+                          </li>
+                          <li>
+                            <NavLink
+                              to="/potwierdzenia/uzupelnianie-wypozyczen"
+                              className={({ isActive }) =>
+                                'group relative flex items-center gap-2.5 rounded-md px-4 font-medium text-bodydark2 duration-300 ease-in-out hover:text-white ' +
+                                (isActive && '!text-white')
+                              }
+                            >
+                              Uzupełnianie wypożyczeń
+                            </NavLink>
+                          </li>
                           
                         </ul>
                       </div>
