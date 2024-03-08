@@ -4,6 +4,7 @@ import { addOneRefueling_POST_admin, editOneRefueling_PUT_admin, deleteOneRefuel
 import { acknowledgeOneFault_PUT_admin, deleteOneFault_DELETE_admin, editOneFault_PUT_admin } from '../controllers/admin/faultsController';
 import { addOneReservation_POST_admin, editOneReservation_PUT_admin } from '../controllers/admin/reservationsController';
 import { addOnePlace_POST_admin, deleteOnePlace_PUT_admin, editOnePlace_PUT_admin } from '../controllers/admin/placesController';
+import { acknowledgeOneUser_PUT_admin, deleteOneUser_DELETE_admin, editOneUser_PUT_admin } from '../controllers/admin/usersController';
 
 const app = express.Router();
 
@@ -39,6 +40,12 @@ app.delete('/faults/:faultid', deleteOneFault_DELETE_admin)
 app.post('/places', addOnePlace_POST_admin)
 app.put('/places/:placeid', editOnePlace_PUT_admin)
 app.delete('/places/:placeid', deleteOnePlace_PUT_admin)
+
+
+//users
+app.put('/users/:userid', editOneUser_PUT_admin)
+app.delete('/users/:userid', deleteOneUser_DELETE_admin)
+app.put('/users/confirm', acknowledgeOneUser_PUT_admin)
 
 
 export default app;

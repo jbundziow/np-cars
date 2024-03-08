@@ -2,10 +2,7 @@ import Joi from 'joi';
 
 const signUpUserSchema = Joi.object({
     id: Joi.number()
-        .integer()
-        .positive()
-        .allow(null)
-        .optional(),
+        .valid(null),
 
     email: Joi.string()
         .email({ tlds: { allow: false } })
@@ -32,7 +29,7 @@ const signUpUserSchema = Joi.object({
     
     employedAs: Joi.string()
         .min(1)
-        .max(50)
+        .max(80)
         .required(),
     
     avatarPath: Joi.string()
@@ -40,11 +37,51 @@ const signUpUserSchema = Joi.object({
         .optional(),
 
     role: Joi.string()
-        //TODO: BELOW ONLY FOR ADMIN!!!
-        // .valid('unconfirmed', 'admin', 'user', 'banned')
-        // .required(),
         .allow(null)
         .optional(),
 })
 
-export { signUpUserSchema };
+
+
+
+const editOneUserByAdminSchema = Joi.object({
+    id: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    email: Joi.string()
+        .valid(null),
+    
+    password: Joi.string()
+        .valid(null),
+
+    gender: Joi.string()
+        .valid('male', 'female')
+        .required(),
+
+    name: Joi.string()
+        .min(1)
+        .max(50)
+        .required(),
+
+    surname: Joi.string()
+        .min(1)
+        .max(50)
+        .required(),
+    
+    employedAs: Joi.string()
+        .min(1)
+        .max(80)
+        .required(),
+    
+    avatarPath: Joi.string()
+        .allow(null)
+        .optional(),
+
+    role: Joi.string()
+        .valid('unconfirmed', 'admin', 'user', 'banned')
+        .required(),
+})
+
+export { signUpUserSchema, editOneUserByAdminSchema };

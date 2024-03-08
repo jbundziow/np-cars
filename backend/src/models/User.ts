@@ -5,11 +5,11 @@ import sequelize from "../database/database";
 
 const UserModel = sequelize.define('User', {
     id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true,
-        unique: true
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true,
+      autoIncrement: true,
+      unique: true
       },
     email: {
       type: DataTypes.STRING,
@@ -57,8 +57,8 @@ const UserModel = sequelize.define('User', {
 class User {
     constructor(
         private id: number | null,
-        private email: string,
-        private password: string,
+        private email: string | null,
+        private password: string | null,
         private gender: 'male' | 'female',
         private name: string,
         private surname: string,
@@ -69,7 +69,7 @@ class User {
 
     async addOneUser() {
         return await UserModel.create({
-          id: this.id,
+          // id: this.id,
           email: this.email,
           password: this.password,
           gender: this.gender,
@@ -80,6 +80,47 @@ class User {
           role: this.role,
         })
     }
+
+
+    async editOneUser() {
+      return await UserModel.update({
+        // id: this.id,
+        // email: this.email,
+        // password: this.password,
+        gender: this.gender,
+        name: this.name,
+        surname: this.surname,
+        employedAs: this.employedAs,
+        avatarPath: this.avatarPath,
+        role: this.role,
+      },
+      {where: {id: this.id}})
+  }
+
+
+
+  static async acknowledgeUserByModerator(userID: number) {
+    return await UserModel.update({
+      role: 'user'
+    },
+    {where: {id: userID}},
+    );
+  }
+
+
+
+  static async deleteUser(id: number) {
+    const user = await User.fetchOne(id, true);
+
+    if (user) {
+      return await user.destroy();
+    }
+    else {
+      throw new Error('User not found');
+    }
+  }
+
+
 
     changePassword(hashedPassword: string) {
       this.password = hashedPassword;
