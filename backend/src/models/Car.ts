@@ -133,7 +133,7 @@ class Car {
         availabilityStatus: this.availabilityStatus,
         availabilityDescription: this.availabilityDescription,
       },
-      {where: {id: this.id}}
+      {where: {id: this.id, availabilityStatus: { [Op.ne]: 'rented'}}}
       )
   }
 

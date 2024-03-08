@@ -1,6 +1,6 @@
 import { AuthType } from "../../types/common";
 import { db_User } from "../../types/db_types";
-import CardUser from "../CardUser";
+import CardUser from "./CardUser";
 
 
 type UsersListPageProps = {
@@ -16,7 +16,7 @@ const isUnconfirmedUserExist = props.users.some(user => user.role === 'unconfirm
   return (
   
       <>
-      {props.users && props.users.length > 0
+      {props.users && props.users.length > 0 && (!props.users.every(user => user.role === 'banned') || props.auth.userRole === 'admin')
       ?
       <> 
 

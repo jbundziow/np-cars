@@ -32,9 +32,12 @@ const addOneCarSchema = Joi.object({
         .required(),
 
     fuelCardPIN: Joi.string()
-        .pattern(/^(\d{4}|\d{6})$/)
-        .allow(null)
-        .optional(),
+        .when('hasFuelCard', {
+            is: false,
+            then: Joi.valid(null),
+            otherwise: Joi.string().pattern(/^(\d{4}|\d{6})$/)
+        })
+        .required(),
 
     fuelType: Joi.string()
         .valid('diesel', 'petrol')

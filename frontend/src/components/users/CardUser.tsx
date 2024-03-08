@@ -1,10 +1,9 @@
-// import UnknownCarImg from '../images/cars/unknown_car_1280_720.png'
-import UserMale from '../images/user/unknownUserMale.jpg'
-import UserFemale from '../images/user/unknownUserFemale.jpg'
+import UserMale from '../../images/user/unknownUserMale.jpg'
+import UserFemale from '../../images/user/unknownUserFemale.jpg'
 import { Link } from "react-router-dom";
-import { db_User } from '../types/db_types';
-import DOMAIN_NAME from '../utilities/domainName';
-import { AuthType } from '../types/common';
+import { db_User } from '../../types/db_types';
+import DOMAIN_NAME from '../../utilities/domainName';
+import { AuthType } from '../../types/common';
 
 type CardUserButton = {
   text: string;

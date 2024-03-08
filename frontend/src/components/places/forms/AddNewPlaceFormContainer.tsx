@@ -157,7 +157,6 @@ const AddNewPlaceFormContainer = () => {
                     <input
                         disabled
                         type="text"
-                        placeholder={`np. 214/23/GB`}
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-not-allowed disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-success font-extrabold"
                         value="Aktywny"
                     />
