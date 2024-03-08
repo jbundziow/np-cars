@@ -13,12 +13,20 @@ import Fault from '../../models/Fault';
 export const addOneCar_POST_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     try {
-    const newCar = new Car(null, data.brand, data.model, data.type, data.imgPath, data.plateNumber, data.hasFuelCard, data.fuelCardPIN, data.fuelType, data.tankCapacity, data.loadCapacity, new Date(data.nextInspectionDate), new Date(data.nextInsuranceDate), data.availabilityStatus, data.availabilityDescription);
-    await addOneCarSchema.validateAsync(newCar);
-    await newCar.addOneCar();
-    res.status(200).json({status: 'success', data: req.body});
+        
+
+        // console.log(req.file?.mimetype);
+    // const newCar = new Car(null, data.brand, data.model, data.type, 'data.imgPath', data.plateNumber, data.hasFuelCard, data.fuelCardPIN, data.fuelType, data.tankCapacity, data.loadCapacity, new Date(data.nextInspectionDate), new Date(data.nextInsuranceDate), data.availabilityStatus, data.availabilityDescription);
+    // await addOneCarSchema.validateAsync(newCar);
+    // await newCar.addOneCar();
+    console.log(req.headers['content-type']);
+    console.log(req.body);
+    console.log(req.file);
+    // console.log(req.files);
+    res.status(400).json({status: 'fail', data: {pl: req.body, en: 'asdasd'}});
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({status: 'error', message: err})
     }
 }

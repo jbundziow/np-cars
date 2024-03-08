@@ -20,7 +20,7 @@ const AddNewCarFormContainer = () => {
     const [brand, setBrand] = useState<string>('')
     const [model, setModel] = useState<string>('')
     const [type, setType] = useState<string>('passengerCar')
-    const [image, setImage] = useState<string>('')
+    const [image, setImage] = useState<File>()
     const [plateNumber, setPlateNumber] = useState<string>('')
     const [hasFuelCard, setHasFuelCard] = useState<boolean>(false)
     const [fuelCardPIN, setFuelCardPIN] = useState<number | ''>('')
@@ -36,18 +36,10 @@ const AddNewCarFormContainer = () => {
 
 
 
-
-
-    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0]; // Get the first file selected by the user
-        if (file) {
-            // Convert the selected file to base64 string or any other format you need
-            const reader = new FileReader();
-            reader.onload = () => {
-                const imageData = reader.result as string;
-                setImage(imageData);
-            };
-            reader.readAsDataURL(file);
+    const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if(event.target.files && event.target.files.length > 0) {
+        const selectedImage = event.target.files[0]; // Get the selected file
+        setImage(selectedImage); // Store the selected file in the component's state
         }
     };
 
@@ -63,33 +55,33 @@ const AddNewCarFormContainer = () => {
         e.preventDefault();
 
         const finalFuelCardPIN = hasFuelCard ? fuelCardPIN : null;
-        const formData = {
-            brand,
-            model,
-            type,
-            image,
-            plateNumber,
-            hasFuelCard,
-            fuelCardPIN: finalFuelCardPIN,
-            fuelType,
-            tankCapacity,
-            loadCapacity,
-            nextInspectionDate,
-            nextInsuranceDate,
-            availabilityStatus: 'available',
-            availabilityDescription: null,
-        }
+        const formData = new FormData();
+        formData.append('brand', brand);
+        formData.append('model', model);
+        formData.append('type', type);
+        if (image) {formData.append('image', image)}
+        formData.append('plateNumber', plateNumber);
+        formData.append('hasFuelCard', hasFuelCard.toString());
+        formData.append('fuelCardPIN', finalFuelCardPIN !== null ? finalFuelCardPIN.toString() : '');
+        formData.append('fuelType', fuelType);
+        formData.append('tankCapacity', tankCapacity !== '' ? tankCapacity.toString() : '');
+        formData.append('loadCapacity', loadCapacity !== '' ? loadCapacity.toString() : '');
+        formData.append('nextInspectionDate', nextInspectionDate);
+        formData.append('nextInsuranceDate', nextInsuranceDate);
+        formData.append('availabilityStatus', 'available');
+        formData.append('availabilityDescription', '');
+        console.log(formData);
 
         try {
 
         const response = await fetch(`${DOMAIN_NAME}/admin/cars`, {
             method: 'POST',
-            headers: {
-            'Content-Type': 'application/json; charset=utf-8',
-            },
+            // headers: {
+            //     "Content-Type": "multipart/form-data",
+            //   },
             credentials: 'include',
             
-            body: JSON.stringify(formData),
+            body: formData,
         });
 
         if (response.ok) {
@@ -127,7 +119,7 @@ const AddNewCarFormContainer = () => {
                 
                 
                 
-                <form onSubmit={submitHandler} className='p-2'>
+                <form onSubmit={submitHandler} className='p-2' encType="multipart/form-data">
 
 
 
@@ -209,8 +201,9 @@ const AddNewCarFormContainer = () => {
                         Zdjęcie samochodu (1280x720 pikseli)
                     </label>
                     <input
-                        required
+                        // required
                         type="file"
+                        name="image"
                         accept=".jpg, .jpeg, .png"
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                         onChange={handleImageChange}
@@ -347,6 +340,7 @@ const AddNewCarFormContainer = () => {
                         required
                         type="number"
                         step="1"
+                        min="10"
                         max="1600"
                         placeholder={`Posłuży ona do obliczenia pozostałej ilości paliwa w baku. Jednostka to litr.`}
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
@@ -379,6 +373,7 @@ const AddNewCarFormContainer = () => {
                         required
                         type="number"
                         step="1"
+                        min="100"
                         max="40000"
                         placeholder={`Obliczysz ją z dowodu rejestracyjnego pojazdu. Wzór to F.1 - G.`}
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
