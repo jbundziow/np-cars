@@ -2,11 +2,8 @@ import { Request } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import path from 'path';
 
-type DestinationCallback = (error: Error | null, destination: string) => void;
-type FileNameCallback = (error: Error | null, filename: string) => void;
-
-
-
+// type DestinationCallback = (error: Error | null, destination: string) => void;
+// type FileNameCallback = (error: Error | null, filename: string) => void;
 // const storage = multer.diskStorage({
 //     destination: (req: Request, file: Express.Multer.File, cb: DestinationCallback) => {
 //         cb(null, path.join('public', 'uploaded_images'))
@@ -15,7 +12,7 @@ type FileNameCallback = (error: Error | null, filename: string) => void;
 //         cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
 //     }
 // });
-const storage = multer.memoryStorage()
+const storage = multer.memoryStorage() //store in memory before save, beacuse we need to resize it before save using 'sharp' library
 
 
 

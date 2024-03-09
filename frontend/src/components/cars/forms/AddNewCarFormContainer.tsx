@@ -54,7 +54,7 @@ const AddNewCarFormContainer = () => {
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const finalFuelCardPIN = hasFuelCard ? fuelCardPIN : null;
+        const finalFuelCardPIN = hasFuelCard ? fuelCardPIN : '';
         const formData = new FormData();
         formData.append('brand', brand);
         formData.append('model', model);
@@ -62,10 +62,10 @@ const AddNewCarFormContainer = () => {
         if (image) {formData.append('image', image)}
         formData.append('plateNumber', plateNumber);
         formData.append('hasFuelCard', hasFuelCard.toString());
-        formData.append('fuelCardPIN', finalFuelCardPIN !== null ? finalFuelCardPIN.toString() : '');
+        formData.append('fuelCardPIN', finalFuelCardPIN.toString());
         formData.append('fuelType', fuelType);
-        formData.append('tankCapacity', tankCapacity !== '' ? tankCapacity.toString() : '');
-        formData.append('loadCapacity', loadCapacity !== '' ? loadCapacity.toString() : '');
+        formData.append('tankCapacity', tankCapacity.toString());
+        formData.append('loadCapacity', loadCapacity.toString());
         formData.append('nextInspectionDate', nextInspectionDate);
         formData.append('nextInsuranceDate', nextInsuranceDate);
         formData.append('availabilityStatus', 'available');
@@ -201,13 +201,18 @@ const AddNewCarFormContainer = () => {
                         Zdjęcie samochodu (1280x720 pikseli)
                     </label>
                     <input
-                        // required
+                        required
                         type="file"
                         name="image"
                         accept=".jpg, .jpeg, .png"
                         className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                         onChange={handleImageChange}
                     />
+                    {image && (
+                    <div className="flex justify-center items-center p-10">
+                        <img className="md:max-w-[80%] rounded-lg" src={URL.createObjectURL(image)} alt="Wybrany obraz" />
+                    </div>
+                    )}
                     </div>
 
 

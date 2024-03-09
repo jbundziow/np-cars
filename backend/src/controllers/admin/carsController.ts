@@ -12,42 +12,45 @@ import path from 'path';
 
 
 export const addOneCar_POST_admin = async (req: Request, res: Response, next: NextFunction) => {
-    const data = req.body;
+    
     try {
-        console.log(req.file?.buffer);
-        const metadata = await sharp(req.file?.buffer).metadata();
-        console.log(metadata);
+        const data = req.body;
+        if(data.fuelCardPIN === '') data.fuelCardPIN = null;
+        if(data.availabilityDescription === '') data.availabilityDescription = null;
 
-        await sharp(req.file?.buffer)
+        const newCar = new Car(null, data.brand, data.model, data.type, 'img', data.plateNumber, data.hasFuelCard, data.fuelCardPIN, data.fuelType, data.tankCapacity, data.loadCapacity, new Date(data.nextInspectionDate), new Date(data.nextInsuranceDate), data.availabilityStatus, data.availabilityDescription);
+        await addOneCarSchema.validateAsync(newCar);
+        
+
+        if(!req.file) {
+            res.status(400).json({status: 'fail', data: [{en: 'An error occurred while uploading the image. The allowed size is 10MB and the format is: .jpg, .jpeg, .png. It is recommended to send the image in 16:9 aspect ratio.', pl: 'Wystąpił błąd podczas wgrywania obrazka. Dopuszczalny rozmiar to 10MB, a format to: .jpg, .jpeg, .png. Zaleca się przesłanie obrazka w proporcjach 16:9.'}]})
+            return;
+        }
+
+        const currentDate = new Date().getTime();
+
+        const uploadedImage = await sharp(req.file?.buffer)
         .resize(1280, 720, {
             kernel: sharp.kernel.nearest,
             fit: 'cover',
             position: 'centre',
           })
-          .toFile(path.join('public', 'uploaded_images', `${new Date().getTime()}-output.png`))
-  .then(() => {
-    // res.status(200).json({status: 'success', data: {pl: req.body, en: 'asdasd'}});
-    // return;
-  });
+          .toFile(path.join('public', 'uploaded_images', `${currentDate}-${req.file?.originalname}`))
+
+          if(!uploadedImage) {
+            res.status(400).json({status: 'fail', data: [{en: 'An error occurred while resizing the image and saving it to the server.', pl: 'Wystąpił błąd podczas zmieniania rozmiaru obrazka i zapisywania go na serwerze.'}]})
+            return;
+          }
+
+        const finalPathName: string = path.join('/', 'uploaded_images', `${currentDate}-${req.file?.originalname}`).replace(/\\/g, '/');
           
-          
 
-        // console.log(req.file?.mimetype);
-    // const newCar = new Car(null, data.brand, data.model, data.type, 'data.imgPath', data.plateNumber, data.hasFuelCard, data.fuelCardPIN, data.fuelType, data.tankCapacity, data.loadCapacity, new Date(data.nextInspectionDate), new Date(data.nextInsuranceDate), data.availabilityStatus, data.availabilityDescription);
-    // await addOneCarSchema.validateAsync(newCar);
-    // await newCar.addOneCar();
+        newCar.changeImgPath(finalPathName);
+        const result = await newCar.addOneCar();
 
 
-    
+        res.status(200).json({status: 'success', data: result})
 
-
-
-
-    // console.log(req.headers['content-type']);
-    // console.log(req.body);
-    // console.log(req.file);
-    // console.log(req.files);
-    res.status(400).json({status: 'fail', data: {pl: req.body, en: 'asdasd'}});
     }
     catch (err) {
         console.log(err);

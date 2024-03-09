@@ -4,6 +4,7 @@ import { db_Car_basic } from '../../../types/db_types';
 import { AuthType } from '../../../types/common';
 import { useState } from 'react';
 import ImgLoader from '../../../common/Loader/ImgLoader';
+import DOMAIN_NAME from '../../../utilities/domainName';
 
 type CardCarButton = {
   text: string;
@@ -34,7 +35,7 @@ const CardCar = (props: CardCarProps) => {
           <ImgLoader/>
         )}
         <img
-        src={props.carData.imgPath || UnknownCarImg}
+        src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg}
         style={imgLoaded ? {} : { display: 'none' }}
         onLoad={() => setImgLoaded(true)}
         alt="Zdjęcie samochodu"

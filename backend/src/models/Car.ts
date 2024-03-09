@@ -137,6 +137,10 @@ class Car {
       )
   }
 
+  changeImgPath(newImgPath: string) {
+    this.imgPath = newImgPath;
+  }
+
 
     static async fetchAll(showBanned: boolean) {
       if(showBanned) {
