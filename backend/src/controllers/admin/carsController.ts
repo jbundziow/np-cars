@@ -85,6 +85,10 @@ export const editOneCar_PUT_admin = async (req: Request, res: Response, next: Ne
             return;
         }
 
+        //removing file that works
+        // const ress = await removeFile(path.join('./public', 'uploaded_images', '1710004844191-Screenshot 2023-09-01 at 17.45.05.png'))
+        // console.log(ress);
+
 
         const editedCar = new Car(Number(req.params.carid), data.brand, data.model, data.type, data.imgPath, data.plateNumber, data.hasFuelCard, data.fuelCardPIN, data.fuelType, data.tankCapacity, data.loadCapacity, new Date(data.nextInspectionDate), new Date(data.nextInsuranceDate), data.availabilityStatus, data.availabilityDescription);
 
