@@ -2,6 +2,8 @@ import UnknownCarImg from '../../../images/cars/unknown_car_1280_720.png';
 import { Link } from "react-router-dom";
 import { db_Car_basic } from '../../../types/db_types';
 import { AuthType } from '../../../types/common';
+import { useState } from 'react';
+import ImgLoader from '../../../common/Loader/ImgLoader';
 
 type CardCarButton = {
   text: string;
@@ -16,15 +18,30 @@ interface CardCarProps {
 }
 
 
+
 const CardCar = (props: CardCarProps) => {
+
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+
+
     return (
       <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className='flex justify-center'>
+        
+
+        {imgLoaded ? null : (
+          <ImgLoader/>
+        )}
         <img
-        src={props.carData.imgPath !== null ? `${props.carData.imgPath}` : UnknownCarImg}
+        src={props.carData.imgPath || UnknownCarImg}
+        style={imgLoaded ? {} : { display: 'none' }}
+        onLoad={() => setImgLoaded(true)}
         alt="Zdjęcie samochodu"
         className='w-full border-2 rounded-2xl'
         />
+    
+
         </div>
         <div className='flex justify-center py-2'>
         {props.carData.availabilityStatus === 'available' ?
