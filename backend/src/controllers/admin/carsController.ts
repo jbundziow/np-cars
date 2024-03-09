@@ -7,21 +7,45 @@ import Rental from '../../models/Rental';
 import Reservation from '../../models/Reservation';
 import Refueling from '../../models/Refueling';
 import Fault from '../../models/Fault';
-
+import sharp from 'sharp';
+import path from 'path';
 
 
 export const addOneCar_POST_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     try {
-        
+        console.log(req.file?.buffer);
+        const metadata = await sharp(req.file?.buffer).metadata();
+        console.log(metadata);
+
+        await sharp(req.file?.buffer)
+        .resize(1280, 720, {
+            kernel: sharp.kernel.nearest,
+            fit: 'cover',
+            position: 'centre',
+          })
+          .toFile(path.join('public', 'uploaded_images', `${new Date().getTime()}-output.png`))
+  .then(() => {
+    // res.status(200).json({status: 'success', data: {pl: req.body, en: 'asdasd'}});
+    // return;
+  });
+          
+          
 
         // console.log(req.file?.mimetype);
     // const newCar = new Car(null, data.brand, data.model, data.type, 'data.imgPath', data.plateNumber, data.hasFuelCard, data.fuelCardPIN, data.fuelType, data.tankCapacity, data.loadCapacity, new Date(data.nextInspectionDate), new Date(data.nextInsuranceDate), data.availabilityStatus, data.availabilityDescription);
     // await addOneCarSchema.validateAsync(newCar);
     // await newCar.addOneCar();
-    console.log(req.headers['content-type']);
-    console.log(req.body);
-    console.log(req.file);
+
+
+    
+
+
+
+
+    // console.log(req.headers['content-type']);
+    // console.log(req.body);
+    // console.log(req.file);
     // console.log(req.files);
     res.status(400).json({status: 'fail', data: {pl: req.body, en: 'asdasd'}});
     }

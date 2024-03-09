@@ -7,14 +7,15 @@ type FileNameCallback = (error: Error | null, filename: string) => void;
 
 
 
-const storage = multer.diskStorage({
-    destination: (req: Request, file: Express.Multer.File, cb: DestinationCallback) => {
-        cb(null, path.join('public', 'uploaded_images'))
-    },
-    filename: (req, file, cb) => {
-        cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: (req: Request, file: Express.Multer.File, cb: DestinationCallback) => {
+//         cb(null, path.join('public', 'uploaded_images'))
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, new Date().toISOString().replace(/:/g, '-') + '-' + file.originalname);
+//     }
+// });
+const storage = multer.memoryStorage()
 
 
 
@@ -30,6 +31,6 @@ const fileFilter = (req: Request, file: Express.Multer.File, cb: FileFilterCallb
     }
 };
 
-const limits = { fileSize: 5 * 1024 * 1024 }; // 5MB
+const limits = { fileSize: 10 * 1024 * 1024 }; // 10MB
 
 export { storage, fileFilter, limits };
