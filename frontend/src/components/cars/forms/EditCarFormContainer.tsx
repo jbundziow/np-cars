@@ -7,6 +7,7 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import CarRowInFormImg from "../../general/CarRowInFormImg";
 import formatDate from "../../../utilities/formatDate";
+import StyledSpan from "../../general/spanElements/StyledSpan";
 
 
 
@@ -583,6 +584,52 @@ const EditCarFormContainer = (props: EditCarFormContainerProps) => {
                         onChange={e => setAvailabilityDescription(e.target.value)}
                     />
                     </div>
+
+
+
+
+
+
+
+
+
+                    <div className="flex flex-col">
+                      <p className="pt-5 pb-3">Objaśnienia statusów samochodów:</p>
+
+                      <div className="flex items-center pb-3 text-xs md:text-base">
+                        <StyledSpan color={'success'} text={'\xa0' + '\xa0' + '\xa0' + 'Dostępny' + '\xa0' + '\xa0' + '\xa0'}/>
+                        <p className="pl-4">Samochód może być swobodnie używany przez wszystkich użytkowników aplikacji.</p>
+                      </div>
+
+                      <div className="flex items-center pb-3 text-xs md:text-base">
+                        <StyledSpan color={'warning'} text={'Wypożyczony'}/>
+                        <p className="pl-4">Samochód jest aktualnie wypożyczony przez dowolnego użytkownika aplikacji. W razie potrzeby inny użytkownik może dokonać za niego zwrotu. Samochodu o tym statusie nie można edytować.</p>
+                      </div>
+
+                      <div className="flex items-center pb-3 text-xs md:text-base">
+                        <StyledSpan color={'danger'} text={'\xa0' + '\xa0' + 'Nieaktywny' + '\xa0' + '\xa0'}/>
+                        <p className="pl-4">Samochód nie może być wypożyczany przez innych użytkowników, ale nadal jest widoczny.</p>
+                      </div>
+
+                      <div className="flex items-center pb-3 text-xs md:text-base">
+                        <p className="whitespace-nowrap"><StyledSpan color={'danger'} text={'\xa0' + '\xa0' + '\xa0' + `W serwisie` + '\xa0' + '\xa0' + '\xa0'}/></p>
+                        <p className="pl-4">Samochód nie może być wypożyczany przez innych użytkowników, ale nadal jest widoczny.</p>
+                      </div>
+
+                      <div className="flex items-center pb-3 text-xs md:text-base">
+                        <StyledSpan color={'danger'} text={'\xa0' + '\xa0' + 'Uszkodzony' + '\xa0' + '\xa0'}/>
+                        <p className="pl-4">Samochód nie może być wypożyczany przez innych użytkowników, ale nadal jest widoczny.</p>
+                      </div>
+
+                      <div className="flex items-center pb-3 text-xs md:text-base">
+                        <StyledSpan color={'danger'} text={'\xa0' + '\xa0' + 'Zbanowany' + '\xa0' + '\xa0'}/>
+                        <p className="pl-4">Samochód jest całkowicie niewidoczny dla innych użytkowników (poza administratorami) i nie można go wypożyczać / rezerwować / tankować / zgłaszać usterek itd.</p>
+                      </div>
+
+
+                    </div>
+
+
 
 
 
