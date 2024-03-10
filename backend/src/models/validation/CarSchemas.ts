@@ -1,6 +1,6 @@
 import Joi from 'joi';
 
-const addOneCarSchema = Joi.object({
+const addOneCarAdminSchema = Joi.object({
     id: Joi.number()
         .valid(null)
         .required(),
@@ -35,7 +35,7 @@ const addOneCarSchema = Joi.object({
         .when('hasFuelCard', {
             is: false,
             then: Joi.valid(null),
-            otherwise: Joi.string().pattern(/^(\d{4}|\d{6})$/)
+            otherwise: Joi.string().pattern(/^(\d{4}|\d{6})$/).invalid(null)
         })
         .required(),
 
@@ -62,7 +62,7 @@ const addOneCarSchema = Joi.object({
         .required(),
 
     availabilityStatus: Joi.string()
-        .valid('available', 'notAvailable', 'rented', 'onService', 'damaged', 'banned')
+        .valid('available')
         .required(),
 
     availabilityDescription: Joi.string()
@@ -78,7 +78,7 @@ const addOneCarSchema = Joi.object({
 
 
 
-const editOneCarSchema = Joi.object({
+const editOneCarAdminSchema = Joi.object({
     id: Joi.number()
         .integer()
         .positive()
@@ -111,9 +111,12 @@ const editOneCarSchema = Joi.object({
         .required(),
 
     fuelCardPIN: Joi.string()
-        .pattern(/^(\d{4}|\d{6})$/)
-        .allow(null)
-        .optional(),
+        .when('hasFuelCard', {
+            is: false,
+            then: Joi.valid(null),
+            otherwise: Joi.string().pattern(/^(\d{4}|\d{6})$/).invalid(null)
+        })
+        .required(),
 
     fuelType: Joi.string()
         .valid('diesel', 'petrol')
@@ -138,7 +141,7 @@ const editOneCarSchema = Joi.object({
         .required(),
 
     availabilityStatus: Joi.string()
-        .valid('available', 'notAvailable', 'rented', 'onService', 'damaged', 'banned')
+        .valid('available', 'notAvailable', 'onService', 'damaged', 'banned') // 'rented' is not allowed here
         .required(),
 
     availabilityDescription: Joi.string()
@@ -152,4 +155,4 @@ const editOneCarSchema = Joi.object({
 
 
 
-export { addOneCarSchema, editOneCarSchema };
+export { addOneCarAdminSchema, editOneCarAdminSchema };

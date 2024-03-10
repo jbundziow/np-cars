@@ -1,9 +1,8 @@
 import { lazy } from 'react';
 
 
-
-
 const AddCar = lazy(() => import('../new_pages/samochody/dodaj'));
+const EditCar = lazy(() => import('../new_pages/samochody/edycja'));
 const AddPlace = lazy(() => import('../new_pages/projekty/dodaj'));
 const EditPlace = lazy(() => import('../new_pages/projekty/edycja'));
 const RentalsConfirm = lazy(() => import('../new_pages/potwierdzenia/wypozyczenia'));
@@ -77,6 +76,11 @@ const adminRoutes = [
     path: '/samochody/dodaj',
     title: 'Dodaj nowy samochód',
     component: AddCar,
+  },
+  {
+    path: '/samochody/edycja/:carid',
+    title: 'Edycja samochodu',
+    component: EditCar,
   },
 
 

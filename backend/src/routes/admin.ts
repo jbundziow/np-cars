@@ -13,7 +13,7 @@ const app = express.Router();
 
 //cars
 app.post('/cars', multer({ storage, fileFilter, limits }).single('image'), addOneCar_POST_admin)
-app.put('/cars/:carid', editOneCar_PUT_admin)
+app.put('/cars/:carid', multer({ storage, fileFilter, limits }).single('image'), editOneCar_PUT_admin)
 app.delete('/cars/:carid', deleteOneCar_DELETE_admin)
 
 

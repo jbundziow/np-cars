@@ -185,14 +185,20 @@ class Car {
 
 
 
-    static async deleteCar(id: number) {
+    static async deleteCar(id: number): Promise<boolean> {
+      try {
       const car = await Car.fetchOne(id, true);
-
+      
       if (car) {
-        return await car.destroy();
+        await car.destroy();
+        return true;
       }
       else {
-        throw new Error('Car not found');
+        return false;
+      }
+      }
+      catch(err) {
+        return false;
       }
     }
 

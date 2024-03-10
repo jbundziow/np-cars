@@ -28,10 +28,10 @@ const RentalsTableRow = (props: RentalsTableRowProps) => {
                 result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">W serwisie</p>
                 break;
             case 'damaged':
-                result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Awaria</p>
+                result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Uszkodzony</p>
                 break;
             case 'banned':
-                result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Wycofany</p>
+                result = <p className="inline-flex rounded-full bg-danger bg-opacity-10 py-1 px-3 text-xs sm:text-base font-medium text-danger cursor-default">Zbanowany</p>
                 break;
         }
         return result;
