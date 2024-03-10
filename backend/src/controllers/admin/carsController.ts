@@ -35,14 +35,14 @@ export const addOneCar_POST_admin = async (req: Request, res: Response, next: Ne
             fit: 'cover',
             position: 'centre',
           })
-          .toFile(path.join('public', 'uploaded_images', `${currentDate}-${req.file?.originalname}`))
+          .toFile(path.join('public', 'uploaded_images', `car-${currentDate}`))
 
           if(!uploadedImage) {
             res.status(400).json({status: 'fail', data: [{en: 'An error occurred while resizing the image and saving it to the server.', pl: 'Wystąpił błąd podczas zmieniania rozmiaru obrazka i zapisywania go na serwerze.'}]})
             return;
           }
 
-        const finalPathName: string = path.join('/', 'uploaded_images', `${currentDate}-${req.file?.originalname}`).replace(/\\/g, '/');
+        const finalPathName: string = path.join('/', 'uploaded_images', `car-${currentDate}`).replace(/\\/g, '/');
           
 
         newCar.changeImgPath(finalPathName);

@@ -1,6 +1,10 @@
 import { Link } from "react-router-dom";
 import FaultsStatusCardCounter from "./FaultsStatusCardCounter";
 import { db_Car_basic } from "../../../types/db_types";
+import DOMAIN_NAME from "../../../utilities/domainName";
+import ImgLoader from "../../../common/Loader/ImgLoader";
+import UnknownCarImg from "../../../images/cars/unknown_car_1280_720.png";
+import { useState } from "react";
 
 
 type FaultsStatusCardProps = {
@@ -12,11 +16,27 @@ type FaultsStatusCardProps = {
 
 
 const FaultsStatusCard = (props: FaultsStatusCardProps) => {
+
+  const [imgLoaded, setImgLoaded] = useState(false);
+
+
+
     return (
       <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark">
         <div className='flex flex-col items-center'>
         <p className='text-black dark:text-white pb-2 text-xl font-bold'>{props.carData.brand} {props.carData.model}</p>
-        <img src={props.carData.imgPath} alt="Product" className='w-full border-2 rounded-md'/>
+
+        {imgLoaded ? null : (
+            <ImgLoader/>
+        )}
+        <img
+        src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg}
+        style={imgLoaded ? {} : { display: 'none' }}
+        onLoad={() => setImgLoaded(true)}
+        alt="Zdjęcie samochodu"
+        className='w-full border-2 rounded-md'
+        />
+
         <div className='grid grid-cols-3 gap-3 py-2'>
         {/* INSERT COUTNERS THERE */}
         <FaultsStatusCardCounter amount={props.numberOfPendingFaults} text="oczekujące"/>

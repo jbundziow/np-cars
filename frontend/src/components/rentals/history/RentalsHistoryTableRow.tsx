@@ -4,6 +4,10 @@ import UserSpan from "../../general/spanElements/UserSpan";
 import PlaceSpan from "../../general/spanElements/PlaceSpan";
 import StyledSpan from "../../general/spanElements/StyledSpan";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
+import DOMAIN_NAME from "../../../utilities/domainName";
+import UnknownCarImg from '../../../images/cars/unknown_car_1280_720.png'
+import { useState } from "react";
+import ImgLoader from "../../../common/Loader/ImgLoader";
 
 
 
@@ -15,6 +19,8 @@ interface RentalsHistoryTableRowProps {
   }
 
 const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
+
+    const [imgLoaded, setImgLoaded] = useState(false);
 
 
     const rentalUserObject = props.usersData.find(user => user.id === props.rentalData.userID);
@@ -29,11 +35,20 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
         <div className="col-span-3 flex items-center">
         <div className="flex flex-col sm:gap-4 xl:flex-row xl:items-center">
             <div className=" w-22 sm:w-32 rounded-md">
-            <img 
-            className="rounded-md block"
-            src={props.carData.imgPath} alt="Zdjęcie samochodu" />
+
+            {imgLoaded ? null : (
+              <ImgLoader/>
+            )}
+            <img
+            src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg}
+            style={imgLoaded ? {} : { display: 'none' }}
+            onLoad={() => setImgLoaded(true)}
+            alt="Zdjęcie samochodu"
+            className='rounded-md block'
+            />
+
             </div>
-            <Link to={`/samochody/${[props.carData.id]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1">
+            <Link to={`/samochody/${[props.carData.id]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1 xl:w-[40%]">
             <h5 className="font-medium text-xs xl:text-sm text-black dark:text-white">
             {`${props.carData.brand} ${props.carData.model}`}
             </h5>

@@ -9,6 +9,7 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 import { useState } from "react";
 import ModalWarning from "../../general/ModalWarning";
 import FaultStatusSpan from "../../general/spanElements/FaultStatusSpan";
+import CarRowInFormImg from "../../general/CarRowInFormImg";
 
 
 type faultDataSchema = {
@@ -74,9 +75,10 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
       <ModalWarning showModal={showWarningConfirmModal} setShowModal={(state: boolean) => setShowWarningConfirmModal(state)} title= {'Zatwierdź zmianę statusu'} bodyText={`Czy na pewno chcesz zatwierdzić zmianę statusu tej usterki na "W trakcie"?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, zatwierdzam'} callback={ async () => await confirmFault() }/>
       <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
 
-        <div className='p-5 pt-0'>
-        <img src={props.faultAndCarData.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-        <p className='text-black dark:text-white pb-2 text-lg'>{props.faultAndCarData.carData.brand}&nbsp;{props.faultAndCarData.carData.model}</p>
+        <div className="flex flex-col items-center pb-10">
+
+        <CarRowInFormImg carData={props.faultAndCarData.carData}/>
+
         <Link
         to={`/usterki/zglos/${props.faultAndCarData.carData.id}`}
         className={`inline-flex items-center justify-center rounded-full bg-primary py-2 px-7 text-center text-base font-medium text-white hover:bg-opacity-90 lg:px-6 xl:px-8 mt-2`}

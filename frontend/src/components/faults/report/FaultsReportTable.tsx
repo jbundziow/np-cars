@@ -34,7 +34,7 @@ const FaultsReportTable = (props: FaultsReportTableProps) => {
             <tbody>
             <div className='py-2' />
                {/* INSERT ROWS HERE */}
-                {props.data.map(item => <FaultsReportTableRow carData={{id: item.id, brand: item.brand, model: item.model, imgPath: item.imgPath, availabilityStatus: item.availabilityStatus}} amountOfFaults={item.pending+item.accepted}/>)}
+                {props.data.filter(car => car.availabilityStatus !== 'banned').map(item => <FaultsReportTableRow carData={{id: item.id, brand: item.brand, model: item.model, imgPath: item.imgPath, availabilityStatus: item.availabilityStatus}} amountOfFaults={item.pending+item.accepted}/>)}
                
 
             </tbody>

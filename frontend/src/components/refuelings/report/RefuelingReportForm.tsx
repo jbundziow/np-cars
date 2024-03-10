@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { db_Car_basic, db_User } from "../../../types/db_types";
 import OperationResult from "../../general/OperationResult";
 import { FormPageStatus } from "../../../types/enums";
@@ -7,6 +6,7 @@ import { useState } from "react";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { Option } from "react-tailwindcss-select/dist/components/type";
+import CarRowInFormImg from "../../general/CarRowInFormImg";
 
 interface RefuelingUserDataToAPI {
   carMileage: number | '';
@@ -181,12 +181,7 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
         <>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
   
-          <div className='p-5 pt-0'>
-          <img src={props.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-          <Link to={`/samochody/${props.carData.id}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
-          <p className='text-black dark:text-white pb-2 text-lg'>{props.carData.brand}&nbsp;{props.carData.model}</p>
-          </Link>
-          </div>
+            <CarRowInFormImg carData={props.carData} />
 
           
             <div className='col-span-3'>

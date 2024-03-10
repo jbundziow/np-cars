@@ -11,6 +11,8 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 import useAuth from "../../../hooks/useAuth";
+import ImgLoader from "../../../common/Loader/ImgLoader";
+import UnknownCarImg from '../../../images/cars/unknown_car_1280_720.png'
 
 
 
@@ -22,6 +24,8 @@ interface ReservationsHistoryTableRowProps {
   }
 
 const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) => {
+
+    const [imgLoaded, setImgLoaded] = useState(false);
 
     const [rowDeleted, setRowDeleted] = useState<boolean>(false);
 
@@ -71,12 +75,21 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
         <div className="col-span-3 flex items-center">
         <div className="flex flex-col sm:gap-4 xl:flex-row xl:items-center">
-            <div className=" w-22 sm:w-32 rounded-md">
-            <img 
-            className="rounded-md block"
-            src={props.carData.imgPath} alt="Zdjęcie samochodu" />
+            <div className="w-22 sm:w-32 rounded-md">
+            
+            {imgLoaded ? null : (
+              <ImgLoader/>
+            )}
+            <img
+            src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg}
+            style={imgLoaded ? {} : { display: 'none' }}
+            onLoad={() => setImgLoaded(true)}
+            alt="Zdjęcie samochodu"
+            className='rounded-md block'
+            />
+
             </div>
-            <Link to={`/samochody/${[props.carData.id]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1">
+            <Link to={`/samochody/${[props.carData.id]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1 xl:w-[40%]">
             <h5 className="font-medium text-xs xl:text-sm text-black dark:text-white">
             {`${props.carData.brand} ${props.carData.model}`}
             </h5>

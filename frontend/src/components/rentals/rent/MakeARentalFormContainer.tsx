@@ -3,11 +3,11 @@ import OperationResult from "../../general/OperationResult";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import TwoWeeksReservations from "../../reservations/overview/TwoWeeksReservations";
-import { Link } from "react-router-dom";
 import { warnings } from "../../../types/common";
 import { FormPageStatus } from "../../../types/enums";
 import { db_Car_basic, db_Rental, db_User } from "../../../types/db_types";
 import { reservationTypeAtSpecificDate } from "../../../types/api";
+import CarRowInFormImg from "../../general/CarRowInFormImg";
 
 
 
@@ -119,12 +119,8 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
         <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Ostrzeżenie!'} bodyText={`Wpisano większy przebieg początkowy niż przebieg końcowy z ostatniego wypożyczenia tego samochodu. Wypożyczenie przez Ciebie tego auta będzie skutować dodaniem dodatkowo jednej pustej podróży pomiędzy przebiegiem ${props.lastRentalData?.carMileageAfter}km, a ${carMileageBefore}km.`} cancelBtnText={'Anuluj'} acceptBtnText={'Wypożycz mimo to'} callback={ async () => await postForm() }/>
 
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
-          <div className='p-5 pt-0'>
-          <img src={props.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-          <Link to={`/samochody/${props.carData.id}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
-          <p className='text-black dark:text-white pb-2 text-lg'>{props.carData.brand}&nbsp;{props.carData.model}</p>
-          </Link>
-          </div>
+          
+            <CarRowInFormImg carData={props.carData} />
 
           
             <div className='col-span-3'>

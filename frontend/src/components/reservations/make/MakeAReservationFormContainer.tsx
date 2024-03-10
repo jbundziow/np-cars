@@ -5,13 +5,13 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
 import formatDate from "../../../utilities/formatDate";
-import { Link } from "react-router-dom";
 import { db_Car_basic, db_User } from "../../../types/db_types";
 import { FormPageStatus } from "../../../types/enums";
 import { AuthType, warnings } from "../../../types/common";
 import useAuth from "../../../hooks/useAuth";
 import { Option } from "react-tailwindcss-select/dist/components/type";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
+import CarRowInFormImg from "../../general/CarRowInFormImg";
 
 
 
@@ -142,13 +142,7 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
         <>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4"> 
   
-          <div className='p-5 pt-0'>
-          <img src={props.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-          <Link to={`/samochody/${props.carData.id}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
-          <p className='text-black dark:text-white pb-2 text-lg'>{props.carData.brand}&nbsp;{props.carData.model}</p>
-          </Link>
-          </div>
-
+            <CarRowInFormImg carData={props.carData} />
           
             <div className='col-span-3'>
             <div className="rounded-lg border border-neutral-200 bg-white dark:border-neutral-600 dark:bg-neutral-800 p-2 text-black dark:text-white">

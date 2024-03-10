@@ -4,6 +4,7 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 import { FormPageStatus } from "../../../types/enums";
 import { warnings } from "../../../types/common";
 import { db_Car_basic } from "../../../types/db_types";
+import CarRowInFormImg from "../../general/CarRowInFormImg";
 
 
 
@@ -57,10 +58,7 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
         <>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
   
-          <div className='p-5 pt-0'>
-          <img src={props.data.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-          <p className='text-black dark:text-white pb-2 text-lg'>{props.data.brand}&nbsp;{props.data.model}</p>
-          </div>
+            <CarRowInFormImg carData={props.data} />
 
           
             <div className='col-span-3'>

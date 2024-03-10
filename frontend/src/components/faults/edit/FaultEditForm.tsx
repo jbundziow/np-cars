@@ -1,4 +1,3 @@
-import { Link } from "react-router-dom";
 import { db_Car_basic, db_Fault, db_User } from "../../../types/db_types";
 import OperationResult from "../../general/OperationResult";
 import { EditFormPageStatus } from "../../../types/enums";
@@ -10,6 +9,7 @@ import { Option } from "react-tailwindcss-select/dist/components/type";
 import ModalWarning from "../../general/ModalWarning";
 import { dateFormatter } from "../../../utilities/dateFormatter";
 import useAuth from "../../../hooks/useAuth";
+import CarRowInFormImg from "../../general/CarRowInFormImg";
 
 type faultDataSchema = {
   carData: db_Car_basic,
@@ -160,12 +160,7 @@ const FaultEditForm = (props: FaultEditFormProps) => {
 
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
   
-          <div className='p-5 pt-0'>
-          <img src={props.faultAndCarBasicData.carData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-          <Link to={`/samochody/${props.faultAndCarBasicData.carData.id}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
-          <p className='text-black dark:text-white pb-2 text-lg'>{props.faultAndCarBasicData.carData.brand}&nbsp;{props.faultAndCarBasicData.carData.model}</p>
-          </Link>
-          </div>
+            <CarRowInFormImg carData={props.faultAndCarBasicData.carData} />
 
           
             <div className='col-span-3'>

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
 import DOMAIN_NAME from "../../../utilities/domainName";
-import { Link } from "react-router-dom";
 import { warnings } from "../../../types/common";
 import { FormPageStatus } from "../../../types/enums";
 import { db_Car_basic, db_Rental } from "../../../types/db_types";
+import CarRowInFormImg from "../../general/CarRowInFormImg";
 
 
 
@@ -65,12 +65,7 @@ const RentalsReturnCarFormContainer = (props: RentalsReturnCarFormContainerProps
         <>
         <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-1 xl:grid-cols-4">
   
-          <div className='p-5 pt-0'>
-          <img src={props.carBasicData.imgPath} alt="Zdjęcie samochodu" className='w-full border-2 rounded-md'/>
-          <Link to={`/samochody/${props.carBasicData.id}`} target={'_self'} className="underline decoration-[0.5px] underline-offset-1 inline-block">
-          <p className='text-black dark:text-white pb-2 text-lg'>{props.carBasicData.brand}&nbsp;{props.carBasicData.model}</p>
-          </Link>
-          </div>
+            <CarRowInFormImg carData={props.carBasicData} />
 
           
             <div className='col-span-3'>
