@@ -49,13 +49,91 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
   const [showWarningChangeImageModal, setShowWarningChangeImageModal] = useState<boolean>(false);
   const [showWarningDeleteImageModal, setShowWarningDeleteImageModal] = useState<boolean>(false);
 
+
+
+
+
+
+
+
   const editUserData = async () => {
-    setPageState(EditUserDataPageStatus.UserDataSuccessfullyEdited)
+    const editedUserData = {
+      name: name,
+      surname: surname,
+      employedAs: employedAs,
+      gender: gender,
+      role: isAdmin ? role : null
+    }
+    
+    try {
+      const response = await fetch(`${DOMAIN_NAME}${isAdmin ? '/admin' : ''}/users/${props.user.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        credentials: 'include',
+        body: JSON.stringify(editedUserData)
+      });
+
+      if (response.ok) {
+        setPageState(EditUserDataPageStatus.UserDataSuccessfullyEdited)
+
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setPageState(EditUserDataPageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
+        }
+        else {
+        setPageState(EditUserDataPageStatus.ErrorWithSendingForm);
+        }
+      }
+    }
+    catch (error) {
+      setPageState(EditUserDataPageStatus.ErrorWithSendingForm);
+    }
   }
 
+
+
+
+
+
+
   const deleteUser = async () => {
-    setPageState(EditUserDataPageStatus.UserDataSuccessfullyDeleted)
+
+    try {
+      const response = await fetch(`${DOMAIN_NAME}/admin/users/${props.user.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        setPageState(EditUserDataPageStatus.UserDataSuccessfullyDeleted)
+
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setPageState(EditUserDataPageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
+        }
+        else {
+        setPageState(EditUserDataPageStatus.ErrorWithSendingForm);
+        }
+      }
+    }
+    catch (error) {
+      setPageState(EditUserDataPageStatus.ErrorWithSendingForm);
+    }
   }
+
+
+
+
+
 
   const changeImage = async () => {
     setPageState(EditUserDataPageStatus.ImageSuccessfullyChanged)
@@ -380,9 +458,10 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                             <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
                             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"/></svg>
                             </span>
-                            <select className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
+                            <select className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary disabled:cursor-not-allowed"
                             value={role}
                             onChange={(e)=>setRole(e.target.value)}
+                            disabled={isCurrentUser && isAdmin ? true : false}
                             >
                                 <option value="user">Zwykły użytkownik</option>
                                 <option value="unconfirmed">Niepotwierdzony użytkownik</option>
@@ -536,10 +615,10 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                         przeciągnij i upuść plik
                       </p>
                       <p className="mt-1.5">PNG, JPG, JPEG lub WEBP</p>
-                      <p>(max 10MB)</p>
+                      <p>(max 10MB, zalecany format 1:1)</p>
                     </div>
                     :
-                    <p className="text-success font-bold">Zdjęcie zostało pomyślnie załadowane. Kliknij przycisk poniżej, aby zaakceptować zmianę avatara.</p>
+                    <p className="text-black dark:text-white font-bold">Zdjęcie zostało pomyślnie załadowane. Kliknij przycisk poniżej, aby zaakceptować zmianę avatara.</p>
                     }
 
                   </div>

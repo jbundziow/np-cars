@@ -5,6 +5,8 @@ import Rental from '../../models/Rental';
 import Reservation from '../../models/Reservation';
 import Refueling from '../../models/Refueling';
 import Fault from '../../models/Fault';
+import removeFile from '../../utilities/fileUpload/removeFile';
+import path from 'path'
 
 
 
@@ -28,14 +30,15 @@ export const editOneUser_PUT_admin = async (req: Request, res: Response, next: N
         }
 
 
-        const editedUser = new User(Number(req.params.userid), null, null, data.gender, data.name, data.surname, data.employedAs, data.avatarPath, data.role);
+        const editedUser = new User(Number(req.params.userid), null, null, data.gender, data.name, data.surname, data.employedAs, null, data.role);
 
         await editOneUserByAdminSchema.validateAsync(editedUser);
-        const result = await editedUser.editOneUser();
+        const result = await editedUser.editOneUserAsAdmin();
 
         res.status(200).json({status: 'success', data: result});
     }
     catch (err) {
+        console.log(err);
         res.status(500).json({status: 'error', message: err})
     }
 }
@@ -67,8 +70,14 @@ export const deleteOneUser_DELETE_admin = async (req: Request, res: Response, ne
             return;
         }
 
-        const result = await User.deleteUser(Number(req.params.userid));
-        res.status(200).json({status: 'success', data: result})
+
+        let imageRemoved = false;
+        const dataRemoved = await User.deleteUser(Number(req.params.userid));
+        if(dataRemoved && isUserExist.dataValues.avatarPath) {
+            imageRemoved = await removeFile(path.join('./public', isUserExist.dataValues.avatarPath))
+        }
+
+        res.status(200).json({status: 'success', dataRemoved: dataRemoved, imageRemoved: imageRemoved})
 
     }
     catch (err) {

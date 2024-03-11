@@ -175,7 +175,7 @@ export const deleteOneCar_DELETE_admin = async (req: Request, res: Response, nex
 
         let imageRemoved = false;
         const dataRemoved = await Car.deleteCar(Number(req.params.carid));
-        if(dataRemoved) {
+        if(dataRemoved && isCarExist.dataValues.imgPath) {
             imageRemoved = await removeFile(path.join('./public', isCarExist.dataValues.imgPath))
         }
         

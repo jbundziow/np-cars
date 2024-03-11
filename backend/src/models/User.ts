@@ -64,7 +64,7 @@ class User {
         private surname: string,
         private employedAs: string,
         private avatarPath: string | null,
-        private role: 'unconfirmed' | 'banned' | 'admin' | 'user',
+        private role: 'unconfirmed' | 'banned' | 'admin' | 'user' | null,
         ) {}
 
     async addOneUser() {
@@ -82,7 +82,8 @@ class User {
     }
 
 
-    async editOneUser() {
+    async editOneUserAsAdmin() {
+      try {
       return await UserModel.update({
         // id: this.id,
         // email: this.email,
@@ -91,11 +92,30 @@ class User {
         name: this.name,
         surname: this.surname,
         employedAs: this.employedAs,
-        avatarPath: this.avatarPath,
+        // avatarPath: this.avatarPath,
         role: this.role,
       },
       {where: {id: this.id}})
+    }
+    catch(e) {
+      console.log(e);
+    }
   }
+
+  async editOneUserAsUser() {
+    return await UserModel.update({
+      // id: this.id,
+      // email: this.email,
+      // password: this.password,
+      gender: this.gender,
+      name: this.name,
+      surname: this.surname,
+      employedAs: this.employedAs,
+      // avatarPath: this.avatarPath,
+      // role: this.role,
+    },
+    {where: {id: this.id}})
+}
 
 
 
@@ -109,18 +129,30 @@ class User {
 
 
 
-  static async deleteUser(id: number) {
-    const user = await User.fetchOne(id, true);
 
-    if (user) {
-      return await user.destroy();
+
+
+  static async deleteUser(id: number): Promise<boolean> {
+    try {
+      const user = await User.fetchOne(id, true);
+
+      if (user) {
+        await user.destroy();
+        return true;
+      }
+      else {
+        return false;
+      }
     }
-    else {
-      throw new Error('User not found');
+    catch(err) {
+      return false;
     }
   }
 
 
+
+
+  
 
     changePassword(hashedPassword: string) {
       this.password = hashedPassword;

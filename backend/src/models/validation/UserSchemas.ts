@@ -76,12 +76,51 @@ const editOneUserByAdminSchema = Joi.object({
         .required(),
     
     avatarPath: Joi.string()
-        .allow(null)
-        .optional(),
+        .valid(null),
 
     role: Joi.string()
         .valid('unconfirmed', 'admin', 'user', 'banned')
         .required(),
 })
 
-export { signUpUserSchema, editOneUserByAdminSchema };
+
+
+const editOneUserByNormalUserSchema = Joi.object({
+    id: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    email: Joi.string()
+        .valid(null),
+    
+    password: Joi.string()
+        .valid(null),
+
+    gender: Joi.string()
+        .valid('male', 'female')
+        .required(),
+
+    name: Joi.string()
+        .min(1)
+        .max(50)
+        .required(),
+
+    surname: Joi.string()
+        .min(1)
+        .max(50)
+        .required(),
+    
+    employedAs: Joi.string()
+        .min(1)
+        .max(80)
+        .required(),
+    
+    avatarPath: Joi.string()
+        .valid(null),
+
+    role: Joi.string()
+        .valid(null),
+})
+
+export { signUpUserSchema, editOneUserByAdminSchema, editOneUserByNormalUserSchema };
