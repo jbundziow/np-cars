@@ -10,6 +10,7 @@ import ImgLoader from '../../common/Loader/ImgLoader';
 import OperationResult from '../general/OperationResult';
 import ModalWarning from '../general/ModalWarning';
 import { EditUserDataPageStatus } from '../../types/enums';
+import FixedAlert, { alertOptionsObject } from '../general/FixedAlert';
 
 
 interface UserSettingsFormProps {
@@ -43,6 +44,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
 
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
   const [pageState, setPageState] = useState<EditUserDataPageStatus>(EditUserDataPageStatus.FillingTheForm)
+  const [alertOptions, setAlertOptions] = useState<alertOptionsObject>({showAlert: false, color: 'danger', text: '#ERR#', dismiss_button: false, autohide: true, delay_ms: 1, key: 1});
   const [showWarningDeleteUserModal, setShowWarningDeleteUserModal] = useState<boolean>(false);
   const [showWarningEditUserDataModal, setShowWarningEditUserDataModal] = useState<boolean>(false);
   const [showWarningPasswordResetModal, setShowWarningPasswordResetModal] = useState<boolean>(false);
@@ -136,12 +138,75 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
 
 
   const changeImage = async () => {
-    setPageState(EditUserDataPageStatus.ImageSuccessfullyChanged)
+    const formData = new FormData();
+    if (image) {formData.append('image', image)}
+    
+    try {
+      const response = await fetch(`${DOMAIN_NAME}/users/avatar/${props.user.id}`, {
+        method: 'PUT',
+        // headers: {
+        //   'Content-Type': 'multipart/form-data',
+        // },
+        credentials: 'include',
+        body: formData
+      });
+
+      if (response.ok) {
+        setPageState(EditUserDataPageStatus.ImageSuccessfullyChanged)
+
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setPageState(EditUserDataPageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
+        }
+        else {
+        setPageState(EditUserDataPageStatus.ErrorWithSendingForm);
+        }
+      }
+    }
+    catch (error) {
+      setPageState(EditUserDataPageStatus.ErrorWithSendingForm);
+    }
   }
 
   const removeImage = async () => {
-    //TODO: update image
+
+    try {
+      const response = await fetch(`${DOMAIN_NAME}/users/avatar/${props.user.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        setAlertOptions(({showAlert: true, color: 'success', text: 'Pomyślnie usunięto avatar.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+        setImage(null);
+        props.user.avatarPath = null;
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setAlertOptions(({showAlert: true, color: 'danger', text: `Wystąpił błąd: ${responseJSON.data[0].pl}`, dismiss_button: true, autohide: true, delay_ms: 7000, key: Math.random()}))
+          
+        }
+        else {
+          setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania obrazka. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+        }
+      }
+    }
+    catch (error) {
+      setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania obrazka. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+    }
   }
+
+
+
+
+
+
+
 
   const changePassword = async () => {
     //TODO
@@ -175,6 +240,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
     <ModalWarning showModal={showWarningPasswordResetModal} setShowModal={(state: boolean) => setShowWarningPasswordResetModal(state)} title= {'Zatwierdź zmiany'} bodyText={`Czy na pewno chcesz dokonać zmiany hasła? Spowoduje to wysłanie linku do zmiany hasła na adres email: ${props.user.email}. Link będzie aktywny przez najbliższe 24 godziny.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, wyślij link do zmiany hasła'} callback={ async () => await changePassword() }/>
     <ModalWarning showModal={showWarningChangeImageModal} setShowModal={(state: boolean) => setShowWarningChangeImageModal(state)} title= {'Zmień avatar'} bodyText={`Czy na pewno chcesz zmienić avatar użytkownika?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, zmień zdjęcie'} callback={ async () => await changeImage() }/>
     <ModalWarning showModal={showWarningDeleteImageModal} setShowModal={(state: boolean) => setShowWarningDeleteImageModal(state)} title= {'Zmień avatar'} bodyText={`Czy na pewno chcesz usunąć zdjęcie użytkownika?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń zdjęcie'} callback={ async () => await removeImage() }/>
+    <FixedAlert options={alertOptions}/>
 
       <div className="mx-auto max-w-270">
         

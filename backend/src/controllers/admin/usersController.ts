@@ -77,7 +77,7 @@ export const deleteOneUser_DELETE_admin = async (req: Request, res: Response, ne
             imageRemoved = await removeFile(path.join('./public', isUserExist.dataValues.avatarPath))
         }
 
-        res.status(200).json({status: 'success', dataRemoved: dataRemoved, imageRemoved: imageRemoved})
+        res.status(200).json({status: 'success', data: {dataRemoved: dataRemoved, imageRemoved: imageRemoved}})
 
     }
     catch (err) {

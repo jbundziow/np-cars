@@ -119,6 +119,16 @@ class User {
 
 
 
+static async changeAvatarPath(userID: number, avatarPath: string | null) {
+  return await UserModel.update({
+    avatarPath: avatarPath
+  },
+  {where: {id: userID}}
+  );
+}
+
+
+
   static async acknowledgeUserByModerator(userID: number) {
     return await UserModel.update({
       role: 'user'
