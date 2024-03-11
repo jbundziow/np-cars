@@ -6,6 +6,7 @@ import BarChart from '../general/charts/BarChart';
 import { db_User } from '../../types/db_types';
 import useAuth from '../../hooks/useAuth';
 import { stats_UserDistanceInYear, stats_UserDistanceInYear_oneMonthSchema } from '../../types/stats';
+import { Link } from 'react-router-dom';
 
 
 
@@ -41,8 +42,8 @@ const UserPage = (props: UserPageProps) => {
               <img className="bg-cover bg-top-center rounded-[50%]" src={props.userData.avatarPath !== null ? `${DOMAIN_NAME}${props.userData.avatarPath}` : props.userData.gender === 'female' ? UserFemale : UserMale} alt="Avatar użytkownika"/>
 
               {Number(auth.userID) === props.userData.id || auth.userRole === 'admin' ?
-              <label
-                htmlFor="profile"
+              <Link
+                to={`/uzytkownicy/ustawienia-konta/${props.userData.id}`}
                 className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
               >
                 <svg
@@ -66,13 +67,7 @@ const UserPage = (props: UserPageProps) => {
                     fill=""
                   />
                 </svg>
-                <input
-                  type="file"
-                  name="profile"
-                  id="profile"
-                  className="sr-only"
-                />
-              </label>
+              </Link>
               :
               <></>
               }
