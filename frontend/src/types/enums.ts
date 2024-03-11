@@ -13,6 +13,18 @@ export enum EditFormPageStatus {
     FailOnSendingForm
   }
 
+export enum EditUserDataPageStatus {
+  FillingTheForm,
+  ErrorWithSendingForm,
+  FailOnSendingForm,
+  UserDataSuccessfullyEdited,
+  UserDataSuccessfullyDeleted,
+  ImageSuccessfullyChanged,
+  LinkToPasswordResetSuccessfullySent,
+  ChangeEmailForm,
+  LinkToEmailChangeSuccessfullySent,
+}
+
 
   export enum generateExcelPageState {
     initial,

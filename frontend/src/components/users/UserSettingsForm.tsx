@@ -4,10 +4,12 @@ import UserFemale from '../../images/user/unknownUserFemale.jpg'
 
 import { useState } from "react";
 import { db_User } from '../../types/db_types';
-import { AuthType } from '../../types/common';
+import { AuthType, warnings } from '../../types/common';
 import DOMAIN_NAME from '../../utilities/domainName';
 import ImgLoader from '../../common/Loader/ImgLoader';
 import OperationResult from '../general/OperationResult';
+import ModalWarning from '../general/ModalWarning';
+import { EditUserDataPageStatus } from '../../types/enums';
 
 
 interface UserSettingsFormProps {
@@ -33,13 +35,74 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
   const [image, setImage] = useState<File | null>(null);
   const [imgLoaded, setImgLoaded] = useState(false);
 
+  const [newEmail, setNewEmail] = useState<string>('');
+
+
+
+
+
+  const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
+  const [pageState, setPageState] = useState<EditUserDataPageStatus>(EditUserDataPageStatus.FillingTheForm)
+  const [showWarningDeleteUserModal, setShowWarningDeleteUserModal] = useState<boolean>(false);
+  const [showWarningEditUserDataModal, setShowWarningEditUserDataModal] = useState<boolean>(false);
+  const [showWarningPasswordResetModal, setShowWarningPasswordResetModal] = useState<boolean>(false);
+  const [showWarningChangeImageModal, setShowWarningChangeImageModal] = useState<boolean>(false);
+  const [showWarningDeleteImageModal, setShowWarningDeleteImageModal] = useState<boolean>(false);
+
+  const editUserData = async () => {
+    setPageState(EditUserDataPageStatus.UserDataSuccessfullyEdited)
+  }
+
+  const deleteUser = async () => {
+    setPageState(EditUserDataPageStatus.UserDataSuccessfullyDeleted)
+  }
+
+  const changeImage = async () => {
+    setPageState(EditUserDataPageStatus.ImageSuccessfullyChanged)
+  }
+
+  const removeImage = async () => {
+    //TODO: update image
+  }
+
+  const changePassword = async () => {
+    //TODO
+    setPageState(EditUserDataPageStatus.LinkToPasswordResetSuccessfullySent)
+  }
+
+  const changeEmail = async () => {
+    //TODO
+    setPageState(EditUserDataPageStatus.LinkToEmailChangeSuccessfullySent)
+  }
+
+
+
+
+
+
+
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if(event.target.files && event.target.files.length > 0) {
+    const selectedImage = event.target.files[0]; // Get the selected file
+    setImage(selectedImage); // Store the selected file in the component's state
+    }
+  };
+
 
 
   return (
     <>
+    <ModalWarning showModal={showWarningDeleteUserModal} setShowModal={(state: boolean) => setShowWarningDeleteUserModal(state)} title= {'Usuń użytkownika'} bodyText={`Czy na pewno chcesz usunąć tego użytkownika z bazy danych? Zaleca się zmienę typu użytkownika na "Zbanowany", aby nie utracić wszystkich archiwalnych danych. Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteUser() }/>
+    <ModalWarning showModal={showWarningEditUserDataModal} setShowModal={(state: boolean) => setShowWarningEditUserDataModal(state)} title= {'Zatwierdź zmiany'} bodyText={`Czy na pewno chcesz zatwierdzić wprowadzone zmiany i zaktualizować je w bazie danych? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, zatwierdzam'} callback={ async () => await editUserData() }/>
+    <ModalWarning showModal={showWarningPasswordResetModal} setShowModal={(state: boolean) => setShowWarningPasswordResetModal(state)} title= {'Zatwierdź zmiany'} bodyText={`Czy na pewno chcesz dokonać zmiany hasła? Spowoduje to wysłanie linku do zmiany hasła na adres email: ${props.user.email}. Link będzie aktywny przez najbliższe 24 godziny.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, wyślij link do zmiany hasła'} callback={ async () => await changePassword() }/>
+    <ModalWarning showModal={showWarningChangeImageModal} setShowModal={(state: boolean) => setShowWarningChangeImageModal(state)} title= {'Zmień avatar'} bodyText={`Czy na pewno chcesz zmienić avatar użytkownika?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, zmień zdjęcie'} callback={ async () => await changeImage() }/>
+    <ModalWarning showModal={showWarningDeleteImageModal} setShowModal={(state: boolean) => setShowWarningDeleteImageModal(state)} title= {'Zmień avatar'} bodyText={`Czy na pewno chcesz usunąć zdjęcie użytkownika?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń zdjęcie'} callback={ async () => await removeImage() }/>
+
       <div className="mx-auto max-w-270">
         
         {isAdmin || isCurrentUser ?
+        <>
+        {pageState === EditUserDataPageStatus.FillingTheForm ?
         <div className="grid grid-cols-5 gap-8">
           <div className="col-span-5 xl:col-span-3">
             <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
@@ -224,6 +287,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                       <button
                         className="rounded bg-danger py-2 px-6 font-medium text-gray hover:shadow-1 w-full h-full sm:text-xs hover:bg-opacity-90"
                         type="button"
+                        onClick={()=> setPageState(EditUserDataPageStatus.ChangeEmailForm)}
                       >
                         Zmień adres email
                       </button>
@@ -280,7 +344,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
 
                       <div className="relative z-20 bg-white dark:bg-form-input">
                             <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><path fill="#3C50E0" d="M350 177.5c3.8-8.8 2-19-4.6-26l-136-144C204.9 2.7 198.6 0 192 0s-12.9 2.7-17.4 7.5l-136 144c-6.6 7-8.4 17.2-4.6 26s12.5 14.5 22 14.5h88l0 192c0 17.7-14.3 32-32 32H32c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32l80 0c70.7 0 128-57.3 128-128l0-192h88c9.6 0 18.2-5.7 22-14.5z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 640 512"><path fill="#3C50E0" d="M176 288a112 112 0 1 0 0-224 112 112 0 1 0 0 224zM352 176c0 86.3-62.1 158.1-144 173.1V384h32c17.7 0 32 14.3 32 32s-14.3 32-32 32H208v32c0 17.7-14.3 32-32 32s-32-14.3-32-32V448H112c-17.7 0-32-14.3-32-32s14.3-32 32-32h32V349.1C62.1 334.1 0 262.3 0 176C0 78.8 78.8 0 176 0s176 78.8 176 176zM271.9 360.6c19.3-10.1 36.9-23.1 52.1-38.4c20 18.5 46.7 29.8 76.1 29.8c61.9 0 112-50.1 112-112s-50.1-112-112-112c-7.2 0-14.3 .7-21.1 2c-4.9-21.5-13-41.7-24-60.2C369.3 66 384.4 64 400 64c37 0 71.4 11.4 99.8 31l20.6-20.6L487 41c-6.9-6.9-8.9-17.2-5.2-26.2S494.3 0 504 0H616c13.3 0 24 10.7 24 24V136c0 9.7-5.8 18.5-14.8 22.2s-19.3 1.7-26.2-5.2l-33.4-33.4L545 140.2c19.5 28.4 31 62.7 31 99.8c0 97.2-78.8 176-176 176c-50.5 0-96-21.3-128.1-55.4z"/></svg>
                             </span>
                             <select className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                             value={gender}
@@ -314,7 +378,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
 
                       <div className="relative z-20 bg-white dark:bg-form-input">
                             <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 384 512"><path fill="#3C50E0" d="M350 177.5c3.8-8.8 2-19-4.6-26l-136-144C204.9 2.7 198.6 0 192 0s-12.9 2.7-17.4 7.5l-136 144c-6.6 7-8.4 17.2-4.6 26s12.5 14.5 22 14.5h88l0 192c0 17.7-14.3 32-32 32H32c-17.7 0-32 14.3-32 32v32c0 17.7 14.3 32 32 32l80 0c70.7 0 128-57.3 128-128l0-192h88c9.6 0 18.2-5.7 22-14.5z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M304 128a80 80 0 1 0 -160 0 80 80 0 1 0 160 0zM96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM49.3 464H398.7c-8.9-63.3-63.3-112-129-112H178.3c-65.7 0-120.1 48.7-129 112zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3z"/></svg>
                             </span>
                             <select className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                             value={role}
@@ -352,21 +416,18 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
 
 
                   <div className="flex flex-col sm:flex-row justify-between gap-4.5">
-                    {/* <button
-                      className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
-                      type="submit"
-                    >
-                      Cancel
-                    </button> */}
+
                     <button
                         className="flex justify-center rounded bg-danger py-2 px-6 font-medium text-gray hover:shadow-1 hover:bg-opacity-90"
                         type="button"
+                        onClick={() => setShowWarningPasswordResetModal(true)}
                       >
                         Resetuj hasło
                       </button>
                     <button
                       className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                       type="button"
+                      onClick={() => setShowWarningEditUserDataModal(true)}
                       
                     >
                       Zatwierdź zmiany
@@ -395,19 +456,18 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                 <form action="#">
                   <div className="mb-4 flex items-center gap-3">
 
-                    <div className="h-14 w-14 rounded-full border-2">
+                    <div className="h-14 w-14 rounded-full border-2 overflow-hidden">
 
                     {imgLoaded ? null : (
                       <ImgLoader/>
                     )}
                     <img
-                    src={props.user.avatarPath !== null ? `${DOMAIN_NAME}${props.user.avatarPath}` : props.user.gender === 'female' ? UserFemale : UserMale}
+                    src={props.user.avatarPath !== null && image === null ? `${DOMAIN_NAME}${props.user.avatarPath}` : image !== null ? URL.createObjectURL(image) : props.user.gender === 'female' ? UserFemale : UserMale}
                     style={imgLoaded ? {} : { display: 'none' }}
                     onLoad={() => setImgLoaded(true)}
                     alt="Avatar użytkownika"
-                    className='w-full border-2 rounded-full'
+                    className='w-full h-full border-2 rounded-full object-cover'
                     />
-
                     </div>
 
                     <div>
@@ -415,9 +475,17 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                         Edytuj zdjęcie
                       </span>
                       <span className="flex gap-2.5">
-                        <button className="text-sm hover:text-primary">
+                        {props.user.avatarPath !== null ?
+                        <button className="text-sm hover:text-primary"
+                        type='button'
+                        onClick={() => setShowWarningDeleteImageModal(true)}
+                        
+                        >
                           Usuń
                         </button>
+                        :
+                        null
+                        }
 
                       </span>
                     </div>
@@ -431,7 +499,9 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                       type="file"
                       accept=".jpg, .jpeg, .png, .webp"
                       className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                      onChange={handleImageChange}
                     />
+                    {image === null ?
                     <div className="flex flex-col items-center justify-center space-y-3">
                       <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
                         <svg
@@ -468,12 +538,18 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                       <p className="mt-1.5">PNG, JPG, JPEG lub WEBP</p>
                       <p>(max 10MB)</p>
                     </div>
+                    :
+                    <p className="text-success font-bold">Zdjęcie zostało pomyślnie załadowane. Kliknij przycisk poniżej, aby zaakceptować zmianę avatara.</p>
+                    }
+
                   </div>
 
                   <div className="flex justify-end gap-4.5">
                     <button
-                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
-                      type="submit"
+                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70 disabled:cursor-not-allowed"
+                      type='button'
+                      disabled={image === null}
+                      onClick={() => setShowWarningChangeImageModal(true)}
                     >
                       Wgraj nowe zdjęcie
                     </button>
@@ -486,6 +562,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                     <button
                       className="flex justify-center w-full rounded bg-danger py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                       type="button"
+                      onClick={() => setShowWarningDeleteUserModal(true)}
                     >
                       ⚠️ Usuń CAŁKOWICIE konto użytkownika ⚠️
                     </button>
@@ -502,11 +579,160 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
           </div>
         </div>
         :
+        pageState === EditUserDataPageStatus.UserDataSuccessfullyEdited ?
+          <OperationResult status={'success'} title={'Dokonano edycji danych dotyczących użytkownika 👍'} description={'Dane zostały pomyślnie zapisane w bazie danych.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/uzytkownicy/${props.user.id}`}/>
+        :
+        pageState === EditUserDataPageStatus.UserDataSuccessfullyDeleted ?
+          <OperationResult status={'success'} title={'Usunięto użytkownika 👍'} description={'Dane zostały usunięte z bazy danych.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/uzytkownicy/zestawienie`}/>
+        :
+        pageState === EditUserDataPageStatus.ImageSuccessfullyChanged ?
+          <OperationResult status={'success'} title={'Avatar zmieniony 👍'} description={'Pomyślnie zmieniono zdjęcie użytkownika.'} showButton={true} buttonText={'Dalej'} buttonLinkTo={`/uzytkownicy/${props.user.id}`}/>
+        :
+        pageState === EditUserDataPageStatus.LinkToEmailChangeSuccessfullySent ?
+          <OperationResult status={'success'} title={'Wysłano email na nowy adres 👍'} description={'Wysłano link potwierdzający zmianę adresu email na adres wskazany w formularzu. Powinien się on pojawić w ciągu kilku minut. Pamiętaj o sprawdzeniu zakładki SPAM. Link jest aktywny 24 godziny.'} showButton={false}/>
+        :
+        pageState === EditUserDataPageStatus.LinkToPasswordResetSuccessfullySent ?
+          <OperationResult status={'success'} title={'Wysłano link do zmiany hasła 👍'} description={'Na adres email użytkownika został wysłany link do zmiany hasła użytkownika. Powinien się on pojawić w ciągu kilku minut. Pamiętaj o sprawdzeniu zakładki SPAM. Link jest aktywny 24 godziny.'} showButton={false}/>
+        :
+        pageState === EditUserDataPageStatus.ChangeEmailForm ?
+        <div className="grid grid-cols-5 gap-8">
+        <div className="col-span-5 xl:col-span-3">
+          <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+            <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+              <h3 className="font-medium text-black dark:text-white">
+                Zmień adres email
+              </h3>
+            </div>
+            <div className="p-7">
+              <form onSubmit={changeEmail}>
+                <p className="text-black dark:text-white pb-6">Na wpisany poniżej adres email zostanie wysłany nowy link aktywacyjny do konta <span className="font-bold">{props.user.name} {props.user.surname}</span>. Po kliknięciu w niego zmiana adresu email zostanie zatwierdzona. Link wygaśnie po 24 godzinach.</p>
+
+                <div className="mb-5.5">
+                      <label
+                        className="mb-3 block text-sm font-medium text-black dark:text-white"
+                        htmlFor="newEmail"
+                      >
+                        Aktualny adres email
+                      </label>
+                      
+                      <div className="w-full">
+                        <div className="relative">
+                          <span className="absolute left-4.5 top-4">
+                            <svg
+                              className="fill-current"
+                              width="20"
+                              height="20"
+                              viewBox="0 0 20 20"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <g opacity="0.8">
+                                <path
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
+                                  d="M3.33301 4.16667C2.87658 4.16667 2.49967 4.54357 2.49967 5V15C2.49967 15.4564 2.87658 15.8333 3.33301 15.8333H16.6663C17.1228 15.8333 17.4997 15.4564 17.4997 15V5C17.4997 4.54357 17.1228 4.16667 16.6663 4.16667H3.33301ZM0.833008 5C0.833008 3.6231 1.9561 2.5 3.33301 2.5H16.6663C18.0432 2.5 19.1663 3.6231 19.1663 5V15C19.1663 16.3769 18.0432 17.5 16.6663 17.5H3.33301C1.9561 17.5 0.833008 16.3769 0.833008 15V5Z"
+                                  fill=""
+                                />
+                                <path
+                                  fillRule="evenodd"
+                                  clipRule="evenodd"
+                                  d="M0.983719 4.52215C1.24765 4.1451 1.76726 4.05341 2.1443 4.31734L9.99975 9.81615L17.8552 4.31734C18.2322 4.05341 18.7518 4.1451 19.0158 4.52215C19.2797 4.89919 19.188 5.4188 18.811 5.68272L10.4776 11.5161C10.1907 11.7169 9.80879 11.7169 9.52186 11.5161L1.18853 5.68272C0.811486 5.4188 0.719791 4.89919 0.983719 4.52215Z"
+                                  fill=""
+                                />
+                              </g>
+                            </svg>
+                          </span>
+                          <input
+                            className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary disabled:cursor-not-allowed"
+                            type="email"
+                            value={email}
+                            disabled
+                          />
+                        </div>
+                      </div>
+                </div>
+
+                <div className="mb-5.5">
+                        <label
+                          className="mb-3 block text-sm font-medium text-black dark:text-white"
+                          htmlFor="newEmail"
+                        >
+                          Nowy adres email
+                        </label>
+                        
+                        <div className="w-full">
+                          <div className="relative">
+                            <span className="absolute left-4.5 top-4">
+                              <svg
+                                className="fill-current"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 20 20"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                              >
+                                <g opacity="0.8">
+                                  <path
+                                    fillRule="evenodd"
+                                    clipRule="evenodd"
+                                    d="M3.33301 4.16667C2.87658 4.16667 2.49967 4.54357 2.49967 5V15C2.49967 15.4564 2.87658 15.8333 3.33301 15.8333H16.6663C17.1228 15.8333 17.4997 15.4564 17.4997 15V5C17.4997 4.54357 17.1228 4.16667 16.6663 4.16667H3.33301ZM0.833008 5C0.833008 3.6231 1.9561 2.5 3.33301 2.5H16.6663C18.0432 2.5 19.1663 3.6231 19.1663 5V15C19.1663 16.3769 18.0432 17.5 16.6663 17.5H3.33301C1.9561 17.5 0.833008 16.3769 0.833008 15V5Z"
+                                    fill=""
+                                  />
+                                  <path
+                                    fillRule="evenodd"
+                                    clipRule="evenodd"
+                                    d="M0.983719 4.52215C1.24765 4.1451 1.76726 4.05341 2.1443 4.31734L9.99975 9.81615L17.8552 4.31734C18.2322 4.05341 18.7518 4.1451 19.0158 4.52215C19.2797 4.89919 19.188 5.4188 18.811 5.68272L10.4776 11.5161C10.1907 11.7169 9.80879 11.7169 9.52186 11.5161L1.18853 5.68272C0.811486 5.4188 0.719791 4.89919 0.983719 4.52215Z"
+                                    fill=""
+                                  />
+                                </g>
+                              </svg>
+                            </span>
+                            <input
+                              className="w-full rounded border border-stroke bg-gray py-3 pl-11.5 pr-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary disabled:cursor-not-allowed"
+                              type="email"
+                              name="newEmail"
+                              id="newEmail"
+                              placeholder="Wprowadź nowy adres email"
+                              value={newEmail}
+                              onChange={(e)=>setNewEmail(e.target.value)}
+                              required
+                            />
+                          </div>
+                        </div>
+                  </div>
+
+                  <div className="flex justify-end gap-4.5">
+                    <button
+                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
+                      type='submit'
+                    >
+                      Zmień adres email
+                    </button>
+                  </div>
+                    
+              </form>
+            </div>
+          </div>
+        </div>
+        </div>
+        :
+        pageState === EditUserDataPageStatus.ErrorWithSendingForm ?
+          <OperationResult status={'error'} title={'Wystąpił błąd 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(EditUserDataPageStatus.FillingTheForm)}/>
+        :
+        pageState === EditUserDataPageStatus.FailOnSendingForm ?
+          <OperationResult status={'warning'} title={'Wystąpiły błędy 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(EditUserDataPageStatus.FillingTheForm)}/>
+        :
+        ''
+        }
+        </>
+        :
         <div>
           <OperationResult status="error" title="Brak uprawnień!" description="Nie możesz edytować danych dotyczących innych użytkowników nie będąc administratorem." showButton={false}/>
         </div>
         }
       </div>
+
+
     </>
   );
 };
