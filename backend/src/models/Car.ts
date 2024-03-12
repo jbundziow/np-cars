@@ -2,6 +2,7 @@ const {DataTypes, Op} = require('sequelize');
 
 
 
+
 import sequelize from "../database/database";
 const CarModel = sequelize.define('Car', {
     id: {
@@ -201,6 +202,7 @@ class Car {
         return false;
       }
     }
+
 
 
 

@@ -420,6 +420,90 @@ class Rental {
 
 
 
+
+
+    // static findMileageGaps = async (carID: number) => {
+    //   try {
+    //     // Find all rentals
+    //     const rentals = await RentalModel.findAll({ where: { carID: carID } });
+    
+    //     // Create a set to store unique mileage values
+    //     const mileageSet = new Set();
+    
+    //     // Add all carMileageBefore and carMileageAfter values to the set
+    //     rentals.forEach((rental: any) => {
+    //       mileageSet.add(rental.carMileageBefore);
+    //       mileageSet.add(rental.carMileageAfter);
+    //     });
+    
+    //     // Convert set to array and sort it
+    //     const sortedMileageArray = Array.from(mileageSet).sort((a:any, b:any) => a - b);
+    
+    //     // Check for gaps
+    //     const gaps = [];
+    //     for (let i = 0; i < sortedMileageArray.length - 1; i++) {
+    //       const currentMileage = sortedMileageArray[i];
+    //       const nextMileage = sortedMileageArray[i + 1];
+    //       const foundOverlap = rentals.some((rental: any) => {
+    //         return rental.carMileageBefore === currentMileage && rental.carMileageAfter === nextMileage;
+    //       });
+    //       if (!foundOverlap) {
+    //         gaps.push({
+    //           gapStart: currentMileage,
+    //           gapEnd: nextMileage
+    //         });
+    //       }
+    //     }
+    
+    //     console.log(gaps);
+    //   } catch (error) {
+    //     console.error('Error finding mileage gaps:', error);
+    //   }
+    // };
+
+    static findMileageGaps = async (carID: number, optionalRentalID: number) => {
+      try {
+        // Find all rentals
+        const rentals = await RentalModel.findAll({ where: { carID: carID, id: { [Op.ne]: optionalRentalID } } });
+
+        // Create a set to store unique mileage values
+        const mileageSet = new Set();
+
+        // Add all carMileageBefore and carMileageAfter values to the set
+        rentals.forEach((rental: any) => {
+          mileageSet.add(rental.carMileageBefore);
+          mileageSet.add(rental.carMileageAfter);
+        });
+
+        // Convert set to array and sort it
+        const sortedMileageArray = Array.from(mileageSet).sort((a:any, b:any) => a - b);
+    
+        // Check for gaps
+        const gaps = [];
+        for (let i = 0; i < sortedMileageArray.length - 1; i++) {
+          const currentMileage = sortedMileageArray[i];
+          const nextMileage = sortedMileageArray[i + 1];
+          const foundOverlap = rentals.some((rental: any) => {
+            return rental.carMileageBefore === currentMileage && rental.carMileageAfter === nextMileage;
+          });
+          if (!foundOverlap) {
+            gaps.push({
+              gapStart: currentMileage,
+              gapEnd: nextMileage
+            });
+          }
+        }
+    
+        
+    
+        console.log(gaps);
+      } catch (error) {
+        console.error('Error finding mileage gaps:', error);
+      }
+    };
+
+
+
 }
 
 

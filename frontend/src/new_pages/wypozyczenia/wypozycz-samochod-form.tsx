@@ -44,17 +44,19 @@ const MakeARentalForm = (props: Props) => {
         if(res2.status === 'success') {
           const res3 = await fetchData(`${DOMAIN_NAME}/rentals/cars/${params.carid}/last`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           setData3(res3);
+
           if(res3.status === 'success' && res3.data !== null) {
             const res4 = await fetchData(`${DOMAIN_NAME}/users/${res3.data.userID}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
             setData4(res4);
-            if(res4.status === 'success' && res4.data !== null) {
-              const res5 = await fetchData(`${DOMAIN_NAME}/reservations/twoweeks/cars/${params.carid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-              setData5(res5);
-              
-            }
           }
+
+          const res5 = await fetchData(`${DOMAIN_NAME}/reservations/twoweeks/cars/${params.carid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          setData5(res5);
+              
+          }
+
         }
-      }
+      
 
       const forbiddenStatuses = ['notAvailable', 'onService', 'damaged', 'banned'];
       if(forbiddenStatuses.includes(res1.data.availabilityStatus)) {

@@ -13,7 +13,7 @@ type newReservationType = {
 
 
 interface TwoWeeksReservationsProps {
-    twoWeeksData:reservationTypeAtSpecificDate[]
+    twoWeeksData:reservationTypeAtSpecificDate[] | undefined;
   }
 
 const TwoWeeksReservations = (props: TwoWeeksReservationsProps) => {
@@ -27,6 +27,7 @@ const TwoWeeksReservations = (props: TwoWeeksReservationsProps) => {
   }
 
   let newTwoWeeksData: newReservationType[] = []
+  if(props.twoWeeksData) {
     newTwoWeeksData = props.twoWeeksData.map(elem => (
         {
             day: dateToDayOfTheWeek(elem.date),
@@ -35,6 +36,7 @@ const TwoWeeksReservations = (props: TwoWeeksReservationsProps) => {
             name: elem.userName,
         }
     ))
+  }
 
 
     return (
