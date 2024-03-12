@@ -2,7 +2,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import Car from '../models/Car'
-import Rental from '../models/Rental';
+
 
 
 
@@ -59,18 +59,4 @@ export const fetchOneCar_GET_user = async (req: Request, res: Response, next: Ne
     else {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano zły ID samochodu.'}]});
     }   
-}
-
-
-
-export const fetchMileageGaps_GET_user = async (req: Request, res: Response, next: NextFunction) => { 
-
-    try {
-        const dbResponse = await Rental.findMileageGaps(35, 36); 
-        res.status(200).json({status: 'success', data: dbResponse})
-    }
-    catch(err) {
-        res.status(500).json({status: 'error', message: err})
-    }
-
 }

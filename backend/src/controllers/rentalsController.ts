@@ -324,7 +324,18 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
     }
 
 
+
+
+
+
+
+
+
+
+
+
     export const fetchAllPendingRentals_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+        
         try {
             const response = await Rental.fetchAllPendingRentals();
             res.status(200).json({status: 'success', data: response})
@@ -333,4 +344,42 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
             console.log(e);
             res.status(500).json({status: 'error', message: e})
         }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    export const fetchMileageGaps_GET_user = async (req: Request, res: Response, next: NextFunction) => { 
+        if(!req.query.carid || isNaN(Number(req.query.carid))) {
+            res.status(400).json({status: 'fail', data: [{en: `No query param 'carid' passed.`, pl: `Nie przekazano 'carid' w parametrach zapytania.`}]})
+            return;
+        }
+        if(req.query.excludeonerental !== 'true' && req.query.excludeonerental !== 'false') {
+            res.status(400).json({status: 'fail', data: [{en: `No query param 'excludeonerental' passed. It should be 'true' or 'false'`, pl: `Nie przekazano 'excludeonerental' w parametrach zapytania. Powinno być to 'true' lub 'false'`}]})
+            return;
+        }
+        if(req.query.excludeonerental === 'true' && (!req.query.rentalid || isNaN(Number(req.query.rentalid)))) {
+            res.status(400).json({status: 'fail', data: [{en: `No query param 'rentalid' passed.`, pl: `Nie przekazano 'rentalid' w parametrach zapytania.`}]})
+            return;
+        }
+
+
+        try {
+            const dbResponse = await Rental.findMileageGaps(Number(req.query.carid), req.query.excludeonerental === 'true', Number(req.query.rentalid)); 
+            res.status(200).json({status: 'success', data: dbResponse})
+        }
+        catch(err) {
+            res.status(500).json({status: 'error', message: err})
+        }
+    
     }

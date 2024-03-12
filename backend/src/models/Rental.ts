@@ -1,8 +1,12 @@
 const {DataTypes, Op} = require('sequelize');
 
-import { fn, literal } from "sequelize";
+import { Model, fn, literal } from "sequelize";
 import sequelize from "../database/database";
 import { CarModel } from "./Car";
+
+
+
+
 
 const RentalModel = sequelize.define('Rental', {
     id: {
@@ -422,63 +426,34 @@ class Rental {
 
 
 
-    // static findMileageGaps = async (carID: number) => {
-    //   try {
-    //     // Find all rentals
-    //     const rentals = await RentalModel.findAll({ where: { carID: carID } });
-    
-    //     // Create a set to store unique mileage values
-    //     const mileageSet = new Set();
-    
-    //     // Add all carMileageBefore and carMileageAfter values to the set
-    //     rentals.forEach((rental: any) => {
-    //       mileageSet.add(rental.carMileageBefore);
-    //       mileageSet.add(rental.carMileageAfter);
-    //     });
-    
-    //     // Convert set to array and sort it
-    //     const sortedMileageArray = Array.from(mileageSet).sort((a:any, b:any) => a - b);
-    
-    //     // Check for gaps
-    //     const gaps = [];
-    //     for (let i = 0; i < sortedMileageArray.length - 1; i++) {
-    //       const currentMileage = sortedMileageArray[i];
-    //       const nextMileage = sortedMileageArray[i + 1];
-    //       const foundOverlap = rentals.some((rental: any) => {
-    //         return rental.carMileageBefore === currentMileage && rental.carMileageAfter === nextMileage;
-    //       });
-    //       if (!foundOverlap) {
-    //         gaps.push({
-    //           gapStart: currentMileage,
-    //           gapEnd: nextMileage
-    //         });
-    //       }
-    //     }
-    
-    //     console.log(gaps);
-    //   } catch (error) {
-    //     console.error('Error finding mileage gaps:', error);
-    //   }
-    // };
-
-    static findMileageGaps = async (carID: number, optionalRentalID: number) => {
+    static findMileageGaps = async (carID: number, excludeOneRental: boolean, excludeRentalID?: number) => {
       try {
-        // Find all rentals
-        const rentals = await RentalModel.findAll({ where: { carID: carID, id: { [Op.ne]: optionalRentalID } } });
+        
+        let whereClause = { where: { carID: carID } };
+        if (excludeOneRental) {
+          whereClause = { where: { carID: carID, id: { [Op.ne]: excludeRentalID } } as any };
+        }
+        const rentals = await RentalModel.findAll(whereClause);
 
-        // Create a set to store unique mileage values
-        const mileageSet = new Set();
+        //create a set to store unique mileage values
+        const mileageSet = new Set<number>();
 
-        // Add all carMileageBefore and carMileageAfter values to the set
+        //add values to the set
         rentals.forEach((rental: any) => {
-          mileageSet.add(rental.carMileageBefore);
-          mileageSet.add(rental.carMileageAfter);
+          if(rental.carMileageBefore !== null) {mileageSet.add(rental.carMileageBefore)}
+          if(rental.carMileageAfter !== null) {mileageSet.add(rental.carMileageAfter)}
         });
 
-        // Convert set to array and sort it
-        const sortedMileageArray = Array.from(mileageSet).sort((a:any, b:any) => a - b);
+
+
+        //convert set to array and sort it
+        const sortedMileageArray = Array.from(mileageSet).sort((a, b) => a - b);
+
+        //boundary values
+        const firstMileage = sortedMileageArray[0];
+        const lastMileage = sortedMileageArray[sortedMileageArray.length - 1];
     
-        // Check for gaps
+        //check for gaps
         const gaps = [];
         for (let i = 0; i < sortedMileageArray.length - 1; i++) {
           const currentMileage = sortedMileageArray[i];
@@ -495,10 +470,16 @@ class Rental {
         }
     
         
-    
-        console.log(gaps);
-      } catch (error) {
-        console.error('Error finding mileage gaps:', error);
+        return {
+          carID: carID,
+          excludedRentalID: excludeOneRental ? excludeRentalID : null,
+          firstMileage: firstMileage,
+          lastMileage: lastMileage,
+          gaps: gaps
+        };
+        
+      } catch (err) {
+        throw new Error('Error while finding mileage gaps');
       }
     };
 
