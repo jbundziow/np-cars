@@ -3,10 +3,23 @@ import { NextFunction, Request, Response, response } from 'express'
 import Rental from '../models/Rental';
 import Car from '../models/Car';
 import User from '../models/User';
-import { addOneNullRentalByNormalUserSchema, addOneRentalByNormalUserSchema, filtersObjRentalSchema, returnCarByNormalUserSchema } from '../models/validation/RentalsSchemas';
+import { addOneRentalByNormalUserSchema, filtersObjRentalSchema, returnCarByNormalUserSchema } from '../models/validation/RentalsSchemas';
 import { isDateString } from '../utilities/functions/isDateString';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValuesFromObject';
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -28,6 +41,27 @@ export const fetchOneRental_GET_user = async (req: Request, res: Response, next:
         return;
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 export const addOneRental_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
@@ -78,17 +112,14 @@ export const addOneRental_POST_user = async (req: Request, res: Response, next: 
                         res.status(200).json({status: 'success', data: response})
                     }
                     else if(data.carMileageBefore > lastRentalData.dataValues.carMileageAfter) {
-                        //add null (unknown) rental
-                        const distance = data.carMileageBefore - lastRentalData.dataValues.carMileageAfter;
-                        const newNullRental = new Rental(null,data.carID,null,null,null,lastRentalData.dataValues.carMileageAfter,data.carMileageBefore,distance,null,null,new Date(),new Date());
-                        await addOneNullRentalByNormalUserSchema.validateAsync(newNullRental);
-                        const responseNullRental = await newNullRental.addOneRental();
+                        //there is a gap in mileage, but don't add a new record, just leave 
+                        
 
                         //then add new rental
                         const newRental = new Rental(null,data.carID,userID,null,null,data.carMileageBefore,null,null,data.travelDestination,null,new Date(),null);
                         await addOneRentalByNormalUserSchema.validateAsync(newRental);
                         const responseNewRental = await newRental.addOneRental();
-                        res.status(200).json({status: 'success', data: {responseNullRental, responseNewRental}})
+                        res.status(200).json({status: 'success', data: {responseNewRental}})
                     }
                     else {
                         res.status(400).json({status: 'fail', data: [{en: 'You have passed a less mileage than mileage of that car in last rental.', pl: 'Wpisano mniejszy przebieg niż został wpisany przy ostatnim wypożyczeniu tego samochodu.'}]})
@@ -119,6 +150,19 @@ export const addOneRental_POST_user = async (req: Request, res: Response, next: 
         res.status(500).json({status: 'error', message: error?.toString()})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -211,6 +255,21 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchLastRentalOfCar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.carid))) {
         try {
@@ -240,6 +299,20 @@ export const fetchLastRentalOfCar_GET_user = async (req: Request, res: Response,
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (isNaN(Number(req.params.userid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]});
@@ -253,14 +326,7 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
                 return;
             }
 
-            //only admin can fetch rentals data of other users
-            // const queryUser = await identifyUserId(req.cookies.jwt);
-            // if(queryUser.id !== Number(req.params.userid)) {
-            //     if(queryUser.role !== 'admin') {
-            //         res.status(400).json({status: 'fail', data: [{en: `Only admin can fetch rentals data of other users.`, pl: `Tylko admin może pobrać dane o wypożyczeniach innych użytkowników.`}]})
-            //         return;
-            //     }
-            // }
+           
             if(!req.query.type) {
                 res.status(400).json({status: 'fail', data: [{en: `No query param 'type' passed.`, pl: `Nie przekazano 'type' w parametrach zapytania.`}]})
                 return;
@@ -282,6 +348,21 @@ export const fetchAllRentalsOfUser_GET_user = async (req: Request, res: Response
             res.status(500).json({status: 'error', message: e})
         }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -334,6 +415,13 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
 
 
 
+
+
+
+
+
+
+
     export const fetchAllPendingRentals_GET_user = async (req: Request, res: Response, next: NextFunction) => {
         
         try {
@@ -345,6 +433,9 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
             res.status(500).json({status: 'error', message: e})
         }
     }
+
+
+
 
 
 
