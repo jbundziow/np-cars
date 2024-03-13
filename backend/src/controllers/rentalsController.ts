@@ -194,10 +194,14 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
         }
 
         const carData = await Car.fetchOne(Number(data.carID), true)
-        const {id: userID} = await identifyUserId(req.cookies.jwt);
+        const {id: userID, role: userRole} = await identifyUserId(req.cookies.jwt);
         const isReturnUserExist = await User.fetchOne(userID, true)
         if(carData && data.carID === rental.dataValues.carID) {
             if(isReturnUserExist) {
+                if(rental.dataValues.userID !== userID && userRole !== 'admin') {
+                    res.status(400).json({status: 'fail', data: [{en: `You are not allowed to return a rental that is not yours.`, pl: `Nie masz uprawnień do zwrócenia wypożyczenia, które nie należy do Ciebie.`}]}); 
+                    return;
+                }
                 if(data.carMileageAfter < rental.dataValues.carMileageBefore) {
                     res.status(400).json({status: 'fail', data: [{en: `carMileageAfter ${data.carMileageAfter} cannot be less than carMileageBefore ${rental.dataValues.carMileageBefore}.`, pl: `Przebieg końcowy wypożyczenia ${data.carMileageAfter} nie może być mniejszy niż przebieg początkowy ${rental.dataValues.carMileageBefore}.`}]})
                     return; 
@@ -237,7 +241,7 @@ export const returnCar_POST_user = async (req: Request, res: Response, next: Nex
         }
     }
     else {
-        res.status(400).json({status: 'fail', data: [{en: `Rental of ID: ${data.rentalID} doesn not exist in the database.`, pl: `Wypożyczenie o ID: ${data.rentalID} nie istnieje w bazie danych.`}]})
+        res.status(400).json({status: 'fail', data: [{en: `Rental of ID: ${data.rentalID} does not exist in the database.`, pl: `Wypożyczenie o ID: ${data.rentalID} nie istnieje w bazie danych.`}]})
         return;
     }
 
