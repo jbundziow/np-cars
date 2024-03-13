@@ -124,6 +124,44 @@ class Rental {
         }
     }
 
+    async editOneRental() {
+      await RentalModel.update({
+        // id: this.id,
+        carID: this.carID,
+        userID: this.userID,
+        returnUserID: this.returnUserID,
+        lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+        carMileageBefore: this.carMileageBefore,
+        carMileageAfter: this.carMileageAfter,
+        distance: this.distance,
+        travelDestination: this.travelDestination,
+        placeID: this.placeID,
+        dateFrom: this.dateFrom,
+        dateTo: this.dateTo,
+      },
+      {where: {id: this.id}})
+
+    }
+
+    static async undoReturnRental(rentalID: number) {
+      await RentalModel.update({
+        // id: this.id,
+        // carID: this.carID,
+        // userID: this.userID,
+        returnUserID: null,
+        // lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+        // carMileageBefore: this.carMileageBefore,
+        carMileageAfter: null,
+        distance: null,
+        // travelDestination: this.travelDestination,
+        // placeID: this.placeID,
+        // dateFrom: this.dateFrom,
+        dateTo: null,
+      },
+      {where: {id: rentalID}})
+
+    }
+
     //by normal user
     static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageBefore: number, carMileageAfter: number, dateTo: Date, travelDestination: string | null) {
       let rentalData;
@@ -179,6 +217,27 @@ class Rental {
         },
       })
     }
+
+
+
+
+
+
+
+
+
+
+    static async fetchLastRentalOfUser(userID: number) {
+      return await RentalModel.findOne({
+      where: {
+        userID: userID,
+      },
+      order: [['id', 'DESC']],
+      });
+    }
+
+
+   
 
 
 
@@ -485,7 +544,80 @@ class Rental {
 
 
 
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    static async deleteRental(id: number): Promise<boolean> {
+      try {
+        const rental = await Rental.fetchOne(id);
+  
+        if (rental) {
+          await rental.destroy();
+          return true;
+        }
+        else {
+          return false;
+        }
+      }
+      catch(err) {
+        return false;
+      }
+    }
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

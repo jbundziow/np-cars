@@ -185,6 +185,19 @@ class Car {
 
 
 
+    static async changeAvailabilityStatus(carID: number, status: 'available' | 'notAvailable' | 'rented' | 'onService' | 'damaged' | 'banned') {
+      await CarModel.update({
+        availabilityStatus: status
+      },
+      {where: {id: carID}}
+      )
+    }
+
+
+
+
+
+
 
     static async deleteCar(id: number): Promise<boolean> {
       try {

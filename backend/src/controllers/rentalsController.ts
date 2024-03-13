@@ -474,3 +474,110 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
         }
     
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    export const deleteLastRental_DELETE_user = async (req: Request, res: Response, next: NextFunction) => { 
+
+    if (!req.params.rentalid || isNaN(Number(req.params.rentalid))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong rental ID.', pl: 'Podano złe ID wypożyczenia.'}]})
+        return;
+    }
+
+
+
+    try {
+        const isRentalToDeleteExist = await Rental.fetchOne(Number(req.params.rentalid));
+        const {id: userID} = await identifyUserId(req.cookies.jwt);
+        
+        
+
+        if(!isRentalToDeleteExist) {
+            res.status(400).json({status: 'fail', data: [{en: `The rental of id: ${Number(req.params.rentalid)} does not exist in the database.`, pl: `Wypożyczenie o ID: ${Number(req.params.rentalid)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const lastRentalOfCar = await Rental.fetchLastRentalOfCar(isRentalToDeleteExist.dataValues.carID);
+        if(!lastRentalOfCar) {
+            res.status(400).json({status: 'fail', data: [{en: `No last rental found for the car of ID: ${isRentalToDeleteExist.dataValues.carID}.`, pl: `Nie znaleziono ostatniego wypożyczenia dla samochodu o ID: ${isRentalToDeleteExist.dataValues.carID}.`}]})
+            return;
+        }
+
+
+
+        if(lastRentalOfCar.dataValues.id !== Number(req.params.rentalid)) {
+            res.status(400).json({status: 'fail', data: [{en: `The rental of ID: ${Number(req.params.rentalid)} is not the last rental of the car of ID: ${isRentalToDeleteExist.dataValues.carID}.`, pl: `Wypożyczenie o ID: ${Number(req.params.rentalid)} nie jest ostatnim wypożyczeniem samochodu o ID: ${isRentalToDeleteExist.dataValues.carID}.`}]})
+            return;
+        }
+
+        if(lastRentalOfCar.dataValues.userID !== userID) {
+            res.status(400).json({status: 'fail', data: [{en: `You are not allowed to delete this rental. It does not belongs to you.`, pl: `Nie masz uprawnień do usunięcia tego wypożyczenia. Nie należy do Ciebie.`}]})
+            return;
+        }
+
+        const lastRentalOfUser = await Rental.fetchLastRentalOfUser(userID);
+        if(!lastRentalOfUser) {
+            res.status(400).json({status: 'fail', data: [{en: `No last rental found for the user of ID: ${userID}.`, pl: `Nie znaleziono ostatniego wypożyczenia dla użytkownika o ID: ${userID}.`}]})
+            return;
+        }
+        if(lastRentalOfUser.dataValues.id !== Number(req.params.rentalid)) {
+            res.status(400).json({status: 'fail', data: [{en: `The rental of ID: ${Number(req.params.rentalid)} is not the last rental of the user of ID: ${userID}. The user can delete only his last rental.`, pl: `Wypożyczenie o ID: ${Number(req.params.rentalid)} nie jest ostatnim wypożyczeniem użytkownika o ID: ${userID}. Użytkownik może usunąć tylko swoje ostatnie wypożyczenie.`}]})
+            return;
+        }
+
+        
+
+        
+        const rentalDate = new Date(lastRentalOfCar.dataValues.createdAt);
+        const today_from = new Date().setHours(0, 0, 0, 0);
+        const today_to = new Date().setHours(23, 59, 59, 999);
+        if(rentalDate < new Date(today_from) || rentalDate > new Date(today_to)) {
+            res.status(400).json({ status: 'fail', data: [{ en: `As a user, you can only delete the rental you made today.`, pl: `Jako użytkownik możesz usunąć tylko wypożyczenie, którego dokonałeś dzisiaj.` }] })
+            return;
+        }
+
+
+
+        const rentalDeleted = await Rental.deleteRental(Number(req.params.rentalid));
+        //if last rental was returned while creating the rental, undo changes
+        if(rentalDeleted) {
+            const lastRentalOfCarAfterDelete = await Rental.fetchLastRentalOfCar(isRentalToDeleteExist.dataValues.carID);
+            if(lastRentalOfCarAfterDelete && lastRentalOfCarAfterDelete.dataValues.returnUserID === userID && lastRentalOfCarAfterDelete.dataValues.userID !== userID) {
+                await Rental.undoReturnRental(lastRentalOfCarAfterDelete.dataValues.id)
+                await Car.changeAvailabilityStatus(lastRentalOfCarAfterDelete.dataValues.carID, 'rented');
+            }
+            else {
+                const carData = await Car.fetchOne(isRentalToDeleteExist.dataValues.carID, true);
+                if(carData && carData.dataValues.availabilityStatus === 'rented') {
+                    await Car.changeAvailabilityStatus(isRentalToDeleteExist.dataValues.carID, 'available');
+                }
+            }
+        }
+        else {
+            res.status(400).json({status: 'fail', data: [{en: `An error occured. The rental of ID: ${Number(req.params.rentalid)} was not deleted.`, pl: `Wystąpił błąd. Wypożyczenie o ID: ${Number(req.params.rentalid)} nie zostało usunięte.`}]})
+            return;
+        
+        }
+
+
+        res.status(200).json({status: 'success', data: rentalDeleted})
+
+    }
+    catch(e) {
+        res.status(500).json({status: 'error', message: e})
+    }
+
+    }
