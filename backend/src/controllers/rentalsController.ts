@@ -170,6 +170,9 @@ export const addOneRental_POST_user = async (req: Request, res: Response, next: 
 
 
 
+
+
+
 export const returnCar_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!data.rentalID || isNaN(Number(data.rentalID))) {

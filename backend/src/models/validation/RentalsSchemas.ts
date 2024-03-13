@@ -38,7 +38,7 @@ const addOneRentalByNormalUserSchema = Joi.object({
         .required()
         .allow(null),
 
-    placeID: Joi.string()
+    placeID: Joi.number()
         .valid(null),
 
     dateFrom: Joi.date()
@@ -151,5 +151,147 @@ const filtersObjRentalSchema = Joi.object({
 });
 
 
-export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema, filtersObjRentalSchema};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const addOneUnfinishedRentalByAdminUserSchema = Joi.object({
+    id: Joi.number()
+        .valid(null),
+
+    carID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    userID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    returnUserID: Joi.number()
+        .valid(null),
+
+    lastEditedByModeratorOfID: Joi.number()
+        .integer()
+        .positive()
+        .required()
+        .allow(null),
+
+    carMileageBefore: Joi.number()
+        .integer()
+        .positive()
+        .max(2000000)
+        .required(),
+
+    carMileageAfter: Joi.number()
+        .valid(null),
+
+    distance: Joi.number()
+        .valid(null),
+    
+    travelDestination: Joi.string()
+        .min(1)
+        .max(70)
+        .required()
+        .allow(null),
+
+    placeID: Joi.number()
+        .integer()
+        .positive()
+        .required()
+        .allow(null),
+
+    dateFrom: Joi.date()
+        .required(),
+
+    dateTo: Joi.date()
+        .valid(null)
+})
+
+
+
+
+
+
+
+const addOneFinishedRentalByAdminUserSchema = Joi.object({
+    id: Joi.number()
+        .valid(null),
+
+    carID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    userID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    returnUserID: Joi.number()
+        .integer()
+        .positive()
+        .required(),
+
+    lastEditedByModeratorOfID: Joi.number()
+        .integer()
+        .positive()
+        .required()
+        .allow(null),
+
+    carMileageBefore: Joi.number()
+        .integer()
+        .positive()
+        .max(2000000)
+        .required(),
+
+    carMileageAfter: Joi.number()
+        .integer()
+        .positive()
+        .min(Joi.ref('carMileageBefore'))
+        .max(2000000)
+        .required(),
+
+    distance: Joi.number()
+        .valid(null),
+    
+    travelDestination: Joi.string()
+        .min(1)
+        .max(70)
+        .required()
+        .allow(null),
+
+    placeID: Joi.number()
+        .integer()
+        .positive()
+        .required()
+        .allow(null),
+
+    dateFrom: Joi.date()
+        .required(),
+
+    dateTo: Joi.date()
+        .min(Joi.ref('dateFrom'))
+        .required(),
+})
+
+
+
+
+
+
+export { addOneRentalByNormalUserSchema, returnCarByNormalUserSchema, filtersObjRentalSchema, addOneUnfinishedRentalByAdminUserSchema, addOneFinishedRentalByAdminUserSchema};
 

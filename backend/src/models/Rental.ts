@@ -87,6 +87,16 @@ class Rental {
         private dateTo: Date | null,
         ) {}
 
+
+
+
+
+
+
+
+
+
+
       
     //by normal user
     async addOneRental() {
@@ -124,6 +134,48 @@ class Rental {
         }
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+    //by admin
+    async addOneFinishedRental() {
+          return await RentalModel.create({
+            // id: this.id,
+            carID: this.carID,
+            userID: this.userID,
+            returnUserID: this.returnUserID,
+            lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
+            carMileageBefore: this.carMileageBefore,
+            carMileageAfter: this.carMileageAfter,
+            distance: this.distance,
+            travelDestination: this.travelDestination,
+            placeID: this.placeID,
+            dateFrom: this.dateFrom,
+            dateTo: this.dateTo,
+          });
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
     async editOneRental() {
       await RentalModel.update({
         // id: this.id,
@@ -143,6 +195,22 @@ class Rental {
 
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     static async undoReturnRental(rentalID: number) {
       await RentalModel.update({
         // id: this.id,
@@ -161,6 +229,21 @@ class Rental {
       {where: {id: rentalID}})
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //by normal user
     static async returnCar(rentalID: number, carID: number, returnUserID: number, carMileageBefore: number, carMileageAfter: number, dateTo: Date, travelDestination: string | null) {
@@ -227,6 +310,8 @@ class Rental {
 
 
 
+
+
     static async fetchLastRentalOfUser(userID: number) {
       return await RentalModel.findOne({
       where: {
@@ -238,6 +323,15 @@ class Rental {
 
 
    
+
+
+
+
+
+
+
+
+
 
 
 
@@ -271,6 +365,21 @@ class Rental {
       
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     static async fetchAllRentalsWithFilters (filters:any, pageSize: number, pageNumber: number, sortFromOldest: boolean) {
         const whereClause: any = {};
@@ -475,11 +584,42 @@ class Rental {
     }
       
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
 
     static async fetchNumberOfRentalsAssociatedWithCar (carID: number) {
       return await RentalModel.count({ where: { carID: carID } })
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -541,6 +681,16 @@ class Rental {
         throw new Error('Error while finding mileage gaps');
       }
     };
+
+
+
+
+
+
+
+
+
+
 
 
 

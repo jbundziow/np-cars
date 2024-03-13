@@ -8,6 +8,7 @@ import { acknowledgeOneUser_PUT_admin, deleteOneUser_DELETE_admin, editOneUser_P
 
 import multer from 'multer';
 import { storage, fileFilter, limits } from '../utilities/fileUpload/multerConfig';
+import { addOneRentalAsAdmin_POST_admin, deleteOneRental_DELETE_admin, editOneRental_PUT_admin } from '../controllers/admin/rentalsController';
 
 const app = express.Router();
 
@@ -16,6 +17,12 @@ app.post('/cars', multer({ storage, fileFilter, limits }).single('image'), addOn
 app.put('/cars/:carid', multer({ storage, fileFilter, limits }).single('image'), editOneCar_PUT_admin)
 app.delete('/cars/:carid', deleteOneCar_DELETE_admin)
 
+
+
+//rentals
+app.post('/rentals', addOneRentalAsAdmin_POST_admin);
+app.put('/rentals/:rentalid', editOneRental_PUT_admin);
+app.delete('/rentals/:rentalid', deleteOneRental_DELETE_admin);
 
 
 
