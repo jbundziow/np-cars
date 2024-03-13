@@ -179,7 +179,7 @@ class Rental {
     async editOneRental() {
       await RentalModel.update({
         // id: this.id,
-        carID: this.carID,
+        // carID: this.carID,
         userID: this.userID,
         returnUserID: this.returnUserID,
         lastEditedByModeratorOfID: this.lastEditedByModeratorOfID,
