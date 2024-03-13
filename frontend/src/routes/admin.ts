@@ -13,11 +13,16 @@ const RentalsGapes = lazy(() => import('../new_pages/potwierdzenia/uzupelnianie-
 const EditReservationForm = lazy(() => import('../new_pages/rezerwacje/edycja'));
 const EditRefuelingForm = lazy(() => import('../new_pages/tankowania/edycja'));
 const EditFaultForm = lazy(() => import('../new_pages/usterki/edycja'));
+const MakeARentalAdminForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod-admin-form'));
 
 
 
 
 const adminRoutes = [
+
+
+  
+
   //potwierdzenia
   {
     path: '/potwierdzenia/wypozyczenia',
@@ -44,6 +49,17 @@ const adminRoutes = [
     title: 'Uzupełnianie wypożyczeń',
     component: RentalsGapes,
   },
+
+
+
+  //wypozyczenia
+  {
+    path: '/wypozyczenia/wypozycz-samochod-admin',
+    title: 'Wypożycz samochód jako admin',
+    component: MakeARentalAdminForm,
+  },
+
+  
 
   
   //rezerwacje

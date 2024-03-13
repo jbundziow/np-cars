@@ -146,7 +146,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
                       <OperationResult status={'error'} title={'UWAGA! To auto nie zostało jeszcze zwrócone przez poprzedniego użytkownika!'} description={`Po uzupełnieniu poniższych danych oraz po kliknięciu "Wypożycz samochód" JEDNOCZEŚNIE zwrócisz to auto za użytkownika ${props.lastRentalUserData?.name.toUpperCase()} ${props.lastRentalUserData?.surname.toUpperCase()} oraz dokonasz nowego wypożyczenia na swoje konto. Wpisany przez Ciebie "przebieg początkowy" będzie jednocześnie "przebiegiem końcowym" użytkownika ${props.lastRentalUserData?.name.toUpperCase()} ${props.lastRentalUserData?.surname.toUpperCase()}.`} showButton={false}/>
                       : ''}
                       {showFutureReservationsAlert ?
-                      <OperationResult status={'warning'} title={'UWAGA! To auto ma już zaplanowane rezerwacje!'} warnings={[{en: '.', pl: 'Sprawdź listę rezerwacji dla tego samochodu w zakładce "Rezerwacje / Przegląd rezerwacji."'}, {en: '.', pl: 'Skontaktuj się najpierw z użytkownikiem, który dokonał rezerwacji jeśli obaj zamierzacie wypożyczyć to auto w jednym terminie.'}]} showButton={false}/>
+                      <OperationResult status={'warning'} title={'UWAGA! To auto ma już zaplanowane rezerwacje!'} warnings={[{en: '.', pl: 'Rezerwacje na najbliższe dwa tygodnie dla tego samochodu są widoczne na górze tej strony. Szczegółowe informacje znajdziesz w zakładce "Rezerwacje / Przyszłe rezerwacje"'}, {en: '.', pl: 'Skontaktuj się najpierw z użytkownikiem, który dokonał rezerwacji jeśli obaj zamierzacie wypożyczyć to auto w jednym terminie.'}]} showButton={false}/>
                       : ''}
                       </div>
 
