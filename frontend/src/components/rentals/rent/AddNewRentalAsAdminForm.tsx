@@ -25,12 +25,12 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
     const [selectedUserID, setSelectedUserID] = useState<Option>({value: '', label: ''});
     const [selectedCarID, setSelectedCarID] = useState<Option>({value: '', label: ''});
-    const [selectedPlaceID, setSelectedPlaceID] = useState<Option>({value: '', label: ''});
+    const [selectedPlaceID, setSelectedPlaceID] = useState<Option>({value: '', label: 'Brak'});
     const [selectedReturnUserID, setSelectedReturnUserID] = useState<Option>({value: '', label: ''});
     const [travelDestination, setTravelDestination] = useState<string>('');
     const [carMileageBefore, setCarMileageBefore] = useState<number | ''>('');
     const [carMileageAfter, setCarMileageAfter] = useState<number | ''>('');
-    const [rentalStartDate, setRentalStartDate] = useState<Date>(new Date());
+    const [rentalStartDate, setRentalStartDate] = useState<Date>(new Date(Date.now() - 60000)); //minus 1 minute to prevent error on server side
     const [rentalReturnDate, setRentalReturnDate] = useState<Date>(new Date());
     const [isConfirmedByAdmin, SetIsConfirmedByAdmin] = useState<boolean>(false);
 
@@ -59,6 +59,7 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
         value: user.id.toString(),
         label: `${user.name} ${user.surname}`
     }));
+    
     }
 
     let placeOptions: {value: string, label: string}[] | [] = [];
@@ -68,6 +69,7 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
         value: place.id.toString(),
         label: `${place.projectCode}`
     }));
+    placeOptions.unshift({value: '', label: 'Brak'})
     }
 
 
@@ -80,6 +82,20 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
     const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const formData = {
+            userID: selectedUserID.value !== '' ? Number(selectedUserID.value) : null,
+            carID: selectedCarID.value !== '' ? Number(selectedCarID.value) : null,
+            placeID: selectedPlaceID.value !== '' ? Number(selectedPlaceID.value) : null,
+            // returnUserID: selectedReturnUserID.value,
+            // travelDestination,
+            // carMileageBefore,
+            // carMileageAfter,
+            // rentalStartDate: rentalStartDate.toISOString(),
+            // rentalReturnDate: rentalReturnDate.toISOString(),
+            // isConfirmedByAdmin,
+            // alsoReturn
+        }
 
         // try {
 
@@ -129,10 +145,6 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
                 
                 
                 <form onSubmit={submitHandler} className='p-2'>
-                
-
-
-
 
 
 
@@ -147,7 +159,7 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
                     <div className='mb-5'>
                       <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                          Rezerwacja dla samochodu:
+                          Wypożyczenie dotyczy samochodu:
                       </label>
                       <MultiselectInput isSearchable={true} isMultiple={false} value={selectedCarID} setValue={(value: Option) => (setSelectedCarID(value))} options={carsOptions} />
                     </div>  
@@ -164,13 +176,62 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
 
 
-                    <div className='mb-5'>
+
+                    <div className="col-span-1 flex flex-col sm:flex-row mb-10 mt-6 sm:mb-5">
+                      <label className="block text-black dark:text-white col-span-2 sm:self-center mb-3 sm:mb-0">
+                          Czy chcesz jednocześnie dokonać zwrotu wypożyczenia?
+                      </label>
+
+                      <div className="sm:ml-3 relative z-20 bg-white dark:bg-form-input h-12">
+                          <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
+                          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>
+                          </span>
+                          <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 mr-8 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
+                          value={alsoReturn.toString()}
+                          onChange={(e)=>SetIsAlsoReturn(e.target.value === 'true')}
+                          >
+                          <option value="false">Nie</option>
+                          <option value="true">Tak</option>
+                          </select>
+                      </div>
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    
+
+
+                    <div className="flex flex-col xl:flex-row xl:gap-5">
+                    
+                    <div className={alsoReturn ? 'mb-5 p-4 xl:p-0 xl:px-2 xl:py-1 xl:w-[50%]' : 'mb-5 xl:w-[100%]'}>
                       <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                          Wybierz użytkownika dokonującego wypożyczenia:
+                        Użytkownik dokonujący wypożyczenia:
                       </label>
                       <MultiselectInput isSearchable={true} isMultiple={false} value={selectedUserID} setValue={(value: Option) => (setSelectedUserID(value))} options={userOptions} />
                     </div>
-                    
+                      
+
+
+                    <div className={alsoReturn ? 'block border rounded-lg dark:bg-[#3d3d3d] bg-[#f7f7f7] p-4 xl:p-0 xl:px-2 xl:py-1 xl:w-[50%]' : 'hidden'}>
+                      <div className='mb-5'>
+                        <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
+                            Użytkownik zwracający samochód:
+                        </label>
+                        <MultiselectInput isSearchable={true} isMultiple={false} value={selectedReturnUserID} setValue={(value: Option) => (setSelectedReturnUserID(value))} options={userOptions} />
+                      </div>
+                    </div>
+
+                    </div>
 
                       
 
@@ -184,18 +245,42 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
 
 
-                    <div className='mb-5'>
+
+
+                    <div className="flex flex-col xl:flex-row xl:gap-5 py-4">
+                    
+                    <div className={alsoReturn ? 'mb-5 p-4 xl:p-0 xl:px-2 xl:py-1 xl:w-[50%]' : 'mb-5 xl:w-[100%]'}>
                       <label className="mb-3 block text-black dark:text-white">
-                        Data i godzina rozpoczęcia podróży:
-                      </label>
-                      <input
-                        required
-                        type="datetime-local"
-                        value={new Date(rentalStartDate.getTime() + (60 * 60000)).toISOString().slice(0, 16)} //UTC +1 TIMEZONE (WARSAW/EUROPE)
-                        onChange={(e)=>setRentalStartDate(new Date(e.target.value))}
-                        placeholder=""
-                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      />
+                          Data i godzina rozpoczęcia podróży:
+                        </label>
+                        <input
+                          required
+                          type="datetime-local"
+                          value={new Date(rentalStartDate.getTime() + (60 * 60000)).toISOString().slice(0, 16)} //UTC +1 TIMEZONE (WARSAW/EUROPE)
+                          onChange={(e)=>setRentalStartDate(new Date(e.target.value))}
+                          placeholder=""
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        />
+                    </div>
+                      
+
+
+                    <div className={alsoReturn ? 'block border rounded-lg dark:bg-[#3d3d3d] bg-[#f7f7f7] p-4 xl:p-0 xl:px-2 xl:py-1 xl:w-[50%]' : 'hidden'}>
+                      <div className='mb-5'>
+                        <label className="mb-3 block text-black dark:text-white">
+                          Data i godzina zakończenia podróży:
+                        </label>
+                        <input
+                          required
+                          type="datetime-local"
+                          value={new Date(rentalReturnDate.getTime() + (60 * 60000)).toISOString().slice(0, 16)} //UTC +1 TIMEZONE (WARSAW/EUROPE)
+                          onChange={(e)=>setRentalReturnDate(new Date(e.target.value))}
+                          placeholder=""
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        />
+                      </div>
+                    </div>
+
                     </div>
                     
 
@@ -206,41 +291,58 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
 
 
-
-
-
-                    <div className='mb-5'>
-                        <label className="mb-3 block text-black dark:text-white">
-                          Cel podróży:
-                        </label>
-                        <input
-                          required
-                          type="text"
-                          placeholder={`np. "Marba Racula"`}
-                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                          value={travelDestination}
-                          onChange={e => setTravelDestination(e.target.value)}
-                        />
-                    </div>
-
-
-
-
-
-
-                    <div className='mb-5'>
-                      <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                          Przypisany numer projektu (opcjonalnie):
+                    <div className="flex flex-col xl:flex-row xl:gap-5 py-2">
+                    
+                    <div className='mb-5 xl:px-2 xl:py-1 xl:w-[50%]'>
+                      <label className="mb-3 block text-black dark:text-white">
+                        Cel podróży:
                       </label>
-                      <MultiselectInput isSearchable={true} isMultiple={false} value={selectedPlaceID} setValue={(value: Option) => (setSelectedPlaceID(value))} options={placeOptions} />
+                      <input
+                        required
+                        type="text"
+                        placeholder={`np. "Marba Racula"`}
+                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        value={travelDestination}
+                        onChange={e => setTravelDestination(e.target.value)}
+                      />
                     </div>
+                      
+
+
+                    <div className='block xl:px-2 xl:py-1 xl:w-[50%]'>
+                      <div className='mb-5'>
+                        <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
+                            Przypisany numer projektu (opcjonalnie):
+                        </label>
+                        <MultiselectInput isSearchable={true} isMultiple={false} value={selectedPlaceID} setValue={(value: Option) => (setSelectedPlaceID(value))} options={placeOptions} />
+                      </div>
+                    </div>
+
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
                     <div className="flex flex-col xl:flex-row xl:gap-5">
                     
-                    <div className={alsoReturn ? 'mb-5 xl:w-[50%]' : 'mb-5 xl:w-[100%]'}>
+                    <div className={alsoReturn ? 'mb-5 p-4 xl:p-0 xl:px-2 xl:py-1 xl:w-[50%]' : 'mb-5 xl:w-[100%]'}>
                         <label className="mb-3 block text-black dark:text-white">
                         Przebieg początkowy [km]:
                         </label>
@@ -298,89 +400,8 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
 
 
-                    <div className="col-span-1 flex flex-col sm:flex-row mb-10 mt-6 sm:mb-5">
-                    <label className="block text-black dark:text-white col-span-2 sm:self-center mb-3 sm:mb-0">
-                        Czy chcesz jednocześnie dokonać zwrotu wypożyczenia?
-                    </label>
 
-                    <div className="sm:ml-3 relative z-20 bg-white dark:bg-form-input h-12">
-                        <span className="absolute top-1/2 left-4 z-30 -translate-y-1/2">
-                        <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><path fill="#3C50E0" d="M64 80c-8.8 0-16 7.2-16 16V416c0 8.8 7.2 16 16 16H384c8.8 0 16-7.2 16-16V96c0-8.8-7.2-16-16-16H64zM0 96C0 60.7 28.7 32 64 32H384c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM337 209L209 337c-9.4 9.4-24.6 9.4-33.9 0l-64-64c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l47 47L303 175c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9z"/></svg>
-                        </span>
-                        <select className="relative z-20 w-full appearance-none rounded border border-stroke bg-transparent py-3 px-12 mr-8 outline-none transition focus:border-primary active:border-primary dark:border-form-strokedark dark:bg-form-input"
-                        value={alsoReturn.toString()}
-                        onChange={(e)=>SetIsAlsoReturn(e.target.value === 'true')}
-                        >
-                        <option value="false">Nie</option>
-                        <option value="true">Tak</option>
-                        </select>
-                    </div>
-                    </div>
-
-
-
-
-
-                    
-
-
-
-
-
-
-
-
-                    
-
-
-
-
-
-
-
-
-
-                    <div className='mb-5'>
-                      <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                          Wybierz użytkownika, który dokonuje zwrotu wypożyczenia:
-                      </label>
-                      <MultiselectInput isSearchable={true} isMultiple={false} value={selectedReturnUserID} setValue={(value: Option) => (setSelectedReturnUserID(value))} options={userOptions} />
-                    </div>
-
-
-
-
-
-                    
-
-
-
-
-                    <div className='mb-5'>
-                      <label className="mb-3 block text-black dark:text-white">
-                        Data i godzina zakończenia podróży (musi być większa niż data rozpoczęcia podróży):
-                      </label>
-                      <input
-                        required
-                        type="datetime-local"
-                        value={new Date(rentalReturnDate.getTime() + (60 * 60000)).toISOString().slice(0, 16)} //UTC +1 TIMEZONE (WARSAW/EUROPE)
-                        onChange={(e)=>setRentalReturnDate(new Date(e.target.value))}
-                        placeholder=""
-                        className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      />
-                    </div>
-
-
-
-
-
-
-
-
-
-
-
-
+                    {alsoReturn ?
                     <div className="col-span-1 flex flex-col sm:flex-row mb-10 mt-6 sm:mb-5">
                     <label className="block text-black dark:text-white col-span-2 sm:self-center mb-3 sm:mb-0">
                         Czy chcesz dodając to wypożyczenie jednocześnie potwierdzić je jako administrator?
@@ -399,6 +420,9 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
                         </select>
                     </div>
                     </div>
+                    :
+                    null
+                    }
 
 
 
@@ -410,7 +434,7 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
                     
 
 
-                    <div className='flex justify-center mb-2'>
+                    <div className='flex justify-center mb-2 mt-10'>
                     <button className="flex w-90 justify-center rounded bg-primary p-3 font-medium text-gray hover:opacity-90" type='submit'>
                         Dodaj nowe wypożyczenie
                     </button>

@@ -101,6 +101,15 @@ export const addOneRentalAsAdmin_POST_admin = async (req: Request, res: Response
         }
 
 
+        if(data.dateFrom && data.dateTo && new Date(data.dateFrom) > new Date(data.dateTo)) {
+            res.status(400).json({status: 'fail', data: [{en: `The rental dateFrom cannot be greater than the rental dateTo.`, pl: `Data rozpoczęcia podróży nie może być większa od daty zakończenia podróży.`}]}); 
+            return;
+        }
+        if(data.carMileageBefore && data.carMileageAfter && Number(data.carMileageBefore) > Number(data.carMileageAfter)) {
+            res.status(400).json({status: 'fail', data: [{en: `The carMileageBefore cannot be greater than the carMileageAfter.`, pl: `Przebieg początkowy podróży nie może być większy od przebiegu końcowego podróży.`}]});
+        }
+
+
 
         const gapsData = await Rental.findMileageGaps(Number(data.carID), false);
 
@@ -276,6 +285,15 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
             const lastRentalForCar = await Rental.fetchLastRentalOfCar(Number(data.carID));
             if(!lastRentalForCar) {
                 res.status(400).json({status: 'fail', data: [{en: `No recent rental found for the specified car.`, pl: `Nie znaleziono ostatniego wypożyczenia dla podanego samochodu.`}]});
+            }
+
+
+            if(data.dateFrom && data.dateTo && new Date(data.dateFrom) > new Date(data.dateTo)) {
+                res.status(400).json({status: 'fail', data: [{en: `The rental dateFrom cannot be greater than the rental dateTo.`, pl: `Data rozpoczęcia podróży nie może być większa od daty zakończenia podróży.`}]}); 
+                return;
+            }
+            if(data.carMileageBefore && data.carMileageAfter && Number(data.carMileageBefore) > Number(data.carMileageAfter)) {
+                res.status(400).json({status: 'fail', data: [{en: `The carMileageBefore cannot be greater than the carMileageAfter.`, pl: `Przebieg początkowy podróży nie może być większy od przebiegu końcowego podróży.`}]});
             }
             
 
