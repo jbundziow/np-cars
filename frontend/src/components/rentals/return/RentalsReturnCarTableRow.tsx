@@ -5,6 +5,7 @@ import { useState } from "react";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 import DOMAIN_NAME from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
+import useAuth from "../../../hooks/useAuth";
 
 
 
@@ -17,6 +18,8 @@ interface RentalsReturnCarTableRowProps {
 
 const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
 
+    const { auth } = useAuth();
+
     const [rentalDeleted, setRentalDeleted] = useState<boolean>(false);
 
     const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
@@ -24,14 +27,12 @@ const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
 
     const deleteRental = async () => {
         try {
-            //TODO: change the endpoint
-            const response = await fetch(`${DOMAIN_NAME}/rentalXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX`, {
+            const response = await fetch(`${DOMAIN_NAME}${auth.userRole === 'admin' ? '/admin' : ''}/rentals/${props.rentalID}`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',
               },
               credentials: 'include',
-              body: JSON.stringify({rentalID: props.rentalID}),
             });
             const responseJSON = await response.json();
 
@@ -59,7 +60,7 @@ const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
 
     return (
     <>
-        <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Usuń wypożyczenia'} bodyText={`Czy na pewno chcesz usunąć to wypożyczenie? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteRental() }/>
+        <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Usuń wypożyczenie'} bodyText={`Czy na pewno chcesz usunąć to wypożyczenie? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteRental() }/>
         <FixedAlert options={alertOptions}/>
     {!rentalDeleted ? 
         <tr className="hover:bg-gray-2 dark:hover:bg-meta-4">

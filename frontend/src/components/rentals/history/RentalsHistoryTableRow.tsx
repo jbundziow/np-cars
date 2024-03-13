@@ -8,6 +8,11 @@ import DOMAIN_NAME from "../../../utilities/domainName";
 import UnknownCarImg from '../../../images/cars/unknown_car_1280_720.png'
 import { useState } from "react";
 import ImgLoader from "../../../common/Loader/ImgLoader";
+import EditButton from "../../general/buttons/EditButton";
+import DeleteButton from "../../general/buttons/DeleteButton";
+import useAuth from "../../../hooks/useAuth";
+import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
+import ModalWarning from "../../general/ModalWarning";
 
 
 
@@ -20,6 +25,8 @@ interface RentalsHistoryTableRowProps {
 
 const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
 
+    const { auth } = useAuth();
+
     const [imgLoaded, setImgLoaded] = useState(false);
 
 
@@ -27,9 +34,44 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
     const returnUserObject = props.usersData.find(user => user.id === props.rentalData.returnUserID);
     const acknowledgedByModeratorObject = props.usersData.find(user => user.id === props.rentalData.lastEditedByModeratorOfID)
     const placeObject = props.placesData.find(place => place.id === props.rentalData.placeID)
+
+
+    const [rowDeleted, setRowDeleted] = useState<boolean>(false);
+    const [showWarningModal, setShowWarningModal] = useState<boolean>(false);
+    const [alertOptions, setAlertOptions] = useState<alertOptionsObject>({showAlert: false, color: 'danger', text: '#ERR#', dismiss_button: false, autohide: true, delay_ms: 1, key: 1});
+
+    const deleteRental = async () => {
+        try {
+            const response = await fetch(`${DOMAIN_NAME}${auth.userRole === 'admin' ? '/admin' : ''}/rentals/${props.rentalData.id}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json; charset=utf-8',
+              },
+              credentials: 'include',
+            });
+            const responseJSON = await response.json();
+            if(responseJSON.status === 'success') {
+                setRowDeleted(true)
+                setAlertOptions(({showAlert: true, color: 'success', text: 'Pomyślnie usunięto wypożyczenie.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+            }
+            else if(responseJSON.status === 'fail') {
+                setAlertOptions(({showAlert: true, color: 'danger', text: `Wystąpił błąd: ${responseJSON.data[0].pl}`, dismiss_button: true, autohide: true, delay_ms: 7000, key: Math.random()}))
+              }
+            else {
+                setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania wypożyczenia. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+            }
+            
+          }
+          catch (error) {
+            setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas usuwania wypożyczenia. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 5000, key: Math.random()}))
+          }
+    }
     
     return (
     <>
+    <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Usuń wypożyczenie'} bodyText={`Czy na pewno chcesz usunąć to wypożyczenie? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteRental() }/>
+    <FixedAlert options={alertOptions}/>
+    {!rowDeleted ? 
     <tr className="hover:bg-gray-2 dark:hover:bg-meta-4 text-center">
     <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
         <div className="col-span-3 flex items-center">
@@ -133,8 +175,23 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
         </p>
         </div>
     </td>
+    
+    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+        <div className="flex justify-center space-x-3.5">
+            {auth.userRole === 'admin' ?
+            <EditButton linkTo={`/wypozyczenia/edycja/${props.rentalData.id}`} linkTarget="_self"/>
+            :
+            null
+            }
+            <DeleteButton onClick={() => {setShowWarningModal(true)}}/>
+        </div>
+    </td>
+    
 
     </tr>
+    :
+    null
+    }
     </>
     );
   };

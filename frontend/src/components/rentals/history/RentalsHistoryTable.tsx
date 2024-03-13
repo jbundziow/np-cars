@@ -71,6 +71,9 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                 <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
                   Ostatnia edycja w bazie danych
                 </th>
+                <th className="py-4 px-4 font-medium text-xs xl:text-sm text-black dark:text-white xl:pl-11">
+                  Działania
+                </th>
                 
                 
               </tr>
@@ -109,6 +112,7 @@ const RentalsHistoryTable = (props: RentalsHistoryTableProps) => {
                   <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łączna suma dla zapytania: {props.totalDistance} km</p>
                 </div>  
               </td>
+              <td></td>
               <td></td>
               <td></td>
               </tr>
