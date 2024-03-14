@@ -66,9 +66,9 @@ export const addOneRentalAsAdmin_POST_admin = async (req: Request, res: Response
 
 
         let finalModeratorAcknowledgeID = null;
-        if(data.lastEditeByModeratorOfID && !isNaN(Number(data.lastEditeByModeratorOfID))) {
+        if(data.lastEditedByModeratorOfID && !isNaN(Number(data.lastEditedByModeratorOfID))) {
             const {id: currentAdminUserID} = await identifyUserId(req.cookies.jwt);
-            if(currentAdminUserID === Number(data.lastEditeByModeratorOfID)) {
+            if(currentAdminUserID === Number(data.lastEditedByModeratorOfID)) {
                 finalModeratorAcknowledgeID = currentAdminUserID;
             }
             else {
@@ -89,15 +89,22 @@ export const addOneRentalAsAdmin_POST_admin = async (req: Request, res: Response
             }
         }
 
+        if(finalModeratorAcknowledgeID && finalPlaceID === null) {
+            res.status(400).json({status: 'fail', data: [{en: `You cannot add a rental with the moderator's acknowledgment without specifying the place (number of project) of the rental.`, pl: `Nie możesz dodać wypożyczenia z akceptacją moderatora bez przypisania go do jakiegoś numeru projektu.`}]}); 
+            return;
+        }
+
         
 
 
         const lastRental = await Rental.fetchLastRentalOfCar(Number(data.carID));
         if(!lastRental) {
             res.status(400).json({status: 'fail', data: [{en: `The first rental in the database for a given car must be added in the traditional way.`, pl: `Pierwsze wypożyczenie w bazie danych dla danego samochodu musi być dodane w tradycyjny sposób.`}]});
+            return;
         }
         if(lastRental && lastRental.dataValues.returnUserID === null && Number(data.carMileageBefore) >= lastRental.dataValues.carMileageBefore) {
             res.status(400).json({status: 'fail', data: [{en: `You cannot add a rental with the highest starting mileage to date if the previous rental for that car has not been returned.`, pl: `Nie możesz dodać wypożyczenia z najwyższym przebiegiem początkowym jaki istnieje do tej pory, jeśli poprzednie wypożyczenie dla tego samochodu nie zostało zwrócone.`}]});
+            return;
         }
 
 
@@ -107,6 +114,7 @@ export const addOneRentalAsAdmin_POST_admin = async (req: Request, res: Response
         }
         if(data.carMileageBefore && data.carMileageAfter && Number(data.carMileageBefore) > Number(data.carMileageAfter)) {
             res.status(400).json({status: 'fail', data: [{en: `The carMileageBefore cannot be greater than the carMileageAfter.`, pl: `Przebieg początkowy podróży nie może być większy od przebiegu końcowego podróży.`}]});
+            return;
         }
 
 
@@ -128,23 +136,14 @@ export const addOneRentalAsAdmin_POST_admin = async (req: Request, res: Response
             }
         }
         else {
-            const newFinishedRental = new Rental(null, Number(data.carID), Number(data.userID), Number(data.returnUserID), finalModeratorAcknowledgeID, Number(data.carMileageBefore), Number(data.carMileageAfter), null, data.travelDestination, finalPlaceID, data.dateFrom, data.dateTo);
+            const newFinishedRental = new Rental(null, Number(data.carID), Number(data.userID), Number(data.returnUserID), finalModeratorAcknowledgeID, data.carMileageBefore, data.carMileageAfter, Number(data.carMileageAfter - data.carMileageBefore), data.travelDestination, finalPlaceID, data.dateFrom, data.dateTo);
             await addOneFinishedRentalByAdminUserSchema.validateAsync(newFinishedRental);
             
-            
+           
             if(data.carMileageAfter <= gapsData.firstMileage) { //before first rental in the table for car
                 const result = await newFinishedRental.addOneFinishedRental();
                 res.status(200).json({status: 'success', data: result})
                 return;
-            }
-            else if(Array.isArray(gapsData.gaps) && gapsData.gaps.length > 0) { //between rentals in 'gaps'[]
-                for (const gap of gapsData.gaps) {
-                    if(data.carMileageBefore >= gap.gapStart && data.carMileageAfter <= gap.gapEnd) {
-                        const result = await newFinishedRental.addOneFinishedRental();
-                        res.status(200).json({status: 'success', data: result})
-                        return;
-                    }
-                }
             }
             else if(data.carMileageBefore >= gapsData.lastMileage) { //after last rental in the table for car
                 const result = await newFinishedRental.addOneFinishedRental();
@@ -152,13 +151,26 @@ export const addOneRentalAsAdmin_POST_admin = async (req: Request, res: Response
                 return;
             }
             else {
+
+                if(Array.isArray(gapsData.gaps) && gapsData.gaps.length > 0) { //between rentals in 'gaps'[]
+                    for (const gap of gapsData.gaps) {
+                        if(data.carMileageBefore >= gap.gapStart && data.carMileageAfter <= gap.gapEnd) {
+                            const result = await newFinishedRental.addOneFinishedRental();
+                            res.status(200).json({status: 'success', data: result})
+                            return;
+                        }
+                    }
+                }
+                
                 res.status(400).json({status: 'fail', data: [{en: `You cannot add a rental whose start and end mileage overlaps with an existing rental in the database for that car (you can only add a new rental as a complete first rental, last rental, or to fill a gap in rentals). Current gaps in rentals can be found in the "To be confirmed -> Replenishing rentals" tab.`, pl: `Nie możesz dodać wypożyczenia, którego przebieg początkowy i końcowy nachodzi na istniejące już wypożyczenie w bazie danych dla tego samochodu (możesz jedynie dodać nowe wypożyczenie jako całkowicie pierwsze wypożyczenie, ostatnie lub zapełnić lukę w wypożyczeniach). Aktualne luki w wypożyczeniach znajdziesz w zakładce "Do potwierdzenia -> Uzupełnianie wypożyczeń".`}]});
                 return;
             }
         }
     }
-    catch (error) {
-        res.status(500).json({status: 'error', message: error?.toString()})
+    catch (err) {
+        console.log(err);
+        res.status(500).json({status: 'error', message: err?.toString()})
+        return;
     }
     
 }
@@ -257,7 +269,7 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
                 res.status(400).json({status: 'fail', data: [{en: `The rental of id: ${Number(req.params.rentalid)} does not exist in the database.`, pl: `Wypożyczenie o ID: ${Number(req.params.rentalid)} nie istnieje w bazie danych.`}]})
                 return;
             }
-            if(isRentalToEditExist.dataValues.returnUserID === null) {
+            if(isRentalToEditExist.dataValues.returnUserID === null || isRentalToEditExist.dataValues.carMileageAfter === null) {
                 res.status(400).json({status: 'fail', data: [{en: `You cannot edit a rental that has not yet been returned by the previous user.`, pl: `Nie możesz edytować wypożyczenia, które nie zostało jeszcze zwrócone przez poprzedniego użytkownika.`}]}); 
                 return;
             }
@@ -285,6 +297,7 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
             const lastRentalForCar = await Rental.fetchLastRentalOfCar(Number(data.carID));
             if(!lastRentalForCar) {
                 res.status(400).json({status: 'fail', data: [{en: `No recent rental found for the specified car.`, pl: `Nie znaleziono ostatniego wypożyczenia dla podanego samochodu.`}]});
+                return;
             }
 
 
@@ -294,13 +307,14 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
             }
             if(data.carMileageBefore && data.carMileageAfter && Number(data.carMileageBefore) > Number(data.carMileageAfter)) {
                 res.status(400).json({status: 'fail', data: [{en: `The carMileageBefore cannot be greater than the carMileageAfter.`, pl: `Przebieg początkowy podróży nie może być większy od przebiegu końcowego podróży.`}]});
+                return;
             }
             
 
 
 
 
-            const rentalToEdit = new Rental(Number(req.params.rentalid), isRentalToEditExist.dataValues.carID, Number(data.userID), Number(data.returnUserID), finalModeratorAcknowledgeID, Number(data.carMileageBefore), Number(data.carMileageAfter), null, data.travelDestination, finalPlaceID, data.dateFrom, data.dateTo);
+            const rentalToEdit = new Rental(Number(req.params.rentalid), isRentalToEditExist.dataValues.carID, Number(data.userID), Number(data.returnUserID), finalModeratorAcknowledgeID, data.carMileageBefore, data.carMileageAfter, Number(data.carMileageAfter - data.carMileageBefore), data.travelDestination, finalPlaceID, data.dateFrom, data.dateTo);
             await editOneFinishedRentalByAdminUserSchema.validateAsync(rentalToEdit);
             
 
@@ -310,7 +324,7 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
 
 
             if(data.carMileageBefore >= gapsData.lastMileage) {
-                if(lastRentalForCar?.dataValues.returnUserID === null) {
+                if(lastRentalForCar?.dataValues.returnUserID === null || lastRentalForCar?.dataValues.carMileageAfter === null) {
                     res.status(400).json({status: 'fail', data: [{en: `You cannot edit the rental as the newest one because the previous newest rental for this car has not yet been returned.`, pl: `Nie możesz wyedytować wypożyczenia jako najnowsze, bo poprzednie najnowsze wypożyczenie dla tego samochodu nie zostało jeszcze zwrócone.`}]});
                     return;
                 }
@@ -323,23 +337,26 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
                 res.status(200).json({status: 'success', data: result})
                 return;
             }
-            else if(Array.isArray(gapsData.gaps) && gapsData.gaps.length > 0) { //between rentals in 'gaps'[]
-                for (const gap of gapsData.gaps) {
-                    if(data.carMileageBefore >= gap.gapStart && data.carMileageAfter <= gap.gapEnd) {
-                        const result = await rentalToEdit.editOneRental();
-                        res.status(200).json({status: 'success', data: result})
-                        return;
+            else {
+                if(Array.isArray(gapsData.gaps) && gapsData.gaps.length > 0) { //between rentals in 'gaps'[]
+                    for (const gap of gapsData.gaps) {
+                        if(data.carMileageBefore >= gap.gapStart && data.carMileageAfter <= gap.gapEnd) {
+                            const result = await rentalToEdit.editOneRental();
+                            res.status(200).json({status: 'success', data: result})
+                            return;
+                        }
                     }
                 }
-            }
-            else {
+
                 res.status(400).json({status: 'fail', data: [{en: `You cannot edit a rental whose start and end mileage overlaps with an existing rental in the database for that car (you can only edit it as a new <last> rental, as a complete first rental, or to fill a gap in the rentals). Current gaps in rentals can be found in the "To be confirmed -> Replenishing rentals" tab. In the case of editing, the rental being edited also becomes a vulnerability.`, pl: `Nie możesz edytować wypożyczenia, którego przebieg początkowy i końcowy nachodzi na istniejące już wypożyczenie w bazie danych dla tego samochodu (możesz jedynie zedytować je jako nowe <ostatnie> wypożyczenie, jako całkowicie pierwsze wypożyczenie lub zapełnić lukę w wypożyczeniach). Aktualne luki w wypożyczeniach znajdziesz w zakładce "Do potwierdzenia -> Uzupełnianie wypożyczeń". W przypadku edycji luką staje się także edytowane właśnie wypożyczenie.`}]});
                 return;
             }
         
         }
-        catch (error) {
-            res.status(500).json({status: 'error', message: error?.toString()})
+        catch (err) {
+            console.log(err);
+            res.status(500).json({status: 'error', message: err?.toString()})
+            return;
         }
 }
 
@@ -424,10 +441,12 @@ export const deleteOneRental_DELETE_admin = async (req: Request, res: Response, 
 
 
         res.status(200).json({status: 'success', data: rentalDeleted})
+        return;
 
     }
     catch(e) {
         res.status(500).json({status: 'error', message: e})
+        return;
     }
 
     }

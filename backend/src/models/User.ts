@@ -173,7 +173,7 @@ static async changeAvatarPath(userID: number, avatarPath: string | null) {
         return await UserModel.findAll({attributes: { exclude: ['password'] }})
       }
       else {
-        return await UserModel.findAll({attributes: { exclude: ['password'] }, where: {role: { [Op.ne]: 'banned' }}})
+        return await UserModel.findAll({ attributes: { exclude: ['password'] }, where: {role: {[Op.notIn]: ['banned', 'unconfirmed']} } });
       }
         
     }
@@ -183,7 +183,7 @@ static async changeAvatarPath(userID: number, avatarPath: string | null) {
         return await UserModel.findOne({ where: { id: id }, attributes: { exclude: ['password'] } })
       }
       else {
-        return await UserModel.findOne({ where: { id: id, role: { [Op.ne]: 'banned' } }, attributes: { exclude: ['password'] } })
+        return await UserModel.findOne({ where: { id: id, role: { [Op.notIn]: ['banned', 'unconfirmed'] } }, attributes: { exclude: ['password'] } })
       }
         
     }

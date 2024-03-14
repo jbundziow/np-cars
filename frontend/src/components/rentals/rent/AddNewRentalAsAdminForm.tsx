@@ -6,6 +6,7 @@ import { FormPageStatus } from "../../../types/enums";
 import { db_Car_basic, db_Place, db_User } from "../../../types/db_types";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { Option } from "react-tailwindcss-select/dist/components/type";
+import useAuth from "../../../hooks/useAuth";
 
 
 interface AddNewRentalAsAdminFormProps {
@@ -18,6 +19,8 @@ interface AddNewRentalAsAdminFormProps {
 
 const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
+  const { auth } = useAuth();
+
 
 
   const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
@@ -26,7 +29,6 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
     const [selectedUserID, setSelectedUserID] = useState<Option>({value: '', label: ''});
     const [selectedCarID, setSelectedCarID] = useState<Option>({value: '', label: ''});
     const [selectedPlaceID, setSelectedPlaceID] = useState<Option>({value: '', label: 'Brak'});
-    const [selectedReturnUserID, setSelectedReturnUserID] = useState<Option>({value: '', label: ''});
     const [travelDestination, setTravelDestination] = useState<string>('');
     const [carMileageBefore, setCarMileageBefore] = useState<number | ''>('');
     const [carMileageAfter, setCarMileageAfter] = useState<number | ''>('');
@@ -86,45 +88,46 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
         const formData = {
             userID: selectedUserID.value !== '' ? Number(selectedUserID.value) : null,
             carID: selectedCarID.value !== '' ? Number(selectedCarID.value) : null,
+            carMileageBefore: carMileageBefore !== '' ? Number(carMileageBefore) : null,
+            travelDestination: travelDestination !== '' ? travelDestination : null,
+            dateFrom: rentalStartDate,
             placeID: selectedPlaceID.value !== '' ? Number(selectedPlaceID.value) : null,
-            // returnUserID: selectedReturnUserID.value,
-            // travelDestination,
-            // carMileageBefore,
-            // carMileageAfter,
-            // rentalStartDate: rentalStartDate.toISOString(),
-            // rentalReturnDate: rentalReturnDate.toISOString(),
-            // isConfirmedByAdmin,
-            // alsoReturn
+    
+            //if user want to return car at the same time
+            returnUserID: alsoReturn ? (selectedUserID.value !== '' ? Number(selectedUserID.value) : null) : null, //always the same as userID
+            lastEditedByModeratorOfID: alsoReturn && isConfirmedByAdmin ? (Number(auth.userID)) : null,
+            carMileageAfter: alsoReturn ? (carMileageAfter !== '' ? Number(carMileageAfter) : null) : null,
+            dateTo: alsoReturn ? (rentalReturnDate) : null,
         }
+        
 
-        // try {
-
-        // const response = await fetch(`${DOMAIN_NAME}/admin/places`, {
-        //     method: 'POST',
-        //     headers: {
-        //     'Content-Type': 'application/json; charset=utf-8',
-        //     },
-        //     credentials: 'include',
+        try {
+        const response = await fetch(`${DOMAIN_NAME}/admin/rentals?alsoreturn=${alsoReturn}`, {
+            method: 'POST',
+            headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+            },
+            credentials: 'include',
             
-        //     body: JSON.stringify({projectCode, placeName, projectName}),
-        // });
+            body: JSON.stringify(formData),
+        });
 
-        // if (response.ok) {
-        //     setPageState(FormPageStatus.FormWasSentCorrectly);
-        // } else {
-        //     const responseJSON = await response.json();
-        //     if(responseJSON.status === 'fail') {
-        //     setPageState(FormPageStatus.FailOnSendingForm);
-        //     setWarnings(responseJSON.data);
-        //     }
-        //     else {
-        //     setPageState(FormPageStatus.ErrorWithSendingForm);
-        //     }
-        // }
-        // }
-        // catch (error) {
-        // setPageState(FormPageStatus.ErrorWithSendingForm);
-        // }
+        if (response.ok) {
+            setPageState(FormPageStatus.FormWasSentCorrectly);
+        } else {
+            const responseJSON = await response.json();
+            if(responseJSON.status === 'fail') {
+            setPageState(FormPageStatus.FailOnSendingForm);
+            setWarnings(responseJSON.data);
+            }
+            else {
+            setPageState(FormPageStatus.ErrorWithSendingForm);
+            }
+        }
+        }
+        catch (error) {
+        setPageState(FormPageStatus.ErrorWithSendingForm);
+        }
   };
 
 
@@ -225,9 +228,14 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
                     <div className={alsoReturn ? 'block border rounded-lg dark:bg-[#3d3d3d] bg-[#f7f7f7] p-4 xl:p-0 xl:px-2 xl:py-1 xl:w-[50%]' : 'hidden'}>
                       <div className='mb-5'>
                         <label className="mb-3 block text-black dark:text-white text-sm sm:text-base">
-                            Użytkownik zwracający samochód:
+                          Użytkownik zwracający wypożyczenie:
                         </label>
-                        <MultiselectInput isSearchable={true} isMultiple={false} value={selectedReturnUserID} setValue={(value: Option) => (setSelectedReturnUserID(value))} options={userOptions} />
+                        <input
+                          disabled
+                          type="text"
+                          className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-not-allowed disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                          value={selectedUserID.label}
+                        />
                       </div>
                     </div>
 
@@ -271,7 +279,6 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
                           Data i godzina zakończenia podróży:
                         </label>
                         <input
-                          required
                           type="datetime-local"
                           value={new Date(rentalReturnDate.getTime() + (60 * 60000)).toISOString().slice(0, 16)} //UTC +1 TIMEZONE (WARSAW/EUROPE)
                           onChange={(e)=>setRentalReturnDate(new Date(e.target.value))}
@@ -370,7 +377,6 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
                             Przebieg końcowy [km]:
                             </label>
                             <input
-                            required
                             type="number"
                             placeholder={`Wpisz stan licznika na koniec podróży`}
                             className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-5 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"

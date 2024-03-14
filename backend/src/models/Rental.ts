@@ -497,6 +497,9 @@ class Rental {
         let sortDirection: 'ASC' | 'DESC' = 'DESC';
         if(sortFromOldest === true) {sortDirection = 'ASC'}
 
+        
+
+
         const records = await RentalModel.findAll({
             where: whereClause,
             limit: pageSize,

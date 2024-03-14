@@ -266,8 +266,11 @@ const addOneFinishedRentalByAdminUserSchema = Joi.object({
         .required(),
 
     distance: Joi.number()
-        .valid(null),
-    
+        .integer()
+        .min(0)
+        .max(Joi.ref('carMileageAfter'))
+        .required(),
+
     travelDestination: Joi.string()
         .min(1)
         .max(70)
@@ -346,7 +349,10 @@ const editOneFinishedRentalByAdminUserSchema = Joi.object({
         .required(),
 
     distance: Joi.number()
-        .valid(null),
+        .integer()
+        .min(0)
+        .max(Joi.ref('carMileageAfter'))
+        .required(),
     
     travelDestination: Joi.string()
         .min(1)
