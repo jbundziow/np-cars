@@ -35,7 +35,7 @@ const PlacesList = (props: Props) => {
     useEffect(() => {
       const getData = async () => {
         setLoadingTable(true)
-
+        
         const res1 = await fetchData(`${DOMAIN_NAME}/places?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) {setPaginationData(res1.pagination)}

@@ -84,7 +84,7 @@ export const addOneRentalAsAdmin_POST_admin = async (req: Request, res: Response
                 finalPlaceID = Number(data.placeID);
             }
             else {
-                res.status(400).json({status: 'fail', data: [{en: `The place of id: ${Number(data.placeID)} does not exist in the database.`, pl: `Miejsce o ID: ${Number(data.placeID)} nie istnieje w bazie danych.`}]});
+                res.status(400).json({status: 'fail', data: [{en: `The place of id: ${Number(data.placeID)} does not exist in the database or has status 'closed' / 'banned'.`, pl: `Miejsce o ID: ${Number(data.placeID)} nie istnieje w bazie danych lub ma status "Niektywny"/"Zbanowany".`}]});
                 return;
             }
         }
@@ -252,7 +252,7 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
 
             let finalPlaceID = null;
             if(data.placeID && !isNaN(Number(data.placeID))) {
-                const isPlaceExist = await Place.fetchOne(Number(data.placeID), false);
+                const isPlaceExist = await Place.fetchOne(Number(data.placeID), true);
                 if(isPlaceExist) {
                     finalPlaceID = Number(data.placeID);
                 }
@@ -260,6 +260,11 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
                     res.status(400).json({status: 'fail', data: [{en: `The place of id: ${Number(data.placeID)} does not exist in the database.`, pl: `Miejsce o ID: ${Number(data.placeID)} nie istnieje w bazie danych.`}]});
                     return;
                 }
+            }
+
+            if(finalModeratorAcknowledgeID && finalPlaceID === null) {
+                res.status(400).json({status: 'fail', data: [{en: `You cannot add a rental with the moderator's acknowledgment without specifying the place (number of project) of the rental.`, pl: `Nie możesz dodać wypożyczenia z akceptacją moderatora bez przypisania go do jakiegoś numeru projektu.`}]}); 
+                return;
             }
 
             const isRentalToEditExist = await Rental.fetchOne(Number(req.params.rentalid));

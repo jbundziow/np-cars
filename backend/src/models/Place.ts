@@ -76,7 +76,7 @@ class Place {
         return await PlaceModel.findOne({ where: { id: id } })
       }
       else {
-          return await PlaceModel.findOne({where: { id: id, status: { [Op.ne]: 'banned' }}})
+          return await PlaceModel.findOne({where: { id: id, status: { [Op.notIn]: ['banned', 'closed'] }}})
       }
     }
 
