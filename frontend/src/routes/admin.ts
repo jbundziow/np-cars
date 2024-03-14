@@ -1,6 +1,8 @@
 import { lazy } from 'react';
 
 
+
+
 const AddCar = lazy(() => import('../new_pages/samochody/dodaj'));
 const EditCar = lazy(() => import('../new_pages/samochody/edycja'));
 const AddPlace = lazy(() => import('../new_pages/projekty/dodaj'));
@@ -14,6 +16,7 @@ const EditReservationForm = lazy(() => import('../new_pages/rezerwacje/edycja'))
 const EditRefuelingForm = lazy(() => import('../new_pages/tankowania/edycja'));
 const EditFaultForm = lazy(() => import('../new_pages/usterki/edycja'));
 const MakeARentalAdminForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod-admin-form'));
+const EditRentalAdminForm = lazy(() => import('../new_pages/wypozyczenia/edycja'));
 
 
 
@@ -57,6 +60,11 @@ const adminRoutes = [
     path: '/wypozyczenia/wypozycz-samochod-admin',
     title: 'Wypożycz samochód jako admin',
     component: MakeARentalAdminForm,
+  },
+  {
+    path: '/wypozyczenia/edycja/:rentalid',
+    title: 'Edycja wypożyczenia',
+    component: EditRentalAdminForm,
   },
 
   

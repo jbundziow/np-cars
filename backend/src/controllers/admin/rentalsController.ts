@@ -239,9 +239,9 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
 
 
             let finalModeratorAcknowledgeID = null;
-            if(data.lastEditeByModeratorOfID && !isNaN(Number(data.lastEditeByModeratorOfID))) {
+            if(data.lastEditedByModeratorOfID && !isNaN(Number(data.lastEditedByModeratorOfID))) {
                 const {id: currentAdminUserID} = await identifyUserId(req.cookies.jwt);
-                if(currentAdminUserID === Number(data.lastEditeByModeratorOfID)) {
+                if(currentAdminUserID === Number(data.lastEditedByModeratorOfID)) {
                     finalModeratorAcknowledgeID = currentAdminUserID;
                 }
                 else {
@@ -291,7 +291,7 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
 
             const isCarExist = await Car.fetchOne(isRentalToEditExist.dataValues.carID, true)
             if(!isCarExist) {
-                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${data.carID} does not exist in the database.`, pl: `Samochód o ID: ${data.carID} nie istnieje w bazie danych.`}]})
+                res.status(400).json({status: 'fail', data: [{en: `The car of id: ${isRentalToEditExist.dataValues.carID} does not exist in the database.`, pl: `Samochód o ID: ${isRentalToEditExist.dataValues.carID} nie istnieje w bazie danych.`}]})
                 return;
             }
 
@@ -299,7 +299,7 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
             
 
 
-            const lastRentalForCar = await Rental.fetchLastRentalOfCar(Number(data.carID));
+            const lastRentalForCar = await Rental.fetchLastRentalOfCar(isRentalToEditExist.dataValues.carID);
             if(!lastRentalForCar) {
                 res.status(400).json({status: 'fail', data: [{en: `No recent rental found for the specified car.`, pl: `Nie znaleziono ostatniego wypożyczenia dla podanego samochodu.`}]});
                 return;
@@ -324,7 +324,7 @@ export const editOneRental_PUT_admin = async (req: Request, res: Response, next:
             
 
 
-            const gapsData = await Rental.findMileageGaps(Number(data.carID), true, Number(req.params.rentalid));
+            const gapsData = await Rental.findMileageGaps(isRentalToEditExist.dataValues.carID, true, Number(req.params.rentalid));
 
 
 
