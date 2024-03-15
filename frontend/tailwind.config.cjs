@@ -5,6 +5,7 @@ const colors = require('tailwindcss/colors')
 module.exports = {
   content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}', './node_modules/react-tailwindcss-datepicker/dist/index.esm.js', "./node_modules/react-tailwindcss-select/dist/index.esm.js"],
   darkMode: 'class',
+  
   theme: {
     fontFamily: {
       satoshi: ['Satoshi', 'sans-serif'],
@@ -243,9 +244,24 @@ module.exports = {
           '0%, 100%': { transform: 'rotate(360deg)' },
           '50%': { transform: 'rotate(0deg)' },
         },
+        wiggle: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'rotate(30deg)' },
+        },
+        wiggle_little: {
+          '0%, 100%': { transform: 'rotate(0deg)' },
+          '50%': { transform: 'rotate(10deg)' },
+        },
+        bouncing: {
+          '0%, 100%': { transform: 'translateY(0%)', animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)' },
+          '50%': { transform: 'translateY(-25%)', animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)'  },
+        },
       },
       animation: {
         'ping-once': 'ping 5s cubic-bezier(0, 0, 0.2, 1)',
+        'wiggle-once': 'wiggle 0.5s ease-in-out 5',
+        'wiggle-once-short': 'wiggle_little 0.2s ease-in-out 7',
+        'bounce-once': 'bouncing 0.5s ease-in-out 3',
         rotating: 'rotating 30s linear infinite',
         'spin-1.5': 'spin 1.5s linear infinite',
         'spin-2': 'spin 2s linear infinite',

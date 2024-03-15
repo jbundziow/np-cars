@@ -32,7 +32,6 @@ const MyReservations = (props: Props) => {
     const { auth }= useAuth();
     useEffect(() => {
       const getData = async () => {   
-
       const res1 = await fetchData(`${DOMAIN_NAME}/reservations/users/${auth.userID}?time=future`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
