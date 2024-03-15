@@ -1,6 +1,6 @@
 import { AuthType } from "../../types/common";
 import { db_User } from "../../types/db_types";
-import CardUser from "../users/CardUser";
+import CardUser from "../users/CardUserFlip";
 import { TEAnimation } from "tw-elements-react";
 
 
@@ -11,8 +11,8 @@ type UsersConfirmListPageProps = {
 
 const UsersConfirmListPage = (props: UsersConfirmListPageProps) => {
 
-// const isUnconfirmedUserExist = props.users.some(user => user.role === 'unconfirmed');
-const isUnconfirmedUserExist = false;
+const isUnconfirmedUserExist = props.users.some(user => user.role === 'unconfirmed');
+// const isUnconfirmedUserExist = false;
 
   return (
   
@@ -24,13 +24,18 @@ const isUnconfirmedUserExist = false;
 
           
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-            {props.users.filter(user => user.role === 'unconfirmed').map(user => 
+            {/* {props.users.filter(user => user.role === 'unconfirmed').map(user =>  */}
+            {props.users.map(user => 
               <CardUser userData={user} primaryButton={{text: 'Potwierdź', link: `/potwierdzenia/nowi-uzytkownicy`}} secondaryButton={{text: 'Edytuj', link: `/uzytkownicy/ustawienia-konta/${user.id}`}} auth={props.auth}/>
             )}
           </div>
         </div>
         :
-        <div className="bg-gray-100 h-screen">
+        <div className="rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark">
+
+
+
+        <div className="bg-gray-100">
         <div className="p-6  md:mx-auto">
           <div className="animate-bounce-once">
           <svg viewBox="0 0 24 24" className="text-green-600 w-16 h-16 mx-auto my-6 animate-wiggle-once">
@@ -40,17 +45,20 @@ const isUnconfirmedUserExist = false;
           </svg>
           </div>
           
-          <div className="text-center">
-              <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">Payment Done!</h3>
-              <p className="text-gray-600 my-2">Thank you for completing your secure online payment.</p>
-              <p> Have a great day!  </p>
+          <div className="text-center text-black dark:text-white">
+              <h3 className="md:text-2xl text-base text-gray-900 font-semibold text-center">Wszystko w porządku!</h3>
+              <p className="text-gray-600 my-2">W tej chwili nie ma w bazie danych użytkowników czekających na potwierdzenie.</p>
+              <p>Miłego dnia!</p>
               <div className="py-10 text-center">
-                  <a href="#" className="px-12 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold py-3">
-                      GO BACK 
+                  <a href="/uzytkownicy/zestawienie" className="px-12 bg-primary hover:bg-indigo-600 text-white font-semibold py-3 rounded-lg">
+                      Przejdź do listy użytkowników
                  </a>
               </div>
           </div>
       </div>
+    </div>
+
+    
     </div>
       }
       

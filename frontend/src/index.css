@@ -185,3 +185,29 @@ span.flatpickr-weekday,
 [x-cloak] {
   display: none !important;
 }
+/* 
+*/
+/* 
+*/
+/* 
+*/
+/* MY CARD FILP */
+.card-flip-container {
+  perspective: 1000px;
+}
+.card-flip {
+  @apply relative w-full h-full transition-transform duration-[0.8s];
+  transform-style: preserve-3d;
+}
+.card-flip.flipped {
+  transform: rotateY(180deg);
+}
+.card-front,
+.card-back {
+  @apply absolute inset-0;
+  backface-visibility: hidden;
+}
+.card-back {
+  transform: rotateY(180deg);
+}
+/* END MY CARD FILP */
