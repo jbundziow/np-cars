@@ -53,9 +53,10 @@ app.delete('/places/:placeid', deleteOnePlace_PUT_admin)
 
 
 //users
+app.put('/users/confirm', acknowledgeOneUser_PUT_admin)
 app.put('/users/:userid', editOneUser_PUT_admin)
 app.delete('/users/:userid', deleteOneUser_DELETE_admin)
-app.put('/users/confirm', acknowledgeOneUser_PUT_admin)
+
 
 
 export default app;

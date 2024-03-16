@@ -95,6 +95,7 @@ export const deleteOneUser_DELETE_admin = async (req: Request, res: Response, ne
 
 export const acknowledgeOneUser_PUT_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
+
     if (!data.userid || isNaN(Number(data.userid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
         return;
@@ -111,6 +112,10 @@ export const acknowledgeOneUser_PUT_admin = async (req: Request, res: Response, 
         }
 
         else {
+            if(isUserExist.dataValues.role !== 'unconfirmed') {
+                res.status(400).json({status: 'fail', data: [{en: `You cannot confirm a user account with a status other than "Unconfirmed".`, pl: `Nie możesz potwierdzić konta użytkownika, który ma status inny niż "Niepotwierdzony".`}]})
+                return;
+            }
             const result = await User.acknowledgeUserByModerator(Number(data.userid));
             res.status(200).json({status: 'success', data: result});
         }

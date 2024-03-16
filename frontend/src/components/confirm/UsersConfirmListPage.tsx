@@ -1,7 +1,6 @@
 import { AuthType } from "../../types/common";
 import { db_User } from "../../types/db_types";
 import CardUser from "../users/CardUserFlip";
-import { TEAnimation } from "tw-elements-react";
 
 
 type UsersConfirmListPageProps = {
@@ -12,7 +11,7 @@ type UsersConfirmListPageProps = {
 const UsersConfirmListPage = (props: UsersConfirmListPageProps) => {
 
 const isUnconfirmedUserExist = props.users.some(user => user.role === 'unconfirmed');
-// const isUnconfirmedUserExist = false;
+
 
   return (
   
@@ -24,9 +23,8 @@ const isUnconfirmedUserExist = props.users.some(user => user.role === 'unconfirm
 
           
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-            {/* {props.users.filter(user => user.role === 'unconfirmed').map(user =>  */}
-            {props.users.map(user => 
-              <CardUser userData={user} primaryButton={{text: 'Potwierdź', link: `/potwierdzenia/nowi-uzytkownicy`}} secondaryButton={{text: 'Edytuj', link: `/uzytkownicy/ustawienia-konta/${user.id}`}} auth={props.auth}/>
+            {props.users.filter(user => user.role === 'unconfirmed').map(user => 
+              <CardUser userData={user} primaryButtonText={'Potwierdź'} secondaryButton={{text: 'Edytuj', link: `/uzytkownicy/ustawienia-konta/${user.id}`}} auth={props.auth}/>
             )}
           </div>
         </div>
