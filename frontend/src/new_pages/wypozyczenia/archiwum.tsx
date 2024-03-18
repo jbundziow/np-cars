@@ -39,6 +39,7 @@ const RentalsArchive = (props: Props) => {
 
     useEffect(() => {
       const getData = async () => {
+        console.log(filters);
         setLoadingTable(true)
 
         const res1 = await fetchData(`${DOMAIN_NAME}/rentals?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
