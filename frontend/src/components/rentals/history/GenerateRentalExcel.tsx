@@ -45,7 +45,7 @@ type GenerateRentalExcelProps = {
           if(res2.status==='success') {
             const res3 = await fetchData(`${DOMAIN_NAME}/users?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
             if(res3.status==='success') {
-              const res4 = await fetchData(`${DOMAIN_NAME}/places?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+              const res4 = await fetchData(`${DOMAIN_NAME}/places?filters=%7B%7D&pagenumber=1&pagesize=999999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
               
 
 

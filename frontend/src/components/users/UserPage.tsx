@@ -87,25 +87,25 @@ const UserPage = (props: UserPageProps) => {
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
                 <span className="font-semibold text-black dark:text-white">
-                #999#
+                36
                 </span>
                 <span className="text-sm">Wypożyczeń samochodów</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
                 <span className="font-semibold text-black dark:text-white">
-                #999#
+                4
                 </span>
                 <span className="text-sm">Złożonych rezerwacji</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
                 <span className="font-semibold text-black dark:text-white">
-                #999#
+                6
                 </span>
                 <span className="text-sm">Zgłoszonych usterek</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
                 <span className="font-semibold text-black dark:text-white">
-                  #999#
+                  5
                 </span>
                 <span className="text-sm">Tankowań samochodów</span>
               </div>
