@@ -54,8 +54,6 @@ type GenerateRefuelingExcelProps = {
                 const refuelingUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === refueling.userID);
                 const isAcknowledgedByModeratorUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === refueling.isAcknowledgedByModerator)
                 const lastEditedByModeratorUserObject: db_User | undefined = res3.data.find((user: db_User) => user.id === refueling.lastEditedByModeratorOfID)
-                  console.log(refueling.averageConsumption);
-                  console.log(refueling.costPerLiter);
 
                 return {
                   ...refueling,

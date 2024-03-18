@@ -1,7 +1,7 @@
 import express from 'express'
 import { addOneCar_POST_admin, editOneCar_PUT_admin, deleteOneCar_DELETE_admin } from '../controllers/admin/carsController';
 import { addOneRefueling_POST_admin, editOneRefueling_PUT_admin, deleteOneRefueling_DELETE_admin, acknowledgeOneRefueling_PUT_admin} from '../controllers/admin/refuelingController';
-import { acknowledgeOneFault_PUT_admin, deleteOneFault_DELETE_admin, editOneFault_PUT_admin } from '../controllers/admin/faultsController';
+import { acknowledgeOneFault_PUT_admin, deleteOneFault_DELETE_admin, editOneFault_PUT_admin, fetchAllFaultsByStatus_GET_admin } from '../controllers/admin/faultsController';
 import { addOneReservation_POST_admin, editOneReservation_PUT_admin } from '../controllers/admin/reservationsController';
 import { addOnePlace_POST_admin, deleteOnePlace_PUT_admin, editOnePlace_PUT_admin } from '../controllers/admin/placesController';
 import { acknowledgeOneUser_PUT_admin, deleteOneUser_DELETE_admin, editOneUser_PUT_admin } from '../controllers/admin/usersController';
@@ -41,6 +41,7 @@ app.put('/refuelings/confirm', acknowledgeOneRefueling_PUT_admin)
 
 
 //faults
+app.get('/faults', fetchAllFaultsByStatus_GET_admin)
 app.put('/faults/confirm', acknowledgeOneFault_PUT_admin)
 app.put('/faults/:faultid', editOneFault_PUT_admin);
 app.delete('/faults/:faultid', deleteOneFault_DELETE_admin)

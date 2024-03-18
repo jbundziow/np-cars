@@ -11,6 +11,62 @@ import { editOneFaultByAdminSchema } from '../../models/validation/FaultsSchemas
 
 
 
+
+
+
+
+
+export const fetchAllFaultsByStatus_GET_admin = async (req: Request, res: Response, next: NextFunction) => {
+
+    if(!req.query.status) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'status' passed.`, pl: `Nie przekazano 'status' w parametrach zapytania.`}]})
+        return;
+    }
+
+    if(req.query.status !== 'pending' && req.query.status !== 'accepted' && req.query.status !== 'finished' && req.query.status !== 'cancelled') {
+        res.status(400).json({status: 'fail', data: [{en: `The query param 'status' is wrong. It should be 'pending', 'accepted', 'finished' or 'cancelled'.`, pl: `Parametr 'status' jest nieprawidłowy. Musi mieć wartość 'pending', 'accepted', 'finished' lub 'cancelled'.`}]})
+    }
+
+    if(!req.query.pagenumber || isNaN(Number(req.query.pagenumber))) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'pagenumber' passed or it is not a number.`, pl: `Nie przekazano 'pagenumber' w parametrach zapytania lub nie jest to cyfra.`}]})
+        return;
+    }
+    if(!req.query.pagesize || isNaN(Number(req.query.pagesize))) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'pagesize' passed or it is not a number.`, pl: `Nie przekazano 'pagesize' w parametrach zapytania lub nie jest to cyfra.`}]})
+        return;
+    }
+
+    let sortFromOldest = false;
+    if(req.query.sortfromoldest && req.query.sortfromoldest === 'true') {sortFromOldest = true}
+
+    try {
+        const pageNumber = Number(req.query.pagenumber);
+        const pageSize = Number(req.query.pagesize);
+        const result = await Fault.fetchAllByStatus(req.query.status as 'pending' | 'accepted' | 'finished' | 'cancelled', pageSize, pageNumber, sortFromOldest);
+        res.status(200).json({status: 'success', data: result.records, pagination: result.pagination})
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const editOneFault_PUT_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
 

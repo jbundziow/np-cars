@@ -6,7 +6,7 @@ import OperationResult from '../../components/general/OperationResult';
 import DOMAIN_NAME from "../../utilities/domainName";
 import { ApiResponse } from "../../types/common";
 import useAuth from "../../hooks/useAuth";
-import UsersConfirmListPage from "../../components/confirm/UsersConfirmListPage";
+import UsersConfirmListPage from "../../components/confirm/users/UsersConfirmListPage";
 
   interface Props {
       documentTitle: string;
