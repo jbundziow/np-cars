@@ -21,7 +21,7 @@ const RentalsConfirm = (props: Props) => {
     
 
     const [data1, setData1] = useState<ApiResponse>();  //all cars basic data
-    const [data2, setData2] = useState<ApiResponse>();  //all 'pending' faults
+    const [data2, setData2] = useState<ApiResponse>();  //all unconfirmed rentals
     const [data3, setData3] = useState<ApiResponse>();  //all users data
 
     const [failData, setFailData] = useState<ApiResponse>();

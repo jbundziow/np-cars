@@ -9,6 +9,7 @@ const AddPlace = lazy(() => import('../new_pages/projekty/dodaj'));
 const EditPlace = lazy(() => import('../new_pages/projekty/edycja'));
 const RentalsConfirm = lazy(() => import('../new_pages/potwierdzenia/wypozyczenia'));
 const RefuelingsConfirm = lazy(() => import('../new_pages/potwierdzenia/tankowania'));
+const RefuelingsRefund = lazy(() => import('../new_pages/potwierdzenia/tankowania-zwrot-pieniedzy'));
 const FaultsConfirm = lazy(() => import('../new_pages/potwierdzenia/usterki'));
 const NewUsersConfirm = lazy(() => import('../new_pages/potwierdzenia/nowi-uzytkownicy'));
 const RentalsGapes = lazy(() => import('../new_pages/potwierdzenia/uzupelnianie-wypozyczen'));
@@ -36,6 +37,11 @@ const adminRoutes = [
     path: '/potwierdzenia/tankowania',
     title: 'Potwierdzanie tankowań',
     component: RefuelingsConfirm,
+  },
+  {
+    path: '/potwierdzenia/tankowania/zwrot-pieniedzy',
+    title: 'Zwroty pieniędzy za tankowania',
+    component: RefuelingsRefund,
   },
   {
     path: '/potwierdzenia/usterki',
