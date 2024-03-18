@@ -2,6 +2,7 @@ import CarRowInTable from "../../general/CarRowInTable";
 import { db_Car_basic, db_Fault, db_User } from "../../../types/db_types";
 import UserSpan from "../../general/spanElements/UserSpan";
 import { Link } from "react-router-dom";
+import FaultStatusSpan from "../../general/spanElements/FaultStatusSpan";
 
 
 
@@ -34,6 +35,11 @@ const FaultsConfirmTableRow = (props: FaultsConfirmTableRowProps) => {
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
         <p className='dark:text-white text-black text-xs sm:text-base'><UserSpan userObj={props.userData} nullText={'Brak danych'} linkTarget={'_self'} no_wrap={true}/></p>
+        </div>
+    </td>
+    <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
+        <div className="flex justify-center">
+        <p className='dark:text-white text-black text-xs sm:text-base whitespace-nowrap'><FaultStatusSpan status={props.faultData.status}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">

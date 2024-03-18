@@ -38,7 +38,9 @@ const FaultsConfirmTable = (props: FaultsConfirmTableProps) => {
                 <th className="py-4 px-4 font-medium text-xs sm:text-base text-black dark:text-white xl:pl-11">
                   Usterka zgłoszona przez użytkownika
                 </th>
-                {/* {hidden md:table-cell} */}
+                <th className="py-4 px-4 font-medium text-xs sm:text-base text-black dark:text-white xl:pl-11">
+                  Aktualny status usterki
+                </th>
                 <th className="py-4 px-4 font-medium text-xs sm:text-base text-black dark:text-white">
                   Działania
                 </th>
@@ -61,9 +63,10 @@ const FaultsConfirmTable = (props: FaultsConfirmTableProps) => {
               <tr>
               <td className="pt-3">
                 <div className="flex justify-center">
-                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap'>Łączna ilość wyników: {props.paginationData.totalCount}</p>
+                  <p className='dark:text-white text-black text-xs xl:text-sm whitespace-nowrap mb-4'>Łączna ilość wyników: {props.paginationData.totalCount}</p>
                 </div>  
               </td>
+              <td></td>
               <td></td>
               <td></td>
               <td></td>
