@@ -458,8 +458,8 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
 
 
     export const fetchMileageGaps_GET_user = async (req: Request, res: Response, next: NextFunction) => { 
-        if(!req.query.carid || isNaN(Number(req.query.carid))) {
-            res.status(400).json({status: 'fail', data: [{en: `No query param 'carid' passed.`, pl: `Nie przekazano 'carid' w parametrach zapytania.`}]})
+        if(!req.query.carid || (isNaN(Number(req.query.carid)) && req.query.carid !== 'all')) {
+            res.status(400).json({status: 'fail', data: [{en: `No query param 'carid' passed. It should be number or 'all'.`, pl: `Nie przekazano 'carid' w parametrach zapytania. Powinno mieć wartość liczbową lub 'all'.`}]})
             return;
         }
         if(req.query.excludeonerental !== 'true' && req.query.excludeonerental !== 'false') {
@@ -473,8 +473,19 @@ export const fetchAllRentalsWithFilters_GET_user = async (req: Request, res: Res
 
 
         try {
-            const dbResponse = await Rental.findMileageGaps(Number(req.query.carid), req.query.excludeonerental === 'true', Number(req.query.rentalid)); 
-            res.status(200).json({status: 'success', data: dbResponse})
+            if(req.query.carid === 'all') {
+                const allCarsBasicData = await Car.fetchAllBasicData(false);
+                const result = [];
+                for await (const car of allCarsBasicData) {
+                    const dbResponse = await Rental.findMileageGaps(car.dataValues.id , req.query.excludeonerental === 'true', Number(req.query.rentalid)); 
+                    result.push(dbResponse)
+                }
+                res.status(200).json({status: 'success', data: result})
+            }
+            else {
+                const dbResponse = await Rental.findMileageGaps(Number(req.query.carid), req.query.excludeonerental === 'true', Number(req.query.rentalid)); 
+                res.status(200).json({status: 'success', data: dbResponse})
+            }
         }
         catch(err) {
             res.status(500).json({status: 'error', message: err})

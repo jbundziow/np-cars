@@ -19,6 +19,7 @@ const MakeARentalAdminForm = (props: Props) => {
 
 
 
+
     const [data1, setData1] = useState<ApiResponse>(); //places data
     const [data2, setData2] = useState<ApiResponse>(); //car basic data
     const [data3, setData3] = useState<ApiResponse>(); //users data

@@ -7,6 +7,7 @@ import { db_Car_basic, db_Place, db_User } from "../../../types/db_types";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { Option } from "react-tailwindcss-select/dist/components/type";
 import useAuth from "../../../hooks/useAuth";
+import { useSearchParams } from "react-router-dom";
 
 
 interface AddNewRentalAsAdminFormProps {
@@ -19,6 +20,17 @@ interface AddNewRentalAsAdminFormProps {
 
 const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
 
+  //if params are in url
+  const [ searchParams ] = useSearchParams();
+    const carID = searchParams.get('carid');
+    const carBrand = searchParams.get('carbrand');
+    const carModel = searchParams.get('carmodel');
+    const initialCarOption = carID && carBrand && carModel ? {value: carID, label: `${carBrand} ${carModel}`} : {value: '', label: ''};
+    const initialGapStart = Number(searchParams.get('gapstart')) || '';
+    const initialGapEnd = Number(searchParams.get('gapend')) || '';
+    const initialAlsoReturn = initialGapStart !== '' && initialGapEnd !== '' ? true : false;
+
+
   const { auth } = useAuth();
 
 
@@ -27,16 +39,16 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
   const [pageState, setPageState] = useState<FormPageStatus>(FormPageStatus.FillingTheForm)
 
     const [selectedUserID, setSelectedUserID] = useState<Option>({value: '', label: ''});
-    const [selectedCarID, setSelectedCarID] = useState<Option>({value: '', label: ''});
+    const [selectedCarID, setSelectedCarID] = useState<Option>(initialCarOption);
     const [selectedPlaceID, setSelectedPlaceID] = useState<Option>({value: '', label: 'Brak'});
     const [travelDestination, setTravelDestination] = useState<string>('');
-    const [carMileageBefore, setCarMileageBefore] = useState<number | ''>('');
-    const [carMileageAfter, setCarMileageAfter] = useState<number | ''>('');
+    const [carMileageBefore, setCarMileageBefore] = useState<number | ''>(initialGapStart);
+    const [carMileageAfter, setCarMileageAfter] = useState<number | ''>(initialGapEnd);
     const [rentalStartDate, setRentalStartDate] = useState<Date>(new Date(Date.now() - 60000)); //minus 1 minute to prevent error on server side
     const [rentalReturnDate, setRentalReturnDate] = useState<Date>(new Date());
     const [isConfirmedByAdmin, SetIsConfirmedByAdmin] = useState<boolean>(false);
 
-    const [alsoReturn, SetIsAlsoReturn] = useState<boolean>(false);
+    const [alsoReturn, SetIsAlsoReturn] = useState<boolean>(initialAlsoReturn);
 
 
 
