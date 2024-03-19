@@ -8,9 +8,8 @@ import useAuth from '../../hooks/useAuth';
 import { stats_UserDistanceInYear, stats_UserDistanceInYear_oneMonthSchema } from '../../types/stats';
 import { Link } from 'react-router-dom';
 import CardStat from '../general/CardStat';
-import ChartThree from '../ChartThree';
-import ChartOne from '../ChartOne';
 import PieChart from '../general/charts/PieChart';
+import AreaChart from '../general/charts/AreAChart';
 
 
 
@@ -86,7 +85,17 @@ const UserPage = (props: UserPageProps) => {
             {props.userData.role === 'admin' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Admin</p> : ''}
             {props.userData.role === 'banned' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Użytkownik zbanowany</p> : ''}
             {props.userData.role === 'unconfirmed' ? <p className="inline-block rounded-full bg-gray bg-opacity-10 py-1 px-3 mt-2 font-bold text-white cursor-default">Użytkownik niepotwierdzony</p> : ''}
-
+            
+            {auth.userRole === 'admin' && Number(auth.userID) !== props.userData.id &&
+            <div className="flex justify-center my-6">
+            <Link
+              to={`/uzytkownicy/ustawienia-konta/${props.userData.id}`}
+              className=" rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
+            >
+              Edytuj dane użytkownika
+            </Link>
+            </div>
+            }
             
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
@@ -115,7 +124,7 @@ const UserPage = (props: UserPageProps) => {
               </div>
             </div>
 
-          <div className="md:my-10 md:mx-10">
+          <div className="my-5 md:my-10 md:mx-2">
 
           {/* key={props.statsData.key} */}
           <BarChart title={'Przejechane kilometry'} data={props.statsData.distance.map((obj: stats_UserDistanceInYear_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
@@ -240,7 +249,8 @@ const UserPage = (props: UserPageProps) => {
           </div>
 
 
-          <div className="md:my-10 md:mx-2 grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5">
+          <div className="my-5 md:my-10 md:mx-2 grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5">
+          <div className='col-span-12 xl:col-span-5'>
             <PieChart
             title={'Top 4 projekty w roku 2024 według przejechanego dystansu'}
             data={
@@ -252,9 +262,16 @@ const UserPage = (props: UserPageProps) => {
               ]
             }
             />
-            <div className='col-span-7'>
+          </div>
+            <div className='col-span-12 xl:col-span-7'>
 
-            <ChartOne/>
+            <AreaChart
+            title={`Najczęściej wykorzystywane typy samochodów w 2024 roku`}
+            categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
+            data_passengerCar={[23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 45]}
+            data_bus={[30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51]}
+            
+            />
             </div>
           </div>
 
