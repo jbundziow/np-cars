@@ -25,7 +25,7 @@ const RefuelingsConfirmTable = (props: RefuelingsConfirmTableProps) => {
         {props.refuelingsData && props.refuelingsData.length !== 0 ?
         <>
         {props.loadingTable ? <Loader/> :
-        <div className="max-w-full overflow-x-auto">
+        <div className="max-w-full overflow-x-auto special-scrollbar">
           <table className="w-full table-auto">
             <thead>
               <tr className="bg-gray-2 text-left dark:bg-meta-4">
