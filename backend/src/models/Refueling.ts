@@ -378,17 +378,17 @@ class Refueling {
       //booleans
       if (filters.isFuelCardUsed !== undefined && typeof filters.isFuelCardUsed === 'boolean') {
         if (filters.isFuelCardUsed) {
-          whereClause.isFuelCardUsed = { [Op.ne]: null }; //true
+          whereClause.isFuelCardUsed = { [Op.eq]: true }; //true
         } else {
-          whereClause.isFuelCardUsed = { [Op.eq]: null }; //false
+          whereClause.isFuelCardUsed = { [Op.eq]: false }; //false
         }
       }
 
       if (filters.moneyReturned !== undefined && typeof filters.moneyReturned === 'boolean') {
         if (filters.moneyReturned) {
-          whereClause.moneyReturned = { [Op.ne]: null }; //true
+          whereClause.moneyReturned = { [Op.eq]: true }; //true
         } else {
-          whereClause.moneyReturned = { [Op.eq]: null }; //false
+          whereClause.moneyReturned = { [Op.eq]: false }; //false
         }
       }
 
