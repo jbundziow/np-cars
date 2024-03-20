@@ -19,9 +19,16 @@ const UserMainpage = (props: Props) => {
 
 
   const params = useParams();
+  const currentYear = new Date().getFullYear();
 
     const [data1, setData1] = useState<ApiResponse>();  //user data
-    const [data2, setData2] = useState<ApiResponse>();  //<BarChart> data - distance for every month in specified year
+    const [data2, setData2] = useState<ApiResponse>();  //user total stats (all existing data)
+    const [data3, setData3] = useState<ApiResponse>();  //<BarChart> data - distance for every month in specified year
+    const [data4, setData4] = useState<ApiResponse>();  //user total stats in current year
+    const [data5, setData5] = useState<ApiResponse>();  //user places distance stats total
+    const [data6, setData6] = useState<ApiResponse>();  //user car types distance stats in current year
+    const [data7, setData7] = useState<ApiResponse>();  //user favourite car in current year
+    const [data8, setData8] = useState<ApiResponse>();  //user favourite place in current year
 
     const [failData, setFailData] = useState<ApiResponse>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -29,21 +36,53 @@ const UserMainpage = (props: Props) => {
     const [isError, setError] = useState<boolean>(false);
 
     const [filterValue, setFilterValue] = useState(2024); //year to <BarChart>
-    
+
+
+    //bar chart data
+    useEffect(() => {
+      const getData = async () => {   
+        const res3 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance?year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        setData3(res3)
+      }
+      getData()
+    }, [params.userid, filterValue])
+
+
+
+    //other data
     useEffect(() => {
       const getData = async () => {   
        
       const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.status === 'success') {
-        const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance?year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/total`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData2(res2)
-      }
-
+        if(res2.status === 'success') {
+            const res4 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/total/year/${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+            setData4(res4)
+            if(res4.status === 'success') {
+              const res5 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance/places`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+              setData5(res5)
+              if(res5.status === 'success') {
+                const res6 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance/bycartypes?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+                setData6(res6)
+                if(res6.status === 'success') {
+                  const res7 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/car?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+                  setData7(res7)
+                  if(res7.status === 'success') {
+                    const res8 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/place?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+                    setData8(res8)
+                  }
+                }
+              }
+            }
+          }
+        }
       setLoading(false)
       }
       getData()
-    }, [params.userid, filterValue])
+    }, [params.userid])
 
     
 
@@ -51,7 +90,7 @@ const UserMainpage = (props: Props) => {
       <>
       <Breadcrumb pageName="Profil użytkownika" />
 
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <UserPage userData={data1?.data} statsData={data2?.data} filterValue={filterValue} setFilterValue={(value: number) => setFilterValue(value)} /> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <UserPage userData={data1?.data} totalData={data2?.data} distanceYearData={data3?.data} totalYearData={data4?.data} distancePlacesData={data5?.data} distanceCarTypesYearData={data6?.data} favouriteCarInYearData={data7?.data} favouritePlaceInYearData={data8?.data} filterValue={filterValue} setFilterValue={(value: number) => setFilterValue(value)} /> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
      
       </>
     );

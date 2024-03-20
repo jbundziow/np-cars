@@ -1,10 +1,10 @@
 import { ApexOptions } from 'apexcharts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 type PieChartProps = {
   title: string,
-  data: {name: string, value: number}[]
+  data: {name: string, value: number, color:string}[]
 }
 
 interface PieChartState {
@@ -17,10 +17,16 @@ const PieChart = (props: PieChartProps) => {
 
 
 
-  const [state] = useState<PieChartState>({
+  const [state, setState] = useState<PieChartState>({
     series:  props.data.map((item) => item.value),
   });
 
+  //handle props.data change and update chart
+  useEffect(() => {
+    setState({series:  props.data.map((item) => item.value),
+    })
+  }, [props.data]);
+  //
 
 
 
@@ -28,7 +34,7 @@ const PieChart = (props: PieChartProps) => {
     chart: {
       type: 'donut',
     },
-    colors: ['#10B981', '#375E83', '#259AE6', '#FFA70B'],
+    colors: props.data.map((item) => item.color.slice(4, -1)),
     labels: props.data.map((item) => item.name),
     legend: {
       show: true,
@@ -77,10 +83,6 @@ const PieChart = (props: PieChartProps) => {
 
 
 
-  let bgColors: string[] = [];
-  if(options.colors) {
-  bgColors = options.colors.map((color) => `bg-[${color}]`);
-  }
 
 
 
@@ -110,12 +112,11 @@ const PieChart = (props: PieChartProps) => {
 
       <div className="-mx-8 flex flex-wrap items-center justify-center gap-y-3 mt-10">
         {props.data.map((item, index) => {
-          const color = bgColors[index];
 
           return (
           <div className="w-full px-8 sm:w-1/2">
           <div className="flex w-full items-center">
-            <span className={`mr-2 block h-3 w-full max-w-3 rounded-full ${color}`}></span>
+            <span className={`mr-2 block h-3 w-full max-w-3 rounded-full ${props.data[index].color}`}></span>
             <p className="flex w-full justify-between text-xs font-medium text-black dark:text-white">
               <span>&nbsp;{item.name}&nbsp;</span>
               <span> {Number(item.value*100/totalValues).toFixed(2)}% </span>

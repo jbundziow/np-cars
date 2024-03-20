@@ -154,7 +154,7 @@ const AreaChart = (props: AreaChartProps) => {
   return (
     <div className="rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark-2 sm:px-7.5 h-full">
 
-        <div className="mb-3 justify-between gap-4 sm:flex">
+        <div className="mb-3 xl:mb-12 justify-between gap-4 sm:flex">
           <div>
             <h5 className="text-xl font-semibold text-black dark:text-white">
               {props.title}

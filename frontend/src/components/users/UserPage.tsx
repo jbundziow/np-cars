@@ -5,7 +5,7 @@ import DOMAIN_NAME from '../../utilities/domainName';
 import BarChart from '../general/charts/BarChart';
 import { db_User } from '../../types/db_types';
 import useAuth from '../../hooks/useAuth';
-import { stats_UserDistanceInYear, stats_oneMonthSchema } from '../../types/user_stats';
+import { stats_UserDistanceInYear, stats_UserDistanceInYearByCarTypes, stats_UserDistanceToPlaces, stats_UserFavouriteCar, stats_UserFavouritePlace, stats_UserTotalStats, stats_UserTotalStatsInYear, stats_oneMonthSchema, stats_oneMonthSchemaByCarTypes, stats_oneMonthSchemaToPlaces } from '../../types/user_stats';
 import { Link } from 'react-router-dom';
 import CardStat from '../general/CardStat';
 import PieChart from '../general/charts/PieChart';
@@ -15,7 +15,15 @@ import AreaChart from '../general/charts/AreaChart';
 
 type UserPageProps = {
   userData: db_User;
-  statsData: stats_UserDistanceInYear;
+
+  totalData: stats_UserTotalStats;
+  distanceYearData: stats_UserDistanceInYear,
+  totalYearData: stats_UserTotalStatsInYear,
+  distancePlacesData: stats_UserDistanceToPlaces,
+  distanceCarTypesYearData: stats_UserDistanceInYearByCarTypes,
+  favouriteCarInYearData: stats_UserFavouriteCar,
+  favouritePlaceInYearData: stats_UserFavouritePlace,
+
   filterValue: number,
   setFilterValue: Function;
 }
@@ -98,25 +106,25 @@ const UserPage = (props: UserPageProps) => {
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
                 <span className="font-semibold text-black dark:text-white">
-                36
+                {props.totalData.total_rentals}
                 </span>
                 <span className="text-sm">Wypożyczeń samochodów</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
                 <span className="font-semibold text-black dark:text-white">
-                4
+                {props.totalData.total_reservations}
                 </span>
                 <span className="text-sm">Złożonych rezerwacji</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
                 <span className="font-semibold text-black dark:text-white">
-                6
+                {props.totalData.total_faults}
                 </span>
                 <span className="text-sm">Zgłoszonych usterek</span>
               </div>
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
                 <span className="font-semibold text-black dark:text-white">
-                  5
+                {props.totalData.total_refuelings}
                 </span>
                 <span className="text-sm">Tankowań samochodów</span>
               </div>
@@ -124,8 +132,8 @@ const UserPage = (props: UserPageProps) => {
 
           <div className="my-5 md:my-10 md:mx-2">
 
-          {/* key={props.statsData.key} */}
-          <BarChart title={'Przejechane kilometry'} data={props.statsData.distance.map((obj: stats_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
+         
+          <BarChart title={'Przejechany dystans ogólnie'} data={props.distanceYearData.distance.map((obj: stats_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
           </div>
 
 
@@ -134,11 +142,11 @@ const UserPage = (props: UserPageProps) => {
             svg={
             <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 640 512"><path d="M171.3 96H224v96H111.3l30.4-75.9C146.5 104 158.2 96 171.3 96zM272 192V96h81.2c9.7 0 18.9 4.4 25 12l67.2 84H272zm256.2 1L428.2 68c-18.2-22.8-45.8-36-75-36H171.3c-39.3 0-74.6 23.9-89.1 60.3L40.6 196.4C16.8 205.8 0 228.9 0 256V368c0 17.7 14.3 32 32 32H65.3c7.6 45.4 47.1 80 94.7 80s87.1-34.6 94.7-80H385.3c7.6 45.4 47.1 80 94.7 80s87.1-34.6 94.7-80H608c17.7 0 32-14.3 32-32V320c0-65.2-48.8-119-111.8-127zM434.7 368a48 48 0 1 1 90.5 32 48 48 0 1 1 -90.5-32zM160 336a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
             }
-            value={3434+' km'}
-            title="Przejechany dystans w roku 2024"
+            value={`${props.totalYearData.data.total_distance.currentYear} km`}
+            title={`Przejechany dystans w roku ${props.totalYearData.year}`}
             showProgress={true}
-            progressValue={242+' km'}
-            isProgressPositive={true}
+            progressValue={`${props.totalYearData.data.total_distance.currentYear - props.totalYearData.data.total_distance.previousYear} km`}
+            isProgressPositive={props.totalYearData.data.total_distance.currentYear - props.totalYearData.data.total_distance.previousYear >= 0}
 
             />
 
@@ -146,11 +154,11 @@ const UserPage = (props: UserPageProps) => {
             svg={
               <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M176 56V96H336V56c0-4.4-3.6-8-8-8H184c-4.4 0-8 3.6-8 8zM128 96V56c0-30.9 25.1-56 56-56H328c30.9 0 56 25.1 56 56V96v32V480H128V128 96zM64 96H96V480H64c-35.3 0-64-28.7-64-64V160c0-35.3 28.7-64 64-64zM448 480H416V96h32c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64z"/></svg>
             }
-            value={122}
-            title="Podróży w roku 2024"
-            showProgress={true}
-            progressValue={21.23+'%'}
-            isProgressPositive={false}
+            value={`${props.totalYearData.data.total_rentals.currentYear}`}
+            title={`Podróży w roku ${props.totalYearData.year}`}
+            showProgress={props.totalYearData.data.total_rentals.previousYear !== 0}
+            progressValue={`${((props.totalYearData.data.total_rentals.currentYear - props.totalYearData.data.total_rentals.previousYear) / props.totalYearData.data.total_rentals.previousYear * 100).toFixed(2)}%`}
+            isProgressPositive={((props.totalYearData.data.total_rentals.currentYear - props.totalYearData.data.total_rentals.previousYear) / props.totalYearData.data.total_rentals.previousYear * 100) >= 0}
 
             />
 
@@ -158,11 +166,12 @@ const UserPage = (props: UserPageProps) => {
             svg={
               <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M32 64C32 28.7 60.7 0 96 0H256c35.3 0 64 28.7 64 64V256h8c48.6 0 88 39.4 88 88v32c0 13.3 10.7 24 24 24s24-10.7 24-24V222c-27.6-7.1-48-32.2-48-62V96L384 64c-8.8-8.8-8.8-23.2 0-32s23.2-8.8 32 0l77.3 77.3c12 12 18.7 28.3 18.7 45.3V168v24 32V376c0 39.8-32.2 72-72 72s-72-32.2-72-72V344c0-22.1-17.9-40-40-40h-8V448c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32V64zM96 80v96c0 8.8 7.2 16 16 16H240c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16H112c-8.8 0-16 7.2-16 16z"/></svg>
             }
-            value={2284.21}
-            title="Zatankowane litry paliwa w roku 2024"
-            showProgress={true}
-            progressValue={63.21+'%'}
-            isProgressPositive={true}
+            value={`${props.totalYearData.data.total_number_of_refueled_liters.currentYear}`}
+            title={`Zatankowane litry paliwa w roku ${props.totalYearData.year}`}
+            showProgress={props.totalYearData.data.total_number_of_refueled_liters.previousYear !== 0}
+            progressValue={`${((props.totalYearData.data.total_number_of_refueled_liters.currentYear - props.totalYearData.data.total_number_of_refueled_liters.previousYear) / props.totalYearData.data.total_number_of_refueled_liters.previousYear * 100).toFixed(2)}%`}
+            isProgressPositive={((props.totalYearData.data.total_number_of_refueled_liters.currentYear - props.totalYearData.data.total_number_of_refueled_liters.previousYear) / props.totalYearData.data.total_number_of_refueled_liters.previousYear * 100) >= 0}
+            
 
             />
 
@@ -171,11 +180,11 @@ const UserPage = (props: UserPageProps) => {
             svg={
               <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M96 0C60.7 0 32 28.7 32 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H96zM208 288h64c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16H144c-8.8 0-16-7.2-16-16c0-44.2 35.8-80 80-80zm-32-96a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM512 80c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V80zM496 192c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm16 144c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V336z"/></svg>
             }
-            value={5}
-            title="Rezerwacji w roku 2024"
-            showProgress={true}
-            progressValue={2.42+'%'}
-            isProgressPositive={false}
+            value={`${props.totalYearData.data.total_reservations.currentYear}`}
+            title={`Rezerwacji w roku ${props.totalYearData.year}`}
+            showProgress={props.totalYearData.data.total_reservations.previousYear !== 0}
+            progressValue={`${((props.totalYearData.data.total_reservations.currentYear - props.totalYearData.data.total_reservations.previousYear) / props.totalYearData.data.total_reservations.previousYear * 100).toFixed(2)}%`}
+            isProgressPositive={((props.totalYearData.data.total_reservations.currentYear - props.totalYearData.data.total_reservations.previousYear) / props.totalYearData.data.total_reservations.previousYear * 100) >= 0}
 
             />
             
@@ -186,24 +195,21 @@ const UserPage = (props: UserPageProps) => {
           <div className="my-5 md:my-10 md:mx-2 grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5">
           <div className='col-span-12 xl:col-span-5'>
             <PieChart
-            title={'Top 4 projekty w roku 2024 według przejechanego dystansu'}
-            data={
-              [
-                {name: '103/23/MCZ', value: 400},
-                {name: '52/23', value: 200},
-                {name: '92/25/FFSA', value: 300},
-                {name: '23/112/AD', value: 100},
-              ]
+            title={'Top 10 projektów według przejechanego dystansu'}
+            data = {props.distancePlacesData.response
+              .filter((obj: stats_oneMonthSchemaToPlaces) => obj.total_distance > 0)
+              .map((obj: stats_oneMonthSchemaToPlaces) => ({name: obj.placeData.projectCode, value: obj.total_distance, color: obj.random_color}))
+              .slice(0, 10) //limit to the first 6 elements
             }
             />
           </div>
             <div className='col-span-12 xl:col-span-7'>
 
             <AreaChart
-            title={`Najczęściej wykorzystywane typy samochodów w 2024 roku`}
+            title={`Najczęściej wykorzystywane typy samochodów w ${props.distanceCarTypesYearData.year} roku`}
             categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
-            data_passengerCar={[23, 11, 22, 27, 13, 222, 37, 21, 44, 22, 30, 45]}
-            data_bus={[30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39, 51]}
+            data_passengerCar={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_passengerCar)}
+            data_bus={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_bus_and_truck)}
             
             />
             </div>
