@@ -3,6 +3,7 @@ const {DataTypes, Op} = require('sequelize');
 import { Model, fn, literal } from "sequelize";
 import sequelize from "../database/database";
 import { CarModel } from "./Car";
+import getDatesForMonth from "../utilities/functions/getDateRangesForMonth";
 
 
 
@@ -730,6 +731,50 @@ class Rental {
   
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    static getTotalDistanceForUserByMonthInYear = async (userID: number, year: number) => {
+      const totalDistances: any[] = [];
+    
+      for (let month = 0; month < 12; month++) {
+        const { startDate, endDate } = getDatesForMonth(year, month);
+    
+        const totalDistance = await RentalModel.sum('distance', {
+          where: {
+            userID: userID,
+            dateTo: {
+              [Op.between]: [startDate, endDate]
+            }
+          }
+        });
+    
+        totalDistances.push({
+          month_num: month,
+          month_text: new Date(year, month).toLocaleString('en-US', { month: 'long' }),
+          total_distance: totalDistance || 0
+        });
+      }
+    
+      return totalDistances;
+    };
+    
+    
 
 
 

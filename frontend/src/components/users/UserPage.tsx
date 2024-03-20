@@ -9,7 +9,7 @@ import { stats_UserDistanceInYear, stats_UserDistanceInYear_oneMonthSchema } fro
 import { Link } from 'react-router-dom';
 import CardStat from '../general/CardStat';
 import PieChart from '../general/charts/PieChart';
-import AreaChart from '../general/charts/AreAChart';
+import AreaChart from '../general/charts/AreaChart';
 
 
 

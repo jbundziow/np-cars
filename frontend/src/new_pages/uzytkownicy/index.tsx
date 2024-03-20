@@ -6,7 +6,6 @@ import OperationResult from '../../components/general/OperationResult';
 import DOMAIN_NAME from "../../utilities/domainName";
 import { ApiResponse } from "../../types/common";
 import { useParams } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
 import UserPage from "../../components/users/UserPage";
 
   interface Props {
@@ -18,7 +17,7 @@ import UserPage from "../../components/users/UserPage";
 const UserMainpage = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
-  const { auth } = useAuth();
+
   const params = useParams();
 
     const [data1, setData1] = useState<ApiResponse>();  //user data
@@ -37,7 +36,7 @@ const UserMainpage = (props: Props) => {
       const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.status === 'success') {
-        const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/distance?userid=${auth.userID}&year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance?year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData2(res2)
       }
 

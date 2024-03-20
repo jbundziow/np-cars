@@ -11,7 +11,6 @@ export type stats_UserDistanceInYear_oneMonthSchema = {
 export type stats_UserDistanceInYear = {
     userid: number,
     year: number,
-    key: number,
     distance: stats_UserDistanceInYear_oneMonthSchema[]
   }
 
