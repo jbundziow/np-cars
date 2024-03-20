@@ -1,6 +1,7 @@
 type CardStatProps = {
   svg: JSX.Element;
   value: string | number;
+  value_wrap: boolean,
   title: string;
   showProgress: boolean;
   progressValue?: string | number;
@@ -16,7 +17,7 @@ const CardStat = (props: CardStatProps) => {
 
       <div className="mt-4 flex items-end justify-between">
         <div className="flex flex-col items-start">
-          <h4 className="text-title-md font-bold text-black dark:text-white text-left whitespace-nowrap">
+          <h4 className={`text-title-md font-bold text-black dark:text-white text-left ${props.value_wrap ? '' : 'whitespace-nowrap'}`}>
             {props.value}
           </h4>
           <span className="text-sm font-medium text-left">{props.title}</span>

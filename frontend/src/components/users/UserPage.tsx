@@ -143,6 +143,7 @@ const UserPage = (props: UserPageProps) => {
             <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 640 512"><path d="M171.3 96H224v96H111.3l30.4-75.9C146.5 104 158.2 96 171.3 96zM272 192V96h81.2c9.7 0 18.9 4.4 25 12l67.2 84H272zm256.2 1L428.2 68c-18.2-22.8-45.8-36-75-36H171.3c-39.3 0-74.6 23.9-89.1 60.3L40.6 196.4C16.8 205.8 0 228.9 0 256V368c0 17.7 14.3 32 32 32H65.3c7.6 45.4 47.1 80 94.7 80s87.1-34.6 94.7-80H385.3c7.6 45.4 47.1 80 94.7 80s87.1-34.6 94.7-80H608c17.7 0 32-14.3 32-32V320c0-65.2-48.8-119-111.8-127zM434.7 368a48 48 0 1 1 90.5 32 48 48 0 1 1 -90.5-32zM160 336a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
             }
             value={`${props.totalYearData.data.total_distance.currentYear} km`}
+            value_wrap={false}
             title={`Przejechany dystans w roku ${props.totalYearData.year}`}
             showProgress={true}
             progressValue={`${props.totalYearData.data.total_distance.currentYear - props.totalYearData.data.total_distance.previousYear} km`}
@@ -155,6 +156,7 @@ const UserPage = (props: UserPageProps) => {
               <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M176 56V96H336V56c0-4.4-3.6-8-8-8H184c-4.4 0-8 3.6-8 8zM128 96V56c0-30.9 25.1-56 56-56H328c30.9 0 56 25.1 56 56V96v32V480H128V128 96zM64 96H96V480H64c-35.3 0-64-28.7-64-64V160c0-35.3 28.7-64 64-64zM448 480H416V96h32c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64z"/></svg>
             }
             value={`${props.totalYearData.data.total_rentals.currentYear}`}
+            value_wrap={false}
             title={`Podróży w roku ${props.totalYearData.year}`}
             showProgress={props.totalYearData.data.total_rentals.previousYear !== 0}
             progressValue={`${((props.totalYearData.data.total_rentals.currentYear - props.totalYearData.data.total_rentals.previousYear) / props.totalYearData.data.total_rentals.previousYear * 100).toFixed(2)}%`}
@@ -167,6 +169,7 @@ const UserPage = (props: UserPageProps) => {
               <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M32 64C32 28.7 60.7 0 96 0H256c35.3 0 64 28.7 64 64V256h8c48.6 0 88 39.4 88 88v32c0 13.3 10.7 24 24 24s24-10.7 24-24V222c-27.6-7.1-48-32.2-48-62V96L384 64c-8.8-8.8-8.8-23.2 0-32s23.2-8.8 32 0l77.3 77.3c12 12 18.7 28.3 18.7 45.3V168v24 32V376c0 39.8-32.2 72-72 72s-72-32.2-72-72V344c0-22.1-17.9-40-40-40h-8V448c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32V64zM96 80v96c0 8.8 7.2 16 16 16H240c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16H112c-8.8 0-16 7.2-16 16z"/></svg>
             }
             value={`${props.totalYearData.data.total_number_of_refueled_liters.currentYear}`}
+            value_wrap={false}
             title={`Zatankowane litry paliwa w roku ${props.totalYearData.year}`}
             showProgress={props.totalYearData.data.total_number_of_refueled_liters.previousYear !== 0}
             progressValue={`${((props.totalYearData.data.total_number_of_refueled_liters.currentYear - props.totalYearData.data.total_number_of_refueled_liters.previousYear) / props.totalYearData.data.total_number_of_refueled_liters.previousYear * 100).toFixed(2)}%`}
@@ -181,6 +184,7 @@ const UserPage = (props: UserPageProps) => {
               <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M96 0C60.7 0 32 28.7 32 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H96zM208 288h64c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16H144c-8.8 0-16-7.2-16-16c0-44.2 35.8-80 80-80zm-32-96a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM512 80c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V80zM496 192c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm16 144c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V336z"/></svg>
             }
             value={`${props.totalYearData.data.total_reservations.currentYear}`}
+            value_wrap={false}
             title={`Rezerwacji w roku ${props.totalYearData.year}`}
             showProgress={props.totalYearData.data.total_reservations.previousYear !== 0}
             progressValue={`${((props.totalYearData.data.total_reservations.currentYear - props.totalYearData.data.total_reservations.previousYear) / props.totalYearData.data.total_reservations.previousYear * 100).toFixed(2)}%`}
@@ -213,6 +217,62 @@ const UserPage = (props: UserPageProps) => {
             
             />
             </div>
+          </div>
+
+
+
+
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+            {props.favouriteCarInYearData.response !== null &&
+            <CardStat
+            svg={
+            <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
+            }
+            value={`${props.favouriteCarInYearData.response?.carData?.brand} ${props.favouriteCarInYearData.response?.carData?.model}`}
+            value_wrap={true}
+            title={`Ulubione auto w ${props.favouriteCarInYearData.year} roku`}
+            showProgress={false}
+            />
+            }
+
+            {props.favouriteCarInYearData.response !== null &&
+            <CardStat
+            svg={
+            <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256V448c0 35.3 28.7 64 64 64h42.8c-6.6-5.9-10.8-14.4-10.8-24V376c0-20.8 11.3-38.9 28.1-48.6l21-64.7c7.5-23.1 29-38.7 53.3-38.7H313.6c24.3 0 45.8 15.6 53.3 38.7l21 64.7c16.8 9.7 28.2 27.8 28.2 48.6V488c0 9.6-4.2 18.1-10.8 24H448c35.3 0 64-28.7 64-64V256C512 114.6 397.4 0 256 0zM362.8 512c-6.6-5.9-10.8-14.4-10.8-24V448H160v40c0 9.6-4.2 18.1-10.8 24H362.8zM190.8 277.5L177 320H335l-13.8-42.5c-1.1-3.3-4.1-5.5-7.6-5.5H198.4c-3.5 0-6.5 2.2-7.6 5.5zM168 408a24 24 0 1 0 0-48 24 24 0 1 0 0 48zm200-24a24 24 0 1 0 -48 0 24 24 0 1 0 48 0z"/></svg>
+            }
+            value={`${props.favouriteCarInYearData.response?.total_distance} km`}
+            value_wrap={false}
+            title={`Dystans przejechany ulubionym autem w ${props.favouriteCarInYearData.year} roku`}
+            showProgress={false}
+            />
+            }
+            
+
+            {props.favouritePlaceInYearData.response !== null &&
+            <CardStat
+            svg={
+            <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 576 512"><path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48V96H384V80c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H432c-26.5 0-48-21.5-48-48V160H192v16c0 1.7-.1 3.4-.3 5L272 288h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H272c-26.5 0-48-21.5-48-48V336c0-1.7 .1-3.4 .3-5L144 224H48c-26.5 0-48-21.5-48-48V80z"/></svg>
+            }
+            value={`${props.favouritePlaceInYearData.response?.placeData?.projectCode}`}
+            value_wrap={false}
+            title={`Ulubiony projekt w ${props.favouritePlaceInYearData.year} roku`}
+            showProgress={false}
+            />
+            }
+
+            {props.favouritePlaceInYearData.response !== null &&
+            <CardStat
+            svg={
+            <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 640 512"><path d="M112 0C85.5 0 64 21.5 64 48V96H16c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 272c8.8 0 16 7.2 16 16s-7.2 16-16 16H64 48c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 240c8.8 0 16 7.2 16 16s-7.2 16-16 16H64 16c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 208c8.8 0 16 7.2 16 16s-7.2 16-16 16H64V416c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H112zM544 237.3V256H416V160h50.7L544 237.3zM160 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm272 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0z"/></svg>
+            }
+            value={`${props.favouritePlaceInYearData.response?.total_distance} km`}
+            value_wrap={false}
+            title={`Dystans przejechany na rzecz ulubionego projektu w ${props.favouriteCarInYearData.year} roku`}
+            showProgress={false}
+            />
+            }
+
           </div>
 
 
