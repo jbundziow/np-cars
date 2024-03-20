@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize');
 
 import { Op, Transaction } from "sequelize";
 import sequelize from "../database/database";
-const RefuelingModel = sequelize.define('Refueling', {
+export const RefuelingModel = sequelize.define('Refueling', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,

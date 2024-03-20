@@ -9,7 +9,7 @@ import getDatesForMonth from "../utilities/functions/getDateRangesForMonth";
 
 
 
-const RentalModel = sequelize.define('Rental', {
+export const RentalModel = sequelize.define('Rental', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,

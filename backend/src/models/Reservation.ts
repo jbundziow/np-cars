@@ -3,7 +3,7 @@ const {DataTypes, Op} = require('sequelize');
 
 import sequelize from "../database/database";
 import { getFormattedDate } from "../utilities/functions/getFormattedDate";
-const ReservationModel = sequelize.define('Reservation', {
+export const ReservationModel = sequelize.define('Reservation', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,

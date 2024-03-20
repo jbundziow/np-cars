@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize');
 
 import { Op } from "sequelize";
 import sequelize from "../database/database";
-const PlaceModel = sequelize.define('Place', {
+export const PlaceModel = sequelize.define('Place', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,

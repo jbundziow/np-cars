@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize');
 
 import { Op } from "sequelize";
 import sequelize from "../database/database";
-const FaultModel = sequelize.define('Fault', {
+export const FaultModel = sequelize.define('Fault', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,
