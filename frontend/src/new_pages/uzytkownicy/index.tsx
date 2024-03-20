@@ -51,7 +51,7 @@ const UserMainpage = (props: Props) => {
 
     //other data
     useEffect(() => {
-      const getData = async () => {   
+      const getData = async () => {  
        
       const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
@@ -74,7 +74,6 @@ const UserMainpage = (props: Props) => {
       const res8 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/place?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData8(res8)
                  
-        
       setLoading(false)
       }
       getData()

@@ -104,7 +104,7 @@ const PieChart = (props: PieChartProps) => {
         <div id="PieChart" className="mx-auto flex justify-center">
           <ReactApexChart
             options={options}
-            series={state.series}
+            series={state.series ? state.series : []}
             type="donut"
           />
         </div>

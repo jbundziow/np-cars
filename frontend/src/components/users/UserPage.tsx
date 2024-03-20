@@ -198,24 +198,27 @@ const UserPage = (props: UserPageProps) => {
 
           <div className="my-5 md:my-10 md:mx-2 grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5">
           <div className='col-span-12 xl:col-span-5'>
-            <PieChart
-            title={'Top 10 projektów według przejechanego dystansu'}
-            data = {props.distancePlacesData.response
-              .filter((obj: stats_oneMonthSchemaToPlaces) => obj.total_distance > 0)
-              .map((obj: stats_oneMonthSchemaToPlaces) => ({name: obj.placeData.projectCode, value: obj.total_distance, color: obj.random_color}))
-              .slice(0, 10) //limit to the first 6 elements
+            {props.distancePlacesData.response &&
+              <PieChart
+              title={'Top 10 projektów według przejechanego dystansu'}
+              data = {props.distancePlacesData.response
+                .filter((obj: stats_oneMonthSchemaToPlaces) => obj.total_distance > 0)
+                .map((obj: stats_oneMonthSchemaToPlaces) => ({name: obj.placeData.projectCode, value: obj.total_distance, color: obj.random_color}))
+                .slice(0, 10) //limit to the first 6 elements
+              }
+              />
             }
-            />
           </div>
             <div className='col-span-12 xl:col-span-7'>
-
-            <AreaChart
-            title={`Najczęściej wykorzystywane typy samochodów w ${props.distanceCarTypesYearData.year} roku`}
-            categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
-            data_passengerCar={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_passengerCar)}
-            data_bus={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_bus_and_truck)}
-            
-            />
+            {props.distanceCarTypesYearData.distance &&
+              <AreaChart
+              title={`Najczęściej wykorzystywane typy samochodów w ${props.distanceCarTypesYearData.year} roku`}
+              categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
+              data_passengerCar={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_passengerCar)}
+              data_bus={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_bus_and_truck)}
+              
+              />
+            }
             </div>
           </div>
 

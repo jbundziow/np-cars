@@ -1,5 +1,5 @@
 import { ApexOptions } from 'apexcharts';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 interface AreaChartProps {
@@ -22,7 +22,7 @@ const AreaChart = (props: AreaChartProps) => {
 
 
 
-  const [state] = useState<AreaChartState>({
+  const [state, setState] = useState<AreaChartState>({
     series: [
       {
         name: 'Samochody osobowe [km]',
@@ -35,6 +35,24 @@ const AreaChart = (props: AreaChartProps) => {
       },
     ],
   });
+
+  //handle props.data change and update chart
+  useEffect(() => {
+    setState({
+      series: [
+        {
+          name: 'Samochody osobowe [km]',
+          data: props.data_passengerCar,
+        },
+  
+        {
+          name: 'Samochody dostawcze [km]',
+          data: props.data_bus,
+        },
+      ]
+  })
+  }, [props.data_passengerCar, props.data_bus]);
+  //
 
 
 
@@ -188,7 +206,7 @@ const AreaChart = (props: AreaChartProps) => {
         <div id="AreaChart" className="-ml-5">
           <ReactApexChart
             options={options}
-            series={state.series}
+            series={state.series ? state.series : []}
             type="area"
             height={350}
           />
