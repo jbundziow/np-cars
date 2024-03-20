@@ -55,30 +55,26 @@ const UserMainpage = (props: Props) => {
        
       const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
-      if(res1.status === 'success') {
-        const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/total`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-        setData2(res2)
-        if(res2.status === 'success') {
-            const res4 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/total/year/${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-            setData4(res4)
-            if(res4.status === 'success') {
-              const res5 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance/places`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-              setData5(res5)
-              if(res5.status === 'success') {
-                const res6 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance/bycartypes?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-                setData6(res6)
-                if(res6.status === 'success') {
-                  const res7 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/car?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-                  setData7(res7)
-                  if(res7.status === 'success') {
-                    const res8 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/place?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
-                    setData8(res8)
-                  }
-                }
-              }
-            }
-          }
-        }
+      
+      const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/total`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData2(res2)
+      
+      const res4 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/total/year/${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData4(res4)
+      
+      const res5 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance/places`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData5(res5)
+      
+      const res6 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance/bycartypes?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData6(res6)
+      
+      const res7 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/car?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData7(res7)
+      
+      const res8 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/place?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      setData8(res8)
+                 
+        
       setLoading(false)
       }
       getData()
