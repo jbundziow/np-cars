@@ -144,6 +144,12 @@ export const fetchTotalTravelledDistanceByUser_GET_user = async (req: Request, r
 
 
     try {
+        const isUserExist = await User.fetchOne(Number(req.params.userid), true);
+        if(!isUserExist) {
+            res.status(404).json({status: 'fail', data: [{en: 'User with this ID does not exist.', pl: 'Użytkownik o podanym ID nie istnieje.'}]})
+            return;
+        }
+        
         const dbResponse = await Rental.getTotalDistanceForUserByMonthInYear(Number(req.params.userid), Number(query.year));
         res.status(200).json({
             status: 'success',
@@ -162,5 +168,163 @@ export const fetchTotalTravelledDistanceByUser_GET_user = async (req: Request, r
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const fetchTotalTravelledDistanceByUserByCarTypes_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+
+    if(!req.params.userid || isNaN(Number(req.params.userid))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
+        return;
+    }
+    if(!query.year || isNaN(Number(query.year))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong year.', pl: 'Podano zły rok.'}]})
+        return;
+    }
+
+
+    try {
+        const isUserExist = await User.fetchOne(Number(req.params.userid), true);
+        if(!isUserExist) {
+            res.status(404).json({status: 'fail', data: [{en: 'User with this ID does not exist.', pl: 'Użytkownik o podanym ID nie istnieje.'}]})
+            return;
+        }
+
+        const dbResponse = await Rental.getTotalDistanceForUserByMonthInYearAndCarType(Number(req.params.userid), Number(query.year));
+        res.status(200).json({
+            status: 'success',
+            data: {
+                userid: Number(req.params.userid),
+                year: Number(query.year),
+                distance: dbResponse,
+            }
+        })
+        return;
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({status: 'error', data: error})
+        return;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const fetchTotalTravelledDistanceForAllPlacesByUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+
+    if(!req.params.userid || isNaN(Number(req.params.userid))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
+        return;
+    }
+
+
+    try {
+        const isUserExist = await User.fetchOne(Number(req.params.userid), true);
+        if(!isUserExist) {
+            res.status(404).json({status: 'fail', data: [{en: 'User with this ID does not exist.', pl: 'Użytkownik o podanym ID nie istnieje.'}]})
+            return;
+        }
+
+        const dbResponse = await Rental.getTotalDistanceForAllPlacesOfUser(Number(req.params.userid));
+        res.status(200).json({
+            status: 'success',
+            data: {
+                userid: Number(req.params.userid),
+                response: dbResponse,
+            }
+        })
+        return;
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({status: 'error', data: error})
+        return;
+    }
+
+}
+
+
+
+
+
+
+
+
+
+export const fetchFavouriteCarOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    const query = req.query;
+
+    if(!req.params.userid || isNaN(Number(req.params.userid))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
+        return;
+    }
+    if(query.year && isNaN(Number(query.year))) {
+        res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong year.', pl: 'Podano zły rok.'}]})
+        return;
+    }
+
+
+    try {
+        const isUserExist = await User.fetchOne(Number(req.params.userid), true);
+        if(!isUserExist) {
+            res.status(404).json({status: 'fail', data: [{en: 'User with this ID does not exist.', pl: 'Użytkownik o podanym ID nie istnieje.'}]})
+            return;
+        }
+        const dbResponse = await Rental.getCarWithGreatestSummarizedDistanceOfUser(Number(req.params.userid), query.year ? Number(query.year) : null);
+        res.status(200).json({
+            status: 'success',
+            data: {
+                userid: Number(req.params.userid),
+                year: query.year ? Number(query.year) : null,
+                response: dbResponse,
+            }
+        })
+        return;
+    }
+    catch (error) {
+        console.log(error);
+        res.status(500).json({status: 'error', data: error})
+        return;
+    }
+
+}
+
 
 

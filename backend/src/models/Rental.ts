@@ -2,8 +2,11 @@ const {DataTypes, Op} = require('sequelize');
 
 import { Model, fn, literal } from "sequelize";
 import sequelize from "../database/database";
-import { CarModel } from "./Car";
+import Car, { CarModel } from "./Car";
 import getDatesForMonth from "../utilities/functions/getDateRangesForMonth";
+import Place, { PlaceModel } from "./Place";
+import getRandomColor from "../utilities/functions/getRandomColor";
+import getDateRangesForYear from "../utilities/functions/getDateRangesForYear";
 
 
 
@@ -728,7 +731,6 @@ class Rental {
         return false;
       }
     }
-  
 
 
 
@@ -747,7 +749,7 @@ class Rental {
 
 
 
-    
+
 
     static getTotalDistanceForUserByMonthInYear = async (userID: number, year: number) => {
       const totalDistances: any[] = [];
@@ -773,8 +775,178 @@ class Rental {
     
       return totalDistances;
     };
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     
+
+    static getTotalDistanceForUserByMonthInYearAndCarType = async (userID: number, year: number) => {
+
+      const allCars = await Car.fetchAll(true);
+      const passengerCarIDs = allCars.filter((car: any) => car.type === 'passengerCar').map((car: any) => car.id);
+      const busAndTruckIDs = allCars.filter((car: any) => car.type === 'bus' || car.type === 'truck').map((car: any) => car.id);
+
+
+
+      const totalDistances: any[] = [];
     
+      for (let month = 0; month < 12; month++) {
+        const { startDate, endDate } = getDatesForMonth(year, month);
+    
+        const total_distance_passengerCar = await RentalModel.sum('distance', {
+          where: {
+            carID: passengerCarIDs,
+            userID: userID,
+            dateTo: {
+              [Op.between]: [startDate, endDate]
+            }
+          }
+        });
+
+        const total_distance_bus_and_truck = await RentalModel.sum('distance', {
+          where: {
+            carID: busAndTruckIDs,
+            userID: userID,
+            dateTo: {
+              [Op.between]: [startDate, endDate]
+            }
+          }
+        });
+    
+        totalDistances.push({
+          month_num: month,
+          month_text: new Date(year, month).toLocaleString('en-US', { month: 'long' }),
+          total_distance_passengerCar: total_distance_passengerCar || 0,
+          total_distance_bus_and_truck: total_distance_bus_and_truck || 0,
+        });
+      }
+    
+      return totalDistances;
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    static getTotalDistanceForAllPlacesOfUser = async (userID: number) => {
+
+      const allPlaces = await PlaceModel.findAll({attributes: ['id', 'projectCode']});
+      const placeIDs = allPlaces.map((place: any) => place.id);
+
+      const totalDistances: any[] = [];
+
+      for await (const placeID of placeIDs) {
+
+        const total_distance = await RentalModel.sum('distance', {
+        where: {
+          placeID: placeID,
+          userID: userID,
+        }
+        });
+      
+        totalDistances.push({
+        placeData: allPlaces.filter((place: any) => place.id === placeID)[0] || null,
+        total_distance: total_distance || 0,
+        random_color: getRandomColor(),
+        });
+      
+      }
+
+      totalDistances.sort((a, b) => b.total_distance - a.total_distance);
+    
+      return totalDistances;
+    };
+
+
+
+
+
+
+
+
+
+
+    static getCarWithGreatestSummarizedDistanceOfUser = async (userID: number, year: number | null) => {
+      try {
+        let whereClause: any = {userID: userID};
+        if(year) {
+          const {startDate, endDate} = getDateRangesForYear(year);
+          whereClause.dateTo = {[Op.between]: [startDate, endDate]};
+        }
+
+        const result = await RentalModel.findOne({
+          where: whereClause,
+          attributes: [
+            'carID',
+            [sequelize.fn('SUM', sequelize.col('distance')), 'summarizedDistance']
+          ],
+          group: ['carID'],
+          order: [[sequelize.literal('summarizedDistance'), 'DESC']],
+          limit: 1,
+        });
+
+
+        let carData = null;
+        if(result && result.dataValues.carID) {
+          carData = await Car.fetchOneBasicData(result.dataValues.carID, true);
+        }
+    
+        return result ? { carData, summarizedDistance: result.get('summarizedDistance') } : null;
+      } catch (error) {
+        console.log(error);
+        throw new Error('Error occurred while fetching car with greatest summarized distance.');
+      }
+    };
+
+
+
+
+
 
 
 
@@ -793,29 +965,6 @@ class Rental {
 
 
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

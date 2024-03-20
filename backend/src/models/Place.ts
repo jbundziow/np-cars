@@ -80,6 +80,15 @@ class Place {
       }
     }
 
+    static async fetchAll(showBanned: boolean) {
+      if(showBanned) {
+        return await PlaceModel.findAll()
+      }
+      else {
+        return await PlaceModel.findAll({where: {status: { [Op.ne]: 'banned' }}})
+      }
+    }
+
 
 
 
