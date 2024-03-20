@@ -876,6 +876,7 @@ class Rental {
     static getTotalDistanceForAllPlacesOfUser = async (userID: number) => {
 
       const allPlaces = await PlaceModel.findAll({attributes: ['id', 'projectCode']});
+      if(allPlaces.length === 0) {return []}
       const placeIDs = allPlaces.map((place: any) => place.id);
 
       const totalDistances: any[] = [];
@@ -936,7 +937,7 @@ class Rental {
           carData = await Car.fetchOneBasicData(result.dataValues.carID, true);
         }
     
-        return result ? { carData, summarizedDistance: result.get('summarizedDistance') } : null;
+        return result ? { carData, total_distance: result.get('summarizedDistance') || 0 } : null;
       } catch (error) {
         console.log(error);
         throw new Error('Error occurred while fetching car with greatest summarized distance.');
@@ -985,7 +986,7 @@ class Rental {
           placeData = await PlaceModel.findOne({where: { id: result.dataValues.placeID }, attributes: ['id', 'projectCode'] });
         }
     
-        return result ? { placeData, summarizedDistance: result.get('summarizedDistance') } : null;
+        return result ? { placeData, total_distance: result.get('summarizedDistance') || 0 } : null;
       } catch (error) {
         console.log(error);
         throw new Error('Error occurred while fetching place with greatest summarized distance.');

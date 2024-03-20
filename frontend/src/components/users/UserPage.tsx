@@ -5,7 +5,7 @@ import DOMAIN_NAME from '../../utilities/domainName';
 import BarChart from '../general/charts/BarChart';
 import { db_User } from '../../types/db_types';
 import useAuth from '../../hooks/useAuth';
-import { stats_UserDistanceInYear, stats_UserDistanceInYear_oneMonthSchema } from '../../types/stats';
+import { stats_UserDistanceInYear, stats_oneMonthSchema } from '../../types/user_stats';
 import { Link } from 'react-router-dom';
 import CardStat from '../general/CardStat';
 import PieChart from '../general/charts/PieChart';
@@ -23,8 +23,6 @@ type UserPageProps = {
 const UserPage = (props: UserPageProps) => {
 
   const { auth } = useAuth();
-
-
 
   return (
   
@@ -127,7 +125,7 @@ const UserPage = (props: UserPageProps) => {
           <div className="my-5 md:my-10 md:mx-2">
 
           {/* key={props.statsData.key} */}
-          <BarChart title={'Przejechane kilometry'} data={props.statsData.distance.map((obj: stats_UserDistanceInYear_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
+          <BarChart title={'Przejechane kilometry'} data={props.statsData.distance.map((obj: stats_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
           </div>
 
 

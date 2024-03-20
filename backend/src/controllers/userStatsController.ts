@@ -29,13 +29,19 @@ export const fetchTotalStatsOfUser_GET_user = async (req: Request, res: Response
         const total_reservations = await ReservationModel.count({where: {userID: Number(req.params.userid)}});
         const total_refuelings = await RefuelingModel.count({where: {userID: Number(req.params.userid)}});
         const total_faults = await FaultModel.count({where: {userID: Number(req.params.userid)}});
+        const total_distance = await RentalModel.sum('distance', {where: {userID: Number(req.params.userid) }}) || 0;
+        const total_number_of_refueled_liters = await RefuelingModel.sum('numberOfLiters', {where: {userID: Number(req.params.userid) }}) || 0;
+        const total_costBrutto_of_fuel = await RefuelingModel.sum('costBrutto', {where: {userID: Number(req.params.userid) }}) || 0;
     
     res.status(200).json({status: 'success', data: {
-        userID: Number(req.params.userid),
+        userid: Number(req.params.userid),
         total_rentals,
         total_reservations,
         total_refuelings,
-        total_faults
+        total_faults,
+        total_distance,
+        total_number_of_refueled_liters,
+        total_costBrutto_of_fuel,
     }})
     }
     catch (error) {
