@@ -913,7 +913,7 @@ class Rental {
 
     static getCarWithGreatestSummarizedDistanceOfUser = async (userID: number, year: number | null) => {
       try {
-        let whereClause: any = {userID: userID};
+        let whereClause: any = {userID: userID, carID: {[Op.ne]: null}};
         if(year) {
           const {startDate, endDate} = getDateRangesForYear(year);
           whereClause.dateTo = {[Op.between]: [startDate, endDate]};
@@ -940,6 +940,55 @@ class Rental {
       } catch (error) {
         console.log(error);
         throw new Error('Error occurred while fetching car with greatest summarized distance.');
+      }
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    static getPlaceWithGreatestSummarizedDistanceOfUser = async (userID: number, year: number | null) => {
+      try {
+        let whereClause: any = {userID: userID, placeID: {[Op.ne]: null}};
+        if(year) {
+          const {startDate, endDate} = getDateRangesForYear(year);
+          whereClause.dateTo = {[Op.between]: [startDate, endDate]};
+        }
+
+        const result = await RentalModel.findOne({
+          where: whereClause,
+          attributes: [
+            'placeID',
+            [sequelize.fn('SUM', sequelize.col('distance')), 'summarizedDistance']
+          ],
+          group: ['placeID'],
+          order: [[sequelize.literal('summarizedDistance'), 'DESC']],
+          limit: 1,
+        });
+
+        let placeData = null;
+        if(result && result.dataValues.placeID) {
+          placeData = await PlaceModel.findOne({where: { id: result.dataValues.placeID }, attributes: ['id', 'projectCode'] });
+        }
+    
+        return result ? { placeData, summarizedDistance: result.get('summarizedDistance') } : null;
+      } catch (error) {
+        console.log(error);
+        throw new Error('Error occurred while fetching place with greatest summarized distance.');
       }
     };
 
