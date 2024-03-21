@@ -3,6 +3,7 @@ import { lazy } from 'react';
 
 
 
+
 const FutureReservations = lazy(() => import('../new_pages/rezerwacje/przyszle-rezerwacje'));
 const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
 const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje/index'));
@@ -34,6 +35,7 @@ const CarsList = lazy(() => import('../new_pages/samochody/zestawienie'));
 const CarsInspections = lazy(() => import('../new_pages/samochody/przeglady'));
 const CarsInsurances = lazy(() => import('../new_pages/samochody/ubezpieczenia'));
 const PlacesList = lazy(() => import('../new_pages/projekty/zestawienie'));
+const PlaceMainpage = lazy(() => import('../new_pages/projekty'));
 
 
 //TODO: DELETE IT LATER
@@ -219,6 +221,11 @@ const coreRoutes = [
     path: '/projekty/zestawienie',
     title: 'Lista projektów',
     component: PlacesList,
+  },
+  {
+    path: '/projekty/:placeid',
+    title: 'Profil projektu',
+    component: PlaceMainpage,
   },
 
 
