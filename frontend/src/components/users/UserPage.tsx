@@ -216,7 +216,7 @@ const UserPage = (props: UserPageProps) => {
             
           </div>
             <div className='col-span-12 xl:col-span-7'>
-            {props.distanceCarTypesYearData.distance &&
+
               <AreaChart
               title={`Najczęściej wykorzystywane typy samochodów w ${props.distanceCarTypesYearData.year} roku`}
               categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
@@ -224,7 +224,7 @@ const UserPage = (props: UserPageProps) => {
               data_bus={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_bus_and_truck)}
               
               />
-            }
+
             </div>
           </div>
 

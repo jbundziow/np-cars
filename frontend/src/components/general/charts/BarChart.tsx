@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import ReactApexChart from 'react-apexcharts';
 
 interface BarChartState {
+  key: number;
   series: { name: string, data: number[] }[];
 }
 
@@ -20,6 +21,7 @@ const BarChart = (props: BarChartProps) => {
   
 
   const [state, setState] = useState<BarChartState>({
+    key: 0,
     series: [
       {
         name: '', //tooltip for 'y'
@@ -33,7 +35,9 @@ const BarChart = (props: BarChartProps) => {
   
   //handle props.data change and update chart
   useEffect(() => {
-    setState({series: [
+    setState({
+      key: 1,
+      series: [
                 {
                   name: '',
                   data: props.data,
@@ -188,8 +192,9 @@ const BarChart = (props: BarChartProps) => {
       <div className="mb-2">
         <div id="chartFour" className="-ml-5">
           <ReactApexChart
+            key={state.key}
             options={options}
-            series={state.series}
+            series={state.series ? state.series : []}
             type="bar"
             height={350}
           />

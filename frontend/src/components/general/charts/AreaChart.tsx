@@ -10,19 +10,21 @@ interface AreaChartProps {
 }
 
 interface AreaChartState {
+  key: number,
   series: {
     name: string;
     data: number[];
-  }[];
+  }[],
+  options: ApexOptions,
 }
 
 const AreaChart = (props: AreaChartProps) => {
 
 
 
-
-
   const [state, setState] = useState<AreaChartState>({
+    key: 0,
+
     series: [
       {
         name: 'Samochody osobowe [km]',
@@ -34,11 +36,107 @@ const AreaChart = (props: AreaChartProps) => {
         data: props.data_bus,
       },
     ],
+
+    options: {
+      legend: {
+        show: false,
+        position: 'top',
+        horizontalAlign: 'left',
+      },
+      colors: ['#3C50E0', '#80CAEE'],
+      chart: {
+        fontFamily: 'Satoshi, sans-serif',
+        height: 335,
+        type: 'area',
+        dropShadow: {
+          enabled: true,
+          color: '#623CEA14',
+          top: 10,
+          blur: 4,
+          left: 0,
+          opacity: 0.1,
+        },
+    
+        toolbar: {
+          show: false,
+        },
+      },
+      responsive: [
+        {
+          breakpoint: 1024,
+          options: {
+            chart: {
+              height: 300,
+            },
+          },
+        },
+        {
+          breakpoint: 1366,
+          options: {
+            chart: {
+              height: 350,
+            },
+          },
+        },
+      ],
+      stroke: {
+        width: [2, 2],
+        curve: 'straight',
+      },
+      grid: {
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: true,
+          },
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+      markers: {
+        size: 4,
+        colors: '#fff',
+        strokeColors: ['#3056D3', '#80CAEE'],
+        strokeWidth: 3,
+        strokeOpacity: 0.9,
+        strokeDashArray: 0,
+        fillOpacity: 1,
+        discrete: [],
+        hover: {
+          size: undefined,
+          sizeOffset: 5,
+        },
+      },
+      xaxis: {
+        type: 'category',
+        categories: props.categories,
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+      },
+      yaxis: {
+        title: {
+          style: {
+            fontSize: '0px',
+          },
+        },
+      },
+    }
+
   });
 
   //handle props.data change and update chart
   useEffect(() => {
     setState({
+      key: 1,
       series: [
         {
           name: 'Samochody osobowe [km]',
@@ -49,121 +147,20 @@ const AreaChart = (props: AreaChartProps) => {
           name: 'Samochody dostawcze [km]',
           data: props.data_bus,
         },
-      ]
+      ],
+      options: {... state.options, xaxis: {
+        type: 'category',
+        categories: props.categories,
+        axisBorder: {
+          show: false,
+        },
+        axisTicks: {
+          show: false,
+        },
+      },}
   })
-  }, [props.data_passengerCar, props.data_bus]);
-  //
-
-
-
-
-
-
-
-
-
-  const options: ApexOptions = {
-    legend: {
-      show: false,
-      position: 'top',
-      horizontalAlign: 'left',
-    },
-    colors: ['#3C50E0', '#80CAEE'],
-    chart: {
-      fontFamily: 'Satoshi, sans-serif',
-      height: 335,
-      type: 'area',
-      dropShadow: {
-        enabled: true,
-        color: '#623CEA14',
-        top: 10,
-        blur: 4,
-        left: 0,
-        opacity: 0.1,
-      },
-  
-      toolbar: {
-        show: false,
-      },
-    },
-    responsive: [
-      {
-        breakpoint: 1024,
-        options: {
-          chart: {
-            height: 300,
-          },
-        },
-      },
-      {
-        breakpoint: 1366,
-        options: {
-          chart: {
-            height: 350,
-          },
-        },
-      },
-    ],
-    stroke: {
-      width: [2, 2],
-      curve: 'straight',
-    },
-    // labels: {
-    //   show: false,
-    //   position: "top",
-    // },
-    grid: {
-      xaxis: {
-        lines: {
-          show: true,
-        },
-      },
-      yaxis: {
-        lines: {
-          show: true,
-        },
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    markers: {
-      size: 4,
-      colors: '#fff',
-      strokeColors: ['#3056D3', '#80CAEE'],
-      strokeWidth: 3,
-      strokeOpacity: 0.9,
-      strokeDashArray: 0,
-      fillOpacity: 1,
-      discrete: [],
-      hover: {
-        size: undefined,
-        sizeOffset: 5,
-      },
-    },
-    xaxis: {
-      type: 'category',
-      categories: props.categories,
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-    },
-    yaxis: {
-      title: {
-        style: {
-          fontSize: '0px',
-        },
-      },
-      // min: 0,
-      // max: 100,
-    },
-  };
-
-
-
+  }, [props.data_passengerCar, props.data_bus, props.categories]);
+//
 
 
 
@@ -205,7 +202,8 @@ const AreaChart = (props: AreaChartProps) => {
       <div>
         <div id="AreaChart" className="-ml-5">
           <ReactApexChart
-            options={options}
+            key={state.key}
+            options={state.options ? state.options : {}}
             series={state.series ? state.series : []}
             type="area"
             height={350}
