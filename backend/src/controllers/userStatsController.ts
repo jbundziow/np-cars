@@ -40,8 +40,8 @@ export const fetchTotalStatsOfUser_GET_user = async (req: Request, res: Response
         total_refuelings,
         total_faults,
         total_distance,
-        total_number_of_refueled_liters,
-        total_costBrutto_of_fuel,
+        total_number_of_refueled_liters: Number(total_number_of_refueled_liters.toFixed(2)),
+        total_costBrutto_of_fuel: Number(total_costBrutto_of_fuel.toFixed(2)),
     }})
     }
     catch (error) {
@@ -112,8 +112,8 @@ export const fetchTotalStatsOfUserInYear_GET_user = async (req: Request, res: Re
             total_refuelings: {currentYear: total_refuelings_currentYear, previousYear: total_refuelings_previousYear},
             total_faults: {currentYear: total_faults_currentYear, previousYear: total_faults_previousYear},
             total_distance: {currentYear: total_distance_currentYear, previousYear: total_distance_previousYear},
-            total_number_of_refueled_liters: {currentYear: total_number_of_refueled_liters_currentYear, previousYear: total_number_of_refueled_liters_previousYear},
-            total_costBrutto_of_fuel: {currentYear: total_costBrutto_of_fuel_currentYear, previousYear: total_costBrutto_of_fuel_previousYear},
+            total_number_of_refueled_liters: {currentYear: Number(total_number_of_refueled_liters_currentYear.toFixed(2)), previousYear: Number(total_number_of_refueled_liters_previousYear.toFixed(2))},
+            total_costBrutto_of_fuel: {currentYear: Number(total_costBrutto_of_fuel_currentYear.toFixed(2)), previousYear: Number(total_costBrutto_of_fuel_previousYear.toFixed(2))},
             }
 
 

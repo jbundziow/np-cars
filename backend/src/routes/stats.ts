@@ -1,6 +1,7 @@
 import express from 'express'
 import { fetchFavouriteCarOfUser_GET_user, fetchFavouritePlaceOfUser_GET_user, fetchTotalStatsOfUserInYear_GET_user, fetchTotalStatsOfUser_GET_user, fetchTotalTravelledDistanceByUserByCarTypes_GET_user, fetchTotalTravelledDistanceByUser_GET_user, fetchTotalTravelledDistanceForAllPlacesByUser_GET_user } from '../controllers/userStatsController';
 import { fetchFavouriteCarOfPlace_GET_user, fetchFavouriteUserOfPlace_GET_user, fetchTotalStatsOfPlaceInYear_GET_user, fetchTotalStatsOfPlace_GET_user, fetchTotalTravelledDistanceByPlaceByCarTypes_GET_user, fetchTotalTravelledDistanceByPlace_GET_user, fetchTotalTravelledDistanceForAllCarsByPlace_GET_user, fetchTotalTravelledDistanceForAllUsersByPlace_GET_user } from '../controllers/placeStatsController';
+import { fetchFavouritePlaceOfCar_GET_user, fetchFavouriteUserOfCar_GET_user, fetchFuelUsageForCarForTwoYears_GET_user, fetchTotalStatsOfCarInYear_GET_user, fetchTotalStatsOfCar_GET_user, fetchTotalTravelledDistanceByCar_GET_user, fetchTotalTravelledDistanceForAllPlacesByCar_GET_user, fetchTotalTravelledDistanceForAllUsersByCar_GET_user } from '../controllers/carsStatsController';
 
 
 const app = express.Router();
@@ -25,6 +26,19 @@ app.get('/places/:placeid/distance/users', fetchTotalTravelledDistanceForAllUser
 app.get('/places/:placeid/distance/cars', fetchTotalTravelledDistanceForAllCarsByPlace_GET_user);
 app.get('/places/:placeid/favourite/car', fetchFavouriteCarOfPlace_GET_user);
 app.get('/places/:placeid/favourite/user', fetchFavouriteUserOfPlace_GET_user);
+
+
+
+
+//car
+app.get('/cars/:carid/total', fetchTotalStatsOfCar_GET_user);
+app.get('/cars/:carid/total/year/:year', fetchTotalStatsOfCarInYear_GET_user);
+app.get('/cars/:carid/distance', fetchTotalTravelledDistanceByCar_GET_user);
+app.get('/cars/:carid/fuelusage/year/:year', fetchFuelUsageForCarForTwoYears_GET_user);
+app.get('/cars/:carid/distance/places', fetchTotalTravelledDistanceForAllPlacesByCar_GET_user);
+app.get('/cars/:carid/distance/users', fetchTotalTravelledDistanceForAllUsersByCar_GET_user);
+app.get('/cars/:carid/favourite/user', fetchFavouriteUserOfCar_GET_user);
+app.get('/cars/:carid/favourite/place', fetchFavouritePlaceOfCar_GET_user);
 
 
 

@@ -1,9 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
 import Rental, { RentalModel } from '../models/Rental';
-import Reservation, { ReservationModel } from '../models/Reservation';
-import Refueling, { RefuelingModel } from '../models/Refueling';
-import Fault, { FaultModel } from '../models/Fault';
-import User from '../models/User';
 import getDateRangesForYear from '../utilities/functions/getDateRangesForYear';
 import { Op } from 'sequelize';
 import Place from '../models/Place';

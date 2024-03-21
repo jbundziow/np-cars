@@ -4,6 +4,7 @@ const {DataTypes} = require('sequelize');
 
 import { Op, Transaction } from "sequelize";
 import sequelize from "../database/database";
+import getDatesForMonth from "../utilities/functions/getDateRangesForMonth";
 export const RefuelingModel = sequelize.define('Refueling', {
     id: {
         type: DataTypes.INTEGER,
@@ -665,9 +666,117 @@ class Refueling {
     }
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   static async fetchNumberOfRefuelingsAssociatedWithCar (carID: number) {
     return await RefuelingModel.count({ where: { carID: carID } })
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  static getAverageFuelUsageForCarByMonthForTwoYears = async (carID: number, year: number) => {
+
+
+    const totalData: any[] = [];
+  
+    for (let month = 0; month < 12; month++) {
+      const { startDate: currentYear_startDate, endDate: currentYear_endDate } = getDatesForMonth(year, month);
+      const { startDate: previousYear_startDate, endDate: previousYear_endDate } = getDatesForMonth(year-1, month);
+
+      const currentYear_whereClause = {
+        averageConsumption: {[Op.ne]: null},
+        carID: carID,
+        refuelingDate: {
+          [Op.between]: [currentYear_startDate, currentYear_endDate]
+        }
+      }
+
+      const previousYear_whereClause = {
+        averageConsumption: {[Op.ne]: null},
+        carID: carID,
+        refuelingDate: {
+          [Op.between]: [previousYear_startDate, previousYear_endDate]
+        }
+      }
+
+      
+      
+
+      const total_fuelusage_current_year = await RefuelingModel.sum('averageConsumption', {
+        where: currentYear_whereClause
+      });
+      const number_of_refuelings_current_year = await RefuelingModel.count({where: currentYear_whereClause});
+      let average_fuelusage_current_year: number | null;
+      if(total_fuelusage_current_year > 0 && number_of_refuelings_current_year > 0) {
+        average_fuelusage_current_year = total_fuelusage_current_year / number_of_refuelings_current_year;
+      }
+      else {
+        average_fuelusage_current_year = null;
+      }
+     
+
+
+
+      const total_fuelusage_previous_year = await RefuelingModel.sum('averageConsumption', {
+        where: previousYear_whereClause
+      });
+      const number_of_refuelings_previous_year = await RefuelingModel.count({where: currentYear_whereClause});
+      let average_fuelusage_previous_year: number | null;
+      if(total_fuelusage_previous_year > 0 && number_of_refuelings_previous_year > 0) {
+        average_fuelusage_previous_year = total_fuelusage_previous_year / number_of_refuelings_previous_year;
+      }
+      else {
+        average_fuelusage_previous_year = null;
+      }
+
+
+
+
+  
+      totalData.push({
+        month_num: month,
+        month_text: new Date(year, month).toLocaleString('en-US', { month: 'long' }),
+        average_fuelusage_current_year,
+        average_fuelusage_previous_year,
+      });
+    }
+  
+    return totalData;
+  };
   
 
 
