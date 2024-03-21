@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt')
 import { Op } from "sequelize";
 import sequelize from "../database/database";
 
-const UserModel = sequelize.define('User', {
+export const UserModel = sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
       allowNull: false,
