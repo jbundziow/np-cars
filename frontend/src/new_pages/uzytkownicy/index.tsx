@@ -52,6 +52,7 @@ const UserMainpage = (props: Props) => {
     //other data
     useEffect(() => {
       const getData = async () => {  
+      setLoading(true)
        
       const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
@@ -73,14 +74,15 @@ const UserMainpage = (props: Props) => {
       
       const res8 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/place?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData8(res8)
-                 
+
+      if(res1.status === 'success' && res2.status === 'success' && res4.status === 'success' && res5.status === 'success' && res6.status === 'success' && res7.status === 'success' && res8.status === 'success') {
       setLoading(false)
+      }
       }
       getData()
     }, [params.userid])
 
     
-
     return (
       <>
       <Breadcrumb pageName="Profil użytkownika" />

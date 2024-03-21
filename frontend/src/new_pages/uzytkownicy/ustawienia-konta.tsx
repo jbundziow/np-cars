@@ -44,7 +44,6 @@ const UserSettings = (props: Props) => {
       getData()
     }, [])
 
-    
 
     return (
       <>

@@ -1,7 +1,10 @@
 const getRandomColor = (): string => {
-    const randomColor = '#' + Math.floor(Math.random()*16777215).toString(16);
-    return `bg-[${randomColor}]`;
-  };
+  let randomColor;
+  do {
+      randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16);
+  } while (randomColor.length !== 7);
   
-  export default getRandomColor;
-  
+  return `bg-[${randomColor}]`;
+};
+
+export default getRandomColor;
