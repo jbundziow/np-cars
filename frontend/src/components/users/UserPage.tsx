@@ -202,13 +202,13 @@ const UserPage = (props: UserPageProps) => {
           <div className='col-span-12 xl:col-span-5'>
             
               <PieChart
-              title={'Top 6 projektów według przejechanego dystansu'}
+              title={'Top 10 projektów według przejechanego dystansu'}
               data = {
                 props.distancePlacesData.response && props.distancePlacesData.response.length > 0 ?
                 props.distancePlacesData.response
                 .filter((obj: stats_oneMonthSchemaToPlaces) => obj.total_distance > 0)
                 .map((obj: stats_oneMonthSchemaToPlaces) => ({name: obj.placeData.projectCode, value: obj.total_distance, color: obj.random_color}))
-                .slice(0, 6) //limit to the first 6 elements
+                .slice(0, 10) //limit to the first 10 elements
                 :
                 []
               }
@@ -218,10 +218,12 @@ const UserPage = (props: UserPageProps) => {
             <div className='col-span-12 xl:col-span-7'>
 
               <AreaChart
-              title={`Najczęściej wykorzystywane typy samochodów w ${props.distanceCarTypesYearData.year} roku`}
+              title={`Najczęściej wykorzystywane typy samochodów w ${props.distanceCarTypesYearData.year} roku według przejechanego dystansu`}
               categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
-              data_passengerCar={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_passengerCar)}
-              data_bus={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_bus_and_truck)}
+              label1={'Samochody osobowe'}
+              label2={'Samochody ciężarowe'}
+              data1={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_passengerCar)}
+              data2={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_bus_and_truck)}
               
               />
 
