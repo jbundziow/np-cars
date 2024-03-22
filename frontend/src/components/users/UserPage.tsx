@@ -131,6 +131,7 @@ const UserPage = (props: UserPageProps) => {
                 <span className="text-sm">Tankowań samochodów</span>
               </div>
             </div>
+            
 
           <div className="my-5 md:my-10 md:mx-2">
 
@@ -198,6 +199,11 @@ const UserPage = (props: UserPageProps) => {
           </div>
 
 
+          <div className="inline-block rounded-lg border border-stroke p-5 shadow-1 dark:border-strokedark dark:bg-[#37404F] mt-5 md:mt-10">
+            <p className="text-black dark:text-white text-xs sm:text-base">Przejechany dystans łącznie przez tego użytkownika w całej historii aplikacji: <span className="font-semibold">{props.totalData.total_distance} km</span></p>
+          </div>
+
+
           <div className="my-5 md:my-10 md:mx-2 grid grid-cols-12 gap-4 md:gap-6 2xl:gap-7.5">
           <div className='col-span-12 xl:col-span-5'>
             
@@ -221,7 +227,7 @@ const UserPage = (props: UserPageProps) => {
               title={`Najczęściej wykorzystywane typy samochodów w ${props.distanceCarTypesYearData.year} roku według przejechanego dystansu`}
               categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
               label1={'Samochody osobowe'}
-              label2={'Samochody ciężarowe'}
+              label2={'Samochody dostawcze'}
               data1={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_passengerCar)}
               data2={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_bus_and_truck)}
               

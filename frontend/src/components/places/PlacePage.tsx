@@ -1,4 +1,4 @@
-import CoverOne from '../../images/cover/spawacz-cover.jpg';
+import CoverOne from '../../images/cover/industry-cover.jpg';
 import BarChart from '../general/charts/BarChart';
 import useAuth from '../../hooks/useAuth';
 import { Link } from 'react-router-dom';
@@ -6,7 +6,8 @@ import CardStat from '../general/CardStat';
 import PieChart from '../general/charts/PieChart';
 import AreaChart from '../general/charts/AreaChart';
 import { db_Place } from '../../types/db_types';
-import { stats_DistanceToPlacesByCars, stats_DistanceToPlacesByUsers, stats_PlaceDistanceInYearByCarTypes, stats_PlaceFavouriteCar, stats_PlaceFavouriteUser, stats_PlaceTotalStats, stats_PlaceTotalStatsInYear, stats_PlacesDistanceInYear, stats_oneMonthSchema, stats_oneMonthSchemaByCarTypes, stats_oneMonthSchemaToUsers } from '../../types/places_stats';
+import { stats_DistanceToPlacesByCars, stats_DistanceToPlacesByUsers, stats_PlaceDistanceInYearByCarTypes, stats_PlaceFavouriteCar, stats_PlaceFavouriteUser, stats_PlaceTotalStats, stats_PlaceTotalStatsInYear, stats_PlacesDistanceInYear, stats_oneMonthSchema, stats_oneMonthSchemaByCarTypes, stats_oneMonthSchemaToPlacesByCars, stats_oneMonthSchemaToUsers } from '../../types/places_stats';
+import { dateFormatter } from '../../utilities/dateFormatter';
 
 
 
@@ -46,47 +47,13 @@ const PlacePage = (props: PlacePageProps) => {
 
         </div>
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
-          {/* <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
-            <div className="relative drop-shadow-2">
-              <img className="bg-cover bg-top-center rounded-[50%]" src={`${DOMAIN_NAME}${props.imgPath}` || UnknownCarImg} alt="Avatar użytkownika"/>
 
-              {Number(auth.userID) === props.userData.id || auth.userRole === 'admin' ?
-              <Link
-                to={`/uzytkownicy/ustawienia-konta/${props.userData.id}`}
-                className="absolute bottom-0 right-0 flex h-8.5 w-8.5 cursor-pointer items-center justify-center rounded-full bg-primary text-white hover:bg-opacity-90 sm:bottom-2 sm:right-2"
-              >
-                <svg
-                  className="fill-current"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 14 14"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M4.76464 1.42638C4.87283 1.2641 5.05496 1.16663 5.25 1.16663H8.75C8.94504 1.16663 9.12717 1.2641 9.23536 1.42638L10.2289 2.91663H12.25C12.7141 2.91663 13.1592 3.101 13.4874 3.42919C13.8156 3.75738 14 4.2025 14 4.66663V11.0833C14 11.5474 13.8156 11.9925 13.4874 12.3207C13.1592 12.6489 12.7141 12.8333 12.25 12.8333H1.75C1.28587 12.8333 0.840752 12.6489 0.512563 12.3207C0.184375 11.9925 0 11.5474 0 11.0833V4.66663C0 4.2025 0.184374 3.75738 0.512563 3.42919C0.840752 3.101 1.28587 2.91663 1.75 2.91663H3.77114L4.76464 1.42638ZM5.56219 2.33329L4.5687 3.82353C4.46051 3.98582 4.27837 4.08329 4.08333 4.08329H1.75C1.59529 4.08329 1.44692 4.14475 1.33752 4.25415C1.22812 4.36354 1.16667 4.51192 1.16667 4.66663V11.0833C1.16667 11.238 1.22812 11.3864 1.33752 11.4958C1.44692 11.6052 1.59529 11.6666 1.75 11.6666H12.25C12.4047 11.6666 12.5531 11.6052 12.6625 11.4958C12.7719 11.3864 12.8333 11.238 12.8333 11.0833V4.66663C12.8333 4.51192 12.7719 4.36354 12.6625 4.25415C12.5531 4.14475 12.4047 4.08329 12.25 4.08329H9.91667C9.72163 4.08329 9.53949 3.98582 9.4313 3.82353L8.43781 2.33329H5.56219Z"
-                    fill=""
-                  />
-                  <path
-                    fillRule="evenodd"
-                    clipRule="evenodd"
-                    d="M7.00004 5.83329C6.03354 5.83329 5.25004 6.61679 5.25004 7.58329C5.25004 8.54979 6.03354 9.33329 7.00004 9.33329C7.96654 9.33329 8.75004 8.54979 8.75004 7.58329C8.75004 6.61679 7.96654 5.83329 7.00004 5.83329ZM4.08337 7.58329C4.08337 5.97246 5.38921 4.66663 7.00004 4.66663C8.61087 4.66663 9.91671 5.97246 9.91671 7.58329C9.91671 9.19412 8.61087 10.5 7.00004 10.5C5.38921 10.5 4.08337 9.19412 4.08337 7.58329Z"
-                    fill=""
-                  />
-                </svg>
-              </Link>
-              :
-              <></>
-              }
-
-            </div>
-          </div> */}
           <div className="mt-4">
-            <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
-              {`${props.placeData.projectCode}`}
+            <h3 className="mb-1.5 text-4xl font-semibold text-black dark:text-white">
+              {props.placeData.projectCode}
             </h3>
+            <h4 className="text-black dark:text-white text-xl">{props.placeData.projectName}</h4>
+            <h5 className="text-black dark:text-white text-base mb-2">{props.placeData.placeName}</h5>
             {props.placeData.status === 'active' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Aktywny</p> : ''}
             {props.placeData.status === 'closed' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Nieaktywny</p> : ''}
             {props.placeData.status === 'banned' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Zbanowany</p> : ''}
@@ -102,12 +69,20 @@ const PlacePage = (props: PlacePageProps) => {
             </div>
             }
             
-            <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
+            <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-2 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
-                <span className="font-semibold text-black dark:text-white">
-                {props.totalData.total_rentals}
+                <span className="text-xs sm:text-sm xl:mr-4">Projekt utworzono w bazie danych</span>
+                <span className="font-semibold text-black dark:text-white text-sm sm:text-base">
+                {dateFormatter(props.placeData.createdAt.toString())}
                 </span>
-                <span className="text-sm">Wypożyczeń samochodów</span>
+                
+              </div>
+              <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
+                <span className="text-xs sm:text-sm xl:mr-4">Ostatnia edycja projektu w bazie danych</span>
+                <span className="font-semibold text-black dark:text-white text-sm sm:text-base">
+                {dateFormatter(props.placeData.updatedAt.toString())}
+                </span>
+                
               </div>
             </div>
 
@@ -145,33 +120,26 @@ const PlacePage = (props: PlacePageProps) => {
 
             />
 
-            {/* <CardStat
+            <CardStat
             svg={
-              <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M32 64C32 28.7 60.7 0 96 0H256c35.3 0 64 28.7 64 64V256h8c48.6 0 88 39.4 88 88v32c0 13.3 10.7 24 24 24s24-10.7 24-24V222c-27.6-7.1-48-32.2-48-62V96L384 64c-8.8-8.8-8.8-23.2 0-32s23.2-8.8 32 0l77.3 77.3c12 12 18.7 28.3 18.7 45.3V168v24 32V376c0 39.8-32.2 72-72 72s-72-32.2-72-72V344c0-22.1-17.9-40-40-40h-8V448c17.7 0 32 14.3 32 32s-14.3 32-32 32H32c-17.7 0-32-14.3-32-32s14.3-32 32-32V64zM96 80v96c0 8.8 7.2 16 16 16H240c8.8 0 16-7.2 16-16V80c0-8.8-7.2-16-16-16H112c-8.8 0-16 7.2-16 16z"/></svg>
+              <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M280 24c0-13.3-10.7-24-24-24s-24 10.7-24 24v80c0 13.3 10.7 24 24 24s24-10.7 24-24V24zM185.8 224H326.2c6.8 0 12.8 4.3 15.1 10.6L360.3 288H151.7l19.1-53.4c2.3-6.4 8.3-10.6 15.1-10.6zm-75.3-10.9L82.2 292.4C62.1 300.9 48 320.8 48 344v40 64 32c0 17.7 14.3 32 32 32H96c17.7 0 32-14.3 32-32V448H384v32c0 17.7 14.3 32 32 32h16c17.7 0 32-14.3 32-32V448 384 344c0-23.2-14.1-43.1-34.2-51.6l-28.3-79.3C390.1 181.3 360 160 326.2 160H185.8c-33.8 0-64 21.3-75.3 53.1zM128 344a24 24 0 1 1 0 48 24 24 0 1 1 0-48zm232 24a24 24 0 1 1 48 0 24 24 0 1 1 -48 0zM39 39c-9.4 9.4-9.4 24.6 0 33.9l48 48c9.4 9.4 24.6 9.4 33.9 0s9.4-24.6 0-33.9L73 39c-9.4-9.4-24.6-9.4-33.9 0zm400 0L391 87c-9.4 9.4-9.4 24.6 0 33.9s24.6 9.4 33.9 0l48-48c9.4-9.4 9.4-24.6 0-33.9s-24.6-9.4-33.9 0z"/></svg>
             }
-            value={`${props.totalYearData.data.total_number_of_refueled_liters.currentYear}`}
+            value={`${props.totalData.total_distance} km`}
             value_wrap={false}
-            title={`Zatankowane litry paliwa w roku ${props.totalYearData.year}`}
-            showProgress={props.totalYearData.data.total_number_of_refueled_liters.previousYear !== 0}
-            progressValue={`${((props.totalYearData.data.total_number_of_refueled_liters.currentYear - props.totalYearData.data.total_number_of_refueled_liters.previousYear) / props.totalYearData.data.total_number_of_refueled_liters.previousYear * 100).toFixed(2)}%`}
-            isProgressPositive={((props.totalYearData.data.total_number_of_refueled_liters.currentYear - props.totalYearData.data.total_number_of_refueled_liters.previousYear) / props.totalYearData.data.total_number_of_refueled_liters.previousYear * 100) >= 0}
-            
-
-            /> */}
+            title={`Przejechany dystans łącznie`}
+            showProgress={false}
+            />
 
 
-          {/* <CardStat
+            <CardStat
             svg={
-              <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M96 0C60.7 0 32 28.7 32 64V448c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V64c0-35.3-28.7-64-64-64H96zM208 288h64c44.2 0 80 35.8 80 80c0 8.8-7.2 16-16 16H144c-8.8 0-16-7.2-16-16c0-44.2 35.8-80 80-80zm-32-96a64 64 0 1 1 128 0 64 64 0 1 1 -128 0zM512 80c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V80zM496 192c-8.8 0-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V208c0-8.8-7.2-16-16-16zm16 144c0-8.8-7.2-16-16-16s-16 7.2-16 16v64c0 8.8 7.2 16 16 16s16-7.2 16-16V336z"/></svg>
+              <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M57.7 193l9.4 16.4c8.3 14.5 21.9 25.2 38 29.8L163 255.7c17.2 4.9 29 20.6 29 38.5v39.9c0 11 6.2 21 16 25.9s16 14.9 16 25.9v39c0 15.6 14.9 26.9 29.9 22.6c16.1-4.6 28.6-17.5 32.7-33.8l2.8-11.2c4.2-16.9 15.2-31.4 30.3-40l8.1-4.6c15-8.5 24.2-24.5 24.2-41.7v-8.3c0-12.7-5.1-24.9-14.1-33.9l-3.9-3.9c-9-9-21.2-14.1-33.9-14.1H257c-11.1 0-22.1-2.9-31.8-8.4l-34.5-19.7c-4.3-2.5-7.6-6.5-9.2-11.2c-3.2-9.6 1.1-20 10.2-24.5l5.9-3c6.6-3.3 14.3-3.9 21.3-1.5l23.2 7.7c8.2 2.7 17.2-.4 21.9-7.5c4.7-7 4.2-16.3-1.2-22.8l-13.6-16.3c-10-12-9.9-29.5 .3-41.3l15.7-18.3c8.8-10.3 10.2-25 3.5-36.7l-2.4-4.2c-3.5-.2-6.9-.3-10.4-.3C163.1 48 84.4 108.9 57.7 193zM464 256c0-36.8-9.6-71.4-26.4-101.5L412 164.8c-15.7 6.3-23.8 23.8-18.5 39.8l16.9 50.7c3.5 10.4 12 18.3 22.6 20.9l29.1 7.3c1.2-9 1.8-18.2 1.8-27.5zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256z"/></svg>
             }
-            value={`${props.totalYearData.data.total_reservations.currentYear}`}
+            value={`${props.totalData.total_rentals}`}
             value_wrap={false}
-            title={`Rezerwacji w roku ${props.totalYearData.year}`}
-            showProgress={props.totalYearData.data.total_reservations.previousYear !== 0}
-            progressValue={`${((props.totalYearData.data.total_reservations.currentYear - props.totalYearData.data.total_reservations.previousYear) / props.totalYearData.data.total_reservations.previousYear * 100).toFixed(2)}%`}
-            isProgressPositive={((props.totalYearData.data.total_reservations.currentYear - props.totalYearData.data.total_reservations.previousYear) / props.totalYearData.data.total_reservations.previousYear * 100) >= 0}
-
-            /> */}
+            title={`Podróży łącznie`}
+            showProgress={false}
+            />
             
 
           </div>
@@ -181,13 +149,13 @@ const PlacePage = (props: PlacePageProps) => {
           <div className='col-span-12 xl:col-span-5'>
             
               <PieChart
-              title={'Top 10 użytkowników według przejechanego dystansu'}
+              title={'Top 6 użytkowników według przejechanego dystansu'}
               data = {
                 props.distanceUsersData.response && props.distanceUsersData.response.length > 0 ?
                 props.distanceUsersData.response
                 .filter((obj: stats_oneMonthSchemaToUsers) => obj.total_distance > 0)
                 .map((obj: stats_oneMonthSchemaToUsers) => ({name: `${obj.userData.name} ${obj.userData.surname}`, value: obj.total_distance, color: obj.random_color}))
-                .slice(0, 10) //limit to the first 10 elements
+                .slice(0, 6) //limit to the first 6 elements
                 :
                 []
               }
@@ -200,7 +168,7 @@ const PlacePage = (props: PlacePageProps) => {
               title={`Najczęściej wykorzystywane typy samochodów w ${props.distanceCarTypesYearData.year} roku według przejechanego dystansu`}
               categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
               label1={'Samochody osobowe'}
-              label2={'Samochody ciężarowe'}
+              label2={'Samochody dostawcze'}
               data1={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_passengerCar)}
               data2={props.distanceCarTypesYearData.distance.map((obj: stats_oneMonthSchemaByCarTypes) => obj.total_distance_bus_and_truck)}
               
@@ -212,58 +180,83 @@ const PlacePage = (props: PlacePageProps) => {
 
 
 
+          <div className='flex flex-col lg:flex-row gap-4 md:gap-62xl:gap-7.5'>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
-            {props.favouriteCarInYearData.response !== null &&
-            <CardStat
-            svg={
-            <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
-            }
-            value={`${props.favouriteCarInYearData.response?.carData?.brand} ${props.favouriteCarInYearData.response?.carData?.model}`}
-            value_wrap={true}
-            title={`Ulubione auto w ${props.favouriteCarInYearData.year} roku`}
-            showProgress={false}
-            />
-            }
 
-            {props.favouriteCarInYearData.response !== null &&
-            <CardStat
-            svg={
-            <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256V448c0 35.3 28.7 64 64 64h42.8c-6.6-5.9-10.8-14.4-10.8-24V376c0-20.8 11.3-38.9 28.1-48.6l21-64.7c7.5-23.1 29-38.7 53.3-38.7H313.6c24.3 0 45.8 15.6 53.3 38.7l21 64.7c16.8 9.7 28.2 27.8 28.2 48.6V488c0 9.6-4.2 18.1-10.8 24H448c35.3 0 64-28.7 64-64V256C512 114.6 397.4 0 256 0zM362.8 512c-6.6-5.9-10.8-14.4-10.8-24V448H160v40c0 9.6-4.2 18.1-10.8 24H362.8zM190.8 277.5L177 320H335l-13.8-42.5c-1.1-3.3-4.1-5.5-7.6-5.5H198.4c-3.5 0-6.5 2.2-7.6 5.5zM168 408a24 24 0 1 0 0-48 24 24 0 1 0 0 48zm200-24a24 24 0 1 0 -48 0 24 24 0 1 0 48 0z"/></svg>
-            }
-            value={`${props.favouriteCarInYearData.response?.total_distance} km`}
-            value_wrap={false}
-            title={`Dystans przejechany ulubionym autem w ${props.favouriteCarInYearData.year} roku`}
-            showProgress={false}
-            />
-            }
-            
+              <div className="lg:w-1/2 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">
+                {props.favouriteCarInYearData.response !== null &&
+                <CardStat
+                svg={
+                <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M135.2 117.4L109.1 192H402.9l-26.1-74.6C372.3 104.6 360.2 96 346.6 96H165.4c-13.6 0-25.7 8.6-30.2 21.4zM39.6 196.8L74.8 96.3C88.3 57.8 124.6 32 165.4 32H346.6c40.8 0 77.1 25.8 90.6 64.3l35.2 100.5c23.2 9.6 39.6 32.5 39.6 59.2V400v48c0 17.7-14.3 32-32 32H448c-17.7 0-32-14.3-32-32V400H96v48c0 17.7-14.3 32-32 32H32c-17.7 0-32-14.3-32-32V400 256c0-26.7 16.4-49.6 39.6-59.2zM128 288a32 32 0 1 0 -64 0 32 32 0 1 0 64 0zm288 32a32 32 0 1 0 0-64 32 32 0 1 0 0 64z"/></svg>
+                }
+                value={`${props.favouriteCarInYearData.response?.carData?.brand} ${props.favouriteCarInYearData.response?.carData?.model}`}
+                value_wrap={true}
+                title={`Najczęściej używane auto w ${props.favouriteCarInYearData.year} roku`}
+                showProgress={false}
+                />
+                }
 
-            {props.favouriteUserInYearData.response !== null &&
-            <CardStat
-            svg={
-            <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 576 512"><path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48V96H384V80c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H432c-26.5 0-48-21.5-48-48V160H192v16c0 1.7-.1 3.4-.3 5L272 288h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H272c-26.5 0-48-21.5-48-48V336c0-1.7 .1-3.4 .3-5L144 224H48c-26.5 0-48-21.5-48-48V80z"/></svg>
-            }
-            value={`${props.favouriteUserInYearData.response?.userData?.name} ${props.favouriteUserInYearData.response?.userData?.surname}`}
-            value_wrap={true}
-            title={`Ulubiony użytkownik w ${props.favouriteUserInYearData.year} roku`}
-            showProgress={false}
-            />
-            }
+                {props.favouriteCarInYearData.response !== null &&
+                <CardStat
+                svg={
+                <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 512 512"><path d="M256 0C114.6 0 0 114.6 0 256V448c0 35.3 28.7 64 64 64h42.8c-6.6-5.9-10.8-14.4-10.8-24V376c0-20.8 11.3-38.9 28.1-48.6l21-64.7c7.5-23.1 29-38.7 53.3-38.7H313.6c24.3 0 45.8 15.6 53.3 38.7l21 64.7c16.8 9.7 28.2 27.8 28.2 48.6V488c0 9.6-4.2 18.1-10.8 24H448c35.3 0 64-28.7 64-64V256C512 114.6 397.4 0 256 0zM362.8 512c-6.6-5.9-10.8-14.4-10.8-24V448H160v40c0 9.6-4.2 18.1-10.8 24H362.8zM190.8 277.5L177 320H335l-13.8-42.5c-1.1-3.3-4.1-5.5-7.6-5.5H198.4c-3.5 0-6.5 2.2-7.6 5.5zM168 408a24 24 0 1 0 0-48 24 24 0 1 0 0 48zm200-24a24 24 0 1 0 -48 0 24 24 0 1 0 48 0z"/></svg>
+                }
+                value={`${props.favouriteCarInYearData.response?.total_distance} km`}
+                value_wrap={false}
+                title={`Dystans przejechany najczęściej używanym autem w ${props.favouriteCarInYearData.year} roku`}
+                showProgress={false}
+                />
+                }
 
-            {props.favouriteUserInYearData.response !== null &&
-            <CardStat
-            svg={
-            <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 640 512"><path d="M112 0C85.5 0 64 21.5 64 48V96H16c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 272c8.8 0 16 7.2 16 16s-7.2 16-16 16H64 48c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 240c8.8 0 16 7.2 16 16s-7.2 16-16 16H64 16c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 208c8.8 0 16 7.2 16 16s-7.2 16-16 16H64V416c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H112zM544 237.3V256H416V160h50.7L544 237.3zM160 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm272 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0z"/></svg>
-            }
-            value={`${props.favouriteUserInYearData.response?.total_distance} km`}
-            value_wrap={false}
-            title={`Dystans przejechany przez ulubionego użytkownika w ${props.favouriteCarInYearData.year} roku`}
-            showProgress={false}
-            />
-            }
+                
+                {props.favouriteUserInYearData.response !== null &&
+                <CardStat
+                svg={
+                <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 576 512"><path d="M0 80C0 53.5 21.5 32 48 32h96c26.5 0 48 21.5 48 48V96H384V80c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H432c-26.5 0-48-21.5-48-48V160H192v16c0 1.7-.1 3.4-.3 5L272 288h96c26.5 0 48 21.5 48 48v96c0 26.5-21.5 48-48 48H272c-26.5 0-48-21.5-48-48V336c0-1.7 .1-3.4 .3-5L144 224H48c-26.5 0-48-21.5-48-48V80z"/></svg>
+                }
+                value={`${props.favouriteUserInYearData.response?.userData?.name} ${props.favouriteUserInYearData.response?.userData?.surname}`}
+                value_wrap={true}
+                title={`Użytkownik z największym przejechanym dystansem na ten projekt w ${props.favouriteUserInYearData.year} roku`}
+                showProgress={false}
+                />
+                }
+
+                {props.favouriteUserInYearData.response !== null &&
+                <CardStat
+                svg={
+                <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 640 512"><path d="M112 0C85.5 0 64 21.5 64 48V96H16c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 272c8.8 0 16 7.2 16 16s-7.2 16-16 16H64 48c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 240c8.8 0 16 7.2 16 16s-7.2 16-16 16H64 16c-8.8 0-16 7.2-16 16s7.2 16 16 16H64 208c8.8 0 16 7.2 16 16s-7.2 16-16 16H64V416c0 53 43 96 96 96s96-43 96-96H384c0 53 43 96 96 96s96-43 96-96h32c17.7 0 32-14.3 32-32s-14.3-32-32-32V288 256 237.3c0-17-6.7-33.3-18.7-45.3L512 114.7c-12-12-28.3-18.7-45.3-18.7H416V48c0-26.5-21.5-48-48-48H112zM544 237.3V256H416V160h50.7L544 237.3zM160 368a48 48 0 1 1 0 96 48 48 0 1 1 0-96zm272 48a48 48 0 1 1 96 0 48 48 0 1 1 -96 0z"/></svg>
+                }
+                value={`${props.favouriteUserInYearData.response?.total_distance} km`}
+                value_wrap={false}
+                title={`Dystans przejechany przez ${props.favouriteUserInYearData.response?.userData?.name} ${props.favouriteUserInYearData.response?.userData?.surname} na rzecz tego projektu w ${props.favouriteCarInYearData.year} roku`}
+                showProgress={false}
+                />
+                }
+
+              </div>
+
+
+              <div className='lg:w-1/2'>
+                
+                  <PieChart
+                  title={'Top 6 samochodów według przejechanego dystansu'}
+                  data = {
+                    props.distanceCarsData.response && props.distanceCarsData.response.length > 0 ?
+                    props.distanceCarsData.response
+                    .filter((obj: stats_oneMonthSchemaToPlacesByCars) => obj.total_distance > 0)
+                    .map((obj: stats_oneMonthSchemaToPlacesByCars) => ({name: `${obj.carData.brand} ${obj.carData.model}`, value: obj.total_distance, color: obj.random_color}))
+                    .slice(0, 6) //limit to the first 6 elements
+                    :
+                    []
+                  }
+                  />
+                
+              </div>
+
 
           </div>
+
+          
 
 
 

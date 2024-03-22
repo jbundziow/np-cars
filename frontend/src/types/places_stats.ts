@@ -63,7 +63,7 @@ type CarData = {
     brand: string,
     model: string,
 }
-export interface stats_oneMonthSchemaToPlaces {
+export interface stats_oneMonthSchemaToPlacesByCars {
     carData: CarData,
     total_distance: number,
     random_color: string,
@@ -71,7 +71,7 @@ export interface stats_oneMonthSchemaToPlaces {
 
 export interface stats_DistanceToPlacesByCars {
     placeid: number,
-    response: stats_oneMonthSchemaToPlaces[] | [],
+    response: stats_oneMonthSchemaToPlacesByCars[] | [],
 }
 //................................................................//
 
