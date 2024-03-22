@@ -1,5 +1,4 @@
-import CoverOne from '../../images/cover/spawacz-cover.jpg';
-
+import CoverOne from '../../images/cover/road-cover.jpg';
 import DOMAIN_NAME from '../../utilities/domainName';
 import BarChart from '../general/charts/BarChart';
 import { db_Car } from '../../types/db_types';
@@ -7,12 +6,13 @@ import useAuth from '../../hooks/useAuth';
 import { Link } from 'react-router-dom';
 import CardStat from '../general/CardStat';
 import PieChart from '../general/charts/PieChart';
-import AreaChart from '../general/charts/AreaChart';
 import { useEffect, useState } from 'react';
 import Loader from '../../common/Loader';
 import { stats_CarDistanceByUsers, stats_CarDistanceInYear, stats_CarDistanceToPlaces, stats_CarFavouritePlace, stats_CarFavouriteUser, stats_CarFuelUsageInYear, stats_CarTotalStats, stats_CarTotalStatsInYear, stats_oneMonthSchema, stats_oneMonthSchemaByUsers, stats_oneMonthSchemaFuelUsage, stats_oneMonthSchemaToPlaces } from '../../types/car_stats';
 import UnknownCarImg from '../../images/cars/unknown_car_1280_720.png'
 import BarChart2 from '../general/charts/BarChart2';
+import { dateFormatter } from '../../utilities/dateFormatter';
+import formatDate from '../../utilities/formatDate';
 
 
 
@@ -65,9 +65,9 @@ const CarPage = (props: CarPageProps) => {
 
         </div>
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
-          <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
-            <div className="relative drop-shadow-2">
-              <img className="bg-cover bg-top-center rounded-[50%]" src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg} alt="Zdjęcie samochodu"/>
+          <div className="relative z-30 mx-auto -mt-22 w-full rounded-3xl bg-white/20 p-1 backdrop-blur sm:p-3 max-w-[300px] overflow-hidden">
+            <div className="relative drop-shadow-2 h-full w-full rounded-3xl overflow-hidden">
+              <img className="h-full w-full" src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg} alt="Zdjęcie samochodu"/>
 
               {auth.userRole === 'admin' ?
               <Link
@@ -106,7 +106,7 @@ const CarPage = (props: CarPageProps) => {
             <h3 className="mb-1.5 text-2xl font-semibold text-black dark:text-white">
               {`${props.carData.brand} ${props.carData.model}`}
             </h3>
-            <p className="font-medium">{props.carData.plateNumber}</p>
+            <p className="font-medium">{props.carData.type === 'truck' ? 'Auto ciężarowe' : props.carData.type === 'bus' ? 'Auto dostawcze (bus)' : props.carData.type === 'passengerCar' ? 'Auto osobowe' : '#ERROR#'}</p>
             {props.carData.availabilityStatus === 'available' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Dostępny</p> : ''}
             {props.carData.availabilityStatus === 'rented' ? <p className="inline-block rounded-full bg-warning bg-opacity-10 py-1 px-3 mt-2 font-bold text-warning cursor-default">Wypożyczony</p> : ''}
             {props.carData.availabilityStatus === 'notAvailable' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Niedostępny</p> : ''}
@@ -124,6 +124,35 @@ const CarPage = (props: CarPageProps) => {
             </Link>
             </div>
             }
+
+
+
+              <div className="mx-auto mt-4.5 mb-5.5 md:max-w-[90%] rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
+              <h4 className="text-sm sm:text-lg md:text-xl text-black dark:text-white pl-4 text-left">Podstawowe dane dotyczące samochodu:</h4>
+              <div className="flex flex-col sm:flex-row items-center justify-center px-4 pb-5 py-5 md:py-8">
+                <div className="w-full sm:w-1/2 text-left sm:p-1">
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Numer rejestracyjny:&nbsp;</strong>{props.carData.plateNumber}</p>
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Maksymalna ładowność:&nbsp;</strong>{props.carData.loadCapacity} kg</p>
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Pojemność zbiornika:&nbsp;</strong>{props.carData.loadCapacity} l</p>
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Data następnego przeglądu:&nbsp;</strong>{formatDate(new Date(props.carData.nextInspectionDate))}</p>
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Utworzono w bazie danych:&nbsp;</strong>{dateFormatter(props.carData.createdAt.toString())}</p>
+                
+                </div>
+
+                <div className="w-full sm:w-1/2 text-left sm:p-1">
+
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Typ paliwa:&nbsp;</strong>{props.carData.fuelType === 'diesel' ? 'Diesel' : props.carData.fuelType === 'petrol' ? 'Benzyna' : '#ERROR#'}</p>
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Karta paliwowa:&nbsp;</strong>{props.carData.hasFuelCard === true ? 'Tak' : props.carData.hasFuelCard === false ? 'Nie' : '#ERROR#'}</p>
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Pin do karty paliwowej:&nbsp;</strong>{!props.carData.fuelCardPIN ? 'Brak' : props.carData.fuelCardPIN}</p>
+                
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Data zapłaty za OC/AC:&nbsp;</strong>{formatDate(new Date(props.carData.nextInsuranceDate))}</p>
+                <p className='text-xs sm:text-base md:text-md text-black dark:text-white'><strong>Ostatnia edycja w bazie danych:&nbsp;</strong>{dateFormatter(props.carData.createdAt.toString())}</p>
+
+                </div>
+              </div>
+              </div>
+
+
             
             <div className="mx-auto mt-4.5 mb-5.5 grid max-w-[90%] grid-cols-2 xl:grid-cols-4 rounded-md border border-stroke py-2.5 shadow-1 dark:border-strokedark dark:bg-[#37404F]">
               <div className="flex flex-col items-center justify-center gap-1 px-4 xsm:flex-row py-5">
@@ -151,6 +180,8 @@ const CarPage = (props: CarPageProps) => {
                 <span className="text-sm">Zgłoszonych usterek</span>
               </div>
             </div>
+
+
             
 
           <div className="my-5 md:my-10 md:mx-2">
@@ -158,6 +189,8 @@ const CarPage = (props: CarPageProps) => {
          
           <BarChart title={'Przejechany dystans ogólnie'} data={props.distanceYearData.distance.map((obj: stats_oneMonthSchema) => obj.total_distance)} categories={['Styczeń', 'Luty', 'Marzec', 'Kwiecień', 'Maj', 'Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień', 'Październik', 'Listopad', 'Grudzień']} filterBy={'year'} filterValue={props.filterValue} setFilterValue={(value: number) => {props.setFilterValue(value)}}/>
           </div>
+
+
 
 
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5 md:mx-2">
@@ -280,7 +313,7 @@ const CarPage = (props: CarPageProps) => {
 
             <div className='col-span-12 xl:col-span-7'>
               <BarChart2
-              title={`Średnie spalanie [l/100km] w bieżącym roku oraz w roku porzedzającym`}
+              title={`Średnie spalanie [l/100km] w bieżącym roku oraz w roku porzednim`}
               categories={['Sty', 'Lut', 'Mar', 'Kwi', 'Maj', 'Cze', 'Lip', 'Sie', 'Wrz', 'Paź', 'Lis', 'Gru']}
               label1={`Rok ${props.distanceFuelUsageYearData.year}`}
               label2={`Rok ${props.distanceFuelUsageYearData.year - 1}`}
