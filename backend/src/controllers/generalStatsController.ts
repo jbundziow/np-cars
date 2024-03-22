@@ -44,7 +44,6 @@ export const fetchHomepageUserData_GET_user = async (req: Request, res: Response
 
     
         res.status(200).json({status: 'success', data: {
-            data: {
             year: Number(req.query.year),
             current_user,
             total_distance_currentYear,
@@ -53,7 +52,6 @@ export const fetchHomepageUserData_GET_user = async (req: Request, res: Response
             active_users,
             all_cars,
             all_available_cars
-            }
     }})
     }
     catch (error) {

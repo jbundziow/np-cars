@@ -18,10 +18,13 @@ const Homepage = (props: Props) => {
 
 
     const { auth } = useAuth();
+    const currentYear = new Date().getFullYear();
 
 
-    const [data1, setData1] = useState<ApiResponse>();  //user data
-
+    const [data1, setData1] = useState<ApiResponse>();  //homepage user data
+    const [data2, setData2] = useState(null);  //USD rates data
+    const [data3, setData3] = useState(null);  //EUR rates data
+    
 
     const [failData, setFailData] = useState<ApiResponse>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -32,8 +35,25 @@ const Homepage = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
        
-      const res1 = await fetchData(`${DOMAIN_NAME}/users/${auth.userID}/?showbanned=false`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${DOMAIN_NAME}/stats/homepage/user/${auth.userID}/?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
+
+      const res2 = await fetch(`http://api.nbp.pl/api/exchangerates/rates/c/usd/today/?format=json`, {
+        method: 'GET',
+      });
+      if(res2.status === 200) {
+        const res2JSON = await res2.json();
+        setData2(res2JSON)
+      }
+
+      const res3 = await fetch(`http://api.nbp.pl/api/exchangerates/rates/c/eur/today/?format=json`, {
+        method: 'GET',
+      });
+      if(res3.status === 200) {
+        const res3JSON = await res3.json();
+        setData3(res3JSON)
+      }
+
 
 
       setLoading(false)
@@ -44,7 +64,7 @@ const Homepage = (props: Props) => {
 
     return (
       <>
-      {loading === true ? <Loader/> : (!isFail && !isError) ? <HomepageComponent userData={data1?.data}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loading === true ? <Loader/> : (!isFail && !isError) ? <HomepageComponent homepageData={data1?.data} usdRates={data2} euroRates={data3}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
      
       </>
     );
