@@ -2,9 +2,14 @@ import express from 'express'
 import { fetchFavouriteCarOfUser_GET_user, fetchFavouritePlaceOfUser_GET_user, fetchTotalStatsOfUserInYear_GET_user, fetchTotalStatsOfUser_GET_user, fetchTotalTravelledDistanceByUserByCarTypes_GET_user, fetchTotalTravelledDistanceByUser_GET_user, fetchTotalTravelledDistanceForAllPlacesByUser_GET_user } from '../controllers/userStatsController';
 import { fetchFavouriteCarOfPlace_GET_user, fetchFavouriteUserOfPlace_GET_user, fetchTotalStatsOfPlaceInYear_GET_user, fetchTotalStatsOfPlace_GET_user, fetchTotalTravelledDistanceByPlaceByCarTypes_GET_user, fetchTotalTravelledDistanceByPlace_GET_user, fetchTotalTravelledDistanceForAllCarsByPlace_GET_user, fetchTotalTravelledDistanceForAllUsersByPlace_GET_user } from '../controllers/placeStatsController';
 import { fetchFavouritePlaceOfCar_GET_user, fetchFavouriteUserOfCar_GET_user, fetchFuelUsageForCarForTwoYears_GET_user, fetchTotalStatsOfCarInYear_GET_user, fetchTotalStatsOfCar_GET_user, fetchTotalTravelledDistanceByCar_GET_user, fetchTotalTravelledDistanceForAllPlacesByCar_GET_user, fetchTotalTravelledDistanceForAllUsersByCar_GET_user } from '../controllers/carsStatsController';
+import { fetchHomepageUserData_GET_user } from '../controllers/generalStatsController';
 
 
 const app = express.Router();
+
+//homepage
+app.get('/homepage/user/:userid', fetchHomepageUserData_GET_user);
+
 
 //user
 app.get('/users/:userid/total', fetchTotalStatsOfUser_GET_user);
