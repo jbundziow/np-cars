@@ -237,7 +237,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
     <>
     <ModalWarning showModal={showWarningDeleteUserModal} setShowModal={(state: boolean) => setShowWarningDeleteUserModal(state)} title= {'Usuń użytkownika'} bodyText={`Czy na pewno chcesz usunąć tego użytkownika z bazy danych? Zaleca się zmienę typu użytkownika na "Zbanowany", aby nie utracić wszystkich archiwalnych danych. Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteUser() }/>
     <ModalWarning showModal={showWarningEditUserDataModal} setShowModal={(state: boolean) => setShowWarningEditUserDataModal(state)} title= {'Zatwierdź zmiany'} bodyText={`Czy na pewno chcesz zatwierdzić wprowadzone zmiany i zaktualizować je w bazie danych? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, zatwierdzam'} callback={ async () => await editUserData() }/>
-    <ModalWarning showModal={showWarningPasswordResetModal} setShowModal={(state: boolean) => setShowWarningPasswordResetModal(state)} title= {'Zatwierdź zmiany'} bodyText={`Czy na pewno chcesz dokonać zmiany hasła? Spowoduje to wysłanie linku do zmiany hasła na adres email: ${props.user.email}. Link będzie aktywny przez najbliższe 24 godziny.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, wyślij link do zmiany hasła'} callback={ async () => await changePassword() }/>
+    <ModalWarning showModal={showWarningPasswordResetModal} setShowModal={(state: boolean) => setShowWarningPasswordResetModal(state)} title= {'Resetowanie hasła'} bodyText={`Czy na pewno chcesz dokonać zmiany hasła? Spowoduje to wysłanie linku do zmiany hasła na adres email: ${props.user.email}. Link będzie aktywny przez najbliższe 24 godziny.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, wyślij link do zmiany hasła'} callback={ async () => await changePassword() }/>
     <ModalWarning showModal={showWarningChangeImageModal} setShowModal={(state: boolean) => setShowWarningChangeImageModal(state)} title= {'Zmień avatar'} bodyText={`Czy na pewno chcesz zmienić avatar użytkownika?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, zmień zdjęcie'} callback={ async () => await changeImage() }/>
     <ModalWarning showModal={showWarningDeleteImageModal} setShowModal={(state: boolean) => setShowWarningDeleteImageModal(state)} title= {'Zmień avatar'} bodyText={`Czy na pewno chcesz usunąć zdjęcie użytkownika?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń zdjęcie'} callback={ async () => await removeImage() }/>
     <FixedAlert options={alertOptions}/>
@@ -846,9 +846,16 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                         </div>
                   </div>
 
-                  <div className="flex justify-end gap-4.5">
+                  <div className="flex justify-between gap-4.5 text-xs sm:text-base">
                     <button
-                      className="flex justify-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
+                      className="flex justify-center items-center rounded bg-danger py-2 px-6 font-medium text-gray hover:bg-opacity-70"
+                      type='button'
+                      onClick={()=> setPageState(EditUserDataPageStatus.FillingTheForm)}
+                    >
+                      Powrót
+                    </button>
+                    <button
+                      className="flex justify-center items-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
                       type='submit'
                     >
                       Zmień adres email
