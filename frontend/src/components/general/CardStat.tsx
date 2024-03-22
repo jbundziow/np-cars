@@ -6,11 +6,13 @@ type CardStatProps = {
   showProgress: boolean;
   progressValue?: string | number;
   isProgressPositive?: boolean;
+
+  otherBackgroundColor?: boolean;
 }
 
 const CardStat = (props: CardStatProps) => {
   return (
-    <div className="flex flex-col justify-between rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark dark:bg-boxdark-2">
+    <div className={`flex flex-col justify-between rounded-sm border border-stroke bg-white py-6 px-7.5 shadow-default dark:border-strokedark ${props.otherBackgroundColor ? 'dark:bg-boxdark' : 'dark:bg-boxdark-2'}`}>
       <div className="flex h-11.5 w-11.5 items-center justify-center rounded-full bg-meta-2 dark:bg-meta-4">
         {props.svg}
       </div>
