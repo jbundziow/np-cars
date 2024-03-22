@@ -35,8 +35,6 @@ export const fetchTotalStatsOfCar_GET_user = async (req: Request, res: Response,
         const total_costBrutto_of_fuel = await RefuelingModel.sum('costBrutto', {where: {carID: Number(req.params.carid) }}) || 0;
         let averageConsumption: number | null = await RefuelingModel.sum('averageConsumption', {where: {carID: Number(req.params.carid) }}) || 0;
         if(averageConsumption > 0 && total_refuelings -1 > 0) {
-            console.log(averageConsumption);
-            console.log(total_refuelings);
         averageConsumption = averageConsumption / (total_refuelings -1);
         }
         else {
@@ -102,13 +100,18 @@ export const fetchTotalStatsOfCarInYear_GET_user = async (req: Request, res: Res
         const total_distance_currentYear = await RentalModel.sum('distance', {where: {carID: Number(req.params.carid), dateTo: {[Op.between]: [currentYear_startDate, currentYear_endDate]} }}) || 0;
         const total_number_of_refueled_liters_currentYear = await RefuelingModel.sum('numberOfLiters', {where: {carID: Number(req.params.carid), refuelingDate: {[Op.between]: [currentYear_startDate, currentYear_endDate]} }}) || 0;
         const total_costBrutto_of_fuel_currentYear = await RefuelingModel.sum('costBrutto', {where: {carID: Number(req.params.carid), refuelingDate: {[Op.between]: [currentYear_startDate, currentYear_endDate]} }}) || 0;
+
+        const total_refuelings_to_count_avg_currentYear = await RefuelingModel.count({where: {carID: Number(req.params.carid), averageConsumption: {[Op.ne]: [null]}, refuelingDate: {[Op.between]: [currentYear_startDate, currentYear_endDate]} }});
         let averageConsumption_currentYear: number | null = await RefuelingModel.sum('averageConsumption', {where: {carID: Number(req.params.carid), refuelingDate: {[Op.between]: [currentYear_startDate, currentYear_endDate]} }}) || 0;
-        if(averageConsumption_currentYear > 0 && total_refuelings_currentYear -1 > 0) {
-        averageConsumption_currentYear = averageConsumption_currentYear / (total_refuelings_currentYear -1);
+        if(averageConsumption_currentYear > 0 && total_refuelings_to_count_avg_currentYear > 0) {
+        averageConsumption_currentYear = averageConsumption_currentYear / (total_refuelings_to_count_avg_currentYear);
         }
         else {
             averageConsumption_currentYear = null;
         }
+
+
+
 
 
         const total_rentals_previousYear = await RentalModel.count({where: {carID: Number(req.params.carid), dateTo: {[Op.between]: [previousYear_startDate, previousYear_endDate]}} });
@@ -118,9 +121,11 @@ export const fetchTotalStatsOfCarInYear_GET_user = async (req: Request, res: Res
         const total_distance_previousYear = await RentalModel.sum('distance', {where: {carID: Number(req.params.carid), dateTo: {[Op.between]: [previousYear_startDate, previousYear_endDate]}} }) || 0;
         const total_number_of_refueled_liters_previousYear = await RefuelingModel.sum('numberOfLiters', {where: {carID: Number(req.params.carid), refuelingDate: {[Op.between]: [previousYear_startDate, previousYear_endDate]} }}) || 0;
         const total_costBrutto_of_fuel_previousYear = await RefuelingModel.sum('costBrutto', {where: {carID: Number(req.params.carid), refuelingDate: {[Op.between]: [previousYear_startDate, previousYear_endDate]} }}) || 0;
+
+        const total_refuelings_to_count_avg_previousYear = await RefuelingModel.count({where: {carID: Number(req.params.carid), averageConsumption: {[Op.ne]: [null]}, refuelingDate: {[Op.between]: [previousYear_startDate, previousYear_endDate]} }});
         let averageConsumption_previousYear: number | null = await RefuelingModel.sum('averageConsumption', {where: {carID: Number(req.params.carid), refuelingDate: {[Op.between]: [previousYear_startDate, previousYear_endDate]} }}) || 0;
-        if(averageConsumption_previousYear > 0 && total_refuelings_previousYear -1 > 0) {
-        averageConsumption_previousYear = averageConsumption_previousYear / (total_refuelings_previousYear -1);
+        if(averageConsumption_previousYear > 0 && total_refuelings_to_count_avg_previousYear > 0) {
+        averageConsumption_previousYear = averageConsumption_previousYear / (total_refuelings_to_count_avg_previousYear);
         }
         else {
             averageConsumption_previousYear = null;

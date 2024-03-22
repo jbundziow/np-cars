@@ -754,7 +754,7 @@ class Refueling {
       const total_fuelusage_previous_year = await RefuelingModel.sum('averageConsumption', {
         where: previousYear_whereClause
       });
-      const number_of_refuelings_previous_year = await RefuelingModel.count({where: currentYear_whereClause});
+      const number_of_refuelings_previous_year = await RefuelingModel.count({where: previousYear_whereClause});
       let average_fuelusage_previous_year: number | null;
       if(total_fuelusage_previous_year > 0 && number_of_refuelings_previous_year > 0) {
         average_fuelusage_previous_year = total_fuelusage_previous_year / number_of_refuelings_previous_year;
@@ -770,8 +770,8 @@ class Refueling {
       totalData.push({
         month_num: month,
         month_text: new Date(year, month).toLocaleString('en-US', { month: 'long' }),
-        average_fuelusage_current_year,
-        average_fuelusage_previous_year,
+        average_fuelusage_current_year: Number(average_fuelusage_current_year?.toFixed(2)) || null,
+        average_fuelusage_previous_year: Number(average_fuelusage_previous_year?.toFixed(2)) || null,
       });
     }
   
