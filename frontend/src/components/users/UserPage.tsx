@@ -10,6 +10,8 @@ import { Link } from 'react-router-dom';
 import CardStat from '../general/CardStat';
 import PieChart from '../general/charts/PieChart';
 import AreaChart from '../general/charts/AreaChart';
+import { useEffect, useState } from 'react';
+import Loader from '../../common/Loader';
 
 
 
@@ -34,9 +36,22 @@ const UserPage = (props: UserPageProps) => {
 
   const { auth } = useAuth();
 
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (props.userData && props.totalData && props.distanceYearData && props.totalYearData && props.distancePlacesData && props.distanceCarTypesYearData && props.favouriteCarInYearData && props.favouritePlaceInYearData) {
+      setTimeout(() => {
+      setLoading(false);
+      }, 2000);
+    }
+  }, [props]);
+
   return (
-  
-      
+    <>
+      {loading ?
+        <Loader />
+      :
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div>
         <div className="relative z-20 h-35 md:h-65">
@@ -298,6 +313,11 @@ const UserPage = (props: UserPageProps) => {
         </div>
       </div>
       </div>
+      }
+    </>
+  
+      
+      
   );
 };
 

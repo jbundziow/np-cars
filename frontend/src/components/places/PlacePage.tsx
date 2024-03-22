@@ -8,6 +8,8 @@ import AreaChart from '../general/charts/AreaChart';
 import { db_Place } from '../../types/db_types';
 import { stats_DistanceToPlacesByCars, stats_DistanceToPlacesByUsers, stats_PlaceDistanceInYearByCarTypes, stats_PlaceFavouriteCar, stats_PlaceFavouriteUser, stats_PlaceTotalStats, stats_PlaceTotalStatsInYear, stats_PlacesDistanceInYear, stats_oneMonthSchema, stats_oneMonthSchemaByCarTypes, stats_oneMonthSchemaToPlacesByCars, stats_oneMonthSchemaToUsers } from '../../types/places_stats';
 import { dateFormatter } from '../../utilities/dateFormatter';
+import Loader from '../../common/Loader';
+import { useEffect, useState } from 'react';
 
 
 
@@ -29,13 +31,24 @@ type PlacePageProps = {
 
 const PlacePage = (props: PlacePageProps) => {
 
-
-
   const { auth } = useAuth();
 
+
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (props.placeData && props.totalData && props.distanceYearData && props.totalYearData && props.distanceUsersData && props.distanceCarsData && props.distanceCarTypesYearData && props.favouriteUserInYearData && props.favouriteCarInYearData) {
+      setTimeout(() => {
+      setLoading(false);
+      }, 2000);
+    }
+  }, [props]);
+
   return (
-  
-      
+    <>
+      {loading ?
+        <Loader />
+      : 
       <div className="overflow-hidden rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
       <div>
         <div className="relative z-20 h-35 md:h-65">
@@ -264,6 +277,11 @@ const PlacePage = (props: PlacePageProps) => {
         </div>
       </div>
       </div>
+      }
+    </>
+  
+      
+      
   );
 };
 
