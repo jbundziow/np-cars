@@ -178,7 +178,7 @@ const AreaChart = (props: AreaChartProps) => {
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-primary"></span>
             </span>
             <div>
-              <p className="font-semibold text-primary">Samochody osobowe</p>
+              <p className="font-semibold text-primary">{props.label1}</p>
             </div>
           </div>
           <div className="flex sm:w-1/2 sm:justify-center">
@@ -186,7 +186,7 @@ const AreaChart = (props: AreaChartProps) => {
               <span className="block h-2.5 w-full max-w-2.5 rounded-full bg-secondary"></span>
             </span>
             <div>
-              <p className="font-semibold text-secondary">Samochody dostawcze</p>
+              <p className="font-semibold text-secondary">{props.label2}</p>
             </div>
           </div>
         </div>

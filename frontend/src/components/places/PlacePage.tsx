@@ -68,7 +68,7 @@ const PlacePage = (props: PlacePageProps) => {
             <h4 className="text-black dark:text-white text-xl">{props.placeData.projectName}</h4>
             <h5 className="text-black dark:text-white text-base mb-2">{props.placeData.placeName}</h5>
             {props.placeData.status === 'active' ? <p className="inline-block rounded-full bg-success bg-opacity-10 py-1 px-3 mt-2 font-bold text-success cursor-default">Aktywny</p> : ''}
-            {props.placeData.status === 'closed' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Nieaktywny</p> : ''}
+            {props.placeData.status === 'closed' ? <p className="inline-block rounded-full bg-warning bg-opacity-10 py-1 px-3 mt-2 font-bold text-warning cursor-default">Nieaktywny</p> : ''}
             {props.placeData.status === 'banned' ? <p className="inline-block rounded-full bg-danger bg-opacity-10 py-1 px-3 mt-2 font-bold text-danger cursor-default">Zbanowany</p> : ''}
             
             {auth.userRole === 'admin' &&
@@ -106,7 +106,7 @@ const PlacePage = (props: PlacePageProps) => {
           </div>
 
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-4 2xl:gap-7.5 md:mx-2">
             <CardStat
             svg={
             <svg className="fill-primary dark:fill-white" xmlns="http://www.w3.org/2000/svg" width="22" height="16" fill="none" viewBox="0 0 640 512"><path d="M171.3 96H224v96H111.3l30.4-75.9C146.5 104 158.2 96 171.3 96zM272 192V96h81.2c9.7 0 18.9 4.4 25 12l67.2 84H272zm256.2 1L428.2 68c-18.2-22.8-45.8-36-75-36H171.3c-39.3 0-74.6 23.9-89.1 60.3L40.6 196.4C16.8 205.8 0 228.9 0 256V368c0 17.7 14.3 32 32 32H65.3c7.6 45.4 47.1 80 94.7 80s87.1-34.6 94.7-80H385.3c7.6 45.4 47.1 80 94.7 80s87.1-34.6 94.7-80H608c17.7 0 32-14.3 32-32V320c0-65.2-48.8-119-111.8-127zM434.7 368a48 48 0 1 1 90.5 32 48 48 0 1 1 -90.5-32zM160 336a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
@@ -193,7 +193,7 @@ const PlacePage = (props: PlacePageProps) => {
 
 
 
-          <div className='flex flex-col lg:flex-row gap-4 md:gap-62xl:gap-7.5'>
+          <div className='flex flex-col lg:flex-row gap-4 md:gap-62xl:gap-7.5 md:mx-2'>
 
 
               <div className="lg:w-1/2 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6 xl:grid-cols-2 2xl:gap-7.5">

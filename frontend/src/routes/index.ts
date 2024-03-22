@@ -34,6 +34,7 @@ const UserSettings = lazy(() => import('../new_pages/uzytkownicy/ustawienia-kont
 const CarsList = lazy(() => import('../new_pages/samochody/zestawienie'));
 const CarsInspections = lazy(() => import('../new_pages/samochody/przeglady'));
 const CarsInsurances = lazy(() => import('../new_pages/samochody/ubezpieczenia'));
+const CarMainpage = lazy(() => import('../new_pages/samochody'));
 const PlacesList = lazy(() => import('../new_pages/projekty/zestawienie'));
 const PlaceMainpage = lazy(() => import('../new_pages/projekty'));
 
@@ -214,6 +215,11 @@ const coreRoutes = [
     path: '/samochody/ubezpieczenia',
     title: 'Terminy OC/AC',
     component: CarsInsurances,
+  },
+  {
+    path: '/samochody/:carid',
+    title: 'Profil samochodu',
+    component: CarMainpage,
   },
 
   //projekty

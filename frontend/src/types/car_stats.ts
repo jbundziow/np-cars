@@ -30,7 +30,7 @@ export interface stats_oneMonthSchemaFuelUsage {
 export interface stats_CarFuelUsageInYear {
   carid: number,
   year: number,
-  distance: stats_oneMonthSchemaFuelUsage[]
+  response: stats_oneMonthSchemaFuelUsage[]
 }
 //................................................................//
 

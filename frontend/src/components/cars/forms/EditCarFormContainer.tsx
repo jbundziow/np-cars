@@ -607,7 +607,7 @@ const EditCarFormContainer = (props: EditCarFormContainerProps) => {
                       </div>
 
                       <div className="flex items-center pb-3 text-xs md:text-base">
-                        <StyledSpan color={'danger'} text={'\xa0' + '\xa0' + 'Nieaktywny' + '\xa0' + '\xa0'}/>
+                        <StyledSpan color={'danger'} text={'\xa0' + '\xa0' + 'Niedostępny' + '\xa0' + '\xa0'}/>
                         <p className="pl-4">Samochód nie może być wypożyczany przez innych użytkowników, ale nadal jest widoczny.</p>
                       </div>
 
