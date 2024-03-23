@@ -27,7 +27,7 @@ const SignUp = () => {
   const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
   const [errorText, setErrorText] = useState<string>('Wystąpił błąd. Skontaktuj się z administratorem.')
 
-  const validPassword = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // minimum eight characters, at least one letter and one number
+  const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
 
   const arePasswordsTheSame = (pass1: string, pass2: string): boolean => pass1 === pass2;
 
@@ -496,7 +496,11 @@ const SignUp = () => {
                     </span>
                   </div>
                 </div>
-                {pageState === PageStatus.DifferentPasswords || pageState === PageStatus.PasswordRegExpFail ? <p className="mb-5 text-danger font-bold text-lg text-center">{pageState === PageStatus.PasswordRegExpFail ? 'Hasło powinno mieć przynajmniej 8 znaków, powinno zawierać jedną literę oraz cyfrę.' : 'Hasła nie mogą się od siebie różnić!'}</p> : <></>}
+
+                <div className='flex justify-center'>
+                {pageState === PageStatus.DifferentPasswords || pageState === PageStatus.PasswordRegExpFail ? <p className="mb-5 text-danger font-bold text-xs md:text-base text-center max-w-[400px]">{pageState === PageStatus.PasswordRegExpFail ? 'Hasło powinno mieć minimum 8 znaków. Powinno zawierać przynajmniej: jedną wielką literę, jedną małą literę, jedną cyfrę, jeden znak specjalny.' : 'Hasła nie mogą się od siebie różnić!'}</p> : <></>}
+                </div>
+
                 <div className="mb-5">
                   <p>Uwaga! Po zarejestrowaniu się Twoje konto nadal pozostanie niekatywne do czasu jego potwierdzenia przez administratora serwisu.</p>
                 </div>

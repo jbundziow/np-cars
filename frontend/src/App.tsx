@@ -12,10 +12,13 @@ import adminRoutes from './routes/admin';
 import RequireAuth from './components/RequireAuth';
 import AuthLayout from './layout/AuthLayout';
 import Unauthorized from './new_pages/authentication/Unauthorized';
+import PasswordResetPage from './new_pages/authentication/PasswordResetPage';
+import PasswordResetRequestPage from './new_pages/authentication/PasswordResetRequestPage';
 
 import useAuth from './hooks/useAuth';
 import Cookies from "js-cookie";
-import PasswordResetResult from './new_pages/authentication/PasswordResetResult';
+
+
 
 const DefaultLayout = lazy(() => import('./layout/DefaultLayout'));
 
@@ -44,7 +47,8 @@ function App() {
       <Routes>
         {/* public routes */}
         <Route element={<AuthLayout />}>
-        <Route path="/auth/reset_password" element={<PasswordResetResult />} />
+        <Route path="/auth/reset_password" element={<PasswordResetPage />} />
+        <Route path="/auth/forgot_password" element={<PasswordResetRequestPage />} />
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} />
         <Route path="/unauthorized" element={<Unauthorized/>} />

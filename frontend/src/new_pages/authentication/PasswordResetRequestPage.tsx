@@ -1,66 +1,76 @@
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import useAuth from '../../hooks/useAuth';
+import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-icon-dark.png';
 import Logo from '../../images/logo/logo.png';
+import { useEffect, useState } from 'react';
+import OperationResult from '../../components/general/OperationResult';
+import { FormPageStatus } from '../../types/enums';
 import DOMAIN_NAME from '../../utilities/domainName';
-import { useState, useEffect } from 'react';
+import { warnings } from '../../types/common';
 
-const SignIn = () => {
-  useEffect(() => {document.title = `Logowanie | NP-CARS`}, []);
 
-  enum PageStatus {
-    FillingTheForm,
-    ErrorOccured
-  }
 
-  const { setAuth } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
 
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('')
-  const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
-  const [errorText, setErrorText] = useState<string>('Wystąpił błąd. Skontaktuj się z administratorem.')
+
+
+const PasswordResetRequestPage = () => {
+  useEffect(() => {document.title = `Zmiana hasła | NP-CARS`}, []);
+
+
+
+
+
+
+
+
+  const [email, setEmail] = useState<string>('')
+  const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
+
+
+
+  const [pageState, setPageState] = useState<FormPageStatus>(FormPageStatus.FillingTheForm)
+  const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
+
+
+
+
+
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const response = await fetch(`${DOMAIN_NAME}/auth/login`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json; charset=utf-8',
-        },
-        credentials: 'include',
-        body: JSON.stringify({email, password}),
-      });
-        const responseJSON = await response.json();
+    setButtonDisabled(true);
 
-      if (responseJSON.status === 'success') {
-        const {userID, userRole} = responseJSON.data;
-        setAuth({userID, userRole});
-        navigate(from, { replace: true });
-      } else {
-        if(responseJSON.status === 'fail') {
-          setErrorText(responseJSON.data[0].pl)
-          setPageState(PageStatus.ErrorOccured);
-          setPassword('')
-        }
-        else {
-          setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
-          setPageState(PageStatus.ErrorOccured);
-          setPassword('')
+      try {
+
+        const response = await fetch(`${DOMAIN_NAME}/auth/password_reset_request`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json; charset=utf-8',
+          },
+          credentials: 'include',
+          body: JSON.stringify({email}),
+        });
+        if (response.ok) {
+          setPageState(FormPageStatus.FormWasSentCorrectly);
+  
+        } else {
+          setButtonDisabled(false);
+          const responseJSON = await response.json();
+          if(responseJSON.status === 'fail') {
+            setPageState(FormPageStatus.FailOnSendingForm);
+            setWarnings(responseJSON.data);
+          }
+          else {
+          setPageState(FormPageStatus.ErrorWithSendingForm);
+          }
         }
       }
-    }
-    catch (error) {
-      setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
-      setPageState(PageStatus.ErrorOccured);
-      setPassword('')
-      console.log(error);
-    }
-  };
+      catch (error) {
+        setPageState(FormPageStatus.ErrorWithSendingForm);
+      }
+  
+}
 
+  
 
 
   return (
@@ -70,8 +80,8 @@ const SignIn = () => {
           <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
               <div className="mb-5.5 inline-block">
-                <img className="hidden dark:block w-40" src={Logo} alt="Logo" />
-                <img className="dark:hidden w-40" src={LogoDark} alt="Logo" />
+                <img className="hidden dark:block w-60" src={Logo} alt="Logo" />
+                <img className="dark:hidden w-60" src={LogoDark} alt="Logo" />
               </div>
 
               <span className="mt-15 inline-block">
@@ -198,18 +208,24 @@ const SignIn = () => {
               </span>
             </div>
           </div>
-
+          
           <div className="w-full border-stroke dark:border-strokedark xl:w-3/5 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              <span className="mb-1.5 block font-medium">Jedziemy!</span>
-              <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-              Zaloguj się do aplikacji np-cars
-              </h2>
-
+              
+              {pageState === FormPageStatus.FillingTheForm ?
               <form onSubmit={submitHandler}>
-                <div className="mb-4">
+
+                <span className="mb-1.5 block font-medium">Czasami tak się zdarza...</span>
+                <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
+                Zapomniałeś hasła?
+                </h2>
+              
+            
+              <div className="mb-4">
                   <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Email
+                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                    Wpisz adres email przypisany do Twojego konta
+                    </span>
                   </label>
                   <div className="relative">
                     <input
@@ -218,7 +234,6 @@ const SignIn = () => {
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       value={email}
                       onChange={e => setEmail(e.target.value)}
-                      onClick={() => setPageState(PageStatus.FillingTheForm)}
                       required
                     />
 
@@ -242,99 +257,58 @@ const SignIn = () => {
                   </div>
                 </div>
 
-                <div className="mb-6">
-                  <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    Hasło
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="password"
-                      placeholder="Wpisz swoje hasło"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      value={password}
-                      onChange={e => setPassword(e.target.value)}
-                      onClick={() => setPageState(PageStatus.FillingTheForm)}
-                      required
-                    />
-
-                    <span className="absolute right-4 top-4">
-                      <svg
-                        className="fill-current"
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g opacity="0.5">
-                          <path
-                            d="M16.1547 6.80626V5.91251C16.1547 3.16251 14.0922 0.825009 11.4797 0.618759C10.0359 0.481259 8.59219 0.996884 7.52656 1.95938C6.46094 2.92188 5.84219 4.29688 5.84219 5.70626V6.80626C3.84844 7.18438 2.33594 8.93751 2.33594 11.0688V17.2906C2.33594 19.5594 4.19219 21.3813 6.42656 21.3813H15.5016C17.7703 21.3813 19.6266 19.525 19.6266 17.2563V11C19.6609 8.93751 18.1484 7.21876 16.1547 6.80626ZM8.55781 3.09376C9.31406 2.40626 10.3109 2.06251 11.3422 2.16563C13.1641 2.33751 14.6078 3.98751 14.6078 5.91251V6.70313H7.38906V5.67188C7.38906 4.70938 7.80156 3.78126 8.55781 3.09376ZM18.1141 17.2906C18.1141 18.7 16.9453 19.8688 15.5359 19.8688H6.46094C5.05156 19.8688 3.91719 18.7344 3.91719 17.325V11.0688C3.91719 9.52189 5.15469 8.28438 6.70156 8.28438H15.2953C16.8422 8.28438 18.1141 9.52188 18.1141 11V17.2906Z"
-                            fill=""
-                          />
-                          <path
-                            d="M10.9977 11.8594C10.5852 11.8594 10.207 12.2031 10.207 12.65V16.2594C10.207 16.6719 10.5508 17.05 10.9977 17.05C11.4102 17.05 11.7883 16.7063 11.7883 16.2594V12.6156C11.7883 12.2031 11.4102 11.8594 10.9977 11.8594Z"
-                            fill=""
-                          />
-                        </g>
-                      </svg>
-                    </span>
-                  </div>
-                </div>
 
                 <div className="mb-5">
-                  <input
-                    type="submit"
-                    value="Zaloguj się"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
-                  />
-                </div>
 
-                {pageState === PageStatus.ErrorOccured ?
-                <div className="flex w-full border-l-6 border-warning bg-warning bg-opacity-[15%] px-4 py-4 shadow-md dark:bg-opacity-[5%]">
-                  <div className="mr-5 flex h-9 w-9 items-center justify-center rounded-lg bg-warning bg-opacity-30">
-                    <svg
-                      width="19"
-                      height="16"
-                      viewBox="0 0 19 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1.50493 16H17.5023C18.6204 16 19.3413 14.9018 18.8354 13.9735L10.8367 0.770573C10.2852 -0.256858 8.70677 -0.256858 8.15528 0.770573L0.156617 13.9735C-0.334072 14.8998 0.386764 16 1.50493 16ZM10.7585 12.9298C10.7585 13.6155 10.2223 14.1433 9.45583 14.1433C8.6894 14.1433 8.15311 13.6155 8.15311 12.9298V12.9015C8.15311 12.2159 8.6894 11.688 9.45583 11.688C10.2223 11.688 10.7585 12.2159 10.7585 12.9015V12.9298ZM8.75236 4.01062H10.2548C10.6674 4.01062 10.9127 4.33826 10.8671 4.75288L10.2071 10.1186C10.1615 10.5049 9.88572 10.7455 9.50142 10.7455C9.11929 10.7455 8.84138 10.5028 8.79579 10.1186L8.13574 4.75288C8.09449 4.33826 8.33984 4.01062 8.75236 4.01062Z"
-                        fill="#FBBF24"
-                      ></path>
-                    </svg>
-                  </div>
-                  <div className="w-full">
-                    <h5 className="text-lg font-semibold text-[#9D5425] text-[#D0915C]">
-                      {errorText}
-                    </h5>     
-                  </div>
                 </div>
-                :
-                <></>
-                }
+                <div className="mb-5">
+                  <button
+                    type="submit"
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    disabled={buttonDisabled}
+                  >
+                    Wyślij link do zmiany hasła
+                  </button>
+                </div>
+                
+
+            
 
 
                 <div className="mt-6 text-center">
                   <p>
-                    Nie masz konta?{' '}
-                    <Link to="/auth/signup" className="text-primary">
-                      Zarejestruj się
+                    Nie chcesz zmieniać hasła?{' '}
+                    <Link to="/auth/signin" className="text-primary">
+                      Zaloguj się
                     </Link>
                   </p>
                 </div>
 
-                <div className="mt-4 text-center">
-                  <p>
-                    Zapomniałeś hasła?{' '}
-                    <Link to="/auth/forgot_password" className="text-primary">
-                      Kliknij tutaj
-                    </Link>
-                  </p>
-                </div>
 
-              </form>
+            </form>
+            :
+            pageState === FormPageStatus.FormWasSentCorrectly ?
+            <>
+            <OperationResult status={'success'} title={'Wysłano link do zmiany hasła 👍'} description={`Na podany adres email ${email} wysłaliśmy link do zmiany hasła. Jest on ważny przez najbliższe 24 godziny. Jeżeli link nie dotarł, to sprawdź zakładkę SPAM lub spróbuj ponownie za kilka minut.`} showButton={false}/>
+            <div className="mt-6 text-center">
+              <p>
+                Chcesz się zalogować?{' '}
+                <Link to="/auth/signin" className="text-primary">
+                  Kliknij tutaj
+                </Link>
+              </p>
+            </div>
+            </>
+            :
+            pageState === FormPageStatus.ErrorWithSendingForm ?
+            <OperationResult status={'error'} title={'Wystąpił błąd podczas wysyłania prośby o zmianę hasła 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
+            :
+            pageState === FormPageStatus.FailOnSendingForm ?
+            <OperationResult status={'warning'} title={'Wystąpiły błędy podczas wysyłania prośby o zmianę hasła 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
+            :
+            <></>
+            }
+              
             </div>
           </div>
         </div>
@@ -343,4 +317,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default PasswordResetRequestPage;

@@ -9,7 +9,7 @@ const signUpUserSchema = Joi.object({
         .required(),
     
     password: Joi.string()
-        .regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/) // minimum eight characters, at least one letter and one number
+        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/) // minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
         .min(8)
         .required(),
 

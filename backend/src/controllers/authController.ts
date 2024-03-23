@@ -6,7 +6,7 @@ import { NextFunction, Request, Response, response } from 'express'
 import { signUpUserSchema } from '../models/validation/UserSchemas';
 import createToken from '../utilities/functions/JWT/createToken'
 import User, { UserModel } from '../models/User';
-import AuthServices from '../models/AuthServices';
+import AuthServices, { AuthServicesModel } from '../models/AuthServices';
 
 //email API
 import sgMail from '@sendgrid/mail';
@@ -185,10 +185,10 @@ export const changePasswordRequest_POST_public = async (req: Request, res: Respo
             sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
             const msg = {
                 to: data.email,
-                from: 'kuba.novaprocess@gmail.com',
+                from: `${process.env.EMAIL_FROM}`,
                 subject: 'Zmiana hasła | NP-CARS',
                 text: ' | NP-CARS | ',
-                html: emailHTML('Prośba o zmianę hasła', 'Otrzymaliśmy prośbę o zmianę hasła do Twojego konta.', 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${isLastTokenStillActive.dataValues.token}`)
+                html: emailHTML('Prośba o zmianę hasła', 'Otrzymaliśmy prośbę o zmianę hasła do Twojego konta.', 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${isLastTokenStillActive.dataValues.token}&userid=${isUserExist.dataValues.id}&email=${data.email}`)
             }
             const emailResult = await sgMail.send(msg);
             let emailSent = false;
@@ -211,6 +211,7 @@ export const changePasswordRequest_POST_public = async (req: Request, res: Respo
             const salt = await bcrypt.genSalt();
             const hashedToken = await bcrypt.hash(token, salt);
             
+            
 
             const newRequest = new AuthServices(null, Number(isUserExist.dataValues.id), 'password_change', data.email, date3MinutesLater, hashedToken, date24HoursLater);
             const db_Result = await newRequest.addOneRequest();
@@ -219,10 +220,10 @@ export const changePasswordRequest_POST_public = async (req: Request, res: Respo
             sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
             const msg = {
                 to: data.email,
-                from: 'kuba.novaprocess@gmail.com',
+                from: `${process.env.EMAIL_FROM}`,
                 subject: 'Zmiana hasła | NP-CARS',
                 text: ' | NP-CARS | ',
-                html: emailHTML('Prośba o zmianę hasła', 'Otrzymaliśmy prośbę o zmianę hasła do Twojego konta.', 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${hashedToken}`)
+                html: emailHTML('Prośba o zmianę hasła', 'Otrzymaliśmy prośbę o zmianę hasła do Twojego konta.', 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${token}&userid=${isUserExist.dataValues.id}&email=${data.email}`)
             }
             const emailResult = await sgMail.send(msg);
             let emailSent = false;
@@ -245,4 +246,87 @@ export const changePasswordRequest_POST_public = async (req: Request, res: Respo
         res.status(500).json({status: 'error', message: err})
     }
 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const changePassword_PUT_public = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+
+    if(!data.token) {
+        res.status(400).json({status: 'fail', data: [{en: `Wrong 'token' passed.`, pl: `Podano nieprawidłowy token.`}]});
+        return;
+    }
+    if(!data.password) {
+        res.status(400).json({status: 'fail', data: [{en: `No new 'password' passed.`, pl: `Nie podano nowego hasła.`}]});
+        return;
+    }
+    if(!data.email) {
+        res.status(400).json({status: 'fail', data: [{en: `No 'email' passed.`, pl: `Nie podano adresu email.`}]});
+        return;
+    }
+    if(!data.userid || isNaN(data.userid)) {
+        res.status(400).json({status: 'fail', data: [{en: `Wrong 'userid' passed.`, pl: `Podano nieprawidłowe id użytkownika.`}]});
+        return;
+    }
+
+
+    try {
+        const isUserExist = await UserModel.findOne({where: {id: data.userid, email: data.email}});
+        if(!isUserExist) {
+            res.status(400).json({status: 'fail', data: [{en: `User with email: ${data.email} does not exist in the database.`, pl: `Użytkownik o adresie email: ${data.email} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const dbResullt = await AuthServices.findLastActiveTokenOfUser(data.userid, data.email, 'password_change');
+        if(!dbResullt) {
+            res.status(400).json({status: 'fail', data: [{en: `Password change request for that user is not found in the database or the token has expired after 24 hours. You need to send 'change password' link again to your email address.`, pl: `Prośba o zmianę hasła dla tego użytkownika nie została znaleziona w bazie danych lub token wygasł po 24 godzinach. Musisz ponownie wysłać link do zmiany hasła na swój adres email.`}]});
+            return;
+        }
+
+
+        const tokenAuthenticated = await bcrypt.compare(data.token, dbResullt.dataValues.token);
+        if(!tokenAuthenticated) {
+            res.status(400).json({status: 'fail', data: [{en: `The token is invalid. You cannot change password.`, pl: `Token jest nieprawidłowy. Nie możesz zmienić hasła.`}]});
+            return;
+        }
+
+
+        //hash and then change password
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(data.password, salt);
+        const isPasswordChanged = await UserModel.update({password: hashedPassword}, {where: {id: isUserExist.dataValues.id}});
+
+        if(!isPasswordChanged) {
+            res.status(400).json({status: 'fail', data: [{en: `An error occured while changing the password. Try again later.`, pl: `Wystąpił błąd podczas zmiany hasła. Spróbuj ponownie później.`}]});
+            return;
+        }
+
+        await AuthServicesModel.update({tokenExpiresAt: new Date()}, {where: {id: dbResullt.dataValues.id}});
+
+        res.status(200).json({status: 'success', data: 'Password successfully changed.'});
+
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({status: 'error', message: err})
+    }
 }

@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { signup_POST_public, login_POST_public, logout_GET_public, changePasswordRequest_POST_public } from '../controllers/authController';
+import { signup_POST_public, login_POST_public, logout_GET_public, changePasswordRequest_POST_public, changePassword_PUT_public } from '../controllers/authController';
 
 const app = express.Router();
 
@@ -11,6 +11,7 @@ app.get('/logout', logout_GET_public);
 
 //auth services
 app.post('/password_reset_request', changePasswordRequest_POST_public);
+app.put('/password_reset', changePassword_PUT_public);
 
 
 export default app;
