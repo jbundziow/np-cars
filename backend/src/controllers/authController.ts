@@ -1,10 +1,24 @@
 
 const bcrypt = require('bcrypt');
+const crypto = require('crypto');
 
 import { NextFunction, Request, Response, response } from 'express'
 import { signUpUserSchema } from '../models/validation/UserSchemas';
 import createToken from '../utilities/functions/JWT/createToken'
-import User from '../models/User';
+import User, { UserModel } from '../models/User';
+import AuthServices from '../models/AuthServices';
+
+//email API
+import sgMail from '@sendgrid/mail';
+import emailHTML from '../utilities/emailTemplates/emailHTML';
+
+
+
+
+
+
+
+
 
 
 
@@ -45,8 +59,26 @@ export const signup_POST_public = async (req: Request, res: Response, next: Next
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const login_POST_public = async (req: Request, res: Response, next: NextFunction) => {
     const {email, password} = req.body;
+
+    try {
 
     if(req.cookies.jwt) { //logout if user is already logged in
         res.cookie('jwt', '', { maxAge: 1 });
@@ -54,7 +86,7 @@ export const login_POST_public = async (req: Request, res: Response, next: NextF
         res.cookie('userRole', '', { maxAge: 1 });
     }
 
-    try {
+    
         const loggedUser = await User.login(email, password);
         const token = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role, Number(process.env.JWT_MAXAGE));
         //TODO: MAKE SURE THAT IN PRODUCTION SECURE IS ENABLED
@@ -80,9 +112,137 @@ export const login_POST_public = async (req: Request, res: Response, next: NextF
     
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const logout_GET_public = async (req: Request, res: Response, next: NextFunction) => {
+    try {
     res.cookie('jwt', '', { maxAge: 1 });
     res.cookie('userID', '', { maxAge: 1 });
     res.cookie('userRole', '', { maxAge: 1 });
     res.status(200).json({status: 'success', data: {}});
+    }
+    catch (err) {
+        res.status(500).json({status: 'error', message: err})
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const changePasswordRequest_POST_public = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+
+    const currentDate = new Date();
+    const date3MinutesLater = new Date(currentDate.getTime() + 3*60000);
+    const date24HoursLater = new Date(currentDate.getTime() + 24*60*60000);
+
+    if(!data.email) {
+        res.status(400).json({status: 'fail', data: [{en: `'email' not passed.`, pl: `Nie podano 'email'.`}]})
+        return;
+    }
+
+    try {
+        const isUserExist = await UserModel.findOne({where: {email: data.email}});
+        if(!isUserExist) {
+            res.status(400).json({status: 'fail', data: [{en: `User with email: ${data.email} does not exist in the database.`, pl: `Użytkownik o adresie email: ${data.email} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const isLastTokenStillActive = await AuthServices.findLastActiveTokenOfUser(Number(isUserExist.dataValues.id), data.email, 'password_change');
+        if(isLastTokenStillActive) {
+            if(new Date(isLastTokenStillActive.dataValues.resendAvailableAt) > new Date()) {
+                res.status(400).json({status: 'fail', data: [{en: `A password change request has already been sent to: ${data.email}. Check also the SPAM tab. If the e-mail does not arrive, another attempt at sending it will be possible in ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minutes.`, pl: `Prośba o zmianę hasła została już wysłana na adres: ${data.email}. Sprawdź również kartę SPAM. Jeśli mail nie dociera, to następna próba wysłania linku będzie możliwa za ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minut.`}]})
+                return;
+            }
+            
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
+            const msg = {
+                to: data.email,
+                from: 'kuba.novaprocess@gmail.com',
+                subject: 'Zmiana hasła | NP-CARS',
+                text: ' | NP-CARS | ',
+                html: emailHTML('Prośba o zmianę hasła', 'Otrzymaliśmy prośbę o zmianę hasła do Twojego konta.', 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${isLastTokenStillActive.dataValues.token}`)
+            }
+            const emailResult = await sgMail.send(msg);
+            let emailSent = false;
+            if(emailResult && Array.isArray(emailResult) && emailResult[0]?.statusCode === 202) {emailSent = true};
+
+            if(!emailSent) {
+                res.status(400).json({status: 'fail', data: [{en: `An error occured while sending an email. Try again later.`, pl: `Wystąpił problem z wysyłaniem maila. Spróbuj ponownie później.`}]})
+                return;
+            }
+
+
+            const isResendAgainDateUpdated = await AuthServices.changeResendAvailableAt(Number(isLastTokenStillActive.dataValues.id), date3MinutesLater);
+
+            res.status(200).json({status: 'success', data: {emailSent, isResendAgainDateUpdated}});
+
+        }
+        else {
+            //create and send new token
+            const token = crypto.randomBytes(64).toString("hex");
+            const salt = await bcrypt.genSalt();
+            const hashedToken = await bcrypt.hash(token, salt);
+            
+
+            const newRequest = new AuthServices(null, Number(isUserExist.dataValues.id), 'password_change', data.email, date3MinutesLater, hashedToken, date24HoursLater);
+            const db_Result = await newRequest.addOneRequest();
+
+
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
+            const msg = {
+                to: data.email,
+                from: 'kuba.novaprocess@gmail.com',
+                subject: 'Zmiana hasła | NP-CARS',
+                text: ' | NP-CARS | ',
+                html: emailHTML('Prośba o zmianę hasła', 'Otrzymaliśmy prośbę o zmianę hasła do Twojego konta.', 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${hashedToken}`)
+            }
+            const emailResult = await sgMail.send(msg);
+            let emailSent = false;
+            if(emailResult && Array.isArray(emailResult) && emailResult[0]?.statusCode === 202) {emailSent = true};
+
+            if(!emailSent) {
+                res.status(400).json({status: 'fail', data: [{en: `An error occured while sending an email. Try again later.`, pl: `Wystąpił problem z wysyłaniem maila. Spróbuj ponownie później.`}]})
+                return;
+            }
+
+            res.status(200).json({status: 'success', data: emailSent});
+
+        }
+
+    
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({status: 'error', message: err})
+    }
+
 }
