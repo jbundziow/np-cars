@@ -100,7 +100,7 @@ const PasswordResetPage = () => {
 
   return (
     <>
-       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
+       <div className="max-w-[1400px] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
@@ -254,7 +254,7 @@ const PasswordResetPage = () => {
                       className={`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:bg-form-input dark:focus:border-primary ${passwordErrorState === passwordErrorStatus.DifferentPasswords || passwordErrorState === passwordErrorStatus.PasswordRegExpFail ? 'border-rose-700 dark:border-rose-700' : 'border-stroke dark:border-form-strokedark'}`}
                       value={password1}
                       onChange={e => setPassword1(e.target.value)}
-                      onClick={() => setPasswordErrorState(passwordErrorStatus.Initial)}
+                      onClick={() => {setPasswordErrorState(passwordErrorStatus.Initial); setButtonDisabled(false);}}
                       required
                     />
 
@@ -295,7 +295,7 @@ const PasswordResetPage = () => {
                       className={`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:bg-form-input dark:focus:border-primary ${passwordErrorState === passwordErrorStatus.DifferentPasswords || passwordErrorState === passwordErrorStatus.PasswordRegExpFail ? 'border-rose-700 dark:border-rose-700' : 'border-stroke dark:border-form-strokedark'}`}
                       value={password2}
                       onChange={e => setPassword2(e.target.value)}
-                      onClick={() => setPasswordErrorState(passwordErrorStatus.Initial)}
+                      onClick={() => {setPasswordErrorState(passwordErrorStatus.Initial); setButtonDisabled(false);}}
                       required
                     />
 
@@ -335,7 +335,7 @@ const PasswordResetPage = () => {
                 <div className="mb-5">
                   <button
                     type="submit"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:cursor-not-allowed"
                     disabled={buttonDisabled}
                   >
                     Zmień hasło do konta

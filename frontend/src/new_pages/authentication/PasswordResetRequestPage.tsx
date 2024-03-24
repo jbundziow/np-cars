@@ -75,7 +75,7 @@ const PasswordResetRequestPage = () => {
 
   return (
     <>
-       <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
+       <div className="max-w-[1400px] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
@@ -233,7 +233,7 @@ const PasswordResetRequestPage = () => {
                       placeholder="Wpisz swój adres email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       value={email}
-                      onChange={e => setEmail(e.target.value)}
+                      onChange={e => {setEmail(e.target.value); setButtonDisabled(false);}}
                       required
                     />
 
@@ -264,7 +264,7 @@ const PasswordResetRequestPage = () => {
                 <div className="mb-5">
                   <button
                     type="submit"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90"
+                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:cursor-not-allowed"
                     disabled={buttonDisabled}
                   >
                     Wyślij link do zmiany hasła

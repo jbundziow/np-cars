@@ -337,10 +337,6 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
   <tbody>
     <tr>
       <td style="overflow-wrap:break-word;word-break:break-word;padding:10px;font-family:'Lato',sans-serif;" align="left">
-        
-  <div style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="line-height: 140%;">This is a new Text block. Change the text.</p>
-  </div>
 
       </td>
     </tr>

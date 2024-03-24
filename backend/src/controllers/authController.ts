@@ -12,6 +12,7 @@ import AuthServices, { AuthServicesModel } from '../models/AuthServices';
 import sgMail from '@sendgrid/mail';
 import emailHTML from '../utilities/emailTemplates/emailHTML';
 import Joi from 'joi';
+import identifyUserId from '../utilities/functions/JWT/identifyUserId';
 
 
 
@@ -336,6 +337,248 @@ export const changePassword_PUT_public = async (req: Request, res: Response, nex
         await AuthServicesModel.update({tokenExpiresAt: new Date()}, {where: {id: dbResullt.dataValues.id}});
 
         res.status(200).json({status: 'success', data: 'Password successfully changed.'});
+
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({status: 'error', message: err})
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const changeEmailRequest_POST_public = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+
+    const currentDate = new Date();
+    const date3MinutesLater = new Date(currentDate.getTime() + 3*60000);
+    const date24HoursLater = new Date(currentDate.getTime() + 24*60*60000);
+
+    if(!data.old_email) {
+        res.status(400).json({status: 'fail', data: [{en: `'old_email' not passed.`, pl: `Nie podano 'old_email'.`}]})
+        return;
+    }
+
+    if(!data.new_email) {
+        res.status(400).json({status: 'fail', data: [{en: `'new_email' not passed.`, pl: `Nie podano 'new_email'.`}]})
+        return;
+    }
+
+    try {
+        const isUserExist = await UserModel.findOne({where: {email: data.old_email}});
+        if(!isUserExist) {
+            res.status(400).json({status: 'fail', data: [{en: `User with email: ${data.old_email} does not exist in the database.`, pl: `Użytkownik o adresie email: ${data.old_email} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const {id: userID, role: userRole} = await identifyUserId(req.cookies.jwt);
+        if(userID !== isUserExist.dataValues.id && userRole !== 'admin') {
+            res.status(400).json({status: 'fail', data: [{en: `You are not authorized to change the email of another user.`, pl: `Nie masz uprawnień do zmiany adresu email innego użytkownika.`}]}); 
+            return;
+        }
+
+        const isNewEmailExist = await UserModel.findOne({where: {email: data.new_email}});
+        if(isNewEmailExist) {
+            res.status(400).json({status: 'fail', data: [{en: `User with new email: ${data.new_email} already exist in the database.`, pl: `Użytkownik o nowym adresie email: ${data.new_email} już istnieje w bazie danych.`}]})
+            return;
+        }
+
+
+
+        const isLastTokenStillActive = await AuthServices.findLastActiveTokenOfUser(Number(isUserExist.dataValues.id), data.new_email, 'email_change');
+        if(isLastTokenStillActive) {
+            if(new Date(isLastTokenStillActive.dataValues.resendAvailableAt) > new Date()) {
+                res.status(400).json({status: 'fail', data: [{en: `An email change request has already been sent to: ${data.new_email}. Check also the SPAM tab. If the e-mail does not arrive, another attempt at sending it will be possible in ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minutes.`, pl: `Prośba o zmianę adresu email została już wysłana na adres: ${data.new_email}. Sprawdź również kartę SPAM. Jeśli mail nie dociera, to następna próba wysłania linku będzie możliwa za ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minut.`}]})
+                return;
+            }
+            
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
+            const msg = {
+                to: data.new_email,
+                from: `${process.env.EMAIL_FROM}`,
+                subject: 'Zmiana adresu email | NP-CARS',
+                text: ' | NP-CARS | ',
+                html: emailHTML('Prośba o zmianę adresu email', `Otrzymaliśmy prośbę o zmianę adresu email przypisanego do Twojego konta na nowy adres: ${data.new_email} .`, 'Potwierdź zmianę', `${process.env.FRONTEND_URL}/auth/change_email?token=${isLastTokenStillActive.dataValues.token}&userid=${isUserExist.dataValues.id}&userfullname=${isUserExist.dataValues.name}%20${isUserExist.dataValues.surname}&old_email=${data.old_email}&new_email=${data.new_email}`)
+            }
+            const emailResult = await sgMail.send(msg);
+            let emailSent = false;
+            if(emailResult && Array.isArray(emailResult) && emailResult[0]?.statusCode === 202) {emailSent = true};
+
+            if(!emailSent) {
+                res.status(400).json({status: 'fail', data: [{en: `An error occured while sending an email. Try again later.`, pl: `Wystąpił problem z wysyłaniem maila. Spróbuj ponownie później.`}]})
+                return;
+            }
+
+
+            const isResendAgainDateUpdated = await AuthServices.changeResendAvailableAt(Number(isLastTokenStillActive.dataValues.id), date3MinutesLater);
+
+            res.status(200).json({status: 'success', data: {emailSent, isResendAgainDateUpdated}});
+
+        }
+        else {
+            //create and send new token
+            const token = crypto.randomBytes(64).toString("hex");
+            const salt = await bcrypt.genSalt();
+            const hashedToken = await bcrypt.hash(token, salt);
+            
+            
+
+            const newRequest = new AuthServices(null, Number(isUserExist.dataValues.id), 'email_change', data.new_email, date3MinutesLater, hashedToken, date24HoursLater);
+            const db_Result = await newRequest.addOneRequest();
+
+
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
+            const msg = {
+                to: data.new_email,
+                from: `${process.env.EMAIL_FROM}`,
+                subject: 'Zmiana adresu email | NP-CARS',
+                text: ' | NP-CARS | ',
+                html: emailHTML('Prośba o zmianę adresu email', `Otrzymaliśmy prośbę o zmianę adresu email przypisanego do Twojego konta na nowy adres: ${data.new_email} .`, 'Potwierdź zmianę', `${process.env.FRONTEND_URL}/auth/change_email?token=${token}&userid=${isUserExist.dataValues.id}&userfullname=${isUserExist.dataValues.name}%20${isUserExist.dataValues.surname}&old_email=${data.old_email}&new_email=${data.new_email}`)
+            }
+            const emailResult = await sgMail.send(msg);
+            let emailSent = false;
+            if(emailResult && Array.isArray(emailResult) && emailResult[0]?.statusCode === 202) {emailSent = true};
+
+            if(!emailSent) {
+                res.status(400).json({status: 'fail', data: [{en: `An error occured while sending an email. Try again later.`, pl: `Wystąpił problem z wysyłaniem maila. Spróbuj ponownie później.`}]})
+                return;
+            }
+
+            res.status(200).json({status: 'success', data: emailSent});
+
+        }
+
+    
+
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({status: 'error', message: err})
+    }
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+export const changeEmail_PUT_public = async (req: Request, res: Response, next: NextFunction) => {
+    const data = req.body;
+
+    if(!data.token) {
+        res.status(400).json({status: 'fail', data: [{en: `Wrong 'token' passed.`, pl: `Podano nieprawidłowy token.`}]});
+        return;
+    }
+
+    if(!data.userid || isNaN(data.userid)) {
+        res.status(400).json({status: 'fail', data: [{en: `Wrong 'userid' passed.`, pl: `Podano nieprawidłowe id użytkownika.`}]});
+        return;
+    }
+
+    if(!data.new_email) {
+        res.status(400).json({status: 'fail', data: [{en: `Wrong 'new_email' passed.`, pl: `Podano nieprawidłowe 'new_email'.`}]});
+        return;
+    }
+
+
+    try {
+
+
+        const isUserExist = await UserModel.findOne({where: {id: data.userid}});
+        if(!isUserExist) {
+            res.status(400).json({status: 'fail', data: [{en: `User of ID: ${data.userid} does not exist in the database.`, pl: `Użytkownik o ID: ${data.userid} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const dbResult = await AuthServices.findLastActiveTokenOfUser(data.userid, data.new_email, 'email_change');
+        if(!dbResult) {
+            res.status(400).json({status: 'fail', data: [{en: `Email change request for that user is not found in the database or the token has expired after 24 hours. You need to send 'change email' link again to your new email address.`, pl: `Prośba o zmianę adresu email dla tego użytkownika nie została znaleziona w bazie danych lub token wygasł po 24 godzinach. Musisz ponownie wysłać link do zmiany adresu email na swój nowy adres email.`}]});
+            return;
+        }
+
+
+        const tokenAuthenticated = await bcrypt.compare(data.token, dbResult.dataValues.token);
+        if(!tokenAuthenticated) {
+            res.status(400).json({status: 'fail', data: [{en: `The token is invalid. You cannot change email.`, pl: `Token jest nieprawidłowy. Nie możesz zmienić adresu email.`}]});
+            return;
+        }
+
+
+
+        const isEmailChanged = await UserModel.update({email: dbResult.dataValues.sendTo}, {where: {id: dbResult.dataValues.id}});
+
+        if(!isEmailChanged) {
+            res.status(400).json({status: 'fail', data: [{en: `An error occured while changing the email address. Try again later.`, pl: `Wystąpił błąd podczas zmiany adresu email. Spróbuj ponownie później.`}]});
+            return;
+        }
+
+        await AuthServicesModel.update({tokenExpiresAt: new Date()}, {where: {id: dbResult.dataValues.id}});
+
+        res.status(200).json({status: 'success', data: 'Email successfully changed.'});
 
 
     }
