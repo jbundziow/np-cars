@@ -14,9 +14,11 @@ import AuthLayout from './layout/AuthLayout';
 import Unauthorized from './new_pages/authentication/Unauthorized';
 import PasswordResetPage from './new_pages/authentication/PasswordResetPage';
 import PasswordResetRequestPage from './new_pages/authentication/PasswordResetRequestPage';
+import EmailChangePage from './new_pages/authentication/EmailChangePage';
 
 import useAuth from './hooks/useAuth';
 import Cookies from "js-cookie";
+
 
 
 
@@ -49,6 +51,7 @@ function App() {
         <Route element={<AuthLayout />}>
         <Route path="/auth/reset_password" element={<PasswordResetPage />} />
         <Route path="/auth/forgot_password" element={<PasswordResetRequestPage />} />
+        <Route path="/auth/change_email" element={<EmailChangePage />} />
         <Route path="/auth/signin" element={<SignIn />} />
         <Route path="/auth/signup" element={<SignUp />} />
         <Route path="/unauthorized" element={<Unauthorized/>} />

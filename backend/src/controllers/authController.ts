@@ -438,7 +438,7 @@ export const changeEmailRequest_POST_public = async (req: Request, res: Response
                 from: `${process.env.EMAIL_FROM}`,
                 subject: 'Zmiana adresu email | NP-CARS',
                 text: ' | NP-CARS | ',
-                html: emailHTML('Prośba o zmianę adresu email', `Otrzymaliśmy prośbę o zmianę adresu email przypisanego do Twojego konta na nowy adres: ${data.new_email} .`, 'Potwierdź zmianę', `${process.env.FRONTEND_URL}/auth/change_email?token=${isLastTokenStillActive.dataValues.token}&userid=${isUserExist.dataValues.id}&userfullname=${isUserExist.dataValues.name}%20${isUserExist.dataValues.surname}&old_email=${data.old_email}&new_email=${data.new_email}`)
+                html: emailHTML('Prośba o zmianę adresu email', `Otrzymaliśmy prośbę o zmianę adresu email przypisanego do Twojego konta ${isUserExist.dataValues.name} ${isUserExist.dataValues.surname} w naszym serwisie NP-CARS na nowy adres: ${data.new_email} .`, 'Potwierdź zmianę', `${process.env.FRONTEND_URL}/auth/change_email?token=${isLastTokenStillActive.dataValues.token}&userid=${isUserExist.dataValues.id}&userfullname=${isUserExist.dataValues.name}%20${isUserExist.dataValues.surname}&old_email=${data.old_email}&new_email=${data.new_email}`)
             }
             const emailResult = await sgMail.send(msg);
             let emailSent = false;
@@ -473,7 +473,7 @@ export const changeEmailRequest_POST_public = async (req: Request, res: Response
                 from: `${process.env.EMAIL_FROM}`,
                 subject: 'Zmiana adresu email | NP-CARS',
                 text: ' | NP-CARS | ',
-                html: emailHTML('Prośba o zmianę adresu email', `Otrzymaliśmy prośbę o zmianę adresu email przypisanego do Twojego konta na nowy adres: ${data.new_email} .`, 'Potwierdź zmianę', `${process.env.FRONTEND_URL}/auth/change_email?token=${token}&userid=${isUserExist.dataValues.id}&userfullname=${isUserExist.dataValues.name}%20${isUserExist.dataValues.surname}&old_email=${data.old_email}&new_email=${data.new_email}`)
+                html: emailHTML('Prośba o zmianę adresu email', `Otrzymaliśmy prośbę o zmianę adresu email przypisanego do Twojego konta ${isUserExist.dataValues.name} ${isUserExist.dataValues.surname} w naszym serwisie NP-CARS na nowy adres: ${data.new_email} .`, 'Potwierdź zmianę', `${process.env.FRONTEND_URL}/auth/change_email?token=${token}&userid=${isUserExist.dataValues.id}&userfullname=${isUserExist.dataValues.name}%20${isUserExist.dataValues.surname}&old_email=${data.old_email}&new_email=${data.new_email}`)
             }
             const emailResult = await sgMail.send(msg);
             let emailSent = false;
