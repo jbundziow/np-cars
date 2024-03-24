@@ -11,6 +11,7 @@ import AuthServices, { AuthServicesModel } from '../models/AuthServices';
 //email API
 import sgMail from '@sendgrid/mail';
 import emailHTML from '../utilities/emailTemplates/emailHTML';
+import Joi from 'joi';
 
 
 
@@ -278,6 +279,7 @@ export const changePassword_PUT_public = async (req: Request, res: Response, nex
         res.status(400).json({status: 'fail', data: [{en: `No new 'password' passed.`, pl: `Nie podano nowego hasła.`}]});
         return;
     }
+    
     if(!data.email) {
         res.status(400).json({status: 'fail', data: [{en: `No 'email' passed.`, pl: `Nie podano adresu email.`}]});
         return;
@@ -289,6 +291,18 @@ export const changePassword_PUT_public = async (req: Request, res: Response, nex
 
 
     try {
+        const passwordSchema = Joi.string()
+        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/)
+        .min(8)
+        .required();
+
+        const { error } = passwordSchema.validate(data.password);
+        if (error) {
+            res.status(400).json({ status: 'fail', data: [{ en: `The password you entered does not meet the requirements. It has not passed validation.`, pl: 'Podane hasło nie spełnia wymagań. Nie przeszło walidacji.' }] });
+            return;
+        }
+
+
         const isUserExist = await UserModel.findOne({where: {id: data.userid, email: data.email}});
         if(!isUserExist) {
             res.status(400).json({status: 'fail', data: [{en: `User with email: ${data.email} does not exist in the database.`, pl: `Użytkownik o adresie email: ${data.email} nie istnieje w bazie danych.`}]})
