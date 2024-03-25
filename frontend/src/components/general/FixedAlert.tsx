@@ -23,7 +23,7 @@ export default function FixedAlert(props: FixedAlertProps): JSX.Element {
 
             <TEAlert
                 key={props.options.key}
-                className="max-[420px]:max-w-[250px] max-w-[350px]    2xl:w-auto my-6 max-w-3xl mx-auto top-[10%] left-0"
+                className="max-[420px]:max-w-[250px] max-w-[350px]    2xl:w-auto my-6 max-w-3xl mx-auto top-[10%] left-0    z-999"
                 color={`${props.options.color === 'success' ? 'bg-success' : props.options.color === 'warning' ? 'bg-warning' : 'bg-danger'} text-white`} 
                 // staticAlert
                 dismiss={props.options.dismiss_button}

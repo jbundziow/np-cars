@@ -237,7 +237,7 @@ const EmailChangePage = () => {
                   <div className="relative">
                     <input
                       type="text"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary disabled:cursor-not-allowed"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary disabled:cursor-not-allowed disabled:bg-whiter"
                       value={userid?.toString()}
                       required
                       disabled
@@ -278,7 +278,7 @@ const EmailChangePage = () => {
                   <div className="relative">
                     <input
                       type="text"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary disabled:cursor-not-allowed"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary disabled:cursor-not-allowed disabled:bg-whiter"
                       value={userFullname?.toString()}
                       required
                       disabled
@@ -318,7 +318,7 @@ const EmailChangePage = () => {
                   <div className="relative">
                     <input
                       type="email"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary disabled:cursor-not-allowed"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary disabled:cursor-not-allowed disabled:bg-whiter"
                       value={oldEmail?.toString()}
                       required
                       disabled
@@ -354,7 +354,7 @@ const EmailChangePage = () => {
                   <div className="relative">
                     <input
                       type="email"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary disabled:cursor-not-allowed"
+                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary disabled:cursor-not-allowed disabled:bg-whiter"
                       value={newEmail?.toString()}
                       required
                       disabled

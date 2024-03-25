@@ -50,6 +50,8 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
   const [showWarningPasswordResetModal, setShowWarningPasswordResetModal] = useState<boolean>(false);
   const [showWarningChangeImageModal, setShowWarningChangeImageModal] = useState<boolean>(false);
   const [showWarningDeleteImageModal, setShowWarningDeleteImageModal] = useState<boolean>(false);
+  const [showWarningChangeEmailModal, setShowWarningChangeEmailModal] = useState<boolean>(false);
+
 
 
 
@@ -170,6 +172,12 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
     }
   }
 
+
+
+
+
+
+
   const removeImage = async () => {
 
     try {
@@ -209,13 +217,69 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
 
 
   const changePassword = async () => {
-    //TODO
-    setPageState(EditUserDataPageStatus.LinkToPasswordResetSuccessfullySent)
+    setShowWarningPasswordResetModal(false);
+
+    try {
+      const response = await fetch(`${DOMAIN_NAME}/auth/password_reset_request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        credentials: 'include',
+        body: JSON.stringify({email})
+      });
+
+      if (response.ok) {
+        setAlertOptions(({showAlert: true, color: 'success', text: `Na adres email ${email} został wysłany link do zmiany hasła użytkownika ${props.user.name} ${props.user.surname}. Powinien się on pojawić w ciągu kilku minut. Pamiętaj o sprawdzeniu zakładki SPAM. Link jest aktywny 24 godziny.`, dismiss_button: true, autohide: true, delay_ms: 10000, key: Math.random()}))
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setAlertOptions(({showAlert: true, color: 'danger', text: `Wystąpił błąd: ${responseJSON.data[0].pl}`, dismiss_button: true, autohide: true, delay_ms: 10000, key: Math.random()}))
+          
+        }
+        else {
+          setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas wysyłania linku do zmiany hasła. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 7000, key: Math.random()}))
+        }
+      }
+    }
+    catch (error) {
+      setAlertOptions(({showAlert: true, color: 'danger', text: 'Wystąpił błąd podczas wysyłania linku do zmiany hasła. Spróbuj ponownie później.', dismiss_button: true, autohide: true, delay_ms: 7000, key: Math.random()}))
+    }
   }
 
+
+
+
+  
   const changeEmail = async () => {
-    //TODO
-    setPageState(EditUserDataPageStatus.LinkToEmailChangeSuccessfullySent)
+
+    try {
+      const response = await fetch(`${DOMAIN_NAME}/auth/email_change_request`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        },
+        credentials: 'include',
+        body: JSON.stringify({old_email: email, new_email: newEmail})
+      });
+
+      if (response.ok) {
+        setPageState(EditUserDataPageStatus.LinkToEmailChangeSuccessfullySent)
+
+      } else {
+        const responseJSON = await response.json();
+        if(responseJSON.status === 'fail') {
+          setPageState(EditUserDataPageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
+        }
+        else {
+        setPageState(EditUserDataPageStatus.ErrorWithSendingForm);
+        }
+      }
+    }
+    catch (error) {
+      setPageState(EditUserDataPageStatus.ErrorWithSendingForm);
+    }
   }
 
 
@@ -240,6 +304,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
     <ModalWarning showModal={showWarningPasswordResetModal} setShowModal={(state: boolean) => setShowWarningPasswordResetModal(state)} title= {'Resetowanie hasła'} bodyText={`Czy na pewno chcesz dokonać zmiany hasła? Spowoduje to wysłanie linku do zmiany hasła na adres email: ${props.user.email}. Link będzie aktywny przez najbliższe 24 godziny.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, wyślij link do zmiany hasła'} callback={ async () => await changePassword() }/>
     <ModalWarning showModal={showWarningChangeImageModal} setShowModal={(state: boolean) => setShowWarningChangeImageModal(state)} title= {'Zmień avatar'} bodyText={`Czy na pewno chcesz zmienić avatar użytkownika?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, zmień zdjęcie'} callback={ async () => await changeImage() }/>
     <ModalWarning showModal={showWarningDeleteImageModal} setShowModal={(state: boolean) => setShowWarningDeleteImageModal(state)} title= {'Zmień avatar'} bodyText={`Czy na pewno chcesz usunąć zdjęcie użytkownika?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń zdjęcie'} callback={ async () => await removeImage() }/>
+    <ModalWarning showModal={showWarningChangeEmailModal} setShowModal={(state: boolean) => setShowWarningChangeEmailModal(state)} title= {'Zmień adres email'} bodyText={`Czy na pewno chcesz zmienić adres email przypisany do konta ${props.user.name} ${props.user.surname} na ${newEmail}?`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, chcę dokonać zmiany'} callback={ async () => await changeEmail() }/>
     <FixedAlert options={alertOptions}/>
 
       <div className="mx-auto max-w-270">
@@ -736,9 +801,6 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
         pageState === EditUserDataPageStatus.LinkToEmailChangeSuccessfullySent ?
           <OperationResult status={'success'} title={'Wysłano email na nowy adres 👍'} description={'Wysłano link potwierdzający zmianę adresu email na adres wskazany w formularzu. Powinien się on pojawić w ciągu kilku minut. Pamiętaj o sprawdzeniu zakładki SPAM. Link jest aktywny 24 godziny.'} showButton={false}/>
         :
-        pageState === EditUserDataPageStatus.LinkToPasswordResetSuccessfullySent ?
-          <OperationResult status={'success'} title={'Wysłano link do zmiany hasła 👍'} description={'Na adres email użytkownika został wysłany link do zmiany hasła użytkownika. Powinien się on pojawić w ciągu kilku minut. Pamiętaj o sprawdzeniu zakładki SPAM. Link jest aktywny 24 godziny.'} showButton={false}/>
-        :
         pageState === EditUserDataPageStatus.ChangeEmailForm ?
         <div className="grid grid-cols-5 gap-8">
         <div className="col-span-5 xl:col-span-3">
@@ -750,7 +812,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
             </div>
             <div className="p-7">
               <form onSubmit={changeEmail}>
-                <p className="text-black dark:text-white pb-6">Na wpisany poniżej adres email zostanie wysłany nowy link aktywacyjny do konta <span className="font-bold">{props.user.name} {props.user.surname}</span>. Po kliknięciu w niego zmiana adresu email zostanie zatwierdzona. Link wygaśnie po 24 godzinach.</p>
+                <p className="text-black dark:text-white pb-6">Na wpisany poniżej nowy adres email zostanie wysłany nowy link aktywacyjny do konta <span className="font-bold">{props.user.name} {props.user.surname}</span>. Po kliknięciu w niego zmiana adresu email zostanie zatwierdzona. Link wygaśnie automatycznie po 24 godzinach.</p>
 
                 <div className="mb-5.5">
                       <label
@@ -856,7 +918,8 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                     </button>
                     <button
                       className="flex justify-center items-center rounded bg-primary py-2 px-6 font-medium text-gray hover:bg-opacity-70"
-                      type='submit'
+                      type='button'
+                      onClick={() => setShowWarningChangeEmailModal(true)}
                     >
                       Zmień adres email
                     </button>

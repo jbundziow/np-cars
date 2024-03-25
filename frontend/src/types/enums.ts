@@ -20,7 +20,6 @@ export enum EditUserDataPageStatus {
   UserDataSuccessfullyEdited,
   UserDataSuccessfullyDeleted,
   ImageSuccessfullyChanged,
-  LinkToPasswordResetSuccessfullySent,
   ChangeEmailForm,
   LinkToEmailChangeSuccessfullySent,
 }

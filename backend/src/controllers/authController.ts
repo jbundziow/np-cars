@@ -180,34 +180,12 @@ export const changePasswordRequest_POST_public = async (req: Request, res: Respo
         const isLastTokenStillActive = await AuthServices.findLastActiveTokenOfUser(Number(isUserExist.dataValues.id), data.email, 'password_change');
         if(isLastTokenStillActive) {
             if(new Date(isLastTokenStillActive.dataValues.resendAvailableAt) > new Date()) {
-                res.status(400).json({status: 'fail', data: [{en: `A password change request has already been sent to: ${data.email}. Check also the SPAM tab. If the e-mail does not arrive, another attempt at sending it will be possible in ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minutes.`, pl: `Prośba o zmianę hasła została już wysłana na adres: ${data.email}. Sprawdź również kartę SPAM. Jeśli mail nie dociera, to następna próba wysłania linku będzie możliwa za ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minut.`}]})
+                res.status(400).json({status: 'fail', data: [{en: `An password change request has already been sent to: ${data.email}. Check also the SPAM tab. If the e-mail does not arrive, another attempt at sending it will be possible in ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minutes.`, pl: `Prośba o zmianę hasła do konta została już wysłana na adres: ${data.email}. Sprawdź również kartę SPAM. Jeśli mail nie dociera, to następna próba wysłania linku będzie możliwa za ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minut.`}]})
                 return;
             }
-            
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
-            const msg = {
-                to: data.email,
-                from: `${process.env.EMAIL_FROM}`,
-                subject: 'Zmiana hasła | NP-CARS',
-                text: ' | NP-CARS | ',
-                html: emailHTML('Prośba o zmianę hasła', 'Otrzymaliśmy prośbę o zmianę hasła do Twojego konta.', 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${isLastTokenStillActive.dataValues.token}&userid=${isUserExist.dataValues.id}&email=${data.email}`)
-            }
-            const emailResult = await sgMail.send(msg);
-            let emailSent = false;
-            if(emailResult && Array.isArray(emailResult) && emailResult[0]?.statusCode === 202) {emailSent = true};
-
-            if(!emailSent) {
-                res.status(400).json({status: 'fail', data: [{en: `An error occured while sending an email. Try again later.`, pl: `Wystąpił problem z wysyłaniem maila. Spróbuj ponownie później.`}]})
-                return;
-            }
-
-
-            const isResendAgainDateUpdated = await AuthServices.changeResendAvailableAt(Number(isLastTokenStillActive.dataValues.id), date3MinutesLater);
-
-            res.status(200).json({status: 'success', data: {emailSent, isResendAgainDateUpdated}});
-
         }
-        else {
+
+
             //create and send new token
             const token = crypto.randomBytes(64).toString("hex");
             const salt = await bcrypt.genSalt();
@@ -225,7 +203,7 @@ export const changePasswordRequest_POST_public = async (req: Request, res: Respo
                 from: `${process.env.EMAIL_FROM}`,
                 subject: 'Zmiana hasła | NP-CARS',
                 text: ' | NP-CARS | ',
-                html: emailHTML('Prośba o zmianę hasła', 'Otrzymaliśmy prośbę o zmianę hasła do Twojego konta.', 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${token}&userid=${isUserExist.dataValues.id}&email=${data.email}`)
+                html: emailHTML('Prośba o zmianę hasła', `Otrzymaliśmy prośbę o zmianę hasła do Twojego konta ${isUserExist.dataValues.name} ${isUserExist.dataValues.surname} w serwisie NP-CARS.`, 'Zresetuj hasło', `${process.env.FRONTEND_URL}/auth/reset_password?token=${token}&userid=${isUserExist.dataValues.id}&email=${data.email}`)
             }
             const emailResult = await sgMail.send(msg);
             let emailSent = false;
@@ -238,7 +216,7 @@ export const changePasswordRequest_POST_public = async (req: Request, res: Respo
 
             res.status(200).json({status: 'success', data: emailSent});
 
-        }
+        
 
     
 
@@ -329,7 +307,7 @@ export const changePassword_PUT_public = async (req: Request, res: Response, nex
         const hashedPassword = await bcrypt.hash(data.password, salt);
         const isPasswordChanged = await UserModel.update({password: hashedPassword}, {where: {id: isUserExist.dataValues.id}});
 
-        if(!isPasswordChanged) {
+        if(Array.isArray(isPasswordChanged) && !isPasswordChanged[0]) {
             res.status(400).json({status: 'fail', data: [{en: `An error occured while changing the password. Try again later.`, pl: `Wystąpił błąd podczas zmiany hasła. Spróbuj ponownie później.`}]});
             return;
         }
@@ -431,31 +409,8 @@ export const changeEmailRequest_POST_public = async (req: Request, res: Response
                 res.status(400).json({status: 'fail', data: [{en: `An email change request has already been sent to: ${data.new_email}. Check also the SPAM tab. If the e-mail does not arrive, another attempt at sending it will be possible in ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minutes.`, pl: `Prośba o zmianę adresu email została już wysłana na adres: ${data.new_email}. Sprawdź również kartę SPAM. Jeśli mail nie dociera, to następna próba wysłania linku będzie możliwa za ${Math.ceil((new Date(isLastTokenStillActive.dataValues.resendAvailableAt).getTime() - new Date().getTime())/60000)} minut.`}]})
                 return;
             }
-            
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY || '');
-            const msg = {
-                to: data.new_email,
-                from: `${process.env.EMAIL_FROM}`,
-                subject: 'Zmiana adresu email | NP-CARS',
-                text: ' | NP-CARS | ',
-                html: emailHTML('Prośba o zmianę adresu email', `Otrzymaliśmy prośbę o zmianę adresu email przypisanego do Twojego konta ${isUserExist.dataValues.name} ${isUserExist.dataValues.surname} w naszym serwisie NP-CARS na nowy adres: ${data.new_email} .`, 'Potwierdź zmianę', `${process.env.FRONTEND_URL}/auth/change_email?token=${isLastTokenStillActive.dataValues.token}&userid=${isUserExist.dataValues.id}&userfullname=${isUserExist.dataValues.name}%20${isUserExist.dataValues.surname}&old_email=${data.old_email}&new_email=${data.new_email}`)
-            }
-            const emailResult = await sgMail.send(msg);
-            let emailSent = false;
-            if(emailResult && Array.isArray(emailResult) && emailResult[0]?.statusCode === 202) {emailSent = true};
-
-            if(!emailSent) {
-                res.status(400).json({status: 'fail', data: [{en: `An error occured while sending an email. Try again later.`, pl: `Wystąpił problem z wysyłaniem maila. Spróbuj ponownie później.`}]})
-                return;
-            }
-
-
-            const isResendAgainDateUpdated = await AuthServices.changeResendAvailableAt(Number(isLastTokenStillActive.dataValues.id), date3MinutesLater);
-
-            res.status(200).json({status: 'success', data: {emailSent, isResendAgainDateUpdated}});
-
         }
-        else {
+            
             //create and send new token
             const token = crypto.randomBytes(64).toString("hex");
             const salt = await bcrypt.genSalt();
@@ -486,7 +441,7 @@ export const changeEmailRequest_POST_public = async (req: Request, res: Response
 
             res.status(200).json({status: 'success', data: emailSent});
 
-        }
+        
 
     
 
@@ -569,9 +524,9 @@ export const changeEmail_PUT_public = async (req: Request, res: Response, next: 
 
 
 
-        const isEmailChanged = await UserModel.update({email: dbResult.dataValues.sendTo}, {where: {id: dbResult.dataValues.id}});
+        const isEmailChanged = await UserModel.update({email: dbResult.dataValues.sendTo}, {where: {id: dbResult.dataValues.userID}});
 
-        if(!isEmailChanged) {
+        if(Array.isArray(isEmailChanged) && !isEmailChanged[0]) {
             res.status(400).json({status: 'fail', data: [{en: `An error occured while changing the email address. Try again later.`, pl: `Wystąpił błąd podczas zmiany adresu email. Spróbuj ponownie później.`}]});
             return;
         }
