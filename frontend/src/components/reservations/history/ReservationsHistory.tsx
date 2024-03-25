@@ -6,6 +6,7 @@ import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
 import GenerateReservationExcel from "./GenerateReservationExcel";
+import TableSorting, { SortOptions } from "../../general/input_elements/TableSorting";
 
 
 
@@ -14,10 +15,13 @@ type ReservationsHistoryProps = {
     allCarsBasicData: db_Car_basic[] | [],
     usersData: db_User[] | [],
     setFilters: Function,
+    filters: string,
     setCurrentPage: (pageNumber: number) => void,
     paginationData: PaginationType,
     loadingTable: boolean,
-    filters: string,
+
+    setSelectedSortOptions: Function,
+    selectedSortOptions: SortOptions | null,
   }
 
 const ReservationsHistory = (props: ReservationsHistoryProps) => {
@@ -86,6 +90,9 @@ const ReservationsHistory = (props: ReservationsHistoryProps) => {
             </div>
             {props.loadingTable ? <Loader/> :
             <>
+            <div className="px-5 pt-6 pb-6 sm:px-7.5">
+            <TableSorting sortOptions={[{value: "createdAt", label: "Data utworzenia"}, {value: "updatedAt", label: "Data ostatniej edycji"}, {value: "dateFrom", label: "Data rezerwacji od"}, {value: "dateTo", label: "Data rezerwacji do"}, {value: "id", label: "ID rezerwacji"}, {value: "carID", label: "ID samochodu"}, {value: "userID", label: "ID użytkownika"}, {value: "lastEditedByModeratorOfID", label: "ID moderatora"}]} setSelectedSortOptions={(value: SortOptions) => props.setSelectedSortOptions(value)} selectedSortOptions={props.selectedSortOptions}/>
+            </div>
             <ReservationsHistoryTable reservationsData={props.reservationsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} />
 
             <GenerateReservationExcel filters={props.filters}/>
