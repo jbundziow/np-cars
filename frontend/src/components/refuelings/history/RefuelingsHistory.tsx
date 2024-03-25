@@ -6,6 +6,7 @@ import { db_Car_basic, db_Refueling, db_User } from "../../../types/db_types";
 import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
 import GenerateRefuelingExcel from "./GenerateRefuelingExcel";
+import TableSorting from "../../general/input_elements/TableSorting";
 
 
 
@@ -23,6 +24,13 @@ type RefuelingsHistoryProps = {
     averageConsumption?: number | null,
     totalCostBrutto?: number,
     averageCostPerLiter?: number | null,
+
+    setSortBy: Function,
+    sortBy: string,
+    setSortOrder: Function,
+    sortOrder: string,
+    setPageSize: Function,
+    pageSize: number,
   }
 
 const RefuelingsHistory = (props: RefuelingsHistoryProps) => {
@@ -91,9 +99,14 @@ const RefuelingsHistory = (props: RefuelingsHistoryProps) => {
             </div>
             {props.loadingTable ? <Loader/> :
             <>
+
+            <div className="px-5 pt-6 pb-6 sm:px-7.5">
+                <TableSorting sortOptions={[{value: "createdAt", label: "Data utworzenia"}, {value: "updatedAt", label: "Data ostatniej edycji"}, {value: "refuelingDate", label: "Data tankowania"}, {value: "carMileage", label: "Przebieg podczas tankowania"}, {value: "numberOfLiters", label: "Zatankowane litry paliwa"}, {value: "averageConsumption", label: "Średnie zużycie paliwa"}, {value: "costBrutto", label: "Koszt tankowania brutto"}, {value: "costPerLiter", label: "Koszt za litr paliwa"}, {value: "isFuelCardUsed", label: "Czy użyto karty flotowej?"}, {value: "moneyReturned", label: "Czy zwrócono koszty?"}, {value: "invoiceNumber", label: "Numer faktury"}, {value: "id", label: "ID tankowania"}, {value: "carID", label: "ID samochodu"}, {value: "userID", label: "ID użytkownika"}, {value: "isAcknowledgedByModerator", label: "ID moderatora potwierdzającego"}, {value: "lastEditedByModeratorOfID", label: "ID moderatora edytującego"}]} setSortBy={(value: string)=> props.setSortBy(value)} sortBy={props.sortBy} setSortOrder={(value: string)=> props.setSortOrder(value)} sortOrder={props.sortOrder} setPageSize={(value: number) => props.setPageSize(value)} pageSize={props.pageSize}/>
+            </div>
+
             <RefuelingsHistoryTable refuelingsData={props.refuelingsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalNumberOfLiters={props.totalNumberOfLiters} averageConsumption={props.averageConsumption} totalCostBrutto={props.totalCostBrutto} averageCostPerLiter={props.averageCostPerLiter}/>
 
-            <GenerateRefuelingExcel filters={props.filters}/>
+            <GenerateRefuelingExcel filters={props.filters} sortBy={props.sortBy} sortOrder={props.sortOrder}/>
             
             </>
             }

@@ -5,6 +5,7 @@ import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
 import PlacesTableFiltering from "./PlacesTableFiltering";
 import PlacesHistoryTable from "./PlacesHistoryTable";
+import TableSorting from "../../general/input_elements/TableSorting";
 
 
 
@@ -16,6 +17,13 @@ type PlacesHistoryProps = {
     paginationData: PaginationType,
     loadingTable: boolean,
     filters: string,
+
+    setSortBy: Function,
+    sortBy: string,
+    setSortOrder: Function,
+    sortOrder: string,
+    setPageSize: Function,
+    pageSize: number,
   }
 
 const PlacesHistory = (props: PlacesHistoryProps) => {
@@ -77,13 +85,18 @@ const PlacesHistory = (props: PlacesHistoryProps) => {
                     className="!mt-0 !rounded-b-none !shadow-none !overflow-visible"
                 >
                     <div>
-                        <PlacesTableFiltering setFilters={(val: string) => props.setFilters(val)} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+                        <PlacesTableFiltering setFilters={(val: string) => props.setFilters(val)} filters={props.filters} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
                     </div>
                 </TECollapse>
                 </div>
             </div>
             {props.loadingTable ? <Loader/> :
             <>
+
+            <div className="px-5 pt-6 pb-6 sm:px-7.5">
+                <TableSorting sortOptions={[{value: "createdAt", label: "Data utworzenia"}, {value: "updatedAt", label: "Data ostatniej edycji"}, {value: "status", label: "Status"}, {value: "projectCode", label: "Kod projektu"}, {value: "placeName", label: "Lokalizacja"}, {value: "projectName", label: "Pełna nazwa"}, {value: "id", label: "ID projektu"}]} setSortBy={(value: string)=> props.setSortBy(value)} sortBy={props.sortBy} setSortOrder={(value: string)=> props.setSortOrder(value)} sortOrder={props.sortOrder} setPageSize={(value: number) => props.setPageSize(value)} pageSize={props.pageSize}/>
+            </div>
+
             <PlacesHistoryTable placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} />
             
             </>

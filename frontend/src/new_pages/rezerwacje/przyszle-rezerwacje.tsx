@@ -35,7 +35,7 @@ const FutureReservations = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
       const filtersQuery = encodeURIComponent(JSON.stringify({reservationDatesRange_from: formatDate(new Date())})); //future reservations
-      const res1 = await fetchData(`${DOMAIN_NAME}/reservations/?filters=${filtersQuery}&pagenumber=1&pagesize=9999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${DOMAIN_NAME}/reservations/?filters=${filtersQuery}&pagenumber=1&sortby=dateFrom&sortorder=ASC&pagesize=9999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.status === 'success') {
         const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})

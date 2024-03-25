@@ -96,12 +96,12 @@ const ReservationsHistory = (props: ReservationsHistoryProps) => {
             <>
 
             <div className="px-5 pt-6 pb-6 sm:px-7.5">
-                <TableSorting sortOptions={[{value: "createdAt", label: "Data utworzenia"}, {value: "updatedAt", label: "Data ostatniej edycji"}, {value: "dateFrom", label: "Data rezerwacji od"}, {value: "dateTo", label: "Data rezerwacji do"}, {value: "id", label: "ID rezerwacji"}, {value: "carID", label: "ID samochodu"}, {value: "userID", label: "ID użytkownika"}, {value: "lastEditedByModeratorOfID", label: "ID moderatora"}]} setSortBy={(value: string)=> props.setSortBy(value)} sortBy={props.sortBy} setSortOrder={(value: string)=> props.setSortOrder(value)} sortOrder={props.sortOrder} setPageSize={(value: number) => props.setPageSize(value)} pageSize={props.pageSize}/>
+                <TableSorting sortOptions={[{value: "createdAt", label: "Data utworzenia"}, {value: "updatedAt", label: "Data ostatniej edycji"}, {value: "dateFrom", label: "Data rezerwacji od"}, {value: "dateTo", label: "Data rezerwacji do"}, {value: "travelDestination", label: "Cel podróży"}, {value: "id", label: "ID rezerwacji"}, {value: "carID", label: "ID samochodu"}, {value: "userID", label: "ID użytkownika"}, {value: "lastEditedByModeratorOfID", label: "ID moderatora"}]} setSortBy={(value: string)=> props.setSortBy(value)} sortBy={props.sortBy} setSortOrder={(value: string)=> props.setSortOrder(value)} sortOrder={props.sortOrder} setPageSize={(value: number) => props.setPageSize(value)} pageSize={props.pageSize}/>
             </div>
 
             <ReservationsHistoryTable reservationsData={props.reservationsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} />
 
-            <GenerateReservationExcel filters={props.filters}/>
+            <GenerateReservationExcel filters={props.filters} sortBy={props.sortBy} sortOrder={props.sortOrder}/>
             
             </>
             }

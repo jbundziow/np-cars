@@ -36,7 +36,7 @@ const MakeARentalAdminForm = (props: Props) => {
       const getData = async () => {   
        
       
-      const res1 = await fetchData(`${DOMAIN_NAME}/places?filters=%7B%22projectCode%22%3A%22%22%2C%22placeName%22%3A%22%22%2C%22projectName%22%3A%22%22%2C%22status%22%3A%22active%22%7D&pagenumber=1&pagesize=999999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${DOMAIN_NAME}/places?filters=%7B%22projectCode%22%3A%22%22%2C%22placeName%22%3A%22%22%2C%22projectName%22%3A%22%22%2C%22status%22%3A%22active%22%7D&pagenumber=1&sortby=createdAt&sortorder=ASC&pagesize=99999999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.status==='success') {
         const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=false`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})

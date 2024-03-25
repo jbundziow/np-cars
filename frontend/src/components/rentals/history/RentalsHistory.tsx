@@ -6,6 +6,7 @@ import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_ty
 import { PaginationType } from "../../../types/common";
 import Loader from "../../../common/Loader";
 import GenerateRentalExcel from "./GenerateRentalExcel";
+import TableSorting from "../../general/input_elements/TableSorting";
 
 
 
@@ -20,6 +21,13 @@ type RentalsHistoryProps = {
     totalDistance: number,
     loadingTable: boolean,
     filters: string,
+
+    setSortBy: Function,
+    sortBy: string,
+    setSortOrder: Function,
+    sortOrder: string,
+    setPageSize: Function,
+    pageSize: number,
   }
 
 const RentalsHistory = (props: RentalsHistoryProps) => {
@@ -92,9 +100,14 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
             </div>
             {props.loadingTable ? <Loader/> :
             <>
+
+            <div className="px-5 pt-6 pb-6 sm:px-7.5">
+                <TableSorting sortOptions={[{value: "createdAt", label: "Data utworzenia"}, {value: "updatedAt", label: "Data ostatniej edycji"}, {value: "dateFrom", label: "Data wypożyczenia od"}, {value: "dateTo", label: "Data wypożyczenia do"}, {value: "carMileageBefore", label: "Przebieg od"}, {value: "carMileageAfter", label: "Przebieg do"}, {value: "distance", label: "Dystans"}, {value: "travelDestination", label: "Cel podróży"}, {value: "id", label: "ID wypożyczenia"}, {value: "carID", label: "ID samochodu"}, {value: "userID", label: "ID wypożyczającego"}, {value: "returnUserID", label: "ID zwracającego"},{value: "placeID", label: "ID projektu"}, {value: "lastEditedByModeratorOfID", label: "ID moderatora"}]} setSortBy={(value: string)=> props.setSortBy(value)} sortBy={props.sortBy} setSortOrder={(value: string)=> props.setSortOrder(value)} sortOrder={props.sortOrder} setPageSize={(value: number) => props.setPageSize(value)} pageSize={props.pageSize}/>
+            </div>
+
             <RentalsHistoryTable rentalsData={props.rentalsData} allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} totalDistance={props.totalDistance}/>
 
-            <GenerateRentalExcel filters={props.filters}/>
+            <GenerateRentalExcel filters={props.filters} sortBy={props.sortBy} sortOrder={props.sortOrder}/>
 
             </>
             }

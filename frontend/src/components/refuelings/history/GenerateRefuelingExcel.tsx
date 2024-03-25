@@ -10,6 +10,8 @@ import { generateExcelPageState } from "../../../types/enums";
 
 type GenerateRefuelingExcelProps = {
     filters: string,
+    sortBy: string,
+    sortOrder: string,
   }
   
   
@@ -39,7 +41,7 @@ type GenerateRefuelingExcelProps = {
       const getData = async () => {
         setPageState(generateExcelPageState.loading)
 
-        const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=${props.filters}&pagenumber=1&pagesize=9999&sortfromoldest=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=${props.filters}&pagenumber=1&sortby=${props.sortBy}&sortorder=${props.sortOrder}&pagesize=999999999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         if(res1.status==='success') {
           const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           if(res2.status==='success') {

@@ -4,18 +4,25 @@ import { useState } from "react";
 
 
 type PlacesTableFilteringProps = {
-    setFilters: Function
-    setCurrentPage: Function
+    setFilters: Function,
+    filters: string,
+    setCurrentPage: Function,
 }
 
 
 
 const PlacesTableFiltering = (props: PlacesTableFilteringProps) => {
+    let parsedFilters;
+    try {
+        parsedFilters = JSON.parse(decodeURIComponent(props.filters));
+    } catch (error) {
+        parsedFilters = null;
+    }
 
-    const [projectCode, setProjectCode] = useState<string>('');
-    const [placeName, setPlaceName] = useState<string>('');
-    const [projectName, setProjectName] = useState<string>('');
-    const [status, setStatus] = useState<string>('');
+    const [projectCode, setProjectCode] = useState<string>(parsedFilters?.projectCode || '');
+    const [placeName, setPlaceName] = useState<string>(parsedFilters?.placeName || '');
+    const [projectName, setProjectName] = useState<string>(parsedFilters?.projectName || '');
+    const [status, setStatus] = useState<string>(parsedFilters?.status || '');
     
     
 

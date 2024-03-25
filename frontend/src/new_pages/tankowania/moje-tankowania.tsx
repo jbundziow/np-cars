@@ -38,7 +38,7 @@ const MyRefuelings = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
 
-      const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=%7B%22userIDs%22%3A%5B${auth.userID}%5D%7D&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=%7B%22userIDs%22%3A%5B${auth.userID}%5D%7D&pagenumber=${currentPage}&sortby=createdAt&sortorder=DSC&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.pagination) {setPaginationData(res1.pagination)}
       if(res1.status==='success') {
