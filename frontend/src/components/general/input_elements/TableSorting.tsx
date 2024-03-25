@@ -41,10 +41,10 @@ const TableSorting = (props: TableSortingProps) => {
 
                 <select
                 className="md:w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-sm md:text-base"
-                value={props.sortOrder || "DSC"}
+                value={props.sortOrder || "DESC"}
                 onChange={(e) => props.setSortOrder(e.target.value)}
                 >
-                <option value="DSC">Malejąco</option>
+                <option value="DESC">Malejąco</option>
                 <option value="ASC">Rosnąco</option>
                 </select>
 

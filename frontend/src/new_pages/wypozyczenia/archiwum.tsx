@@ -30,7 +30,7 @@ const RentalsArchive = (props: Props) => {
     const [paginationData, setPaginationData] = useState<PaginationType>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false}) //pagination data
 
     const [sortBy, setSortBy] = useState<string>(params.get('sortby') || 'createdAt');
-    const [sortOrder, setSortOrder] = useState<string>(params.get('sortorder') || 'DSC');
+    const [sortOrder, setSortOrder] = useState<string>(params.get('sortorder') || 'DESC');
     const [pageSize, setPageSize] = useState<number>(Number(params.get('pagesize')) || 8);
 
 
