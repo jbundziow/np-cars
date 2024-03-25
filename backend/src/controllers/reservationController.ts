@@ -26,6 +26,7 @@ import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValue
 
 
 export const fetchAllReservationsWithFilters_GET_user = async (req: Request, res: Response, next: NextFunction) => {
+    const validSortOptions = ["createdAt", "updatedAt", "dateFrom", "dateTo", "travelDestination", "id", "carID", "userID", "lastEditedByModeratorOfID"];
     if(!req.query.filters) {
         res.status(400).json({status: 'fail', data: [{en: `No query param 'filters' passed.`, pl: `Nie przekazano 'filters' w parametrach zapytania.`}]})
         return;
@@ -38,8 +39,8 @@ export const fetchAllReservationsWithFilters_GET_user = async (req: Request, res
         res.status(400).json({status: 'fail', data: [{en: `No query param 'pagesize' passed or it is not a number.`, pl: `Nie przekazano 'pagesize' w parametrach zapytania lub nie jest to cyfra.`}]})
         return;
     }
-    if(!req.query.sortby) {
-        res.status(400).json({status: 'fail', data: [{en: `No query param 'sortby' passed.`, pl: `Nie przekazano 'sortby' w parametrach zapytania.`}]})
+    if(!req.query.sortby || !validSortOptions.includes(req.query.sortby.toString())) {
+        res.status(400).json({status: 'fail', data: [{en: `No query param 'sortby' passed or passed a wrong value. Available options: ${validSortOptions.map(option => ` "${option}"`)}.`, pl: `Nie przekazano 'sortby' w parametrach zapytania lub przekazano nieprawidłową wartość. Dostępne opcje to: ${validSortOptions.map(option => ` "${option}"`)}.`}]})
         return;
     }
     if(!req.query.sortorder || (req.query.sortorder !== 'ASC' && req.query.sortorder !== 'DESC')) {

@@ -92,7 +92,7 @@ class Place {
 
 
 
-    static async fetchAllPlacesWithFilters (filters:any, pageSize: number, pageNumber: number, sortFromOldest: boolean) {
+    static async fetchAllPlacesWithFilters (filters:any, pageSize: number, pageNumber: number, sortBy: string, sortOrder: 'ASC' | 'DESC') {
       const whereClause: any = {};
 
 
@@ -133,14 +133,13 @@ class Place {
       const offset = (pageNumber - 1) * pageSize;
 
 
-      let sortDirection: 'ASC' | 'DESC' = 'DESC';
-      if(sortFromOldest === true) {sortDirection = 'ASC'}
+
 
       const records = await PlaceModel.findAll({
           where: whereClause,
           limit: pageSize,
           offset: offset,
-          order: [['createdAt', sortDirection]] //sort from the newest
+          order: [[sortBy, sortOrder]]
       });
 
 

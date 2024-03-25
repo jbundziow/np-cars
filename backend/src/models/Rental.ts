@@ -386,7 +386,7 @@ class Rental {
 
     
 
-    static async fetchAllRentalsWithFilters (filters:any, pageSize: number, pageNumber: number, sortFromOldest: boolean) {
+    static async fetchAllRentalsWithFilters (filters:any, pageSize: number, pageNumber: number, sortBy: string, sortOrder: 'ASC' | 'DESC') {
         const whereClause: any = {};
 
         //arrays
@@ -499,8 +499,6 @@ class Rental {
 
         const offset = (pageNumber - 1) * pageSize;
 
-        let sortDirection: 'ASC' | 'DESC' = 'DESC';
-        if(sortFromOldest === true) {sortDirection = 'ASC'}
 
         
 
@@ -509,7 +507,7 @@ class Rental {
             where: whereClause,
             limit: pageSize,
             offset: offset,
-            order: [['createdAt', sortDirection]] //'DESC' = sort from the newest; 'ASC' = sort from the oldest
+            order: [[sortBy, sortOrder]],
         });
 
         
