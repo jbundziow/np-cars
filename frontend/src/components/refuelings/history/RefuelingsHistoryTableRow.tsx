@@ -52,7 +52,7 @@ const RefuelingsHistoryTableRow = (props: RefuelingsHistoryTableRowProps) => {
             />
 
             </div>
-            <Link to={`/samochody/${[props.carData.id]}`} target="_blank" className="underline decoration-[0.5px] underline-offset-1 xl:w-[40%]">
+            <Link to={`/samochody/${[props.carData.id]}`} target="_self" className="underline decoration-[0.5px] underline-offset-1 xl:w-[40%]">
             <h5 className="font-medium text-xs xl:text-sm text-black dark:text-white">
             {`${props.carData.brand} ${props.carData.model}`}
             </h5>
@@ -62,7 +62,7 @@ const RefuelingsHistoryTableRow = (props: RefuelingsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={refuelingUserObject} nullText={'brak'} linkTarget={'_blank'} no_wrap={true}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={refuelingUserObject} nullText={'brak'} linkTarget={'_self'} no_wrap={true}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
@@ -115,7 +115,7 @@ const RefuelingsHistoryTableRow = (props: RefuelingsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={isAcknowledgedByModeratorUserObject} nullText={'Nie'} linkTarget={'_blank'} no_wrap={true}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={isAcknowledgedByModeratorUserObject} nullText={'Nie'} linkTarget={'_self'} no_wrap={true}/></p>
         </div>
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
@@ -141,7 +141,7 @@ const RefuelingsHistoryTableRow = (props: RefuelingsHistoryTableRowProps) => {
     </td>
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">
-        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={lastEditedByModeratorUserObject} nullText={'Nie'} linkTarget={'_blank'} no_wrap={true}/></p>
+        <p className='dark:text-white text-black text-xs xl:text-sm'><UserSpan userObj={lastEditedByModeratorUserObject} nullText={'Nie'} linkTarget={'_self'} no_wrap={true}/></p>
         </div>
     </td>
     {auth.userRole === 'admin' ?

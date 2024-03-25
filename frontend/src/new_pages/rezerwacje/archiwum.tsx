@@ -38,12 +38,13 @@ const ReservationArchive = (props: Props) => {
 
     useEffect(() => {
       const getData = async () => {
+        setLoadingTable(true)
+
+
         params.set('page', currentPage.toString())
         params.set('filters', filters)
         window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
 
-
-        setLoadingTable(true)
 
         const res1 = await fetchData(`${DOMAIN_NAME}/reservations?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);

@@ -10,6 +10,7 @@ import { db_Car_basic, db_User } from "../../../types/db_types";
 type RefuelingTableFilteringProps = {
     allCarsBasicData: db_Car_basic[] | [],
     usersData: db_User[] | [],
+    filters: string,
     setFilters: Function
     setCurrentPage: Function
 }
@@ -17,29 +18,12 @@ type RefuelingTableFilteringProps = {
 
 
 const RefuelingTableFiltering = (props: RefuelingTableFilteringProps) => {
-
-    const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
-    const [selectedUserIDs, setSelectedUserIDs] = useState<SelectValue>(null);
-    const [refuelingDatesRange, setRefuelingDatesRange] = useState<DateValueType>(null);
-    const [carMileage_FROM, setCarMileage_FROM] = useState<number | ''>('');
-    const [carMileage_TO, setCarMileage_TO] = useState<number | ''>('');
-    const [numberOfLiters_FROM, setNumberOfLiters_FROM] = useState<number | ''>('');
-    const [numberOfLiters_TO, setNumberOfLiters_TO] = useState<number | ''>('');
-    const [averageConsumption_FROM, setAverageConsumption_FROM] = useState<number | ''>('');
-    const [averageConsumption_TO, setAverageConsumption_TO] = useState<number | ''>('');
-    const [costBrutto_FROM, setCostBrutto_FROM] = useState<number | ''>('');
-    const [costBrutto_TO, setCostBrutto_TO] = useState<number | ''>('');
-    const [costPerLiter_FROM, setCostPerLiter_FROM] = useState<number | ''>('');
-    const [costPerLiter_TO, setCostPerLiter_TO] = useState<number | ''>('');
-    const [isFuelCardUsed, setIsFuelCardUsed] = useState<string>('');
-    const [moneyReturned, setMoneyReturned] = useState<string>('');
-    const [invoiceNumber, setInvoiceNumber] = useState<string>('');
-
-    const [isAcknowledgedByModerator, setIsAcknowledgedByModerator] = useState<string>('');
-    const [selectedAcknowledgementModerator, setSelectedAcknowledgementModerator] = useState<SelectValue>(null);
-
-    const [wasEditedByModerator, setWasEditedByModerator] = useState<string>('');
-    const [selectedEditorModerator, setSelectedEditorModerator] = useState<SelectValue>(null);
+    let parsedFilters;
+    try {
+        parsedFilters = JSON.parse(decodeURIComponent(props.filters));
+    } catch (error) {
+        parsedFilters = null;
+    }
 
 
    
@@ -60,6 +44,31 @@ const RefuelingTableFiltering = (props: RefuelingTableFilteringProps) => {
             value: user.id.toString(),
             label: `${user.name} ${user.surname}`
         }));
+
+
+
+    const [selectedCars, setSelectedCars] = useState<SelectValue>(parsedFilters?.carIDs?.map((id: number) => carOptions.find((car: Option) => Number(car.value) === id) || null).filter((car: Option | null) => car !== null));
+    const [selectedUserIDs, setSelectedUserIDs] = useState<SelectValue>(parsedFilters?.userIDs?.map((id: number) => userOptions.find((user: Option) => Number(user.value) === id) || null).filter((user: Option | null) => user !== null));
+    const [refuelingDatesRange, setRefuelingDatesRange] = useState<DateValueType>(parsedFilters?.refuelingDateRange_from && parsedFilters?.refuelingDateRange_to ? {startDate: new Date(parsedFilters.refuelingDateRange_from), endDate: new Date(parsedFilters.refuelingDateRange_to)} : null);
+    const [carMileage_FROM, setCarMileage_FROM] = useState<number | ''>(parsedFilters?.carMileage_from || '');
+    const [carMileage_TO, setCarMileage_TO] = useState<number | ''>(parsedFilters?.carMileage_to || '');
+    const [numberOfLiters_FROM, setNumberOfLiters_FROM] = useState<number | ''>(parsedFilters?.numberOfLiters_from || '');
+    const [numberOfLiters_TO, setNumberOfLiters_TO] = useState<number | ''>(parsedFilters?.numberOfLiters_to || '');
+    const [averageConsumption_FROM, setAverageConsumption_FROM] = useState<number | ''>(parsedFilters?.averageConsumption_from || '');
+    const [averageConsumption_TO, setAverageConsumption_TO] = useState<number | ''>(parsedFilters?.averageConsumption_to || '');
+    const [costBrutto_FROM, setCostBrutto_FROM] = useState<number | ''>(parsedFilters?.costBrutto_from || '');
+    const [costBrutto_TO, setCostBrutto_TO] = useState<number | ''>(parsedFilters?.costBrutto_to || '');
+    const [costPerLiter_FROM, setCostPerLiter_FROM] = useState<number | ''>(parsedFilters?.costPerLiter_from || '');
+    const [costPerLiter_TO, setCostPerLiter_TO] = useState<number | ''>(parsedFilters?.costPerLiter_to || '');
+    const [isFuelCardUsed, setIsFuelCardUsed] = useState<string>(parsedFilters?.isFuelCardUsed === true ? 'true' : parsedFilters?.isFuelCardUsed === false ? 'false' : '');
+    const [moneyReturned, setMoneyReturned] = useState<string>(parsedFilters?.moneyReturned === true ? 'true' : parsedFilters?.moneyReturned === false ? 'false' : '');
+    const [invoiceNumber, setInvoiceNumber] = useState<string>(parsedFilters?.invoiceNumber || '');
+
+    const [isAcknowledgedByModerator, setIsAcknowledgedByModerator] = useState<string>(parsedFilters?.isAcknowledgedByModerator === true ? 'true' : parsedFilters?.isAcknowledgedByModerator === false ? 'false' : '');
+    const [selectedAcknowledgementModerator, setSelectedAcknowledgementModerator] = useState<SelectValue>(parsedFilters?.isAcknowledgedByModeratorIDs?.map((id: number) => userAdminOptions.find((user: Option) => Number(user.value) === id) || null).filter((user: Option | null) => user !== null));
+
+    const [wasEditedByModerator, setWasEditedByModerator] = useState<string>(parsedFilters?.lastEditedByModerator === true ? 'true' : parsedFilters?.lastEditedByModerator === false ? 'false' : '');
+    const [selectedEditorModerator, setSelectedEditorModerator] = useState<SelectValue>(parsedFilters?.lastEditedByModeratorIDs?.map((id: number) => userAdminOptions.find((user: Option) => Number(user.value) === id) || null).filter((user: Option | null) => user !== null));
 
 
 

@@ -17,13 +17,15 @@ interface Props {
 const RefuelingArchive = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
+    const params = new URLSearchParams(window.location.search);
+
     
 
     const [data1, setData1] = useState<ApiResponse>();  //refuelings data from backend
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
     const [data3, setData3] = useState<ApiResponse>();  //all users data
-    const [filters, setFilters] = useState<string>('%7B%7D'); //%7B%7D is an empty object {}
-    const [currentPage, setCurrentPage] = useState<number>(1) //current page for pagination
+    const [filters, setFilters] = useState<string>(params.get('filters') || '%7B%7D'); //%7B%7D is an empty object {}
+    const [currentPage, setCurrentPage] = useState<number>(Number(params.get('page')) || 1) //current page for pagination
     const [paginationData, setPaginationData] = useState<PaginationType>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false}) //pagination data
 
     //additional refueling data stats
@@ -43,6 +45,12 @@ const RefuelingArchive = (props: Props) => {
     useEffect(() => {
       const getData = async () => {
         setLoadingTable(true)
+
+        
+        params.set('page', currentPage.toString())
+        params.set('filters', filters)
+        window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+        
 
         const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
