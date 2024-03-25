@@ -6,7 +6,6 @@ import fetchData from "../../utilities/fetchData";
 import { ApiResponse, PaginationType } from "../../types/common";
 import ReservationsHistory from "../../components/reservations/history/ReservationsHistory";
 import Loader from "../../common/Loader";
-import { SortOptions } from "../../components/general/input_elements/TableSorting";
 
 
 
@@ -26,9 +25,12 @@ const ReservationArchive = (props: Props) => {
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
     const [data3, setData3] = useState<ApiResponse>();  //all users data
     const [filters, setFilters] = useState<string>(params.get('filters') || '%7B%7D'); //%7B%7D is an empty object {}
-    const [selectedSortOptions, setSelectedSortOptions] = useState<SortOptions | null>(null);
     const [currentPage, setCurrentPage] = useState<number>(Number(params.get('page')) || 1) //current page for pagination
     const [paginationData, setPaginationData] = useState<PaginationType>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false}) //pagination data
+
+    const [sortBy, setSortBy] = useState<string>(params.get('sortby') || 'createdAt');
+    const [sortOrder, setSortOrder] = useState<string>(params.get('sortorder') || 'DSC');
+    const [pageSize, setPageSize] = useState<number>(Number(params.get('pagesize')) || 8);
 
 
     const [failData, setFailData] = useState<ApiResponse>();
@@ -42,18 +44,16 @@ const ReservationArchive = (props: Props) => {
       const getData = async () => {
         setLoadingTable(true)
 
-
         params.set('page', currentPage.toString())
         params.set('filters', filters)
-        params.set('sortby', selectedSortOptions?.sortby || '')
-        params.set('order', selectedSortOptions?.order || '')
-        params.set('pagesize', selectedSortOptions?.pagesize?.toString() || '8')
-        console.log(selectedSortOptions);
+        params.set('sortby', sortBy)
+        params.set('sortorder', sortOrder)
+        params.set('pagesize', pageSize.toString())
 
         window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
 
 
-        const res1 = await fetchData(`${DOMAIN_NAME}/reservations?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${DOMAIN_NAME}/reservations?filters=${filters}&pagenumber=${currentPage}&sortby=${sortBy}&sortorder=${sortOrder}&pagesize=${pageSize}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) {setPaginationData(res1.pagination)}
         
@@ -71,14 +71,14 @@ const ReservationArchive = (props: Props) => {
       setLoadingData(false)
       }
       getData()
-    }, [filters, currentPage, selectedSortOptions?.sortby, selectedSortOptions?.order, selectedSortOptions?.pagesize])
+    }, [filters, currentPage, sortBy, sortOrder, pageSize])
 
 
     return (
       <>
       <Breadcrumb pageName="Archiwum rezerwacji" />
 
-      {loadingData ? <Loader/> : (!isFail && !isError) ? <ReservationsHistory allCarsBasicData={data2?.data} reservationsData={data1?.data} usersData={data3?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData} loadingTable={loadingTable} filters={filters} setSelectedSortOptions={(val: SortOptions) => setSelectedSortOptions(val)} selectedSortOptions={selectedSortOptions}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
+      {loadingData ? <Loader/> : (!isFail && !isError) ? <ReservationsHistory allCarsBasicData={data2?.data} reservationsData={data1?.data} usersData={data3?.data} setFilters={(val: string) => setFilters(val)} setCurrentPage={(val: number) => setCurrentPage(val)} paginationData={paginationData} loadingTable={loadingTable} filters={filters} setSortBy={(value: string)=> setSortBy(value)} sortBy={sortBy} setSortOrder={(value: string)=> setSortOrder(value)} sortOrder={sortOrder} setPageSize={(value: number)=> setPageSize(value)} pageSize={pageSize}/> : (isFail && !isError) ? <OperationResult status="warning" title="Wystąpiły błędy podczas ładowania zawartości." warnings={failData?.data} showButton={false}/> : <OperationResult status="error" title="Wystąpił problem podczas ładowania zawartości." description="Skontaktuj się z administratorem lub spróbuj ponownie później." showButton={false}/>}
       </>
     );
   };

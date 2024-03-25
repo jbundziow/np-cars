@@ -1,36 +1,20 @@
-import { useEffect, useState } from "react";
-
-
-export interface SortOptions {
-    sortby: string | null,
-    order: string | null,
-    pagesize: number | null,
-}
 
 
 type TableSortingProps = {
     sortOptions: {value: string, label: string}[],
-    setSelectedSortOptions: Function,
-    selectedSortOptions: SortOptions | null,
+
+    setSortBy: Function,
+    sortBy: string,
+    setSortOrder: Function,
+    sortOrder: string,
+    setPageSize: Function,
+    pageSize: number,
 
    
   }
 
 const TableSorting = (props: TableSortingProps) => {
-    // const sortString_params = new URLSearchParams(props.sortString);
 
-
-
-    // const initialSortBy = props.sortOptions?.find(option => option.value === sortString_params.get('sortby') || props.sortOptions[0]);
-
-    const [sortBy, setSortBy] = useState<string>(props.selectedSortOptions?.sortby || props.sortOptions[0]?.value || "");
-    const [sortOrder, setSortOrder] = useState<string>(props.selectedSortOptions?.order || "DSC");
-    const [resultsPerPage, setResultsPerPage] = useState<number>(props.selectedSortOptions?.pagesize || 8);
-
-    useEffect(() => {
-        console.log(sortBy);
-        props.setSelectedSortOptions({sortBy: sortBy, order: sortOrder, pagesize: resultsPerPage})
-    }, [sortBy, sortOrder, resultsPerPage])
 
 
 
@@ -47,8 +31,8 @@ const TableSorting = (props: TableSortingProps) => {
             <div className="flex flex-col md:flex-row gap-2">
                 <select
                 className="md:w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-sm md:text-base"
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
+                value={props.sortBy || props.sortOptions[0]?.value || ""}
+                onChange={(e) => props.setSortBy(e.target.value)}
                 >
                     {props.sortOptions.map(option => (
                         <option key={option.value} value={option.value}>{option.label}</option>
@@ -57,8 +41,8 @@ const TableSorting = (props: TableSortingProps) => {
 
                 <select
                 className="md:w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-sm md:text-base"
-                value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value)}
+                value={props.sortOrder || "DSC"}
+                onChange={(e) => props.setSortOrder(e.target.value)}
                 >
                 <option value="DSC">Malejąco</option>
                 <option value="ASC">Rosnąco</option>
@@ -80,8 +64,8 @@ const TableSorting = (props: TableSortingProps) => {
 
             <select
             className="md:w-1/2 rounded-lg border-[1.5px] border-stroke bg-transparent py-3 px-3 font-medium outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary text-xs sm:text-sm md:text-base"
-            value={resultsPerPage.toString()}
-            onChange={(e) => setResultsPerPage(+e.target.value)}
+            value={props.pageSize.toString() || "8"}
+            onChange={(e) => props.setPageSize(+e.target.value)}
             >
             <option value="5">5</option>
             <option value="8">8</option>
