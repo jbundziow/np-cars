@@ -85,7 +85,7 @@ const RentalsHistory = (props: RentalsHistoryProps) => {
                     className="!mt-0 !rounded-b-none !shadow-none !overflow-visible"
                 >
                     <div>
-                        <RentalTableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setFilters={(val: string) => props.setFilters(val)} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+                        <RentalTableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} placesData={props.placesData} setFilters={(val: string) => props.setFilters(val)} filters={props.filters} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
                     </div>
                 </TECollapse>
                 </div>

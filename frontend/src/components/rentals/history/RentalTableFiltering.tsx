@@ -11,6 +11,7 @@ type RentalTableFilteringProps = {
     allCarsBasicData: db_Car_basic[] | [],
     usersData: db_User[] | [],
     placesData: db_Place[] | [],
+    filters: string,
     setFilters: Function
     setCurrentPage: Function
 }
@@ -19,20 +20,14 @@ type RentalTableFilteringProps = {
 
 const RentalTableFiltering = (props: RentalTableFilteringProps) => {
 
-    const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
-    const [selectedUserIDs, setSelectedUserIDs] = useState<SelectValue>(null);
-    const [rentalDateFrom, setRentalDateFrom] = useState<DateValueType>(null);
-    const [rentalDateTo, setRentalDateTo] = useState<DateValueType>(null);
-    const [carMileageBefore_FROM, setCarMileageBefore_FROM] = useState<number | ''>('');
-    const [carMileageBefore_TO, setCarMileageBefore_TO] = useState<number | ''>('');
-    const [carMileageAfter_FROM, setCarMileageAfter_FROM] = useState<number | ''>('');
-    const [carMileageAfter_TO, setCarMileageAfter_TO] = useState<number | ''>('');
-    const [distance_FROM, setDistance_FROM] = useState<number | ''>('');
-    const [distance_TO, setDistance_TO] = useState<number | ''>('');
-    const [travelDestination, setTravelDestination] = useState<string>('');
-    const [selectedReturnedByUser, setSelectedReturnedByUser] = useState<SelectValue>(null);
-    const [acknowledgedByModerator, setAcknowledgedByModerator] = useState<string>('');
-    const [selectedPlace, setSelectedPlace] = useState<SelectValue>(null);
+    let parsedFilters;
+    try {
+        parsedFilters = JSON.parse(decodeURIComponent(props.filters));
+    } catch (error) {
+        parsedFilters = null;
+    }
+
+    
 
     const carOptions = props.allCarsBasicData.map(car => ({
         value: car.id.toString(),
@@ -48,6 +43,24 @@ const RentalTableFiltering = (props: RentalTableFilteringProps) => {
         value: place.id.toString(),
         label: `${place.projectCode}`
     }));
+
+
+
+
+    const [selectedCars, setSelectedCars] = useState<SelectValue>(parsedFilters?.carIDs?.map((id: number) => carOptions.find((car: Option) => Number(car.value) === id) || null).filter((car: Option | null) => car !== null));
+    const [selectedUserIDs, setSelectedUserIDs] = useState<SelectValue>(parsedFilters?.userIDs?.map((id: number) => userOptions.find((user: Option) => Number(user.value) === id) || null).filter((user: Option | null) => user !== null));
+    const [rentalDateFrom, setRentalDateFrom] = useState<DateValueType>(parsedFilters?.dateFrom_from && parsedFilters?.dateFrom_to ? {startDate: parsedFilters.dateFrom_from, endDate: parsedFilters.dateFrom_to} : null);
+    const [rentalDateTo, setRentalDateTo] = useState<DateValueType>(parsedFilters?.dateTo_from && parsedFilters?.dateTo_to ? {startDate: parsedFilters.dateTo_from, endDate: parsedFilters.dateTo_to} : null);
+    const [carMileageBefore_FROM, setCarMileageBefore_FROM] = useState<number | ''>(parsedFilters?.carMileageBefore_from || '');
+    const [carMileageBefore_TO, setCarMileageBefore_TO] = useState<number | ''>(parsedFilters?.carMileageBefore_to || '');
+    const [carMileageAfter_FROM, setCarMileageAfter_FROM] = useState<number | ''>(parsedFilters?.carMileageAfter_from || '');
+    const [carMileageAfter_TO, setCarMileageAfter_TO] = useState<number | ''>(parsedFilters?.carMileageAfter_to || '');
+    const [distance_FROM, setDistance_FROM] = useState<number | ''>(parsedFilters?.distance_from || '');
+    const [distance_TO, setDistance_TO] = useState<number | ''>(parsedFilters?.distance_to || '');
+    const [travelDestination, setTravelDestination] = useState<string>(parsedFilters?.travelDestination || '');
+    const [selectedReturnedByUser, setSelectedReturnedByUser] = useState<SelectValue>(parsedFilters?.returnUserIDs?.map((id: number) => userOptions.find((user: Option) => Number(user.value) === id) || null).filter((user: Option | null) => user !== null));
+    const [acknowledgedByModerator, setAcknowledgedByModerator] = useState<string>(parsedFilters?.editedByModerator === true ? 'true' : parsedFilters?.editedByModerator === false ? 'false' : '');
+    const [selectedPlace, setSelectedPlace] = useState<SelectValue>(parsedFilters?.placeIDs?.map((id: number) => placeOptions.find((place: Option) => Number(place.value) === id) || null).filter((place: Option | null) => place !== null));
 
 
 
