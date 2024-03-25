@@ -79,7 +79,7 @@ const ReservationsHistory = (props: ReservationsHistoryProps) => {
                     className="!mt-0 !rounded-b-none !shadow-none !overflow-visible"
                 >
                     <div>
-                        <ReservationTableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setFilters={(val: string) => props.setFilters(val)} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
+                        <ReservationTableFiltering allCarsBasicData={props.allCarsBasicData} usersData={props.usersData} setFilters={(val: string) => props.setFilters(val)} filters={props.filters} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
                     </div>
                 </TECollapse>
                 </div>

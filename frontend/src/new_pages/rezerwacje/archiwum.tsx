@@ -16,13 +16,16 @@ interface Props {
 const ReservationArchive = (props: Props) => {
     useEffect(() => {document.title = `${props.documentTitle}`}, []);
 
+    const params = new URLSearchParams(window.location.search);
+    
+
     
 
     const [data1, setData1] = useState<ApiResponse>();  //reservations data from backend
     const [data2, setData2] = useState<ApiResponse>();  //all cars basic data
     const [data3, setData3] = useState<ApiResponse>();  //all users data
-    const [filters, setFilters] = useState<string>('%7B%7D'); //%7B%7D is an empty object {}
-    const [currentPage, setCurrentPage] = useState<number>(1) //current page for pagination
+    const [filters, setFilters] = useState<string>(params.get('filters') || '%7B%7D'); //%7B%7D is an empty object {}
+    const [currentPage, setCurrentPage] = useState<number>(Number(params.get('page')) || 1) //current page for pagination
     const [paginationData, setPaginationData] = useState<PaginationType>({totalCount: 1, totalPages: 1, currentPage: 1, hasPreviousPage: false, hasNextPage: false}) //pagination data
 
 
@@ -35,6 +38,11 @@ const ReservationArchive = (props: Props) => {
 
     useEffect(() => {
       const getData = async () => {
+        params.set('page', currentPage.toString())
+        params.set('filters', filters)
+        window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
+
+
         setLoadingTable(true)
 
         const res1 = await fetchData(`${DOMAIN_NAME}/reservations?filters=${filters}&pagenumber=${currentPage}&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
@@ -49,6 +57,7 @@ const ReservationArchive = (props: Props) => {
             setData3(res3);
           }
         }
+        
 
       setLoadingTable(false)
       setLoadingData(false)

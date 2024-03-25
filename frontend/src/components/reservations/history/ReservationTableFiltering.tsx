@@ -10,6 +10,7 @@ import { db_Car_basic, db_User } from "../../../types/db_types";
 type ReservationTableFilteringProps = {
     allCarsBasicData: db_Car_basic[] | [],
     usersData: db_User[] | [],
+    filters: string,
     setFilters: Function
     setCurrentPage: Function
 }
@@ -18,12 +19,15 @@ type ReservationTableFilteringProps = {
 
 const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
 
-    const [selectedCars, setSelectedCars] = useState<SelectValue>(null);
-    const [selectedUserIDs, setSelectedUserIDs] = useState<SelectValue>(null);
-    const [reservationDatesRange, setReservationDatesRange] = useState<DateValueType>(null);
-    const [travelDestination, setTravelDestination] = useState<string>('');
-    const [wasEditedByModerator, setWasEditedByModerator] = useState<string>('');
-    const [selectedModerator, setSelectedModerator] = useState<SelectValue>(null);
+    let parsedFilters;
+    try {
+        parsedFilters = JSON.parse(decodeURIComponent(props.filters));
+    } catch (error) {
+        parsedFilters = null;
+    }
+
+
+    
 
     const carOptions = props.allCarsBasicData.map(car => ({
         value: car.id.toString(),
@@ -41,6 +45,16 @@ const ReservationTableFiltering = (props: ReservationTableFilteringProps) => {
             value: user.id.toString(),
             label: `${user.name} ${user.surname}`
         }));
+
+
+
+
+    const [selectedCars, setSelectedCars] = useState<SelectValue>(parsedFilters?.carIDs?.map((id: number) => carOptions.find((car: Option) => Number(car.value) === id) || null).filter((car: Option | null) => car !== null));
+    const [selectedUserIDs, setSelectedUserIDs] = useState<SelectValue>(parsedFilters?.userIDs?.map((id: number) => userOptions.find((user: Option) => Number(user.value) === id) || null).filter((user: Option | null) => user !== null));
+    const [reservationDatesRange, setReservationDatesRange] = useState<DateValueType>(parsedFilters?.reservationDatesRange_from && parsedFilters?.reservationDatesRange_to ? {startDate: new Date(parsedFilters.reservationDatesRange_from), endDate: new Date(parsedFilters.reservationDatesRange_to)} : null);
+    const [travelDestination, setTravelDestination] = useState<string>(parsedFilters?.travelDestination || '');
+    const [wasEditedByModerator, setWasEditedByModerator] = useState<string>(parsedFilters?.wasEditedByModerator === true ? 'true' : parsedFilters?.wasEditedByModerator === false ? 'false' : '');
+    const [selectedModerator, setSelectedModerator] = useState<SelectValue>(parsedFilters?.moderatorIDs?.map((id: number) => userAdminOptions.find((user: Option) => Number(user.value) === id) || null).filter((user: Option | null) => user !== null));
 
 
 
