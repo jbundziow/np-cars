@@ -94,7 +94,7 @@ const PlacesHistory = (props: PlacesHistoryProps) => {
             <>
 
             <div className="px-5 pt-6 pb-6 sm:px-7.5">
-                <TableSorting sortOptions={[{value: "createdAt", label: "Data utworzenia"}, {value: "updatedAt", label: "Data ostatniej edycji"}, {value: "status", label: "Status"}, {value: "projectCode", label: "Kod projektu"}, {value: "placeName", label: "Lokalizacja"}, {value: "projectName", label: "Pełna nazwa"}, {value: "id", label: "ID projektu"}]} setSortBy={(value: string)=> props.setSortBy(value)} sortBy={props.sortBy} setSortOrder={(value: string)=> props.setSortOrder(value)} sortOrder={props.sortOrder} setPageSize={(value: number) => props.setPageSize(value)} pageSize={props.pageSize}/>
+                <TableSorting sortOptions={[{value: "createdAt", label: "Data utworzenia"}, {value: "updatedAt", label: "Data ostatniej edycji"}, {value: "status", label: "Status"}, {value: "projectCode", label: "Kod projektu"}, {value: "placeName", label: "Lokalizacja"}, {value: "projectName", label: "Pełna nazwa"}, {value: "id", label: "ID projektu"}]} setSortBy={(value: string)=> props.setSortBy(value)} sortBy={props.sortBy} setSortOrder={(value: string)=> props.setSortOrder(value)} sortOrder={props.sortOrder} setPageSize={(value: number) => props.setPageSize(value)} pageSize={props.pageSize} setCurrentPage={(value: number) => props.setCurrentPage(value)}/>
             </div>
 
             <PlacesHistoryTable placesData={props.placesData} setCurrentPage={(value: number) => props.setCurrentPage(value)} paginationData={props.paginationData} />
