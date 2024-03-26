@@ -1,5 +1,10 @@
 import Joi from 'joi';
 
+
+
+
+
+
 const addOneRefuelingByNormalUserSchema = Joi.object({
     id: Joi.number()
         .valid(null),
@@ -58,6 +63,14 @@ const addOneRefuelingByNormalUserSchema = Joi.object({
     isAcknowledgedByModerator: Joi.number()
         .valid(null)
 })
+
+
+
+
+
+
+
+
 
 
 const addOneRefuelingByAdminUserSchema = Joi.object({
@@ -129,6 +142,13 @@ const addOneRefuelingByAdminUserSchema = Joi.object({
 
 
 
+
+
+
+
+
+
+
 const editOneRefuelingByAdminUserSchema = Joi.object({
     id: Joi.number()
         .integer()
@@ -195,6 +215,11 @@ const editOneRefuelingByAdminUserSchema = Joi.object({
         .required()
         .allow(null)
 })
+
+
+
+
+
 
 
 

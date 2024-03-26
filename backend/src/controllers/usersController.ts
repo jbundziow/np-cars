@@ -10,6 +10,22 @@ import removeFile from '../utilities/fileUpload/removeFile';
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchAllUsers_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     let alsoBanned = false;
     if(req.query.showbanned && req.query.showbanned === 'true') {
@@ -51,6 +67,19 @@ export const fetchOneUser_GET_user = async (req: Request, res: Response, next: N
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const editOneUser_PUT_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
 
@@ -85,6 +114,23 @@ export const editOneUser_PUT_user = async (req: Request, res: Response, next: Ne
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -147,6 +193,26 @@ export const changeUserAvatar_PUT_user = async (req: Request, res: Response, nex
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

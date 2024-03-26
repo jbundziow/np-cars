@@ -1,6 +1,13 @@
 import Joi from 'joi';
 
 
+
+
+
+
+
+
+
 const addOneFaultByUserSchema = Joi.object({
     id: Joi.number()
         .integer()
@@ -56,6 +63,12 @@ const addOneFaultByUserSchema = Joi.object({
         .optional(),
 
 })
+
+
+
+
+
+
 
 
 

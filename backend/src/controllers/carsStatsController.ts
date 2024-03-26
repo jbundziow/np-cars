@@ -14,6 +14,12 @@ import Car from '../models/Car';
 
 
 
+
+
+
+
+
+
 export const fetchTotalStatsOfCar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if(!req.params.carid || isNaN(Number(req.params.carid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong car ID.', pl: 'Podano złe ID samochodu.'}]})
@@ -59,6 +65,12 @@ export const fetchTotalStatsOfCar_GET_user = async (req: Request, res: Response,
     }
 
 }
+
+
+
+
+
+
 
 
 

@@ -1,10 +1,14 @@
 const {DataTypes, Op} = require('sequelize');
-
-
-
-
 import sequelize from "../database/database";
-const CarModel = sequelize.define('Car', {
+
+
+
+
+
+
+
+
+export const CarModel = sequelize.define('Car', {
     id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -70,10 +74,23 @@ const CarModel = sequelize.define('Car', {
       },
 })
 
+
+
+
+
+
+
 // const syncModel = async () => {
 //   await CarModel.sync({ force: true });
 // }
 // syncModel();
+
+
+
+
+
+
+
 
 
 class Car {
@@ -95,6 +112,14 @@ class Car {
         private availabilityDescription: string | null,
         ) {}
 
+
+
+
+
+
+
+
+
     async addOneCar() {
         await CarModel.create({
           id: this.id,
@@ -114,6 +139,12 @@ class Car {
           availabilityDescription: this.availabilityDescription,
         })
     }
+
+
+
+
+
+
 
 
     async editOneCar() {
@@ -138,9 +169,20 @@ class Car {
       )
   }
 
+
+
+
+
+
   changeImgPath(newImgPath: string) {
     this.imgPath = newImgPath;
   }
+
+
+
+
+
+
 
 
     static async fetchAll(showBanned: boolean) {
@@ -152,6 +194,13 @@ class Car {
       }
     }
 
+
+
+
+
+
+
+
     static async fetchAllBasicData(showBanned: boolean) {
       if(showBanned) {
         return await CarModel.findAll({attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
@@ -162,6 +211,15 @@ class Car {
       
     }
 
+
+
+
+
+
+
+
+
+
     static async fetchOne(carid: number, showBanned: boolean) {
       if(showBanned) {
         return await CarModel.findOne({ where: {id: carid} })
@@ -170,6 +228,16 @@ class Car {
         return await CarModel.findOne({ where: {id: carid, availabilityStatus: { [Op.ne]: 'banned' }} })
       }
     }
+
+
+
+
+
+
+
+
+
+
     static async fetchOneBasicData(carid: number, showBanned: boolean) {
       if(showBanned) {
         return await CarModel.findOne({ where: {id: carid}, attributes: ['id', 'brand', 'model', 'imgPath', 'availabilityStatus']})
@@ -179,6 +247,8 @@ class Car {
       }
       
     }
+
+
 
 
 
@@ -228,4 +298,3 @@ class Car {
 
 
 export default Car
-export {CarModel}

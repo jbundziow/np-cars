@@ -1,5 +1,11 @@
 import Joi from 'joi';
 
+
+
+
+
+
+
 const addOneRentalByNormalUserSchema = Joi.object({
     id: Joi.number()
         .valid(null),
@@ -50,6 +56,11 @@ const addOneRentalByNormalUserSchema = Joi.object({
 
 
 
+
+
+
+
+
 const returnCarByNormalUserSchema = Joi.object({
     rentalID: Joi.number()
         .integer()
@@ -87,6 +98,12 @@ const returnCarByNormalUserSchema = Joi.object({
         .allow(null)
         .required()
 })
+
+
+
+
+
+
 
 
 const filtersObjRentalSchema = Joi.object({
@@ -161,12 +178,6 @@ const filtersObjRentalSchema = Joi.object({
 
 
 
-
-
-
-
-
-
 const addOneUnfinishedRentalByAdminUserSchema = Joi.object({
     id: Joi.number()
         .valid(null),
@@ -220,6 +231,7 @@ const addOneUnfinishedRentalByAdminUserSchema = Joi.object({
     dateTo: Joi.date()
         .valid(null)
 })
+
 
 
 
@@ -303,11 +315,6 @@ const addOneFinishedRentalByAdminUserSchema = Joi.object({
 
 
 
-
-
-
-
-
 const editOneFinishedRentalByAdminUserSchema = Joi.object({
     id: Joi.number()
         .integer()
@@ -373,8 +380,6 @@ const editOneFinishedRentalByAdminUserSchema = Joi.object({
         .min(Joi.ref('dateFrom'))
         .required(),
 })
-
-
 
 
 

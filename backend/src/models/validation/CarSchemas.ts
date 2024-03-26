@@ -1,5 +1,11 @@
 import Joi from 'joi';
 
+
+
+
+
+
+
 const addOneCarAdminSchema = Joi.object({
     id: Joi.number()
         .valid(null)
@@ -71,6 +77,11 @@ const addOneCarAdminSchema = Joi.object({
         .allow(null)
         .optional(),
 })
+
+
+
+
+
 
 
 

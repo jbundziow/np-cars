@@ -12,6 +12,24 @@ import path from 'path';
 import removeFile from '../../utilities/fileUpload/removeFile';
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const addOneCar_POST_admin = async (req: Request, res: Response, next: NextFunction) => {
     
     try {
@@ -66,6 +84,21 @@ export const addOneCar_POST_admin = async (req: Request, res: Response, next: Ne
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -140,6 +173,22 @@ export const editOneCar_PUT_admin = async (req: Request, res: Response, next: Ne
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

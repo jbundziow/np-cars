@@ -6,6 +6,16 @@ import Car from '../models/Car'
 
 
 
+
+
+
+
+
+
+
+
+
+
 export const fetchAllCars_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     let alsoBanned = false;
     if(req.query.showbanned && req.query.showbanned === 'true') {
@@ -26,6 +36,18 @@ export const fetchAllCars_GET_user = async (req: Request, res: Response, next: N
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 export const fetchOneCar_GET_user = async (req: Request, res: Response, next: NextFunction) => { 

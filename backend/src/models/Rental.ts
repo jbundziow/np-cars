@@ -1,6 +1,4 @@
 const {DataTypes, Op} = require('sequelize');
-
-import { Model, fn, literal } from "sequelize";
 import sequelize from "../database/database";
 import Car, { CarModel } from "./Car";
 import getDatesForMonth from "../utilities/functions/getDateRangesForMonth";
@@ -8,6 +6,9 @@ import Place, { PlaceModel } from "./Place";
 import getRandomColor from "../utilities/functions/getRandomColor";
 import getDateRangesForYear from "../utilities/functions/getDateRangesForYear";
 import { UserModel } from "./User";
+
+
+
 
 
 
@@ -69,10 +70,20 @@ export const RentalModel = sequelize.define('Rental', {
 })
 
 
+
+
+
+
 // const syncModel = async () => {
 //   await RentalModel.sync({ force: true });
 // }
 // syncModel();
+
+
+
+
+
+
 
 
 
@@ -536,6 +547,8 @@ class Rental {
 
 
 
+
+
     static async fetchAllPendingRentals () {
       return await RentalModel.findAll({ where: { carMileageAfter: null } })
     }
@@ -543,9 +556,23 @@ class Rental {
 
 
 
+
+
+
+
+
     static async fetchNumberOfRentalsAssociatedWithPlace (placeID: number) {
       return await RentalModel.count({ where: { placeID: placeID } })
     }
+
+
+
+
+
+
+
+
+
 
 
     static async fetchNumberOfRentalsAssociatedWithUser(userID: number, withoutReturnUser: boolean, withoutModerator: boolean) {
@@ -600,24 +627,11 @@ class Rental {
 
 
 
-
-
-
-
-
     
 
     static async fetchNumberOfRentalsAssociatedWithCar (carID: number) {
       return await RentalModel.count({ where: { carID: carID } })
     }
-
-
-
-
-
-
-
-
 
 
 
@@ -704,16 +718,6 @@ class Rental {
 
 
 
-
-
-
-
-
-
-
-
-
-
     static async deleteRental(id: number): Promise<boolean> {
       try {
         const rental = await Rental.fetchOne(id);
@@ -730,10 +734,6 @@ class Rental {
         return false;
       }
     }
-
-
-
-
 
 
 
@@ -774,9 +774,6 @@ class Rental {
     
       return totalDistances;
     };
-
-
-
 
 
 
@@ -837,10 +834,6 @@ class Rental {
 
 
 
-
-
-
-
     static getTotalDistanceForPlaceByMonthInYear = async (placeID: number, year: number) => {
       const totalDistances: any[] = [];
     
@@ -866,10 +859,6 @@ class Rental {
       return totalDistances;
     };
   
-
-
-
-
 
 
 
@@ -929,10 +918,6 @@ class Rental {
     
       return totalDistances;
     };
-
-
-
-
 
 
 
@@ -1013,21 +998,6 @@ class Rental {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
     static getTotalDistanceForAllPlacesOfUser = async (userID: number) => {
 
@@ -1058,17 +1028,6 @@ class Rental {
     
       return totalDistances;
     };
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1137,12 +1096,6 @@ class Rental {
 
 
 
-
-
-
-
-
-
     static getTotalDistanceForAllUsersByPlace = async (placeID: number) => {
 
       const allUsers = await UserModel.findAll({attributes: ['id', 'name', 'surname']});
@@ -1172,10 +1125,6 @@ class Rental {
     
       return totalDistances;
     };
-
-
-
-
 
 
 
@@ -1243,10 +1192,6 @@ class Rental {
 
 
 
-
-
-
-
     static getTotalDistanceForAllCarsByPlace = async (placeID: number) => {
 
       const allCars = await CarModel.findAll({attributes: ['id', 'brand', 'model']});
@@ -1276,9 +1221,6 @@ class Rental {
     
       return totalDistances;
     };
-
-
-
 
 
 
@@ -1350,8 +1292,6 @@ class Rental {
 
 
 
-
-
     static getCarWithGreatestSummarizedDistanceOfPlace = async (placeID: number, year: number | null) => {
       try {
         let whereClause: any = {placeID: placeID, carID: {[Op.ne]: null}};
@@ -1402,8 +1342,6 @@ class Rental {
 
 
 
-
-
     static getPlaceWithGreatestSummarizedDistanceOfUser = async (userID: number, year: number | null) => {
       try {
         let whereClause: any = {userID: userID, placeID: {[Op.ne]: null}};
@@ -1434,9 +1372,6 @@ class Rental {
         throw new Error('Error occurred while fetching place with greatest summarized distance.');
       }
     };
-
-
-
 
 
 
@@ -1507,17 +1442,6 @@ class Rental {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
     static getUserWithGreatestSummarizedDistanceOfPlace = async (placeID: number, year: number | null) => {
       try {
         let whereClause: any = {placeID: placeID, userID: {[Op.ne]: null}};
@@ -1567,14 +1491,6 @@ class Rental {
 
 
 
-
-
-
-
-
-
-
-
     static getUserWithGreatestSummarizedDistanceOfCar = async (carID: number, year: number | null) => {
       try {
         let whereClause: any = {carID: carID, userID: {[Op.ne]: null}};
@@ -1605,9 +1521,6 @@ class Rental {
         throw new Error('Error occurred while fetching user with greatest summarized distance.');
       }
     };
-
-
-
 
 
 

@@ -3,6 +3,14 @@ const bcrypt = require('bcrypt')
 import { Op } from "sequelize";
 import sequelize from "../database/database";
 
+
+
+
+
+
+
+
+
 export const UserModel = sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
@@ -47,10 +55,27 @@ export const UserModel = sequelize.define('User', {
 })
 
 
+
+
+
+
+
+
+
 // const syncModel = async () => {
 //   await UserModel.sync({ force: true });
 // }
 // syncModel();
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -67,6 +92,14 @@ class User {
         private role: 'unconfirmed' | 'banned' | 'admin' | 'user' | null,
         ) {}
 
+
+
+
+
+
+
+
+
     async addOneUser() {
         return await UserModel.create({
           // id: this.id,
@@ -80,6 +113,15 @@ class User {
           role: this.role,
         })
     }
+
+
+
+
+
+
+
+
+
 
 
     async editOneUserAsAdmin() {
@@ -102,6 +144,18 @@ class User {
     }
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
   async editOneUserAsUser() {
     return await UserModel.update({
       // id: this.id,
@@ -119,6 +173,16 @@ class User {
 
 
 
+
+
+
+
+
+
+
+
+
+
 static async changeAvatarPath(userID: number, avatarPath: string | null) {
   return await UserModel.update({
     avatarPath: avatarPath
@@ -129,6 +193,15 @@ static async changeAvatarPath(userID: number, avatarPath: string | null) {
 
 
 
+
+
+
+
+
+
+
+
+
   static async acknowledgeUserByModerator(userID: number) {
     return await UserModel.update({
       role: 'user'
@@ -136,6 +209,10 @@ static async changeAvatarPath(userID: number, avatarPath: string | null) {
     {where: {id: userID}},
     );
   }
+
+
+
+
 
 
 
@@ -162,6 +239,10 @@ static async changeAvatarPath(userID: number, avatarPath: string | null) {
 
 
 
+
+
+
+
   
 
     changePassword(hashedPassword: string) {
@@ -178,6 +259,17 @@ static async changeAvatarPath(userID: number, avatarPath: string | null) {
         
     }
 
+
+
+
+
+
+
+
+
+
+
+
     static async fetchOne(id: number, showBanned: boolean) {
       if(showBanned) {
         return await UserModel.findOne({ where: { id: id }, attributes: { exclude: ['password'] } })
@@ -188,6 +280,16 @@ static async changeAvatarPath(userID: number, avatarPath: string | null) {
         
     }
 
+
+
+
+
+
+
+
+
+
+    
     static async login(email: string, password: string) {
       const user = await UserModel.findOne({where: {email: email}});
       if(user) {

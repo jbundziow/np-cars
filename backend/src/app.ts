@@ -17,15 +17,20 @@ import rentalsRoutes from './routes/rentals'
 import placesRoutes from './routes/places'
 import statsRoutes from './routes/stats'
 
+
+
+
 import { requireAuthAsAdmin, requireAuthAsUser } from "./middleware/authMiddleware"
 
-
 require('dotenv').config(); //https://www.npmjs.com/package/dotenv
+
+
+
 
 const app = express();
 
 const corsOptions = {
-    origin: 'http://localhost:5173', //frontend
+    origin: process.env.FRONTEND_URL, //frontend
     credentials: true, // Enable credentials (cookies)
 }
 

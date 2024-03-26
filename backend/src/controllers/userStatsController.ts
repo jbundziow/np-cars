@@ -13,6 +13,17 @@ import { Op } from 'sequelize';
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 export const fetchTotalStatsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if(!req.params.userid || isNaN(Number(req.params.userid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
@@ -50,6 +61,16 @@ export const fetchTotalStatsOfUser_GET_user = async (req: Request, res: Response
     }
 
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -136,6 +157,19 @@ export const fetchTotalStatsOfUserInYear_GET_user = async (req: Request, res: Re
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchTotalTravelledDistanceByUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query;
 
@@ -174,6 +208,7 @@ export const fetchTotalTravelledDistanceByUser_GET_user = async (req: Request, r
     }
 
 }
+
 
 
 
@@ -294,6 +329,22 @@ export const fetchTotalTravelledDistanceForAllPlacesByUser_GET_user = async (req
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchFavouriteCarOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query;
 
@@ -331,6 +382,14 @@ export const fetchFavouriteCarOfUser_GET_user = async (req: Request, res: Respon
     }
 
 }
+
+
+
+
+
+
+
+
 
 
 

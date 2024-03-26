@@ -1,10 +1,16 @@
 const {DataTypes} = require('sequelize');
-
-
-
 import { Op, Transaction } from "sequelize";
 import sequelize from "../database/database";
 import getDatesForMonth from "../utilities/functions/getDateRangesForMonth";
+
+
+
+
+
+
+
+
+
 export const RefuelingModel = sequelize.define('Refueling', {
     id: {
         type: DataTypes.INTEGER,
@@ -68,10 +74,20 @@ export const RefuelingModel = sequelize.define('Refueling', {
 })
 
 
+
+
+
+
+
 // const syncModel = async () => {
 //   await RefuelingModel.sync({ force: true });
 // }
 // syncModel();
+
+
+
+
+
 
 
 
@@ -93,12 +109,35 @@ class Refueling {
         private isAcknowledgedByModerator: boolean | null,
         ) {}
 
+
+
+
+
+
+
+
     changeAverageConsumption(averageConsumption: number) {
       this.averageConsumption = averageConsumption;
     }
+
+
+
+
+
+
+
+
     changeCostPerLiter(costPerLiter: number) {
       this.costPerLiter = costPerLiter;
     }
+
+
+
+
+
+
+
+
 
     async addOneRefueling() {
         await RefuelingModel.create({
@@ -118,6 +157,12 @@ class Refueling {
           isAcknowledgedByModerator: this.isAcknowledgedByModerator,
         })
     }
+
+
+
+
+
+
 
 
     async updateOneRefueling() {
@@ -140,6 +185,14 @@ class Refueling {
       { where: {id: this.id} },
       )
   }
+
+
+
+
+
+
+
+
 
 
     
@@ -182,6 +235,14 @@ class Refueling {
           throw new Error('Error while updating next refueling and adding the new one.')
         }
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -239,6 +300,11 @@ class Refueling {
 
 
 
+
+
+
+
+
     static async deleteOneRefuelingAndUpdateNext(currentRefuelingID: number, nextRefuelingID: number, previousRefuelingID: number| null, setAverageConsumptionToNull: boolean) {
       try {
         await sequelize.transaction(async (t: Transaction) => {
@@ -279,6 +345,16 @@ class Refueling {
 
 
 
+
+
+
+
+
+
+
+
+
+
     static async deleteRefueling(id: number) {
       const refueling = await Refueling.fetchOne(id);
 
@@ -311,9 +387,30 @@ class Refueling {
         return await RefuelingModel.findAll()
     }
 
+
+
+
+
+
+
+
+
+
+
     static async fetchOne(id: number) {
         return await RefuelingModel.findOne({ where: { id: id } })
     }
+
+
+
+
+
+
+
+
+
+
+
 
     static async fetchLastRefuelingOfCar(carid: number) {
       return await RefuelingModel.findOne({
@@ -323,6 +420,16 @@ class Refueling {
         order: [['carMileage', 'DESC']],
       })
     }
+
+
+
+
+
+
+
+
+
+
 
     static async fetchLastRefuelingOfUser(userid: number) { //of any car
       return await RefuelingModel.findOne({
@@ -336,9 +443,18 @@ class Refueling {
 
 
 
+
+
+
+
     static async fetchDuplicate(carMileage: number) {
       return await RefuelingModel.findOne({ where: { carMileage: carMileage } })
   }
+
+
+
+
+
 
 
 
@@ -582,6 +698,18 @@ class Refueling {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
   static async fetchAverageConsumptionOfCar (carid: number) {
     const response = await RefuelingModel.findAll({
       where: {
@@ -621,6 +749,15 @@ class Refueling {
 
 
 
+
+
+
+
+
+
+
+
+
   static async findNextRefueling(carid: number, carmileage: number) {
     return await RefuelingModel.findOne({
         where: {
@@ -632,6 +769,7 @@ class Refueling {
         order: [['carMileage', 'ASC']]
     });
   }
+
 
 
 
@@ -676,23 +814,9 @@ class Refueling {
 
 
 
-
-
-
-
-
-
   static async fetchNumberOfRefuelingsAssociatedWithCar (carID: number) {
     return await RefuelingModel.count({ where: { carID: carID } })
   }
-
-
-
-
-
-
-
-
 
 
 
@@ -732,8 +856,6 @@ class Refueling {
         }
       }
 
-      
-      
 
       const total_fuelusage_current_year = await RefuelingModel.sum('averageConsumption', {
         where: currentYear_whereClause
@@ -780,6 +902,7 @@ class Refueling {
 
 
 
+  
 
 
 

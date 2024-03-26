@@ -1,9 +1,15 @@
 const {DataTypes} = require('sequelize');
-
-
-
 import { Op } from "sequelize";
 import sequelize from "../database/database";
+
+
+
+
+
+
+
+
+
 export const FaultModel = sequelize.define('Fault', {
     id: {
         type: DataTypes.INTEGER,
@@ -51,10 +57,28 @@ export const FaultModel = sequelize.define('Fault', {
 
 })
 
+
+
+
+
+
+
+
+
 // const syncModel = async () => {
 //   await FaultModel.sync({ force: true });
 // }
 // syncModel();
+
+
+
+
+
+
+
+
+
+
 
 class Fault {
     constructor(

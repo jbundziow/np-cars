@@ -1,6 +1,20 @@
 const jwt = require('jsonwebtoken');
 import { NextFunction, Request, Response, response } from 'express'
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const requireAuthAsUser = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.cookies.jwt;
 
@@ -24,6 +38,24 @@ export const requireAuthAsUser = async (req: Request, res: Response, next: NextF
     res.status(401).json({status: 'fail', data: [{en: `You don't have permissions to view that resource. Please log in again.`, pl: `Nie masz uprawnień do wyświetlenia tych zasobów. Zaloguj się ponownie.`}]})
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

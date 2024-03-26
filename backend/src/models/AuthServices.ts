@@ -1,20 +1,11 @@
 const {DataTypes} = require('sequelize');
-const bcrypt = require('bcrypt')
 import { Op } from "sequelize";
 import sequelize from "../database/database";
 
 
 
 
-
-
-
-
-
-
 type serviceType = 'password_change' | 'email_change';
-
-
 
 
 
@@ -31,8 +22,6 @@ export const AuthServicesModel = sequelize.define('AuthServices', {
         allowNull: false,
         unique: false
       },
-    // ...
-
     type: {
         type: DataTypes.ENUM('password_change', 'email_change'),
         allowNull: false
@@ -57,6 +46,13 @@ export const AuthServicesModel = sequelize.define('AuthServices', {
 })
 
 
+
+
+
+
+
+
+
 // const syncModel = async () => {
 //   await AuthServicesModel.sync({ force: true });
 // }
@@ -64,7 +60,13 @@ export const AuthServicesModel = sequelize.define('AuthServices', {
 
 
 
+
+
+
+
 class AuthServices {
+
+
     constructor(
         private id: number | null,
         private userID: number,
@@ -74,6 +76,8 @@ class AuthServices {
         private token: string,
         private tokenExpiresAt: Date
         ) {}
+
+
 
 
 
@@ -97,6 +101,9 @@ class AuthServices {
 
 
 
+
+
+    
 
 
 
@@ -123,6 +130,8 @@ class AuthServices {
 
 
 
+
+    
 
 
     static async changeResendAvailableAt(id: number, newDate: Date) {

@@ -10,6 +10,16 @@ import { filtersObjPlacesSchema } from '../models/validation/PlacesSchemas';
 
 
 
+
+
+
+
+
+
+
+
+
+
 export const fetchAllPlacesWithFilters_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     const validSortOptions = ['createdAt', 'updatedAt', 'status', 'projectCode', 'placeName', 'projectName', 'id']
     if(!req.query.filters) {
@@ -51,6 +61,17 @@ export const fetchAllPlacesWithFilters_GET_user = async (req: Request, res: Resp
             res.status(500).json({status: 'error', message: e})
         }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

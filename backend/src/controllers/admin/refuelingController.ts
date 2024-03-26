@@ -10,7 +10,22 @@ import identifyUserId from '../../utilities/functions/JWT/identifyUserId';
 
 
 
-//02.03.2024
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const addOneRefueling_POST_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!req.params.carid || isNaN(Number(req.params.carid))) {
@@ -92,6 +107,19 @@ export const addOneRefueling_POST_admin = async (req: Request, res: Response, ne
             res.status(500).json({status: 'error', message: err})
         }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -212,6 +240,19 @@ export const editOneRefueling_PUT_admin = async (req: Request, res: Response, ne
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const deleteOneRefueling_DELETE_admin = async (req: Request, res: Response, next: NextFunction) => {
 
     if (!req.params.refuelingid || isNaN(Number(req.params.refuelingid))) {
@@ -255,6 +296,19 @@ export const deleteOneRefueling_DELETE_admin = async (req: Request, res: Respons
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

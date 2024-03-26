@@ -1,5 +1,11 @@
 import Joi from 'joi';
 
+
+
+
+
+
+
 const addOneReservationByNormalUserSchema = Joi.object({
     id: Joi.number()
         .integer()
@@ -41,6 +47,8 @@ const addOneReservationByNormalUserSchema = Joi.object({
 
 
 
+
+
 const addOneReservationByAdminUserSchema = Joi.object({
     id: Joi.number()
         .integer()
@@ -77,6 +85,8 @@ const addOneReservationByAdminUserSchema = Joi.object({
         .required(),
 
 })
+
+
 
 
 
@@ -128,6 +138,13 @@ const dateOnlyValidator = (date: string) :boolean => {
     const result = regex.test(date)
     return result;
 }
+
+
+
+
+
+
+
 
 
 

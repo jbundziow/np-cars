@@ -1,14 +1,18 @@
 import express from 'express'
+import multer from 'multer';
 import { addOneCar_POST_admin, editOneCar_PUT_admin, deleteOneCar_DELETE_admin } from '../controllers/admin/carsController';
 import { addOneRefueling_POST_admin, editOneRefueling_PUT_admin, deleteOneRefueling_DELETE_admin, acknowledgeOneRefueling_PUT_admin} from '../controllers/admin/refuelingController';
 import { acknowledgeOneFault_PUT_admin, deleteOneFault_DELETE_admin, editOneFault_PUT_admin, fetchAllFaultsByStatus_GET_admin } from '../controllers/admin/faultsController';
 import { addOneReservation_POST_admin, editOneReservation_PUT_admin } from '../controllers/admin/reservationsController';
 import { addOnePlace_POST_admin, deleteOnePlace_PUT_admin, editOnePlace_PUT_admin } from '../controllers/admin/placesController';
 import { acknowledgeOneUser_PUT_admin, deleteOneUser_DELETE_admin, editOneUser_PUT_admin } from '../controllers/admin/usersController';
-
-import multer from 'multer';
-import { storage, fileFilter, limits } from '../utilities/fileUpload/multerConfig';
 import { addOneRentalAsAdmin_POST_admin, deleteOneRental_DELETE_admin, editOneRental_PUT_admin } from '../controllers/admin/rentalsController';
+import { storage, fileFilter, limits } from '../utilities/fileUpload/multerConfig';
+
+
+
+
+
 
 const app = express.Router();
 

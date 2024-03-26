@@ -11,6 +11,22 @@ import removeEmptyValuesFromObject from '../utilities/functions/removeEmptyValue
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const addOneRefueling_POST_user = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     if (!req.params.carid || isNaN(Number(req.params.carid))) {
@@ -89,6 +105,21 @@ export const addOneRefueling_POST_user = async (req: Request, res: Response, nex
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchAllRefuelingsWithFilters_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     const validSortOptions = ["createdAt", "updatedAt", "refuelingDate", "carMileage", "numberOfLiters", "averageConsumption", "costBrutto", "costPerLiter", "isFuelCardUsed", "moneyReturned", "invoiceNumber", "id", "carID", "userID", "isAcknowledgedByModerator", "lastEditedByModeratorOfID"];
     
@@ -131,6 +162,13 @@ export const fetchAllRefuelingsWithFilters_GET_user = async (req: Request, res: 
             res.status(500).json({status: 'error', message: e})
         }
 }
+
+
+
+
+
+
+
 
 
 
@@ -199,6 +237,10 @@ export const fetchLastRefuelingAndFuelLevelOfAllCars_GET_user = async (req: Requ
 
 
 }
+
+
+
+
 
 
 
@@ -292,6 +334,11 @@ export const deleteLastRefueling_DELETE_user = async (req: Request, res: Respons
     }
 
 }
+
+
+
+
+
 
 
 

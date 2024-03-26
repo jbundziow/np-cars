@@ -1,5 +1,11 @@
 import Joi from 'joi';
 
+
+
+
+
+
+
 const signUpUserSchema = Joi.object({
     id: Joi.number()
         .valid(null),
@@ -40,6 +46,10 @@ const signUpUserSchema = Joi.object({
         .allow(null)
         .optional(),
 })
+
+
+
+
 
 
 
@@ -85,6 +95,12 @@ const editOneUserByAdminSchema = Joi.object({
 
 
 
+
+
+
+
+
+
 const editOneUserByNormalUserSchema = Joi.object({
     id: Joi.number()
         .integer()
@@ -122,5 +138,8 @@ const editOneUserByNormalUserSchema = Joi.object({
     role: Joi.string()
         .valid(null),
 })
+
+
+
 
 export { signUpUserSchema, editOneUserByAdminSchema, editOneUserByNormalUserSchema };

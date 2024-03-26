@@ -14,6 +14,15 @@ import path from 'path'
 
 
 
+
+
+
+
+
+
+
+
+
 export const editOneUser_PUT_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
 
@@ -42,6 +51,22 @@ export const editOneUser_PUT_admin = async (req: Request, res: Response, next: N
         res.status(500).json({status: 'error', message: err})
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -86,6 +111,18 @@ export const deleteOneUser_DELETE_admin = async (req: Request, res: Response, ne
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

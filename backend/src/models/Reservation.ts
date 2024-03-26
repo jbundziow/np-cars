@@ -1,8 +1,16 @@
 const {DataTypes, Op} = require('sequelize');
-
-
 import sequelize from "../database/database";
 import { getFormattedDate } from "../utilities/functions/getFormattedDate";
+
+
+
+
+
+
+
+
+
+
 export const ReservationModel = sequelize.define('Reservation', {
     id: {
         type: DataTypes.INTEGER,
@@ -38,10 +46,24 @@ export const ReservationModel = sequelize.define('Reservation', {
 })
 
 
+
+
+
+
+
+
 // const syncModel = async () => {
 //   await ReservationModel.sync({ force: true });
 // }
 // syncModel();
+
+
+
+
+
+
+
+
 
 
 class Reservation {
@@ -56,6 +78,11 @@ class Reservation {
         ) {}
 
 
+
+
+
+
+
         
     async addOneReservation() {
         await ReservationModel.create({
@@ -68,6 +95,14 @@ class Reservation {
           travelDestination: this.travelDestination,
         })
     }
+
+
+
+
+
+
+
+
 
 
     async editOneReservation() {
@@ -88,6 +123,14 @@ class Reservation {
 
 
 
+
+
+
+
+
+
+
+
     static async fetchAll() {
         return await ReservationModel.findAll()
     }
@@ -95,9 +138,23 @@ class Reservation {
 
 
 
+
+
+
+
+
+
     static async fetchOne(id: number) {
         return await ReservationModel.findOne({ where: { id: id } })
     }
+
+
+
+
+
+
+
+
 
     static async deleteReservation(id: number) {
       const reservation = await Reservation.fetchOne(id);
@@ -112,6 +169,14 @@ class Reservation {
   }
   
 
+
+
+
+
+
+
+
+
     static async checkReservationAtDesiredDay (carID: number, date: Date) {
       return await ReservationModel.findOne({
         where: {
@@ -123,6 +188,14 @@ class Reservation {
         },
       });
     }
+
+
+
+
+
+
+
+
 
 
 
@@ -141,6 +214,16 @@ class Reservation {
 
 
 
+
+
+
+
+
+
+
+
+
+
     static async checkReservationsBetweenDatesForCarAndOtherUsers (carID: number, userID: number, currentReservationID: number,  dateFrom: Date, dateTo: Date) {
       return await ReservationModel.findAll({
         where: {
@@ -154,6 +237,16 @@ class Reservation {
         },
       });
     }
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -191,6 +284,15 @@ class Reservation {
 
 
 
+
+
+
+
+
+
+
+
+
     static async fetchAllReservationsOfCar (carID: number, time: 'past' | 'all' | 'future') {
    
     if (time === 'past') {
@@ -221,6 +323,13 @@ class Reservation {
       });
     }
     }
+
+    
+
+
+
+
+
 
 
 
@@ -333,6 +442,14 @@ class Reservation {
 
 
 
+
+
+
+
+
+
+
+
   static async fetchNumberOfReservationsAssociatedWithUser(userID: number, withoutModerator: boolean) {
     if(!withoutModerator) {
       return await ReservationModel.count({
@@ -355,6 +472,16 @@ class Reservation {
   }
 
 
+
+
+
+
+
+
+
+
+
+  
 
   static async fetchNumberOfReservationsAssociatedWithCar (carID: number) {
     return await ReservationModel.count({ where: { carID: carID } })

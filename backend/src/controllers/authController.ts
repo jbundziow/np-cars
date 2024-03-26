@@ -500,6 +500,15 @@ export const changeEmail_PUT_public = async (req: Request, res: Response, next: 
 
 
     try {
+        const mailSchema = Joi.string()
+        .email({ tlds: { allow: false } })
+        .required();
+
+        const { error } = mailSchema.validate(data.new_email);
+        if (error) {
+            res.status(400).json({ status: 'fail', data: [{ en: `The new email address you entered does not meet the requirements. It has not passed validation.`, pl: 'Podany nowy adres email nie spełnia wymagań. Nie przeszedł walidacji.' }] });
+            return;
+        }
 
 
         const isUserExist = await UserModel.findOne({where: {id: data.userid}});

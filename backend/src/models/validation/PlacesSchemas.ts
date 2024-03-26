@@ -1,6 +1,11 @@
 import Joi from 'joi';
 
 
+
+
+
+
+
 const AddOnePlaceByAdminSchema = Joi.object({
     id: Joi.number()
         .valid(null)
@@ -25,6 +30,11 @@ const AddOnePlaceByAdminSchema = Joi.object({
         .valid('active', 'closed', 'banned')
         .required(),
 })
+
+
+
+
+
 
 
 const EditOnePlaceByAdminSchema = Joi.object({
@@ -52,6 +62,9 @@ const EditOnePlaceByAdminSchema = Joi.object({
         .valid('active', 'closed', 'banned')
         .required(),
 })
+
+
+
 
 
 

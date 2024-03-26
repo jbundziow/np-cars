@@ -360,6 +360,10 @@ export const checkReservationsForAllCarsForTheNextTwoWeeks_GET_user = async (req
 
 
 
+
+
+
+
 export const findAllReservationsOfUser_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.userid || isNaN(Number(req.params.userid))) {
@@ -400,6 +404,13 @@ export const findAllReservationsOfUser_GET_user = async (req: Request, res: Resp
 
 
 
+
+
+
+
+
+
+
 export const findAllReservationsOfCar_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     try {
         if(!req.params.carid || isNaN(Number(req.params.carid))) {
@@ -427,6 +438,7 @@ export const findAllReservationsOfCar_GET_user = async (req: Request, res: Respo
         res.status(500).json({status: 'error', message: err})
     }
 }
+
 
 
 

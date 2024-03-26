@@ -10,6 +10,12 @@ import Place from '../models/Place';
 
 
 
+
+
+
+
+
+
 export const fetchTotalStatsOfPlace_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if(!req.params.placeid || isNaN(Number(req.params.placeid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong place ID.', pl: 'Podano złe ID projektu.'}]})
@@ -37,6 +43,11 @@ export const fetchTotalStatsOfPlace_GET_user = async (req: Request, res: Respons
     }
 
 }
+
+
+
+
+
 
 
 
@@ -106,6 +117,12 @@ export const fetchTotalStatsOfPlaceInYear_GET_user = async (req: Request, res: R
 
 
 
+
+
+
+
+
+
 export const fetchTotalTravelledDistanceByPlace_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     const query = req.query;
 
@@ -144,6 +161,9 @@ export const fetchTotalTravelledDistanceByPlace_GET_user = async (req: Request, 
     }
 
 }
+
+
+
 
 
 
@@ -306,6 +326,9 @@ export const fetchTotalTravelledDistanceForAllCarsByPlace_GET_user = async (req:
     }
 
 }
+
+
+
 
 
 

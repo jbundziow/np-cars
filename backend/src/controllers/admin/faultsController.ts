@@ -16,6 +16,8 @@ import { editOneFaultByAdminSchema } from '../../models/validation/FaultsSchemas
 
 
 
+
+
 export const fetchAllFaultsByStatus_GET_admin = async (req: Request, res: Response, next: NextFunction) => {
 
     if(!req.query.status) {

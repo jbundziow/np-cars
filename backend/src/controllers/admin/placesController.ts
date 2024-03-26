@@ -4,6 +4,25 @@ import { AddOnePlaceByAdminSchema, EditOnePlaceByAdminSchema } from '../../model
 import Rental from '../../models/Rental';
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const addOnePlace_POST_admin = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
 
@@ -21,6 +40,21 @@ export const addOnePlace_POST_admin = async (req: Request, res: Response, next: 
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -55,6 +89,18 @@ export const editOnePlace_PUT_admin = async (req: Request, res: Response, next: 
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

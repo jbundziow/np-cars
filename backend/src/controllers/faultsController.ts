@@ -6,7 +6,11 @@ import Car from '../models/Car'
 import User from '../models/User';
 import { addOneFaultByUserSchema } from '../models/validation/FaultsSchemas';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
-import { getFormattedDate } from '../utilities/functions/getFormattedDate';
+
+
+
+
+
 
 
 
@@ -66,6 +70,18 @@ export const addOneFault_POST_user = async (req: Request, res: Response, next: N
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
 export const fetchOneFault_GET_user = async (req: Request, res: Response, next: NextFunction) => {
     if (!isNaN(Number(req.params.faultid))) {
         try {
@@ -93,6 +109,17 @@ export const fetchOneFault_GET_user = async (req: Request, res: Response, next: 
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong fault ID.', pl: 'Podano złe ID usterki.'}]});
     }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -151,6 +178,16 @@ export const fetchAllFaultsOfACar_GET_user = async (req: Request, res: Response,
 
 
 
+
+
+
+
+
+
+
+
+
+
 export const fetchAllCarsWithNumberOfFaults_GET_user = async (req: Request, res: Response, next: NextFunction) => {
         try {
             const carsData = await Car.fetchAllBasicData(true);
@@ -180,6 +217,17 @@ export const fetchAllCarsWithNumberOfFaults_GET_user = async (req: Request, res:
             res.status(500).json({status: 'error', message: e})
         }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -231,6 +279,10 @@ export const fetchAllFaultsOfUser_GET_user = async (req: Request, res: Response,
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]});
     }   
 }
+
+
+
+
 
 
 

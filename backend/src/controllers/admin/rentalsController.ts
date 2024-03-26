@@ -10,6 +10,23 @@ import { addOneFinishedRentalByAdminUserSchema, addOneUnfinishedRentalByAdminUse
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const addOneRentalAsAdmin_POST_admin = async (req: Request, res: Response, next: NextFunction) => { 
     const data = req.body;
         try {

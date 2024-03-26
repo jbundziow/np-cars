@@ -1,9 +1,13 @@
 const {DataTypes} = require('sequelize');
-
-
-
 import { Op } from "sequelize";
 import sequelize from "../database/database";
+
+
+
+
+
+
+
 export const PlaceModel = sequelize.define('Place', {
     id: {
         type: DataTypes.INTEGER,
@@ -33,10 +37,19 @@ export const PlaceModel = sequelize.define('Place', {
 })
 
 
+
+
+
+
 // const syncModel = async () => {
 //   await PlaceModel.sync({ force: true });
 // }
 // syncModel();
+
+
+
+
+
 
 
 
@@ -49,6 +62,13 @@ class Place {
         private status: 'active' | 'closed' | 'banned',
         ) {}
 
+
+
+
+
+
+
+
     async addOnePlace() {
         await PlaceModel.create({
           id: this.id,
@@ -58,6 +78,14 @@ class Place {
           status: this.status
         })
     }
+
+
+
+
+
+
+
+
 
     async updateOnePlace() {
       await PlaceModel.update({
@@ -70,6 +98,13 @@ class Place {
       {where: {id: this.id}})
   }
 
+  
+
+
+
+
+
+
 
     static async fetchOne(id: number, showBanned: boolean) {
       if(showBanned) {
@@ -79,6 +114,15 @@ class Place {
           return await PlaceModel.findOne({where: { id: id, status: { [Op.notIn]: ['banned', 'closed'] }}})
       }
     }
+
+
+
+
+
+
+
+
+
 
     static async fetchAll(showBanned: boolean) {
       if(showBanned) {
@@ -90,6 +134,12 @@ class Place {
     }
 
 
+
+
+
+
+
+    
 
 
     static async fetchAllPlacesWithFilters (filters:any, pageSize: number, pageNumber: number, sortBy: string, sortOrder: 'ASC' | 'DESC') {
@@ -160,6 +210,10 @@ class Place {
 
 
 
+
+
+
+  
 
 
   static async deletePlace(id: number) {

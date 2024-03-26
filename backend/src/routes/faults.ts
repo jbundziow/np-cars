@@ -1,5 +1,13 @@
 import express from 'express'
 import {addOneFault_POST_user, fetchAllFaultsOfACar_GET_user, fetchAllCarsWithNumberOfFaults_GET_user, fetchOneFault_GET_user, fetchAllFaultsOfUser_GET_user, deleteOneFault_DELETE_user} from '../controllers/faultsController';
+
+
+
+
+
+
+
+
 const app = express.Router();
 
 
