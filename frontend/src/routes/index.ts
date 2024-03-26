@@ -4,52 +4,40 @@ import { lazy } from 'react';
 
 
 
-const FutureReservations = lazy(() => import('../new_pages/rezerwacje/przyszle-rezerwacje'));
-const RentalsArchive = lazy(() => import('../new_pages/wypozyczenia/archiwum'));
-const ReservationsOverview = lazy(() => import('../new_pages/rezerwacje/index'));
-const MakeAReservation = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji'));
-const MakeAReservationForm = lazy(() => import('../new_pages/rezerwacje/dokonaj-rezerwacji-form'));
-const MyReservations = lazy(() => import('../new_pages/rezerwacje/moje-rezerwacje'));
-const ReservationArchive = lazy(() => import('../new_pages/rezerwacje/archiwum'));
-const RefuelingOverview = lazy(() => import('../new_pages/tankowania/index'));
-const ReportRefueling = lazy(() => import('../new_pages/tankowania/zglos-tankowanie'));
-const ReportRefuelingForm = lazy(() => import('../new_pages/tankowania/zglos-tankowanie-form'));
-const RefuelingFuelCards = lazy(() => import('../new_pages/tankowania/karty-paliwowe'));
-const MyRefuelings = lazy(() => import('../new_pages/tankowania/moje-tankowania'));
-const RefuelingArchive = lazy(() => import('../new_pages/tankowania/archiwum'));
-const RepairsStatus = lazy(() => import('../new_pages/usterki/status-napraw'));
-const RepairsStatusDetails = lazy(() => import('../new_pages/usterki/status-napraw-details'));
-const FaultDetails = lazy(() => import('../new_pages/usterki/status-usterki'));
-const MyFaults = lazy(() => import('../new_pages/usterki/moje-usterki'));
-const ReportFault = lazy(() => import('../new_pages/usterki/zglos'));
-const ReportFaultForm = lazy(() => import('../new_pages/usterki/zglos-form'));
-const RentACar = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod'));
-const RentACarForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod-form'));
-const ReturnACar = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod'));
-const ReturnACarForm = lazy(() => import('../new_pages/wypozyczenia/oddaj-samochod-form'));
-const ActualRentals = lazy(() => import('../new_pages/wypozyczenia/biezace-wypozyczenia'));
-const UsersList = lazy(() => import('../new_pages/uzytkownicy/zestawienie'));
-const UserMainpage = lazy(() => import('../new_pages/uzytkownicy/index'));
-const UserSettings = lazy(() => import('../new_pages/uzytkownicy/ustawienia-konta'));
-const CarsList = lazy(() => import('../new_pages/samochody/zestawienie'));
-const CarsInspections = lazy(() => import('../new_pages/samochody/przeglady'));
-const CarsInsurances = lazy(() => import('../new_pages/samochody/ubezpieczenia'));
-const CarMainpage = lazy(() => import('../new_pages/samochody'));
-const PlacesList = lazy(() => import('../new_pages/projekty/zestawienie'));
-const PlaceMainpage = lazy(() => import('../new_pages/projekty'));
+const FutureReservations = lazy(() => import('../pages/rezerwacje/przyszle-rezerwacje'));
+const RentalsArchive = lazy(() => import('../pages/wypozyczenia/archiwum'));
+const ReservationsOverview = lazy(() => import('../pages/rezerwacje/index'));
+const MakeAReservation = lazy(() => import('../pages/rezerwacje/dokonaj-rezerwacji'));
+const MakeAReservationForm = lazy(() => import('../pages/rezerwacje/dokonaj-rezerwacji-form'));
+const MyReservations = lazy(() => import('../pages/rezerwacje/moje-rezerwacje'));
+const ReservationArchive = lazy(() => import('../pages/rezerwacje/archiwum'));
+const RefuelingOverview = lazy(() => import('../pages/tankowania/index'));
+const ReportRefueling = lazy(() => import('../pages/tankowania/zglos-tankowanie'));
+const ReportRefuelingForm = lazy(() => import('../pages/tankowania/zglos-tankowanie-form'));
+const RefuelingFuelCards = lazy(() => import('../pages/tankowania/karty-paliwowe'));
+const MyRefuelings = lazy(() => import('../pages/tankowania/moje-tankowania'));
+const RefuelingArchive = lazy(() => import('../pages/tankowania/archiwum'));
+const RepairsStatus = lazy(() => import('../pages/usterki/status-napraw'));
+const RepairsStatusDetails = lazy(() => import('../pages/usterki/status-napraw-details'));
+const FaultDetails = lazy(() => import('../pages/usterki/status-usterki'));
+const MyFaults = lazy(() => import('../pages/usterki/moje-usterki'));
+const ReportFault = lazy(() => import('../pages/usterki/zglos'));
+const ReportFaultForm = lazy(() => import('../pages/usterki/zglos-form'));
+const RentACar = lazy(() => import('../pages/wypozyczenia/wypozycz-samochod'));
+const RentACarForm = lazy(() => import('../pages/wypozyczenia/wypozycz-samochod-form'));
+const ReturnACar = lazy(() => import('../pages/wypozyczenia/oddaj-samochod'));
+const ReturnACarForm = lazy(() => import('../pages/wypozyczenia/oddaj-samochod-form'));
+const ActualRentals = lazy(() => import('../pages/wypozyczenia/biezace-wypozyczenia'));
+const UsersList = lazy(() => import('../pages/uzytkownicy/zestawienie'));
+const UserMainpage = lazy(() => import('../pages/uzytkownicy/index'));
+const UserSettings = lazy(() => import('../pages/uzytkownicy/ustawienia-konta'));
+const CarsList = lazy(() => import('../pages/samochody/zestawienie'));
+const CarsInspections = lazy(() => import('../pages/samochody/przeglady'));
+const CarsInsurances = lazy(() => import('../pages/samochody/ubezpieczenia'));
+const CarMainpage = lazy(() => import('../pages/samochody'));
+const PlacesList = lazy(() => import('../pages/projekty/zestawienie'));
+const PlaceMainpage = lazy(() => import('../pages/projekty'));
 
-
-//TODO: DELETE IT LATER
-const ECommerce = lazy(() => import('../pages/Dashboard/ECommerce'));
-const Calendar = lazy(() => import('../pages/Calendar'));
-const Chart = lazy(() => import('../pages/Chart'));
-const FormElements = lazy(() => import('../pages/Form/FormElements'));
-const FormLayout = lazy(() => import('../pages/Form/FormLayout'));
-const Profile = lazy(() => import('../pages/Profile'));
-const Settings = lazy(() => import('../pages/Settings'));
-const Tables = lazy(() => import('../pages/Tables'));
-const Alerts = lazy(() => import('../pages/UiElements/Alerts'));
-const Buttons = lazy(() => import('../pages/UiElements/Buttons'));
 
 const coreRoutes = [
   // wypozyczenia
@@ -234,60 +222,6 @@ const coreRoutes = [
     component: PlaceMainpage,
   },
 
-
-
-  //TODO: DELETE IT LATER
-  // @@@ TEMPLATE TO DELETE BELOW @@@
-  {
-    path: '/dashboard',
-    title: 'Dashboard',
-    component: ECommerce,
-  },
-  {
-    path: '/calendar',
-    title: 'Calender',
-    component: Calendar,
-  },
-  {
-    path: '/profile',
-    title: 'Profile',
-    component: Profile,
-  },
-  {
-    path: '/forms/form-elements',
-    title: 'Forms Elements',
-    component: FormElements,
-  },
-  {
-    path: '/forms/form-layout',
-    title: 'Form Layouts',
-    component: FormLayout,
-  },
-  {
-    path: '/tables',
-    title: 'Tables',
-    component: Tables,
-  },
-  {
-    path: '/settings',
-    title: 'Settings',
-    component: Settings,
-  },
-  {
-    path: '/chart',
-    title: 'Chart',
-    component: Chart,
-  },
-  {
-    path: '/ui/alerts',
-    title: 'Alerts',
-    component: Alerts,
-  },
-  {
-    path: '/ui/buttons',
-    title: 'Buttons',
-    component: Buttons,
-  },
 ];
 
 const routes = [...coreRoutes];

@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 import CardStat from '../general/CardStat';
 import PieChart from '../general/charts/PieChart';
 import { useEffect, useState } from 'react';
-import Loader from '../../common/Loader';
+import Loader from '../../common/Loader/Loader';
 import { stats_CarDistanceByUsers, stats_CarDistanceInYear, stats_CarDistanceToPlaces, stats_CarFavouritePlace, stats_CarFavouriteUser, stats_CarFuelUsageInYear, stats_CarTotalStats, stats_CarTotalStatsInYear, stats_oneMonthSchema, stats_oneMonthSchemaByUsers, stats_oneMonthSchemaFuelUsage, stats_oneMonthSchemaToPlaces } from '../../types/car_stats';
 import UnknownCarImg from '../../images/cars/unknown_car_1280_720.png'
 import BarChart2 from '../general/charts/BarChart2';

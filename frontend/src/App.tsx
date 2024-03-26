@@ -3,18 +3,18 @@ import { Route, Routes } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 
 
-import Homepage from './new_pages/Homepage';
-import SignIn from './new_pages/authentication/SignIn';
-import SignUp from './new_pages/authentication/SignUp';
-import Loader from './common/Loader';
+import Homepage from './pages/Homepage';
+import SignIn from './pages/authentication/SignIn';
+import SignUp from './pages/authentication/SignUp';
+import Loader from './common/Loader/Loader';
 import routes from './routes/index';
 import adminRoutes from './routes/admin';
 import RequireAuth from './components/RequireAuth';
 import AuthLayout from './layout/AuthLayout';
-import Unauthorized from './new_pages/authentication/Unauthorized';
-import PasswordResetPage from './new_pages/authentication/PasswordResetPage';
-import PasswordResetRequestPage from './new_pages/authentication/PasswordResetRequestPage';
-import EmailChangePage from './new_pages/authentication/EmailChangePage';
+import Unauthorized from './pages/authentication/Unauthorized';
+import PasswordResetPage from './pages/authentication/PasswordResetPage';
+import PasswordResetRequestPage from './pages/authentication/PasswordResetRequestPage';
+import EmailChangePage from './pages/authentication/EmailChangePage';
 
 import useAuth from './hooks/useAuth';
 import Cookies from "js-cookie";
@@ -75,7 +75,7 @@ function App() {
           </Route>
         </Route>
 
-        {/* TODO: protected routes only for admins */}
+        {/* protected routes only for admins */}
         <Route element={<RequireAuth allowedRoles={['admin']} />}>
           <Route element={<DefaultLayout />}>
             <Route index element={<Homepage documentTitle={'Strona główna' + websiteTitle} />} />

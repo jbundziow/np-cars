@@ -3,21 +3,21 @@ import { lazy } from 'react';
 
 
 
-const AddCar = lazy(() => import('../new_pages/samochody/dodaj'));
-const EditCar = lazy(() => import('../new_pages/samochody/edycja'));
-const AddPlace = lazy(() => import('../new_pages/projekty/dodaj'));
-const EditPlace = lazy(() => import('../new_pages/projekty/edycja'));
-const RentalsConfirm = lazy(() => import('../new_pages/potwierdzenia/wypozyczenia'));
-const RefuelingsConfirm = lazy(() => import('../new_pages/potwierdzenia/tankowania'));
-const RefuelingsRefund = lazy(() => import('../new_pages/potwierdzenia/tankowania-zwrot-pieniedzy'));
-const FaultsConfirm = lazy(() => import('../new_pages/potwierdzenia/usterki'));
-const NewUsersConfirm = lazy(() => import('../new_pages/potwierdzenia/nowi-uzytkownicy'));
-const RentalsGapes = lazy(() => import('../new_pages/potwierdzenia/uzupelnianie-wypozyczen'));
-const EditReservationForm = lazy(() => import('../new_pages/rezerwacje/edycja'));
-const EditRefuelingForm = lazy(() => import('../new_pages/tankowania/edycja'));
-const EditFaultForm = lazy(() => import('../new_pages/usterki/edycja'));
-const MakeARentalAdminForm = lazy(() => import('../new_pages/wypozyczenia/wypozycz-samochod-admin-form'));
-const EditRentalAdminForm = lazy(() => import('../new_pages/wypozyczenia/edycja'));
+const AddCar = lazy(() => import('../pages/samochody/dodaj'));
+const EditCar = lazy(() => import('../pages/samochody/edycja'));
+const AddPlace = lazy(() => import('../pages/projekty/dodaj'));
+const EditPlace = lazy(() => import('../pages/projekty/edycja'));
+const RentalsConfirm = lazy(() => import('../pages/potwierdzenia/wypozyczenia'));
+const RefuelingsConfirm = lazy(() => import('../pages/potwierdzenia/tankowania'));
+const RefuelingsRefund = lazy(() => import('../pages/potwierdzenia/tankowania-zwrot-pieniedzy'));
+const FaultsConfirm = lazy(() => import('../pages/potwierdzenia/usterki'));
+const NewUsersConfirm = lazy(() => import('../pages/potwierdzenia/nowi-uzytkownicy'));
+const RentalsGapes = lazy(() => import('../pages/potwierdzenia/uzupelnianie-wypozyczen'));
+const EditReservationForm = lazy(() => import('../pages/rezerwacje/edycja'));
+const EditRefuelingForm = lazy(() => import('../pages/tankowania/edycja'));
+const EditFaultForm = lazy(() => import('../pages/usterki/edycja'));
+const MakeARentalAdminForm = lazy(() => import('../pages/wypozyczenia/wypozycz-samochod-admin-form'));
+const EditRentalAdminForm = lazy(() => import('../pages/wypozyczenia/edycja'));
 
 
 

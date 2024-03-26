@@ -4,7 +4,7 @@ import ReservationTableFiltering from "./ReservationTableFiltering";
 import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Reservation, db_User } from "../../../types/db_types";
 import { PaginationType } from "../../../types/common";
-import Loader from "../../../common/Loader";
+import Loader from "../../../common/Loader/Loader";
 import GenerateReservationExcel from "./GenerateReservationExcel";
 import TableSorting  from "../../general/input_elements/TableSorting";
 

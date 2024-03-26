@@ -4,7 +4,7 @@ import RefuelingTableFiltering from "./RefuelingTableFiltering";
 import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Refueling, db_User } from "../../../types/db_types";
 import { PaginationType } from "../../../types/common";
-import Loader from "../../../common/Loader";
+import Loader from "../../../common/Loader/Loader";
 import GenerateRefuelingExcel from "./GenerateRefuelingExcel";
 import TableSorting from "../../general/input_elements/TableSorting";
 

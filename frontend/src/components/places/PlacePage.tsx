@@ -8,7 +8,7 @@ import AreaChart from '../general/charts/AreaChart';
 import { db_Place } from '../../types/db_types';
 import { stats_DistanceToPlacesByCars, stats_DistanceToPlacesByUsers, stats_PlaceDistanceInYearByCarTypes, stats_PlaceFavouriteCar, stats_PlaceFavouriteUser, stats_PlaceTotalStats, stats_PlaceTotalStatsInYear, stats_PlacesDistanceInYear, stats_oneMonthSchema, stats_oneMonthSchemaByCarTypes, stats_oneMonthSchemaToPlacesByCars, stats_oneMonthSchemaToUsers } from '../../types/places_stats';
 import { dateFormatter } from '../../utilities/dateFormatter';
-import Loader from '../../common/Loader';
+import Loader from '../../common/Loader/Loader';
 import { useEffect, useState } from 'react';
 
 

@@ -91,7 +91,6 @@ export const login_POST_public = async (req: Request, res: Response, next: NextF
     
         const loggedUser = await User.login(email, password);
         const token = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role, Number(process.env.JWT_MAXAGE));
-        //TODO: MAKE SURE THAT IN PRODUCTION SECURE IS ENABLED
         res.cookie('jwt', token, { httpOnly: true, secure: process.env.NODE_ENV !== "dev", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
 
         //available for frontend to read, the same maxAge as httpOnly JWT token

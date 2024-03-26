@@ -4,7 +4,7 @@ import RentalTableFiltering from "./RentalTableFiltering";
 import { TECollapse } from "tw-elements-react";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
 import { PaginationType } from "../../../types/common";
-import Loader from "../../../common/Loader";
+import Loader from "../../../common/Loader/Loader";
 import GenerateRentalExcel from "./GenerateRentalExcel";
 import TableSorting from "../../general/input_elements/TableSorting";
 

@@ -11,7 +11,7 @@ import CardStat from '../general/CardStat';
 import PieChart from '../general/charts/PieChart';
 import AreaChart from '../general/charts/AreaChart';
 import { useEffect, useState } from 'react';
-import Loader from '../../common/Loader';
+import Loader from '../../common/Loader/Loader';
 
 
 

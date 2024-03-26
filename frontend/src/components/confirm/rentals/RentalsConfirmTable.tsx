@@ -1,4 +1,4 @@
-import Loader from "../../../common/Loader";
+import Loader from "../../../common/Loader/Loader";
 import { PaginationType } from "../../../types/common";
 import { db_Car_basic, db_Rental, db_User } from "../../../types/db_types";
 import Pagination from "../../general/Pagination";

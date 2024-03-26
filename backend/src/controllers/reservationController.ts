@@ -374,7 +374,6 @@ export const findAllReservationsOfUser_GET_user = async (req: Request, res: Resp
 
         const isUserExist = await User.fetchOne(Number(req.params.userid), true)
         if(isUserExist) {
-            //TODO: PAGINATION
             const reservations = await Reservation.fetchAllReservationsOfUser(Number(req.params.userid), req.query.time);
             const allCars = await Car.fetchAllBasicData(true);
             res.status(200).json({status: 'success', data: {reservations, allCarsData: allCars}});
@@ -414,7 +413,6 @@ export const findAllReservationsOfCar_GET_user = async (req: Request, res: Respo
 
         const carData = await Car.fetchOneBasicData(Number(req.params.carid), false)
         if(carData) {
-            //TODO: PAGINATION
             
             const dbResponse = await Reservation.fetchAllReservationsOfCar(Number(req.params.carid), req.query.time);
             res.status(200).json({status: 'success', data: {carData, reservations: dbResponse}});

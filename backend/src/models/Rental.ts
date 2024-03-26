@@ -350,7 +350,7 @@ class Rental {
           }
         })
       }
-      else if (type === 'closed') { //TODO: maybe add pagination?
+      else if (type === 'closed') {
         return await RentalModel.findAll({
           where: {
             userID: userID,
