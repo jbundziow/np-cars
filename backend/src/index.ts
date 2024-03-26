@@ -74,3 +74,8 @@ app.use('/stats', requireAuthAsUser, statsRoutes)
 app.use('/admin', requireAuthAsAdmin, adminRoutes)
 
 // *************************************************
+
+
+
+
+app.on('error', (error) => console.error('Server error', error));
