@@ -24,6 +24,7 @@
   "main": "app.ts",
   "scripts": {
     "start": "set NODE_ENV=dev && nodemon ./src/app.ts",
+    "publish": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {
