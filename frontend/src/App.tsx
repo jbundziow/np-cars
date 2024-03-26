@@ -18,7 +18,7 @@ import EmailChangePage from './pages/authentication/EmailChangePage';
 
 import useAuth from './hooks/useAuth';
 import Cookies from "js-cookie";
-import NotFound from './components/NotFound';
+import NotFoundPage from './pages/404Page';
 
 
 
@@ -94,7 +94,7 @@ function App() {
         </Route>
 
         {/* 404 page */}
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={<NotFoundPage />} />
 
 
       </Routes>
