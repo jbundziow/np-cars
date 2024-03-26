@@ -20,9 +20,9 @@
   },
   "name": "backend-np-cars",
   "version": "1.0.0",
-  "main": "app.ts",
+  "main": "index.ts",
   "scripts": {
-    "start": "set NODE_ENV=dev && nodemon ./src/app.ts",
+    "start": "set NODE_ENV=dev && nodemon ./src/index.ts",
     "publish": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
