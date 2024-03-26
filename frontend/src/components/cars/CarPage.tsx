@@ -45,7 +45,7 @@ const CarPage = (props: CarPageProps) => {
     if (props.carData && props.totalData && props.distanceYearData && props.totalYearData && props.distancePlacesData && props.distanceUsersData && props.distanceFuelUsageYearData && props.favouriteUserInYearData && props.favouritePlaceInYearData) {
       setTimeout(() => {
       setLoading(false);
-      }, 2000);
+      }, 500);
     }
   }, [props]);
 

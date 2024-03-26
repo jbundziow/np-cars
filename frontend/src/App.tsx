@@ -18,6 +18,7 @@ import EmailChangePage from './pages/authentication/EmailChangePage';
 
 import useAuth from './hooks/useAuth';
 import Cookies from "js-cookie";
+import NotFound from './components/NotFound';
 
 
 
@@ -28,7 +29,7 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000);
+    setTimeout(() => setLoading(false), 300);
   }, []);
 
   const websiteTitle: string = ' | NP-CARS'
@@ -91,6 +92,9 @@ function App() {
             ))}
           </Route>
         </Route>
+
+        {/* 404 page */}
+        <Route path="*" element={<NotFound />} />
 
 
       </Routes>

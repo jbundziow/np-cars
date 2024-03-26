@@ -43,7 +43,7 @@ const UserPage = (props: UserPageProps) => {
     if (props.userData && props.totalData && props.distanceYearData && props.totalYearData && props.distancePlacesData && props.distanceCarTypesYearData && props.favouriteCarInYearData && props.favouritePlaceInYearData) {
       setTimeout(() => {
       setLoading(false);
-      }, 2000);
+      }, 500);
     }
   }, [props]);
 

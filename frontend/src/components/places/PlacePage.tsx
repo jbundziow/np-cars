@@ -40,7 +40,7 @@ const PlacePage = (props: PlacePageProps) => {
     if (props.placeData && props.totalData && props.distanceYearData && props.totalYearData && props.distanceUsersData && props.distanceCarsData && props.distanceCarTypesYearData && props.favouriteUserInYearData && props.favouriteCarInYearData) {
       setTimeout(() => {
       setLoading(false);
-      }, 2000);
+      }, 500);
     }
   }, [props]);
 
