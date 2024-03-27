@@ -3,8 +3,18 @@
 @tailwind utilities;
 
 @layer base {
+  /* for scroll-bounce effect */
+  html {
+    @apply bg-whiten dark:bg-boxdark-2;
+  }
+
   body {
     @apply font-satoshi font-normal text-base text-body bg-whiten relative z-1;
+  }
+
+  /* removing gloss effect safari */
+  select {
+    @apply appearance-none;
   }
 }
 
