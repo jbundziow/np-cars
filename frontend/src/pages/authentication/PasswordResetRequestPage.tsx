@@ -40,7 +40,6 @@ const PasswordResetRequestPage = () => {
     setButtonDisabled(true);
 
       try {
-
         const response = await fetch(`${BACKEND_URL}/auth/password_reset_request`, {
           method: 'POST',
           headers: {

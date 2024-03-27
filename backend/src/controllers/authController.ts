@@ -107,7 +107,7 @@ export const login_POST_public = async (req: Request, res: Response, next: NextF
             res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong password. Try again.', pl: 'Nieprawidłowe hasło. Spróbuj ponownie.'}]})
         }
         else {
-        res.status(500).json({status: 'error', message: err})
+        res.status(500).json({status: 'error', message: (err as Error).message})
         }
     }
     
@@ -222,7 +222,7 @@ export const changePasswordRequest_POST_public = async (req: Request, res: Respo
     }
     catch (err) {
         console.log(err);
-        res.status(500).json({status: 'error', message: err})
+        res.status(500).json({status: 'error', message: (err as Error).message})
     }
 
 }
