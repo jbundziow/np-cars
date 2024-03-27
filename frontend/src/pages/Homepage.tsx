@@ -38,7 +38,7 @@ const Homepage = (props: Props) => {
       const res1 = await fetchData(`${DOMAIN_NAME}/stats/homepage/user/${auth.userID}/?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
-      const res2 = await fetch(`http://api.nbp.pl/api/exchangerates/rates/c/usd/today/?format=json`, {
+      const res2 = await fetch(`https://api.nbp.pl/api/exchangerates/rates/c/usd/today/?format=json`, {
         method: 'GET',
       });
       if(res2.status === 200) {
@@ -46,7 +46,7 @@ const Homepage = (props: Props) => {
         setData2(res2JSON)
       }
 
-      const res3 = await fetch(`http://api.nbp.pl/api/exchangerates/rates/c/eur/today/?format=json`, {
+      const res3 = await fetch(`https://api.nbp.pl/api/exchangerates/rates/c/eur/today/?format=json`, {
         method: 'GET',
       });
       if(res3.status === 200) {
