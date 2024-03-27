@@ -3,7 +3,7 @@ import OperationResult from "../../general/OperationResult";
 import { FormPageStatus } from "../../../types/enums";
 import { AuthType, warnings } from "../../../types/common";
 import { useState } from "react";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { Option } from "react-tailwindcss-select/dist/components/type";
 import CarRowInFormImg from "../../general/CarRowInFormImg";
@@ -99,7 +99,7 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
     
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/refuelings/${props.carData.id}`, {
+      const response = await fetch(`${BACKEND_URL}/refuelings/${props.carData.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -148,7 +148,7 @@ const RefuelingReportForm = (props: RefuelingReportFormProps) => {
     
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/admin/refuelings/${props.carData.id}`, {
+      const response = await fetch(`${BACKEND_URL}/admin/refuelings/${props.carData.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',

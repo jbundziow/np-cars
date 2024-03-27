@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Loader from "../../common/Loader/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 
 import FaultDetailsContainer from '../../components/faults/details/FaultDetailsContainer'
 import fetchData from "../../utilities/fetchData";
@@ -30,10 +30,10 @@ const RepairsStatusDetails = (props: Props) => {
       useEffect(() => {
         const getData = async () => {   
 
-        const res1 = await fetchData(`${DOMAIN_NAME}/faults/${params.faultid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${BACKEND_URL}/faults/${params.faultid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.status === 'success') {
-          const res2 = await fetchData(`${DOMAIN_NAME}/users`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          const res2 = await fetchData(`${BACKEND_URL}/users`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           setData2(res2);
         }
   

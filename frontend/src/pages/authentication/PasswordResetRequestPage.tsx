@@ -4,7 +4,7 @@ import Logo from '../../images/logo/logo.png';
 import { useEffect, useState } from 'react';
 import OperationResult from '../../components/general/OperationResult';
 import { FormPageStatus } from '../../types/enums';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_URL } from '../../utilities/domainName';
 import { warnings } from '../../types/common';
 
 
@@ -41,7 +41,7 @@ const PasswordResetRequestPage = () => {
 
       try {
 
-        const response = await fetch(`${DOMAIN_NAME}/auth/password_reset_request`, {
+        const response = await fetch(`${BACKEND_URL}/auth/password_reset_request`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import { ApiResponse, PaginationType } from "../../types/common";
 import Loader from "../../common/Loader/Loader";
@@ -50,7 +50,7 @@ const PlacesList = (props: Props) => {
 
         window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
         
-        const res1 = await fetchData(`${DOMAIN_NAME}/places?filters=${filters}&pagenumber=${currentPage}&sortby=${sortBy}&sortorder=${sortOrder}&pagesize=${pageSize}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${BACKEND_URL}/places?filters=${filters}&pagenumber=${currentPage}&sortby=${sortBy}&sortorder=${sortOrder}&pagesize=${pageSize}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) {setPaginationData(res1.pagination)}
         

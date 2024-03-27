@@ -5,7 +5,7 @@ import useAuth from '../hooks/useAuth';
 import UserMale from '../images/user/unknownUserMale.jpg';
 import UserFemale from '../images/user/unknownUserFemale.jpg';
 import fetchData from '../utilities/fetchData';
-import DOMAIN_NAME from '../utilities/domainName';
+import { BACKEND_IMG_URL, BACKEND_URL } from '../utilities/domainName';
 
 const DropdownUser = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -57,7 +57,7 @@ const DropdownUser = () => {
     const getData = async () => {   
      
     if(auth.userID) {
-      const res1 = await fetchData(`${DOMAIN_NAME}/users/${auth.userID}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/users/${auth.userID}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       
 
@@ -76,7 +76,7 @@ const DropdownUser = () => {
 
 
   const logoutHandler = async () => {
-    await fetchData(`${DOMAIN_NAME}/auth/logout`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+    await fetchData(`${BACKEND_URL}/auth/logout`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
     setAuth({})
   }
 
@@ -98,7 +98,7 @@ const DropdownUser = () => {
         </span>
 
         <span className="h-12 w-12 rounded-full ">
-          <img className="bg-cover bg-top-center rounded-[50%]" src={(!isFail && !isError) ? data1?.data.avatarPath !== null ? `${DOMAIN_NAME}${data1?.data.avatarPath}` : data1?.data.gender === 'female' ? UserFemale : UserMale : UserMale} alt="User Avatar" />
+          <img className="bg-cover bg-top-center rounded-[50%]" src={(!isFail && !isError) ? data1?.data.avatarPath !== null ? `${BACKEND_IMG_URL}${data1?.data.avatarPath}` : data1?.data.gender === 'female' ? UserFemale : UserMale : UserMale} alt="User Avatar" />
         </span>
 
         <svg

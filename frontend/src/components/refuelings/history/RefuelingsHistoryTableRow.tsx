@@ -5,7 +5,7 @@ import StyledSpan from "../../general/spanElements/StyledSpan";
 import { db_Car_basic, db_Refueling, db_User } from "../../../types/db_types";
 import EditButton from "../../general/buttons/EditButton";
 import useAuth from "../../../hooks/useAuth";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_IMG_URL } from "../../../utilities/domainName";
 import ImgLoader from "../../../common/Loader/ImgLoader";
 import UnknownCarImg from '../../../images/cars/unknown_car_1280_720.png'
 import { useState } from "react";
@@ -44,7 +44,7 @@ const RefuelingsHistoryTableRow = (props: RefuelingsHistoryTableRowProps) => {
               <ImgLoader/>
             )}
             <img
-            src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg}
+            src={`${BACKEND_IMG_URL}${props.carData.imgPath}` || UnknownCarImg}
             style={imgLoaded ? {} : { display: 'none' }}
             onLoad={() => setImgLoaded(true)}
             alt="Zdjęcie samochodu"

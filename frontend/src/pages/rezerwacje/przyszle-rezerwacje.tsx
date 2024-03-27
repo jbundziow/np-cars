@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../common/Loader/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import FutureReservationsTable from "../../components/reservations/future_reservations/FutureReservationsTable";
 import { ApiResponse } from "../../types/common";
@@ -35,13 +35,13 @@ const FutureReservations = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
       const filtersQuery = encodeURIComponent(JSON.stringify({reservationDatesRange_from: formatDate(new Date())})); //future reservations
-      const res1 = await fetchData(`${DOMAIN_NAME}/reservations/?filters=${filtersQuery}&pagenumber=1&sortby=dateFrom&sortorder=ASC&pagesize=9999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/reservations/?filters=${filtersQuery}&pagenumber=1&sortby=dateFrom&sortorder=ASC&pagesize=9999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.status === 'success') {
-        const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res2 = await fetchData(`${BACKEND_URL}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData2(res2);
         if(res2.status === 'success') {
-          const res3 = await fetchData(`${DOMAIN_NAME}/users/?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          const res3 = await fetchData(`${BACKEND_URL}/users/?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           setData3(res3);
         }
       }

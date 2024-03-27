@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../common/Loader/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import useAuth from '../../hooks/useAuth'
 import { ApiResponse, PaginationType } from "../../types/common";
@@ -38,11 +38,11 @@ const MyRefuelings = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
 
-      const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=%7B%22userIDs%22%3A%5B${auth.userID}%5D%7D&pagenumber=${currentPage}&sortby=createdAt&sortorder=DESC&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/refuelings?filters=%7B%22userIDs%22%3A%5B${auth.userID}%5D%7D&pagenumber=${currentPage}&sortby=createdAt&sortorder=DESC&pagesize=8`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.pagination) {setPaginationData(res1.pagination)}
       if(res1.status==='success') {
-        const res2 = await fetchData(`${DOMAIN_NAME}/cars?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res2 = await fetchData(`${BACKEND_URL}/cars?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData2(res2);
       }
 

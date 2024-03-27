@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../common/Loader/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import RentalsReturnCarTable from "../../components/rentals/return/RentalsReturnCarTable";
 import fetchData from "../../utilities/fetchData";
 import useAuth from "../../hooks/useAuth";
@@ -31,18 +31,18 @@ const ReturnACar = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
        
-      let url = `${DOMAIN_NAME}/rentals/users/${auth.userID}?type=pending`; //only for this user
-      if(auth.userRole === 'admin') { url = `${DOMAIN_NAME}/rentals/pending`} //all pending rentals
+      let url = `${BACKEND_URL}/rentals/users/${auth.userID}?type=pending`; //only for this user
+      if(auth.userRole === 'admin') { url = `${BACKEND_URL}/rentals/pending`} //all pending rentals
 
       const res1 = await fetchData(url, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       if(res1.status === 'success') {
-        const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res2 = await fetchData(`${BACKEND_URL}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData2(res2);
       }
       
       if(auth.userRole === 'admin') {
-        const res3 = await fetchData(`${DOMAIN_NAME}/users/?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res3 = await fetchData(`${BACKEND_URL}/users/?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData3(res3);
       }
 

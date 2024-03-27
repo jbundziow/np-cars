@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../common/Loader/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import RentalsHistory from "../../components/rentals/history/RentalsHistory";
 import { ApiResponse, PaginationType } from "../../types/common";
@@ -56,19 +56,19 @@ const RentalsArchive = (props: Props) => {
 
         window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
 
-        const res1 = await fetchData(`${DOMAIN_NAME}/rentals?filters=${filters}&pagenumber=${currentPage}&sortby=${sortBy}&sortorder=${sortOrder}&pagesize=${pageSize}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${BACKEND_URL}/rentals?filters=${filters}&pagenumber=${currentPage}&sortby=${sortBy}&sortorder=${sortOrder}&pagesize=${pageSize}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) {setPaginationData(res1.pagination)}
         if(res1.totalDistance !== undefined && res1.totalDistance !== null) setTotalDistance(res1.totalDistance)
         
         if(res1.status==='success') {
-          const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          const res2 = await fetchData(`${BACKEND_URL}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           setData2(res2);
           if(res2.status==='success') {
-            const res3 = await fetchData(`${DOMAIN_NAME}/users?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+            const res3 = await fetchData(`${BACKEND_URL}/users?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
             setData3(res3);
             if(res3.status==='success') {
-              const res4 = await fetchData(`${DOMAIN_NAME}/places?filters=%7B%7D&pagenumber=1&sortby=createdAt&sortorder=ASC&pagesize=99999999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+              const res4 = await fetchData(`${BACKEND_URL}/places?filters=%7B%7D&pagenumber=1&sortby=createdAt&sortorder=ASC&pagesize=99999999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
               setData4(res4);
               }
           }

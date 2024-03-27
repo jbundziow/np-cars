@@ -4,7 +4,7 @@ import Loader from "../../common/Loader/Loader";
 import Breadcrumb from '../../components/Breadcrumb';
 import fetchData from '../../utilities/fetchData';
 import OperationResult from '../../components/general/OperationResult';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import { ApiResponse } from "../../types/common";
 import ReservationsEditForm from "../../components/reservations/edit/ReservationsEditForm";
 
@@ -31,15 +31,15 @@ const EditReservationForm = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
 
-      const res1 = await fetchData(`${DOMAIN_NAME}/reservations/${params.reservationid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/reservations/${params.reservationid}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
        
       if(res1.status === 'success') {
-      const res2 = await fetchData(`${DOMAIN_NAME}/cars/${res1.data.carID}/?basicdata=true?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res2 = await fetchData(`${BACKEND_URL}/cars/${res1.data.carID}/?basicdata=true?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData2(res2);
 
       if(res2.status === 'success') {
-        const res3 = await fetchData(`${DOMAIN_NAME}/users/?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res3 = await fetchData(`${BACKEND_URL}/users/?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData3(res3);
       }
       }

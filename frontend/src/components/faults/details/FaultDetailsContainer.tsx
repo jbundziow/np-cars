@@ -5,7 +5,7 @@ import useAuth from "../../../hooks/useAuth";
 import { db_Car_basic, db_Fault, db_User } from "../../../types/db_types";
 import UserSpan from "../../general/spanElements/UserSpan";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { useState } from "react";
 import ModalWarning from "../../general/ModalWarning";
 import FaultStatusSpan from "../../general/spanElements/FaultStatusSpan";
@@ -41,7 +41,7 @@ const FaultDetailsContainer = (props: FaultDetailsContainerProps) => {
 
   const confirmFault = async () => {
       try {
-          const response = await fetch(`${DOMAIN_NAME}/admin/faults/confirm`, {
+          const response = await fetch(`${BACKEND_URL}/admin/faults/confirm`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',

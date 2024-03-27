@@ -5,7 +5,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import RefuelingReportForm from '../../components/refuelings/report/RefuelingReportForm';
 import fetchData from '../../utilities/fetchData';
 import OperationResult from '../../components/general/OperationResult';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import { ApiResponse } from "../../types/common";
 import useAuth from "../../hooks/useAuth";
 
@@ -32,11 +32,11 @@ const ReportRefuelingForm = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
        
-      const res1 = await fetchData(`${DOMAIN_NAME}/cars/${params.carid}/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/cars/${params.carid}/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
       if(res1.status === 'success' && auth.userRole === 'admin') {
-        const res2 = await fetchData(`${DOMAIN_NAME}/users/?showbanned=false`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res2 = await fetchData(`${BACKEND_URL}/users/?showbanned=false`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData2(res2);
       }
 

@@ -4,7 +4,7 @@ import Breadcrumb from '../../components/Breadcrumb';
 import RefuelingOverviewTable from '../../components/refuelings/overview/RefuelingsOverviewTable';
 import fetchData from '../../utilities/fetchData';
 import OperationResult from '../../components/general/OperationResult';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import { ApiResponse } from "../../types/common";
 
   interface Props {
@@ -26,7 +26,7 @@ const RefuelingOverview = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
        
-      const res1 = await fetchData(`${DOMAIN_NAME}/refuelings/cars/level`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/refuelings/cars/level`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
       setLoading(false)

@@ -3,7 +3,7 @@ import OperationResult from "../../general/OperationResult";
 import { EditFormPageStatus } from "../../../types/enums";
 import { AuthType, warnings } from "../../../types/common";
 import { useState } from "react";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { Option } from "react-tailwindcss-select/dist/components/type";
 import ModalWarning from "../../general/ModalWarning";
@@ -87,7 +87,7 @@ const RefuelingEditForm = (props: RefuelingEditFormProps) => {
 
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/admin/refuelings/${props.refuelingData.id}`, {
+      const response = await fetch(`${BACKEND_URL}/admin/refuelings/${props.refuelingData.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -121,7 +121,7 @@ const RefuelingEditForm = (props: RefuelingEditFormProps) => {
   
   const deleteRefueling = async () => {
     try {
-          const response = await fetch(`${DOMAIN_NAME}/admin/refuelings/${props.refuelingData.id}`, {
+          const response = await fetch(`${BACKEND_URL}/admin/refuelings/${props.refuelingData.id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',

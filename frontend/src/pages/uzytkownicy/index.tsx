@@ -3,7 +3,7 @@ import Loader from "../../common/Loader/Loader";
 import Breadcrumb from '../../components/Breadcrumb';
 import fetchData from '../../utilities/fetchData';
 import OperationResult from '../../components/general/OperationResult';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import { ApiResponse } from "../../types/common";
 import { useParams } from "react-router-dom";
 import UserPage from "../../components/users/UserPage";
@@ -41,7 +41,7 @@ const UserMainpage = (props: Props) => {
     //bar chart data
     useEffect(() => {
       const getData = async () => {   
-        const res3 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance?year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res3 = await fetchData(`${BACKEND_URL}/stats/users/${params.userid}/distance?year=${filterValue}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData3(res3)
       }
       getData()
@@ -54,25 +54,25 @@ const UserMainpage = (props: Props) => {
       const getData = async () => {  
       setLoading(true)
        
-      const res1 = await fetchData(`${DOMAIN_NAME}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/users/${params.userid}?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
       
-      const res2 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/total`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res2 = await fetchData(`${BACKEND_URL}/stats/users/${params.userid}/total`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData2(res2)
       
-      const res4 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/total/year/${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res4 = await fetchData(`${BACKEND_URL}/stats/users/${params.userid}/total/year/${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData4(res4)
       
-      const res5 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance/places`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res5 = await fetchData(`${BACKEND_URL}/stats/users/${params.userid}/distance/places`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData5(res5)
       
-      const res6 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/distance/bycartypes?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res6 = await fetchData(`${BACKEND_URL}/stats/users/${params.userid}/distance/bycartypes?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData6(res6)
       
-      const res7 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/car?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res7 = await fetchData(`${BACKEND_URL}/stats/users/${params.userid}/favourite/car?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData7(res7)
       
-      const res8 = await fetchData(`${DOMAIN_NAME}/stats/users/${params.userid}/favourite/place?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res8 = await fetchData(`${BACKEND_URL}/stats/users/${params.userid}/favourite/place?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData8(res8)
 
       if(res1.status === 'success' && res2.status === 'success' && res4.status === 'success' && res5.status === 'success' && res6.status === 'success' && res7.status === 'success' && res8.status === 'success') {

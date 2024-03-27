@@ -3,7 +3,7 @@ import OperationResult from "../../general/OperationResult";
 import { EditFormPageStatus } from "../../../types/enums";
 import { warnings } from "../../../types/common";
 import { useState } from "react";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import MultiselectInput from "../../general/input_elements/MultiselectInput";
 import { Option } from "react-tailwindcss-select/dist/components/type";
 import ModalWarning from "../../general/ModalWarning";
@@ -85,7 +85,7 @@ const ReservationsEditForm = (props: ReservationsEditFormProps) => {
 
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/admin/reservations/${props.reservationData.id}`, {
+      const response = await fetch(`${BACKEND_URL}/admin/reservations/${props.reservationData.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -119,7 +119,7 @@ const ReservationsEditForm = (props: ReservationsEditFormProps) => {
   
   const deleteReservation = async () => {
     try {
-          const response = await fetch(`${DOMAIN_NAME}/reservations`, {
+          const response = await fetch(`${BACKEND_URL}/reservations`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { db_User } from '../../types/db_types';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_URL, BACKEND_IMG_URL } from '../../utilities/domainName';
 import { AuthType } from '../../types/common';
 import UserMale from '../../images/user/unknownUserMale.jpg';
 import UserFemale from '../../images/user/unknownUserFemale.jpg';
@@ -35,7 +35,7 @@ const CardUserFlip = (props: CardUserFlipProps) => {
     setCardFlipped(true);
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/admin/users/confirm`, {
+      const response = await fetch(`${BACKEND_URL}/admin/users/confirm`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -102,7 +102,7 @@ const CardUserFlip = (props: CardUserFlipProps) => {
               <ImgLoader/>
             )}
             <img
-              src={props.userData.avatarPath !== null ? `${DOMAIN_NAME}${props.userData.avatarPath}` : props.userData.gender === 'female' ? UserFemale : UserMale}
+              src={props.userData.avatarPath !== null ? `${BACKEND_IMG_URL}${props.userData.avatarPath}` : props.userData.gender === 'female' ? UserFemale : UserMale}
               style={imgLoaded ? {} : { display: 'none' }}
               onLoad={() => setImgLoaded(true)}
               alt="Avatar użytkownika"

@@ -1,5 +1,5 @@
 import CoverOne from '../../images/cover/road-cover.jpg';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_IMG_URL } from '../../utilities/domainName';
 import BarChart from '../general/charts/BarChart';
 import { db_Car } from '../../types/db_types';
 import useAuth from '../../hooks/useAuth';
@@ -67,7 +67,7 @@ const CarPage = (props: CarPageProps) => {
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 w-full rounded-3xl bg-white/20 p-1 backdrop-blur sm:p-3 max-w-[300px] overflow-hidden">
             <div className="relative drop-shadow-2 h-full w-full rounded-3xl overflow-hidden">
-              <img className="h-full w-full" src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg} alt="Zdjęcie samochodu"/>
+              <img className="h-full w-full" src={`${BACKEND_IMG_URL}${props.carData.imgPath}` || UnknownCarImg} alt="Zdjęcie samochodu"/>
 
               {auth.userRole === 'admin' ?
               <Link

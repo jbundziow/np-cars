@@ -4,7 +4,7 @@ import UserSpan from "../../general/spanElements/UserSpan";
 import PlaceSpan from "../../general/spanElements/PlaceSpan";
 import StyledSpan from "../../general/spanElements/StyledSpan";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL, BACKEND_IMG_URL } from "../../../utilities/domainName";
 import UnknownCarImg from '../../../images/cars/unknown_car_1280_720.png'
 import { useState } from "react";
 import ImgLoader from "../../../common/Loader/ImgLoader";
@@ -42,7 +42,7 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
 
     const deleteRental = async () => {
         try {
-            const response = await fetch(`${DOMAIN_NAME}${auth.userRole === 'admin' ? '/admin' : ''}/rentals/${props.rentalData.id}`, {
+            const response = await fetch(`${BACKEND_URL}${auth.userRole === 'admin' ? '/admin' : ''}/rentals/${props.rentalData.id}`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',
@@ -82,7 +82,7 @@ const RentalsHistoryTableRow = (props: RentalsHistoryTableRowProps) => {
               <ImgLoader/>
             )}
             <img
-            src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg}
+            src={`${BACKEND_IMG_URL}${props.carData.imgPath}` || UnknownCarImg}
             style={imgLoaded ? {} : { display: 'none' }}
             onLoad={() => setImgLoaded(true)}
             alt="Zdjęcie samochodu"

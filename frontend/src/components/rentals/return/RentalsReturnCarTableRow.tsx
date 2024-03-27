@@ -3,7 +3,7 @@ import CarRowInTable from "../../general/CarRowInTable";
 import { db_Car_basic, db_User } from "../../../types/db_types";
 import { useState } from "react";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import useAuth from "../../../hooks/useAuth";
 import UserSpan from "../../general/spanElements/UserSpan";
@@ -31,7 +31,7 @@ const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
 
     const deleteRental = async () => {
         try {
-            const response = await fetch(`${DOMAIN_NAME}${auth.userRole === 'admin' ? '/admin' : ''}/rentals/${props.rentalID}`, {
+            const response = await fetch(`${BACKEND_URL}${auth.userRole === 'admin' ? '/admin' : ''}/rentals/${props.rentalID}`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',

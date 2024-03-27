@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ApiResponse } from "../types/common";
-import DOMAIN_NAME from "../utilities/domainName.ts";
+import { BACKEND_URL } from "../utilities/domainName.ts";
 import fetchData from "../utilities/fetchData.ts";
 import OperationResult from "../components/general/OperationResult.tsx";
 import Loader from "../common/Loader/Loader.tsx";
@@ -35,7 +35,7 @@ const Homepage = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
        
-      const res1 = await fetchData(`${DOMAIN_NAME}/stats/homepage/user/${auth.userID}/?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/stats/homepage/user/${auth.userID}/?year=${currentYear}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
       const res2 = await fetch(`https://api.nbp.pl/api/exchangerates/rates/c/usd/today/?format=json`, {

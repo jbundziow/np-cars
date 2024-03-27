@@ -7,7 +7,7 @@ import formatDate from "../../../utilities/formatDate";
 import EditButton from "../../general/buttons/EditButton";
 import DeleteButton from "../../general/buttons/DeleteButton";
 import { useState } from "react";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_IMG_URL, BACKEND_URL } from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
 import useAuth from "../../../hooks/useAuth";
@@ -34,7 +34,7 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
 
     const deleteReservation = async () => {
         try {
-            const response = await fetch(`${DOMAIN_NAME}/reservations`, {
+            const response = await fetch(`${BACKEND_URL}/reservations`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',
@@ -81,7 +81,7 @@ const ReservationsHistoryTableRow = (props: ReservationsHistoryTableRowProps) =>
               <ImgLoader/>
             )}
             <img
-            src={`${DOMAIN_NAME}${props.carData.imgPath}` || UnknownCarImg}
+            src={`${BACKEND_IMG_URL}${props.carData.imgPath}` || UnknownCarImg}
             style={imgLoaded ? {} : { display: 'none' }}
             onLoad={() => setImgLoaded(true)}
             alt="Zdjęcie samochodu"

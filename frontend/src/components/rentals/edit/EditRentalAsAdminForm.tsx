@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { warnings } from "../../../types/common";
 import { EditFormPageStatus } from "../../../types/enums";
 import { db_Car_basic, db_Place, db_Rental, db_User } from "../../../types/db_types";
@@ -113,7 +113,7 @@ const EditRentalAsAdminForm = (props: EditRentalAsAdminFormProps) => {
         
 
         try {
-        const response = await fetch(`${DOMAIN_NAME}/admin/rentals/${props.rentalData.id}`, {
+        const response = await fetch(`${BACKEND_URL}/admin/rentals/${props.rentalData.id}`, {
             method: 'PUT',
             headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -145,7 +145,7 @@ const EditRentalAsAdminForm = (props: EditRentalAsAdminFormProps) => {
 
   const deleteRental = async () => {
     try {
-          const response = await fetch(`${DOMAIN_NAME}/admin/rentals/${props.rentalData.id}`, {
+          const response = await fetch(`${BACKEND_URL}/admin/rentals/${props.rentalData.id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',

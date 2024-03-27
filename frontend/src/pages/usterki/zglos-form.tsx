@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../common/Loader/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import ReportFaultFormContainer from '../../components/faults/report/ReportFaultFormContainer';
 import fetchData from "../../utilities/fetchData";
 import { useParams } from "react-router-dom";
@@ -31,7 +31,7 @@ const ReportFaultForm = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
 
-      const res1 = await fetchData(`${DOMAIN_NAME}/cars/${params.carid}?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/cars/${params.carid}?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
       if(res1.data === null) {

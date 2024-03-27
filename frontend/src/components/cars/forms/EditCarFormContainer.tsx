@@ -3,7 +3,7 @@ import OperationResult from "../../general/OperationResult";
 import { EditFormPageStatus } from "../../../types/enums";
 import { warnings } from "../../../types/common";
 import { useState } from "react";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL, BACKEND_IMG_URL } from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import CarRowInFormImg from "../../general/CarRowInFormImg";
 import formatDate from "../../../utilities/formatDate";
@@ -89,7 +89,7 @@ const EditCarFormContainer = (props: EditCarFormContainerProps) => {
     formData.append('availabilityDescription', availabilityDescription);
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/admin/cars/${props.carData.id}`, {
+      const response = await fetch(`${BACKEND_URL}/admin/cars/${props.carData.id}`, {
         method: 'PUT',
         // headers: {
         //     "Content-Type": "multipart/form-data",
@@ -123,7 +123,7 @@ const EditCarFormContainer = (props: EditCarFormContainerProps) => {
   
   const deleteCar = async () => {
     try {
-          const response = await fetch(`${DOMAIN_NAME}/admin/cars/${props.carData.id}`, {
+          const response = await fetch(`${BACKEND_URL}/admin/cars/${props.carData.id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',
@@ -277,7 +277,7 @@ const EditCarFormContainer = (props: EditCarFormContainerProps) => {
                     )}
                     {image === null && props.carData.imgPath && (
                     <div className="flex justify-center items-center p-10">
-                        <img className="md:max-w-[80%] rounded-lg" src={`${DOMAIN_NAME}${props.carData.imgPath}`} alt="Wybrany obraz" />
+                        <img className="md:max-w-[80%] rounded-lg" src={`${BACKEND_IMG_URL}${props.carData.imgPath}`} alt="Wybrany obraz" />
                     </div>
                     )}
                     </div>

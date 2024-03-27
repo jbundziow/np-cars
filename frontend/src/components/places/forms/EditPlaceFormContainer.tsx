@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { warnings } from "../../../types/common";
 import { EditFormPageStatus } from "../../../types/enums";
 import { db_Place } from "../../../types/db_types";
@@ -42,7 +42,7 @@ const EditPlaceFormContainer = (props: EditPlaceFormContainerProps) => {
 
         try {
 
-        const response = await fetch(`${DOMAIN_NAME}/admin/places/${props.place.id}`, {
+        const response = await fetch(`${BACKEND_URL}/admin/places/${props.place.id}`, {
             method: 'PUT',
             headers: {
             'Content-Type': 'application/json; charset=utf-8',
@@ -75,7 +75,7 @@ const EditPlaceFormContainer = (props: EditPlaceFormContainerProps) => {
 
   const deleteProject = async () => {
     try {
-          const response = await fetch(`${DOMAIN_NAME}/admin/places/${props.place.id}`, {
+          const response = await fetch(`${BACKEND_URL}/admin/places/${props.place.id}`, {
             method: 'DELETE',
             headers: {
               'Content-Type': 'application/json; charset=utf-8',

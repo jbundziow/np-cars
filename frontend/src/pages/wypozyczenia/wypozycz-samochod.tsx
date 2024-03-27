@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../common/Loader/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import RentalsTable from "../../components/rentals/rent/RentalsTable";
 import fetchData from "../../utilities/fetchData";
 import { ApiResponse } from "../../types/common";
@@ -35,14 +35,14 @@ const RentACar = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
       
-      const res1 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/cars/?basicdata=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       
       if(res1.status==='success') {
       const carIDsArr: number[] = [];
       res1.data.forEach((carData: carBasicData) => carIDsArr.push(carData.id))
 
       for await (const [index, id] of carIDsArr.entries()) {
-      const res2 = await fetchData(`${DOMAIN_NAME}/reservations/cars/${id}?time=future`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res2 = await fetchData(`${BACKEND_URL}/reservations/cars/${id}?time=future`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       res1.data[index].numberOfFutureReservations = res2.data.reservations.length;
       }
       setData1(res1);

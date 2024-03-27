@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { FormPageStatus } from "../../../types/enums";
 import { warnings } from "../../../types/common";
 import { db_Car_basic } from "../../../types/db_types";
@@ -25,7 +25,7 @@ const ReportFaultFormContainer = (props: ReportFaultFormContainerProps) => {
     e.preventDefault();
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/faults/cars/${props.data.id}`, {
+      const response = await fetch(`${BACKEND_URL}/faults/cars/${props.data.id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',

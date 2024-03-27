@@ -2,7 +2,7 @@ import UserMale from '../../images/user/unknownUserMale.jpg'
 import UserFemale from '../../images/user/unknownUserFemale.jpg'
 import { Link } from "react-router-dom";
 import { db_User } from '../../types/db_types';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_IMG_URL } from '../../utilities/domainName';
 import { AuthType } from '../../types/common';
 import { useState } from 'react';
 import ImgLoader from '../../common/Loader/ImgLoader';
@@ -33,7 +33,7 @@ const CardUser = (props: CardUserProps) => {
           <ImgLoader/>
         )}
         <img
-        src={props.userData.avatarPath !== null ? `${DOMAIN_NAME}${props.userData.avatarPath}` : props.userData.gender === 'female' ? UserFemale : UserMale}
+        src={props.userData.avatarPath !== null ? `${BACKEND_IMG_URL}${props.userData.avatarPath}` : props.userData.gender === 'female' ? UserFemale : UserMale}
         style={imgLoaded ? {} : { display: 'none' }}
         onLoad={() => setImgLoaded(true)}
         alt="Avatar użytkownika"

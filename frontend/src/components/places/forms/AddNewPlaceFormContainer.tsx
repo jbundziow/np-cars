@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { warnings } from "../../../types/common";
 import { FormPageStatus } from "../../../types/enums";
 
@@ -34,7 +34,7 @@ const AddNewPlaceFormContainer = () => {
 
         try {
 
-        const response = await fetch(`${DOMAIN_NAME}/admin/places`, {
+        const response = await fetch(`${BACKEND_URL}/admin/places`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json; charset=utf-8',

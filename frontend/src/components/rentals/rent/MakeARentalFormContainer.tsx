@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import ModalWarning from "../../general/ModalWarning";
 import TwoWeeksReservations from "../../reservations/overview/TwoWeeksReservations";
 import { warnings } from "../../../types/common";
@@ -83,7 +83,7 @@ const MakeARentalFormContainer = (props: MakeARentalFormContainerProps) => {
       }
       
 
-      const response = await fetch(`${DOMAIN_NAME}/rentals`, {
+      const response = await fetch(`${BACKEND_URL}/rentals`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',

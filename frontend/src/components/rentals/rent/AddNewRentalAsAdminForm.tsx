@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { warnings } from "../../../types/common";
 import { FormPageStatus } from "../../../types/enums";
 import { db_Car_basic, db_Place, db_User } from "../../../types/db_types";
@@ -114,7 +114,7 @@ const AddNewRentalAsAdminForm = (props: AddNewRentalAsAdminFormProps) => {
         
 
         try {
-        const response = await fetch(`${DOMAIN_NAME}/admin/rentals?alsoreturn=${alsoReturn}`, {
+        const response = await fetch(`${BACKEND_URL}/admin/rentals?alsoreturn=${alsoReturn}`, {
             method: 'POST',
             headers: {
             'Content-Type': 'application/json; charset=utf-8',

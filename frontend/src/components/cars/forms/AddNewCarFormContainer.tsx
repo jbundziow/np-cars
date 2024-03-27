@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { warnings } from "../../../types/common";
 import { FormPageStatus } from "../../../types/enums";
 
@@ -73,7 +73,7 @@ const AddNewCarFormContainer = () => {
 
         try {
 
-        const response = await fetch(`${DOMAIN_NAME}/admin/cars`, {
+        const response = await fetch(`${BACKEND_URL}/admin/cars`, {
             method: 'POST',
             // headers: {
             //     "Content-Type": "multipart/form-data",

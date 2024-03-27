@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import LogoDark from '../../images/logo/logo-icon-dark.png';
 import Logo from '../../images/logo/logo.png';
 import { useEffect, useState } from 'react';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_URL } from '../../utilities/domainName';
 import OperationResult from '../../components/general/OperationResult';
 
 const SignUp = () => {
@@ -42,7 +42,7 @@ const SignUp = () => {
     }
     else {
       try {
-        const response = await fetch(`${DOMAIN_NAME}/auth/signup`, {
+        const response = await fetch(`${BACKEND_URL}/auth/signup`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',

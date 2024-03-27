@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 import fetchData from "../../utilities/fetchData";
 import { ApiResponse, PaginationType } from "../../types/common";
 import Loader from "../../common/Loader/Loader";
@@ -59,7 +59,7 @@ const RefuelingArchive = (props: Props) => {
         window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`);
         
 
-        const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=${filters}&pagenumber=${currentPage}&sortby=${sortBy}&sortorder=${sortOrder}&pagesize=${pageSize}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${BACKEND_URL}/refuelings?filters=${filters}&pagenumber=${currentPage}&sortby=${sortBy}&sortorder=${sortOrder}&pagesize=${pageSize}`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         setData1(res1);
         if(res1.pagination) {setPaginationData(res1.pagination)}
 
@@ -69,10 +69,10 @@ const RefuelingArchive = (props: Props) => {
         if(res1.averageCostPerLiter) {setAverageCostPerLiter(res1.averageCostPerLiter)}
         
         if(res1.status==='success') {
-          const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          const res2 = await fetchData(`${BACKEND_URL}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           setData2(res2);
           if(res2.status==='success') {
-            const res3 = await fetchData(`${DOMAIN_NAME}/users?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+            const res3 = await fetchData(`${BACKEND_URL}/users?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
             setData3(res3);
           }
         }

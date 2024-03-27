@@ -2,7 +2,7 @@ import { useState } from "react"
 import { ApiResponse } from "../../../types/common";
 import { CSVLink } from "react-csv";
 import fetchData from "../../../utilities/fetchData";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { db_Car_basic, db_Refueling, db_User } from "../../../types/db_types";
 import { dateFormatter } from "../../../utilities/dateFormatter";
 import { generateExcelPageState } from "../../../types/enums";
@@ -41,11 +41,11 @@ type GenerateRefuelingExcelProps = {
       const getData = async () => {
         setPageState(generateExcelPageState.loading)
 
-        const res1 = await fetchData(`${DOMAIN_NAME}/refuelings?filters=${props.filters}&pagenumber=1&sortby=${props.sortBy}&sortorder=${props.sortOrder}&pagesize=999999999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+        const res1 = await fetchData(`${BACKEND_URL}/refuelings?filters=${props.filters}&pagenumber=1&sortby=${props.sortBy}&sortorder=${props.sortOrder}&pagesize=999999999`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
         if(res1.status==='success') {
-          const res2 = await fetchData(`${DOMAIN_NAME}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+          const res2 = await fetchData(`${BACKEND_URL}/cars/?basicdata=true&showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
           if(res2.status==='success') {
-            const res3 = await fetchData(`${DOMAIN_NAME}/users?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+            const res3 = await fetchData(`${BACKEND_URL}/users?showbanned=true`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
             
 
 

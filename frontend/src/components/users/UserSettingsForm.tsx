@@ -5,7 +5,7 @@ import UserFemale from '../../images/user/unknownUserFemale.jpg'
 import { useState } from "react";
 import { db_User } from '../../types/db_types';
 import { AuthType, warnings } from '../../types/common';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_URL, BACKEND_IMG_URL } from '../../utilities/domainName';
 import ImgLoader from '../../common/Loader/ImgLoader';
 import OperationResult from '../general/OperationResult';
 import ModalWarning from '../general/ModalWarning';
@@ -70,7 +70,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
     }
     
     try {
-      const response = await fetch(`${DOMAIN_NAME}${isAdmin ? '/admin' : ''}/users/${props.user.id}`, {
+      const response = await fetch(`${BACKEND_URL}${isAdmin ? '/admin' : ''}/users/${props.user.id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -107,7 +107,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
   const deleteUser = async () => {
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/admin/users/${props.user.id}`, {
+      const response = await fetch(`${BACKEND_URL}/admin/users/${props.user.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -144,7 +144,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
     if (image) {formData.append('image', image)}
     
     try {
-      const response = await fetch(`${DOMAIN_NAME}/users/avatar/${props.user.id}`, {
+      const response = await fetch(`${BACKEND_URL}/users/avatar/${props.user.id}`, {
         method: 'PUT',
         // headers: {
         //   'Content-Type': 'multipart/form-data',
@@ -181,7 +181,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
   const removeImage = async () => {
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/users/avatar/${props.user.id}`, {
+      const response = await fetch(`${BACKEND_URL}/users/avatar/${props.user.id}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -220,7 +220,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
     setShowWarningPasswordResetModal(false);
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/auth/password_reset_request`, {
+      const response = await fetch(`${BACKEND_URL}/auth/password_reset_request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -254,7 +254,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
   const changeEmail = async () => {
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/auth/email_change_request`, {
+      const response = await fetch(`${BACKEND_URL}/auth/email_change_request`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -672,7 +672,7 @@ const UserSettingsForm = (props: UserSettingsFormProps) => {
                       <ImgLoader/>
                     )}
                     <img
-                    src={props.user.avatarPath !== null && image === null ? `${DOMAIN_NAME}${props.user.avatarPath}` : image !== null ? URL.createObjectURL(image) : props.user.gender === 'female' ? UserFemale : UserMale}
+                    src={props.user.avatarPath !== null && image === null ? `${BACKEND_IMG_URL}${props.user.avatarPath}` : image !== null ? URL.createObjectURL(image) : props.user.gender === 'female' ? UserFemale : UserMale}
                     style={imgLoaded ? {} : { display: 'none' }}
                     onLoad={() => setImgLoaded(true)}
                     alt="Avatar użytkownika"

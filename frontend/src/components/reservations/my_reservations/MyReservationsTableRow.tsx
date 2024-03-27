@@ -1,7 +1,7 @@
 import formatDate from "../../../utilities/formatDate";
 import ModalWarning from "../../general/ModalWarning";
 import { useState } from "react";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import CarRowInTable from "../../general/CarRowInTable";
 import { db_Car_basic, db_Reservation } from "../../../types/db_types";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
@@ -24,7 +24,7 @@ const MyReservationsTableRow = (props: MyReservationsTableRowProps) => {
 
     const deleteReservation = async () => {
         try {
-            const response = await fetch(`${DOMAIN_NAME}/reservations`, {
+            const response = await fetch(`${BACKEND_URL}/reservations`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',

@@ -1,6 +1,6 @@
 import ModalWarning from "../../general/ModalWarning";
 import { useState } from "react";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import CarRowInTable from "../../general/CarRowInTable";
 import { db_Car_basic, db_Refueling } from "../../../types/db_types";
 import FixedAlert, { alertOptionsObject } from "../../general/FixedAlert";
@@ -29,7 +29,7 @@ const MyRefuelingsTableRow = (props: MyRefuelingsTableRowProps) => {
 
     const deleteRefueling = async () => {
         try {
-            const response = await fetch(`${DOMAIN_NAME}/refuelings`, {
+            const response = await fetch(`${BACKEND_URL}/refuelings`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json; charset=utf-8',

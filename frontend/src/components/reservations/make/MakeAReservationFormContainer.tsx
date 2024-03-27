@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 
 import Datepicker from "react-tailwindcss-datepicker";
 import { DateValueType } from 'react-tailwindcss-datepicker/dist/types';
@@ -74,7 +74,7 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
 
   const submitFormAsUser = async () => {
     try {
-      const response = await fetch(`${DOMAIN_NAME}/reservations`, {
+      const response = await fetch(`${BACKEND_URL}/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
@@ -107,7 +107,7 @@ const MakeAReservationFormContainer = (props: MakeAReservationFormContainerProps
   const submitFormAsAdmin = async () => {
     try {
       const finalUserID: number = isAnotherUserMakeReservation ? Number(selectedUserID.value) : auth.userID;
-      const response = await fetch(`${DOMAIN_NAME}/admin/reservations`, {
+      const response = await fetch(`${BACKEND_URL}/admin/reservations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',

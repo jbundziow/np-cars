@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Loader from "../../common/Loader/Loader";
 import OperationResult from "../../components/general/OperationResult";
 import Breadcrumb from '../../components/Breadcrumb';
-import DOMAIN_NAME from "../../utilities/domainName";
+import { BACKEND_URL } from "../../utilities/domainName";
 
 import ReservationsOverviewTable from "../../components/reservations/overview/ReservationsOverviewTable";
 import fetchData from "../../utilities/fetchData";
@@ -27,7 +27,7 @@ const ReservationsOverview = (props: Props) => {
     useEffect(() => {
       const getData = async () => {   
 
-      const res1 = await fetchData(`${DOMAIN_NAME}/reservations/twoweeks/cars`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
+      const res1 = await fetchData(`${BACKEND_URL}/reservations/twoweeks/cars`, (arg:ApiResponse)=>{setFailData(arg)}, (arg:boolean)=>{setFail(arg)}, (arg:boolean)=>{setError(arg)})
       setData1(res1);
 
       setLoading(false)

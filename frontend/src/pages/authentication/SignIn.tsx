@@ -2,7 +2,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import LogoDark from '../../images/logo/logo-icon-dark.png';
 import Logo from '../../images/logo/logo.png';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_URL } from '../../utilities/domainName';
 import { useState, useEffect } from 'react';
 
 const SignIn = () => {
@@ -26,7 +26,7 @@ const SignIn = () => {
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const response = await fetch(`${DOMAIN_NAME}/auth/login`, {
+      const response = await fetch(`${BACKEND_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',

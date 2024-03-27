@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import UnknownCarImg from '../../images/cars/unknown_car_1280_720.png'
 import { useState } from 'react';
 import ImgLoader from '../../common/Loader/ImgLoader';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_IMG_URL } from '../../utilities/domainName';
 
 type CarRowInTableProps = {
     id: number | undefined,
@@ -27,7 +27,7 @@ type CarRowInTableProps = {
               <ImgLoader/>
             )}
             <img
-            src={`${DOMAIN_NAME}${props.imgPath}` || UnknownCarImg}
+            src={`${BACKEND_IMG_URL}${props.imgPath}` || UnknownCarImg}
             style={imgLoaded ? {} : { display: 'none' }}
             onLoad={() => setImgLoaded(true)}
             alt="Zdjęcie samochodu"

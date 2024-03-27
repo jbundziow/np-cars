@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OperationResult from "../../general/OperationResult";
-import DOMAIN_NAME from "../../../utilities/domainName";
+import { BACKEND_URL } from "../../../utilities/domainName";
 import { AuthType, warnings } from "../../../types/common";
 import { FormPageStatus } from "../../../types/enums";
 import { db_Car_basic, db_Rental, db_User } from "../../../types/db_types";
@@ -40,7 +40,7 @@ const RentalsReturnCarFormContainer = (props: RentalsReturnCarFormContainerProps
     const finalDateTo = selectOtherDate ? rentalReturnDate : new Date();
 
     try {
-      const response = await fetch(`${DOMAIN_NAME}/rentals/return`, {
+      const response = await fetch(`${BACKEND_URL}/rentals/return`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json; charset=utf-8',

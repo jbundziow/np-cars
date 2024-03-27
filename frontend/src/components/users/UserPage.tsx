@@ -1,7 +1,7 @@
 import CoverOne from '../../images/cover/spawacz-cover.jpg';
 import UserMale from '../../images/user/unknownUserMale.jpg';
 import UserFemale from '../../images/user/unknownUserFemale.jpg';
-import DOMAIN_NAME from '../../utilities/domainName';
+import { BACKEND_IMG_URL } from '../../utilities/domainName';
 import BarChart from '../general/charts/BarChart';
 import { db_User } from '../../types/db_types';
 import useAuth from '../../hooks/useAuth';
@@ -65,7 +65,7 @@ const UserPage = (props: UserPageProps) => {
         <div className="px-4 pb-6 text-center lg:pb-8 xl:pb-11.5">
           <div className="relative z-30 mx-auto -mt-22 h-30 w-full max-w-30 rounded-full bg-white/20 p-1 backdrop-blur sm:h-44 sm:max-w-44 sm:p-3">
             <div className="relative drop-shadow-2">
-              <img className="bg-cover bg-top-center rounded-[50%]" src={props.userData.avatarPath !== null ? `${DOMAIN_NAME}${props.userData.avatarPath}` : props.userData.gender === 'female' ? UserFemale : UserMale} alt="Avatar użytkownika"/>
+              <img className="bg-cover bg-top-center rounded-[50%]" src={props.userData.avatarPath !== null ? `${BACKEND_IMG_URL}${props.userData.avatarPath}` : props.userData.gender === 'female' ? UserFemale : UserMale} alt="Avatar użytkownika"/>
 
               {Number(auth.userID) === props.userData.id || auth.userRole === 'admin' ?
               <Link
