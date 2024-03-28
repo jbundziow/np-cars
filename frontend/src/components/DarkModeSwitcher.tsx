@@ -3,12 +3,12 @@ import useColorMode from '../hooks/useColorMode';
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode();
-
   return (
     <>
     <Helmet>
-    <meta name="theme-color" content="#4285f4"/>
-    <meta name="apple-mobile-web-app-status-bar-style" content="#4285f4"/>
+    {/* ios/safari backround color */}
+    <meta name="theme-color" content={`${colorMode === 'dark' ? '#1a222c' : '#f1f5f9'}`} media="(prefers-color-scheme: dark)"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content={`${colorMode === 'dark' ? '#1a222c' : '#f1f5f9'}`}/>
     </Helmet>
     <li>
       <label
