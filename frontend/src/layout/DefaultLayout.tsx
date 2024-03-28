@@ -6,6 +6,7 @@ import { Helmet } from 'react-helmet';
 
 const DefaultLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+ 
 
   return (
     <>

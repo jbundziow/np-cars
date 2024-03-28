@@ -25,14 +25,14 @@ const ModalWarning: React.FC<ModalWarningProps> = (props) => {
       {props.showModal ? (
         <>
           <div
-            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-50 outline-none focus:outline-none"
+            className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed inset-0 z-9999 outline-none focus:outline-none"
             id="outside-modal"
             onClick={(e) => { if (e.currentTarget.id === 'outside-modal') { props.setShowModal(false) } }}
           >
             <div className="relative w-96 2xl:w-auto my-6 max-w-3xl mx-8">
               <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white dark:bg-black outline-none focus:outline-none border-l-6 border-warning">
                 <div className="flex items-start justify-between p-5 border-b border-solid border-warning rounded-t">
-                  <h3 className="text-3xl font-semibold text-warning">
+                  <h3 className="text-lg sm:text-3xl font-semibold text-warning">
                     {props.title}
                   </h3>
                   <div className="mr-5 flex h-9 w-9 items-center justify-center rounded-lg bg-warning bg-opacity-30">
@@ -51,7 +51,7 @@ const ModalWarning: React.FC<ModalWarningProps> = (props) => {
                   </div>
                 </div>
                 <div className="relative p-6 flex-auto">
-                  <p className="my-4 text-black dark:text-white text-lg leading-relaxed">
+                  <p className="my-4 text-black dark:text-white text-base sm:text-lg leading-relaxed">
                     {props.bodyText}
                   </p>
                 </div>

@@ -5,7 +5,7 @@
 @layer base {
   /* for scroll-bounce effect */
   html {
-    @apply !bg-whiten dark:!bg-boxdark-2;
+    @apply !bg-whiten dark:!bg-boxdark-2 scroll-smooth;
   }
 
   body {

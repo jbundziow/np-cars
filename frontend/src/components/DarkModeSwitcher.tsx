@@ -1,9 +1,15 @@
+import { Helmet } from 'react-helmet';
 import useColorMode from '../hooks/useColorMode';
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode();
 
   return (
+    <>
+    <Helmet>
+    <meta name="theme-color" content="#4285f4"/>
+    <meta name="apple-mobile-web-app-status-bar-style" content="#4285f4"/>
+    </Helmet>
     <li>
       <label
         className={`relative m-0 block h-7.5 w-14 rounded-full ${
@@ -59,6 +65,7 @@ const DarkModeSwitcher = () => {
         </span>
       </label>
     </li>
+    </>
   );
 };
 
