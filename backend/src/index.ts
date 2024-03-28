@@ -79,10 +79,12 @@ app.use('/api/rentals', requireAuthAsUser, rentalsRoutes)
 app.use('/api/places', requireAuthAsUser, placesRoutes)
 app.use('/api/stats', requireAuthAsUser, statsRoutes)
 
+
 //for 'admin'
 app.use('/api/admin', requireAuthAsAdmin, adminRoutes)
 
 // *************************************************
+
 
 
 
