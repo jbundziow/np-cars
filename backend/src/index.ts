@@ -1,4 +1,5 @@
 import express from 'express'
+import helmet from "helmet";
 import bodyParser from 'body-parser'
 import cors from 'cors';
 import cookies from 'cookie-parser';
@@ -29,6 +30,7 @@ require('dotenv').config(); //https://www.npmjs.com/package/dotenv
 
 
 const app = express();
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
 
 const corsOptions = {
     origin: process.env.FRONTEND_URL, //frontend
