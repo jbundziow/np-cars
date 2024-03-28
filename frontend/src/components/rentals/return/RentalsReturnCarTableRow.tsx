@@ -72,7 +72,7 @@ const RentalsReturnCarTableRow = (props: RentalsReturnCarTableRowProps) => {
         <ModalWarning showModal={showWarningModal} setShowModal={(state: boolean) => setShowWarningModal(state)} title= {'Usuń wypożyczenie'} bodyText={`Czy na pewno chcesz usunąć to wypożyczenie? Nie można później cofnąć tej operacji.`} cancelBtnText={'Anuluj'} acceptBtnText={'Tak, usuń'} callback={ async () => await deleteRental() }/>
         <FixedAlert options={alertOptions}/>
     {!rentalDeleted ? 
-        <tr className="hover:bg-gray-2 dark:hover:bg-meta-4">
+        <tr className="max-md:odd:bg-gray-2 md:hover:bg-gray-2 max-md:odd:dark:bg-meta-4 md:dark:hover:bg-meta-4">
         <td className="border-b border-[#eee] py-5 px-2 sm:pl-9 dark:border-strokedark xl:pl-11">
             <CarRowInTable id={car?.id} brand={car?.brand} model={car?.model} imgPath={car?.imgPath} linkTarget={'_self'}/>
         </td>

@@ -24,7 +24,7 @@ const PlacesHistoryTableRow = (props: PlacesHistoryTableRowProps) => {
     return (
     <>
     
-    <tr className="hover:bg-gray-2 dark:hover:bg-meta-4 text-center">
+    <tr className="max-md:odd:bg-gray-2 md:hover:bg-gray-2 max-md:odd:dark:bg-meta-4 md:dark:hover:bg-meta-4 text-center">
 
     <td className="border-b border-[#eee] py-5 px-2 dark:border-strokedark">
         <div className="flex justify-center">

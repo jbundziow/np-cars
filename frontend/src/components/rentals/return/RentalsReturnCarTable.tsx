@@ -20,7 +20,7 @@ const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
       
         {props.rentalsData.length !== 0 ?
         <div className="">
-        <div className="md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
+        <div className="md:block rounded-sm border border-stroke bg-white px-1 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark md:px-7.5 xl:pb-2">
 
 
           <div className="max-w-full overflow-x-auto special-scrollbar">
@@ -56,7 +56,7 @@ const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
           <div>
             <h2 className="text-title-md2 font-semibold text-black dark:text-white mb-7 mt-20">Zwrot aut za innych użytkowników:</h2>
 
-            <div className="md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
+            <div className="md:block rounded-sm border border-stroke bg-white px-1 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark md:px-7.5 xl:pb-2">
               <div className="max-w-full overflow-x-auto special-scrollbar">
               <table className="w-full table-auto">
                 <thead>
@@ -95,7 +95,7 @@ const RentalsReturnCarTable = (props: RentalsReturnCarTableProps) => {
 
         </div>
         :
-        <div className="md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
+        <div className="md:block rounded-sm border border-stroke bg-white px-1 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark md:px-7.5 xl:pb-2">
           <p className="text-black dark:text-white text-md text-center mb-4">W tej chwili nie masz żadnych wypożyczonych samochodów do oddania.</p>
         </div>
         }

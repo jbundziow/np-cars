@@ -21,7 +21,7 @@ const ReservationsHistoryTable = (props: ReservationsHistoryTableProps) => {
   const { auth } = useAuth();
 
     return (
-      <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
+      <div className=" md:block rounded-sm border border-stroke bg-white px-1 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark md:px-7.5 xl:pb-2">
         {props.reservationsData && props.reservationsData.length > 0 ?
         <>
         <div className="max-w-full overflow-x-auto special-scrollbar mb-3 pb-5">

@@ -23,7 +23,7 @@ const RefuelingsMoneyReturnTable = (props: RefuelingsMoneyReturnTableProps) => {
   const totalCost = props.refuelingsData.reduce((acc, refueling) => acc + refueling.costBrutto, 0).toFixed(2);
 
     return (
-      <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
+      <div className=" md:block rounded-sm border border-stroke bg-white px-1 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark md:px-7.5 xl:pb-2">
         {props.refuelingsData && props.refuelingsData.length !== 0 ?
         <>
         {props.loadingTable ? <Loader/> :

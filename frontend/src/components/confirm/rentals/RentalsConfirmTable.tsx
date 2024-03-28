@@ -21,7 +21,7 @@ type RentalsConfirmTableProps = {
 
 const RentalsConfirmTable = (props: RentalsConfirmTableProps) => {
     return (
-      <div className=" md:block rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-2">
+      <div className=" md:block rounded-sm border border-stroke bg-white px-1 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark md:px-7.5 xl:pb-2">
         {props.rentalsData && props.rentalsData.length !== 0 ?
         <>
         {props.loadingTable ? <Loader/> :

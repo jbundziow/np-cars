@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 interface NoActionRequiredMessageProps {
     title: string;
     text1: string;
@@ -25,9 +27,9 @@ export const NoActionRequiredMessage = (props: NoActionRequiredMessageProps) => 
                     <p className="text-gray-600 my-2">{text1}</p>
                     <p>{text2}</p>
                     <div className="py-10 text-center">
-                        <a href={buttonLink} className="px-12 bg-primary hover:bg-indigo-600 text-white font-semibold py-3 rounded-lg">
+                        <Link to={buttonLink} className="px-12 bg-primary hover:bg-indigo-600 text-white font-semibold py-3 rounded-lg">
                             {buttonText}
-                        </a>
+                        </Link>
                     </div>
                 </div>
             </div>
