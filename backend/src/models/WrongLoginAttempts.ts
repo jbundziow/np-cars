@@ -7,6 +7,25 @@ import sequelize from "../database/database";
 
 
 
+
+
+//CONSTANT VARRIABLES
+export const BLOCK_TIME = 5 * 60 * 1000;
+export const MAX_ATTEMPTS = 5;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 export const WrongLoginAttemptsModel = sequelize.define('WrongLoginAttempts', {
     id: {
         type: DataTypes.INTEGER,
@@ -30,12 +49,6 @@ export const WrongLoginAttemptsModel = sequelize.define('WrongLoginAttempts', {
     },
     }
 )
-
-
-
-//CONSTANT VARRIABLES
-export const BLOCK_TIME = 5 * 60 * 1000;
-export const MAX_ATTEMPTS = 5;
 
 
 
