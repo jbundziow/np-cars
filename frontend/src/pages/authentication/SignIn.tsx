@@ -57,7 +57,6 @@ const SignIn = () => {
       setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
       setPageState(PageStatus.ErrorOccured);
       setPassword('')
-      console.log(error);
     }
   };
 

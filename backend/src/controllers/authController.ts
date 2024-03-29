@@ -13,6 +13,7 @@ import sgMail from '@sendgrid/mail';
 import emailHTML from '../utilities/emailTemplates/emailHTML';
 import Joi from 'joi';
 import identifyUserId from '../utilities/functions/JWT/identifyUserId';
+import WrongLoginAttempts from '../models/WrongLoginAttempts';
 
 
 
@@ -89,26 +90,42 @@ export const login_POST_public = async (req: Request, res: Response, next: NextF
     }
 
     
-        const loggedUser = await User.login(email, password);
-        const token = createToken(loggedUser.dataValues.id, loggedUser.dataValues.role, Number(process.env.JWT_MAXAGE));
-        res.cookie('jwt', token, { httpOnly: true, secure: process.env.NODE_ENV !== "development", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
+        const {result, reason, attemptsLeft, user, unblockTime} = await User.login(email, password);
+        if(result === true && user) {
+            WrongLoginAttempts.deleteWrongAttemptsOfUser(user.dataValues.id);
+        
+            const token = createToken(user.dataValues.id, user.dataValues.role, Number(process.env.JWT_MAXAGE));
+            res.cookie('jwt', token, { httpOnly: true, secure: process.env.NODE_ENV !== "development", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
 
-        //available for frontend to read, the same maxAge as httpOnly JWT token
-        res.cookie('userID', loggedUser.dataValues.id, { httpOnly: false, secure: process.env.NODE_ENV !== "development", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
-        res.cookie('userRole', loggedUser.dataValues.role, { httpOnly: false, secure: process.env.NODE_ENV !== "development", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
+            //available for frontend to read, the same maxAge as httpOnly JWT token
+            res.cookie('userID', user.dataValues.id, { httpOnly: false, secure: process.env.NODE_ENV !== "development", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
+            res.cookie('userRole', user.dataValues.role, { httpOnly: false, secure: process.env.NODE_ENV !== "development", maxAge: Number(process.env.JWT_MAXAGE)*1000 })
 
-        res.status(200).json({status: 'success', data: {userID: loggedUser.dataValues.id, userRole: loggedUser.dataValues.role}});
-    }
-    catch (err) {
-        if((err as Error).message === 'incorrect email') {
-            res.status(400).json({status: 'fail', data: [{en: 'This email address does not exist in the database.', pl: 'Ten adres email nie istnieje w bazie danych.'}]})
-        }
-        else if((err as Error).message === 'incorrect password') {
-            res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong password. Try again.', pl: 'Nieprawidłowe hasło. Spróbuj ponownie.'}]})
+            res.status(200).json({status: 'success', data: {userID: user.dataValues.id, userRole: user.dataValues.role}});
+            return;
         }
         else {
-        res.status(500).json({status: 'error', message: (err as Error).message})
+            if(reason === 'incorrect_email') {
+                res.status(400).json({status: 'fail', data: [{en: 'This email address does not exist in the database.', pl: 'Ten adres email nie istnieje w bazie danych.'}]});
+                return; 
+            }
+            else if(reason === 'incorrect_password') {
+                res.status(400).json({status: 'fail', data: [{en: `Wrong password. Attempts left: ${attemptsLeft}.`, pl: `Nieprawidłowe hasło. Pozostało prób: ${attemptsLeft}.`}]});
+                return; 
+            }
+            else if(reason === 'user_blocked' && unblockTime instanceof Date) {
+                res.status(400).json({status: 'fail', data: [{en: `The number of login attempts has been exceeded. Try again after ${Math.ceil((new Date(unblockTime).getTime() - new Date().getTime())/60000)} minutes or change password.`, pl: `Przekroczono ilość prób logowania. Spróbuj ponownie za ${Math.ceil((new Date(unblockTime).getTime() - new Date().getTime())/60000)} minut lub zmień hasło.`}]});
+                return;
+            }
+            else {
+                res.status(500).json({status: 'error', message: 'Error occured while logging in.'});
+                return;
+            }
         }
+    }
+    catch (err) {
+        console.log((err as Error).message);
+        res.status(500).json({status: 'error', message: (err as Error).message})
     }
     
 }
@@ -312,6 +329,7 @@ export const changePassword_PUT_public = async (req: Request, res: Response, nex
         }
 
         await AuthServicesModel.update({tokenExpiresAt: new Date()}, {where: {id: dbResullt.dataValues.id}});
+        await WrongLoginAttempts.deleteWrongAttemptsOfUser(isUserExist.dataValues.id);
 
         res.status(200).json({status: 'success', data: 'Password successfully changed.'});
 

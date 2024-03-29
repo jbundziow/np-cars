@@ -2,6 +2,7 @@ const {DataTypes} = require('sequelize');
 const bcrypt = require('bcrypt')
 import { Op } from "sequelize";
 import sequelize from "../database/database";
+import WrongLoginAttempts from "./WrongLoginAttempts";
 
 
 
@@ -293,16 +294,22 @@ static async changeAvatarPath(userID: number, avatarPath: string | null) {
     static async login(email: string, password: string) {
       const user = await UserModel.findOne({where: {email: email}});
       if(user) {
+        const {result, unblockTime} = await WrongLoginAttempts.isUserBlocked(user.dataValues.id);
+        if(result === true) {
+          return {result: false, reason: 'user_blocked', attemptsLeft: null, user: null, unblockTime: unblockTime}
+        }
+
         const auth = await bcrypt.compare(password, user.dataValues.password)
         if(auth) {
-          return user;
+          return {result: true, reason: 'success', attemptsLeft: null, user: user, unblockTime: null}
         }
         else {
-          throw Error('incorrect password')
+          const attemptesLeft = await WrongLoginAttempts.addOne(user.dataValues.id);
+          return {result: false, reason: 'incorrect_password', attemptsLeft: attemptesLeft, user: null, unblockTime: null}
         }
       }
       else {
-        throw Error('incorrect email')
+        return {result: false, reason: 'incorrect_email', attemptsLeft: null, user: null, unblockTime: null}
       }
     }
 
