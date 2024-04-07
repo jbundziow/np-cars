@@ -28,7 +28,7 @@ import WrongLoginAttempts from '../models/WrongLoginAttempts';
 export const signup_POST_public = async (req: Request, res: Response, next: NextFunction) => {
     const data = req.body;
     try {
-    const newUser = new User(null, data.email.toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, null, 'unconfirmed');
+    const newUser = new User(null, data.email.trim().toLowerCase(), data.password, data.gender, data.name, data.surname, data.employedAs, null, 'unconfirmed');
     await signUpUserSchema.validateAsync(newUser);
 
     //hash password
@@ -79,9 +79,19 @@ export const signup_POST_public = async (req: Request, res: Response, next: Next
 
 
 export const login_POST_public = async (req: Request, res: Response, next: NextFunction) => {
-    const {email, password} = req.body;
+    let {email, password} = req.body;
+
+    if(!email) {
+        res.status(400).json({status: 'fail', data: [{en: `Email address is not passed.`, pl: `Nie podano adresu email.`}]})
+        return;
+    }
+    if(!password) {
+        res.status(400).json({status: 'fail', data: [{en: `Password is not passed.`, pl: `Nie podano hasła.`}]})
+        return;
+    }
 
     try {
+        email = email.trim().toLowerCase();
 
     if(req.cookies.jwt) { //logout if user is already logged in
         res.cookie('jwt', '', { maxAge: 1 });
