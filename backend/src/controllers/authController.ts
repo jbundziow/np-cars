@@ -79,7 +79,8 @@ export const signup_POST_public = async (req: Request, res: Response, next: Next
 
 
 export const login_POST_public = async (req: Request, res: Response, next: NextFunction) => {
-    let {email, password} = req.body;
+    const { password } = req.body;
+    let { email } = req.body;
 
     if(!email) {
         res.status(400).json({status: 'fail', data: [{en: `Email address is not passed.`, pl: `Nie podano adresu email.`}]})
