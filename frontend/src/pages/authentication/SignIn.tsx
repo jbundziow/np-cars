@@ -4,24 +4,31 @@ import LogoDark from '../../images/logo/logo-icon-dark.png';
 import Logo from '../../images/logo/logo.png';
 import { BACKEND_URL } from '../../utilities/domainName';
 import { useState, useEffect } from 'react';
+import Author from '../../components/general/Author';
 
 const SignIn = () => {
-  useEffect(() => {document.title = `Logowanie | NP-CARS`}, []);
+  useEffect(() => {
+    document.title = `Logowanie | NP-CARS`;
+  }, []);
 
   enum PageStatus {
     FillingTheForm,
-    ErrorOccured
+    ErrorOccured,
   }
 
   const { setAuth } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = location.state?.from?.pathname || "/";
+  const from = location.state?.from?.pathname || '/';
 
   const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('')
-  const [pageState, setPageState] = useState<PageStatus>(PageStatus.FillingTheForm)
-  const [errorText, setErrorText] = useState<string>('Wystąpił błąd. Skontaktuj się z administratorem.')
+  const [password, setPassword] = useState<string>('');
+  const [pageState, setPageState] = useState<PageStatus>(
+    PageStatus.FillingTheForm,
+  );
+  const [errorText, setErrorText] = useState<string>(
+    'Wystąpił błąd. Skontaktuj się z administratorem.',
+  );
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -32,39 +39,35 @@ const SignIn = () => {
           'Content-Type': 'application/json; charset=utf-8',
         },
         credentials: 'include',
-        body: JSON.stringify({email, password}),
+        body: JSON.stringify({ email, password }),
       });
-        const responseJSON = await response.json();
+      const responseJSON = await response.json();
 
       if (responseJSON.status === 'success') {
-        const {userID, userRole} = responseJSON.data;
-        setAuth({userID, userRole});
+        const { userID, userRole } = responseJSON.data;
+        setAuth({ userID, userRole });
         navigate(from, { replace: true });
       } else {
-        if(responseJSON.status === 'fail') {
-          setErrorText(responseJSON.data[0].pl)
+        if (responseJSON.status === 'fail') {
+          setErrorText(responseJSON.data[0].pl);
           setPageState(PageStatus.ErrorOccured);
-          setPassword('')
-        }
-        else {
-          setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
+          setPassword('');
+        } else {
+          setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.');
           setPageState(PageStatus.ErrorOccured);
-          setPassword('')
+          setPassword('');
         }
       }
-    }
-    catch (error) {
-      setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.')
+    } catch (error) {
+      setErrorText('Wystąpił błąd. Skontaktuj się z administratorem.');
       setPageState(PageStatus.ErrorOccured);
-      setPassword('')
+      setPassword('');
     }
   };
 
-
-
   return (
     <>
-       <div className="max-w-[1400px] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
+      <div className="max-w-[1400px] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
@@ -202,7 +205,7 @@ const SignIn = () => {
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
               <span className="mb-1.5 block font-medium">Jedziemy!</span>
               <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-              Zaloguj się do aplikacji np-cars
+                Zaloguj się do aplikacji np-cars
               </h2>
 
               <form onSubmit={submitHandler}>
@@ -216,7 +219,7 @@ const SignIn = () => {
                       placeholder="Wpisz swój adres email"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       value={email}
-                      onChange={e => setEmail(e.target.value)}
+                      onChange={(e) => setEmail(e.target.value)}
                       onClick={() => setPageState(PageStatus.FillingTheForm)}
                       required
                     />
@@ -251,7 +254,7 @@ const SignIn = () => {
                       placeholder="Wpisz swoje hasło"
                       className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
                       value={password}
-                      onChange={e => setPassword(e.target.value)}
+                      onChange={(e) => setPassword(e.target.value)}
                       onClick={() => setPageState(PageStatus.FillingTheForm)}
                       required
                     />
@@ -288,32 +291,31 @@ const SignIn = () => {
                   />
                 </div>
 
-                {pageState === PageStatus.ErrorOccured ?
-                <div className="flex w-full border-l-6 border-warning bg-warning bg-opacity-[15%] px-4 py-4 shadow-md dark:bg-opacity-[5%]">
-                  <div className="mr-5 flex h-9 w-9 items-center justify-center rounded-lg bg-warning bg-opacity-30">
-                    <svg
-                      width="19"
-                      height="16"
-                      viewBox="0 0 19 16"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M1.50493 16H17.5023C18.6204 16 19.3413 14.9018 18.8354 13.9735L10.8367 0.770573C10.2852 -0.256858 8.70677 -0.256858 8.15528 0.770573L0.156617 13.9735C-0.334072 14.8998 0.386764 16 1.50493 16ZM10.7585 12.9298C10.7585 13.6155 10.2223 14.1433 9.45583 14.1433C8.6894 14.1433 8.15311 13.6155 8.15311 12.9298V12.9015C8.15311 12.2159 8.6894 11.688 9.45583 11.688C10.2223 11.688 10.7585 12.2159 10.7585 12.9015V12.9298ZM8.75236 4.01062H10.2548C10.6674 4.01062 10.9127 4.33826 10.8671 4.75288L10.2071 10.1186C10.1615 10.5049 9.88572 10.7455 9.50142 10.7455C9.11929 10.7455 8.84138 10.5028 8.79579 10.1186L8.13574 4.75288C8.09449 4.33826 8.33984 4.01062 8.75236 4.01062Z"
-                        fill="#FBBF24"
-                      ></path>
-                    </svg>
+                {pageState === PageStatus.ErrorOccured ? (
+                  <div className="flex w-full border-l-6 border-warning bg-warning bg-opacity-[15%] px-4 py-4 shadow-md dark:bg-opacity-[5%]">
+                    <div className="mr-5 flex h-9 w-9 items-center justify-center rounded-lg bg-warning bg-opacity-30">
+                      <svg
+                        width="19"
+                        height="16"
+                        viewBox="0 0 19 16"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M1.50493 16H17.5023C18.6204 16 19.3413 14.9018 18.8354 13.9735L10.8367 0.770573C10.2852 -0.256858 8.70677 -0.256858 8.15528 0.770573L0.156617 13.9735C-0.334072 14.8998 0.386764 16 1.50493 16ZM10.7585 12.9298C10.7585 13.6155 10.2223 14.1433 9.45583 14.1433C8.6894 14.1433 8.15311 13.6155 8.15311 12.9298V12.9015C8.15311 12.2159 8.6894 11.688 9.45583 11.688C10.2223 11.688 10.7585 12.2159 10.7585 12.9015V12.9298ZM8.75236 4.01062H10.2548C10.6674 4.01062 10.9127 4.33826 10.8671 4.75288L10.2071 10.1186C10.1615 10.5049 9.88572 10.7455 9.50142 10.7455C9.11929 10.7455 8.84138 10.5028 8.79579 10.1186L8.13574 4.75288C8.09449 4.33826 8.33984 4.01062 8.75236 4.01062Z"
+                          fill="#FBBF24"
+                        ></path>
+                      </svg>
+                    </div>
+                    <div className="w-full">
+                      <h5 className="text-lg font-semibold text-[#9D5425] text-[#D0915C]">
+                        {errorText}
+                      </h5>
+                    </div>
                   </div>
-                  <div className="w-full">
-                    <h5 className="text-lg font-semibold text-[#9D5425] text-[#D0915C]">
-                      {errorText}
-                    </h5>     
-                  </div>
-                </div>
-                :
-                <></>
-                }
-
+                ) : (
+                  <></>
+                )}
 
                 <div className="mt-6 text-center">
                   <p>
@@ -332,11 +334,13 @@ const SignIn = () => {
                     </Link>
                   </p>
                 </div>
-
               </form>
             </div>
           </div>
         </div>
+      </div>
+      <div className="mb-3">
+        <Author />
       </div>
     </>
   );

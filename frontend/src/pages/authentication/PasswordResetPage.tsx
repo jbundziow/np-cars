@@ -6,7 +6,7 @@ import OperationResult from '../../components/general/OperationResult';
 import { FormPageStatus } from '../../types/enums';
 import { BACKEND_URL } from '../../utilities/domainName';
 import { warnings } from '../../types/common';
-
+import Author from '../../components/general/Author';
 
 enum passwordErrorStatus {
   Initial,
@@ -14,93 +14,89 @@ enum passwordErrorStatus {
   PasswordRegExpFail,
 }
 
-
-
 const PasswordResetPage = () => {
-  useEffect(() => {document.title = `Reset hasła | NP-CARS`}, []);
-
+  useEffect(() => {
+    document.title = `Reset hasła | NP-CARS`;
+  }, []);
 
   const query = new URLSearchParams(location.search);
   const [token, setToken] = useState<string | null>(null);
   const [userid, setUserid] = useState<string | null>(null);
   const [email, setEmail] = useState<string | null>(null);
   useEffect(() => {
-    if(query.get('token')) {setToken(query.get('token'))}
-    if(query.get('userid')) {setUserid(query.get('userid'))}
-    if(query.get('email')) {setEmail(query.get('email'))}
-    }, [query]);
+    if (query.get('token')) {
+      setToken(query.get('token'));
+    }
+    if (query.get('userid')) {
+      setUserid(query.get('userid'));
+    }
+    if (query.get('email')) {
+      setEmail(query.get('email'));
+    }
+  }, [query]);
 
-
-
-
-
-  const [password1, setPassword1] = useState<string>('')
-  const [password2, setPassword2] = useState<string>('')
+  const [password1, setPassword1] = useState<string>('');
+  const [password2, setPassword2] = useState<string>('');
 
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
+  const [pageState, setPageState] = useState<FormPageStatus>(
+    FormPageStatus.FillingTheForm,
+  );
+  const [passwordErrorState, setPasswordErrorState] =
+    useState<passwordErrorStatus>(passwordErrorStatus.Initial);
+  const [warnings, setWarnings] = useState<warnings[]>([
+    {
+      en: 'Reason unknown. Unable to load error codes from server.',
+      pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.',
+    },
+  ]);
 
+  const validPassword =
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
 
-  const [pageState, setPageState] = useState<FormPageStatus>(FormPageStatus.FillingTheForm)
-  const [passwordErrorState, setPasswordErrorState] = useState<passwordErrorStatus>(passwordErrorStatus.Initial)
-  const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
-
-
-
-  const validPassword = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/; // minimum eight characters, at least one uppercase letter, one lowercase letter, one number and one special character:
-
-  const arePasswordsTheSame = (pass1: string, pass2: string): boolean => pass1 === pass2;
-
-
+  const arePasswordsTheSame = (pass1: string, pass2: string): boolean =>
+    pass1 === pass2;
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setButtonDisabled(true);
 
-    if(!arePasswordsTheSame(password1, password2)) {
+    if (!arePasswordsTheSame(password1, password2)) {
       setPasswordErrorState(passwordErrorStatus.DifferentPasswords);
-    }
-    else if (!validPassword.test(password1)) {
+    } else if (!validPassword.test(password1)) {
       setPasswordErrorState(passwordErrorStatus.PasswordRegExpFail);
-    }
-    else {
+    } else {
       try {
-
         const response = await fetch(`${BACKEND_URL}/auth/password_reset`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
           },
           credentials: 'include',
-          body: JSON.stringify({token, userid, email, password: password1}),
+          body: JSON.stringify({ token, userid, email, password: password1 }),
         });
         if (response.ok) {
           setPageState(FormPageStatus.FormWasSentCorrectly);
-  
         } else {
           setButtonDisabled(false);
           const responseJSON = await response.json();
-          if(responseJSON.status === 'fail') {
+          if (responseJSON.status === 'fail') {
             setPageState(FormPageStatus.FailOnSendingForm);
             setWarnings(responseJSON.data);
-          }
-          else {
-          setPageState(FormPageStatus.ErrorWithSendingForm);
+          } else {
+            setPageState(FormPageStatus.ErrorWithSendingForm);
           }
         }
-      }
-      catch (error) {
+      } catch (error) {
         setPageState(FormPageStatus.ErrorWithSendingForm);
       }
-  }
-}
-
-  
-
+    }
+  };
 
   return (
     <>
-       <div className="max-w-[1400px] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
+      <div className="max-w-[1400px] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
@@ -233,156 +229,196 @@ const PasswordResetPage = () => {
               </span>
             </div>
           </div>
-          
+
           <div className="w-full border-stroke dark:border-strokedark xl:w-3/5 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              
-              {pageState === FormPageStatus.FillingTheForm ?
-              <form onSubmit={submitHandler}>
-              
-            
-                <div className="w-full mb-4">
+              {pageState === FormPageStatus.FillingTheForm ? (
+                <form onSubmit={submitHandler}>
+                  <div className="w-full mb-4">
                     <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
-                    Nowe hasło
-                    </span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="password"
-                      placeholder="Wpisz swoje nowe hasło"
-                      className={`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:bg-form-input dark:focus:border-primary ${passwordErrorState === passwordErrorStatus.DifferentPasswords || passwordErrorState === passwordErrorStatus.PasswordRegExpFail ? 'border-rose-700 dark:border-rose-700' : 'border-stroke dark:border-form-strokedark'}`}
-                      value={password1}
-                      onChange={e => setPassword1(e.target.value)}
-                      onClick={() => {setPasswordErrorState(passwordErrorStatus.Initial); setButtonDisabled(false);}}
-                      required
-                    />
+                      <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Nowe hasło
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="password"
+                        placeholder="Wpisz swoje nowe hasło"
+                        className={`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:bg-form-input dark:focus:border-primary ${
+                          passwordErrorState ===
+                            passwordErrorStatus.DifferentPasswords ||
+                          passwordErrorState ===
+                            passwordErrorStatus.PasswordRegExpFail
+                            ? 'border-rose-700 dark:border-rose-700'
+                            : 'border-stroke dark:border-form-strokedark'
+                        }`}
+                        value={password1}
+                        onChange={(e) => setPassword1(e.target.value)}
+                        onClick={() => {
+                          setPasswordErrorState(passwordErrorStatus.Initial);
+                          setButtonDisabled(false);
+                        }}
+                        required
+                      />
 
-                    <span className="absolute right-4 top-4">
-                      <svg
-                        className="fill-current"
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g opacity="0.5">
-                          <path
-                            d="M16.1547 6.80626V5.91251C16.1547 3.16251 14.0922 0.825009 11.4797 0.618759C10.0359 0.481259 8.59219 0.996884 7.52656 1.95938C6.46094 2.92188 5.84219 4.29688 5.84219 5.70626V6.80626C3.84844 7.18438 2.33594 8.93751 2.33594 11.0688V17.2906C2.33594 19.5594 4.19219 21.3813 6.42656 21.3813H15.5016C17.7703 21.3813 19.6266 19.525 19.6266 17.2563V11C19.6609 8.93751 18.1484 7.21876 16.1547 6.80626ZM8.55781 3.09376C9.31406 2.40626 10.3109 2.06251 11.3422 2.16563C13.1641 2.33751 14.6078 3.98751 14.6078 5.91251V6.70313H7.38906V5.67188C7.38906 4.70938 7.80156 3.78126 8.55781 3.09376ZM18.1141 17.2906C18.1141 18.7 16.9453 19.8688 15.5359 19.8688H6.46094C5.05156 19.8688 3.91719 18.7344 3.91719 17.325V11.0688C3.91719 9.52189 5.15469 8.28438 6.70156 8.28438H15.2953C16.8422 8.28438 18.1141 9.52188 18.1141 11V17.2906Z"
-                            fill=""
-                          />
-                          <path
-                            d="M10.9977 11.8594C10.5852 11.8594 10.207 12.2031 10.207 12.65V16.2594C10.207 16.6719 10.5508 17.05 10.9977 17.05C11.4102 17.05 11.7883 16.7063 11.7883 16.2594V12.6156C11.7883 12.2031 11.4102 11.8594 10.9977 11.8594Z"
-                            fill=""
-                          />
-                        </g>
-                      </svg>
-                    </span>
+                      <span className="absolute right-4 top-4">
+                        <svg
+                          className="fill-current"
+                          width="22"
+                          height="22"
+                          viewBox="0 0 22 22"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g opacity="0.5">
+                            <path
+                              d="M16.1547 6.80626V5.91251C16.1547 3.16251 14.0922 0.825009 11.4797 0.618759C10.0359 0.481259 8.59219 0.996884 7.52656 1.95938C6.46094 2.92188 5.84219 4.29688 5.84219 5.70626V6.80626C3.84844 7.18438 2.33594 8.93751 2.33594 11.0688V17.2906C2.33594 19.5594 4.19219 21.3813 6.42656 21.3813H15.5016C17.7703 21.3813 19.6266 19.525 19.6266 17.2563V11C19.6609 8.93751 18.1484 7.21876 16.1547 6.80626ZM8.55781 3.09376C9.31406 2.40626 10.3109 2.06251 11.3422 2.16563C13.1641 2.33751 14.6078 3.98751 14.6078 5.91251V6.70313H7.38906V5.67188C7.38906 4.70938 7.80156 3.78126 8.55781 3.09376ZM18.1141 17.2906C18.1141 18.7 16.9453 19.8688 15.5359 19.8688H6.46094C5.05156 19.8688 3.91719 18.7344 3.91719 17.325V11.0688C3.91719 9.52189 5.15469 8.28438 6.70156 8.28438H15.2953C16.8422 8.28438 18.1141 9.52188 18.1141 11V17.2906Z"
+                              fill=""
+                            />
+                            <path
+                              d="M10.9977 11.8594C10.5852 11.8594 10.207 12.2031 10.207 12.65V16.2594C10.207 16.6719 10.5508 17.05 10.9977 17.05C11.4102 17.05 11.7883 16.7063 11.7883 16.2594V12.6156C11.7883 12.2031 11.4102 11.8594 10.9977 11.8594Z"
+                              fill=""
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                <div className="mb-5">
-                  <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
-                    Powtórz nowe hasło
-                    </span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="password"
-                      placeholder="Wpisz ponownie swoje nowe hasło"
-                      className={`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:bg-form-input dark:focus:border-primary ${passwordErrorState === passwordErrorStatus.DifferentPasswords || passwordErrorState === passwordErrorStatus.PasswordRegExpFail ? 'border-rose-700 dark:border-rose-700' : 'border-stroke dark:border-form-strokedark'}`}
-                      value={password2}
-                      onChange={e => setPassword2(e.target.value)}
-                      onClick={() => {setPasswordErrorState(passwordErrorStatus.Initial); setButtonDisabled(false);}}
-                      required
-                    />
+                  <div className="mb-5">
+                    <label className="mb-2.5 block font-medium text-black dark:text-white">
+                      <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Powtórz nowe hasło
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="password"
+                        placeholder="Wpisz ponownie swoje nowe hasło"
+                        className={`w-full rounded-lg border bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:bg-form-input dark:focus:border-primary ${
+                          passwordErrorState ===
+                            passwordErrorStatus.DifferentPasswords ||
+                          passwordErrorState ===
+                            passwordErrorStatus.PasswordRegExpFail
+                            ? 'border-rose-700 dark:border-rose-700'
+                            : 'border-stroke dark:border-form-strokedark'
+                        }`}
+                        value={password2}
+                        onChange={(e) => setPassword2(e.target.value)}
+                        onClick={() => {
+                          setPasswordErrorState(passwordErrorStatus.Initial);
+                          setButtonDisabled(false);
+                        }}
+                        required
+                      />
 
-                    <span className="absolute right-4 top-4">
-                      <svg
-                        className="fill-current"
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g opacity="0.5">
-                          <path
-                            d="M16.1547 6.80626V5.91251C16.1547 3.16251 14.0922 0.825009 11.4797 0.618759C10.0359 0.481259 8.59219 0.996884 7.52656 1.95938C6.46094 2.92188 5.84219 4.29688 5.84219 5.70626V6.80626C3.84844 7.18438 2.33594 8.93751 2.33594 11.0688V17.2906C2.33594 19.5594 4.19219 21.3813 6.42656 21.3813H15.5016C17.7703 21.3813 19.6266 19.525 19.6266 17.2563V11C19.6609 8.93751 18.1484 7.21876 16.1547 6.80626ZM8.55781 3.09376C9.31406 2.40626 10.3109 2.06251 11.3422 2.16563C13.1641 2.33751 14.6078 3.98751 14.6078 5.91251V6.70313H7.38906V5.67188C7.38906 4.70938 7.80156 3.78126 8.55781 3.09376ZM18.1141 17.2906C18.1141 18.7 16.9453 19.8688 15.5359 19.8688H6.46094C5.05156 19.8688 3.91719 18.7344 3.91719 17.325V11.0688C3.91719 9.52189 5.15469 8.28438 6.70156 8.28438H15.2953C16.8422 8.28438 18.1141 9.52188 18.1141 11V17.2906Z"
-                            fill=""
-                          />
-                          <path
-                            d="M10.9977 11.8594C10.5852 11.8594 10.207 12.2031 10.207 12.65V16.2594C10.207 16.6719 10.5508 17.05 10.9977 17.05C11.4102 17.05 11.7883 16.7063 11.7883 16.2594V12.6156C11.7883 12.2031 11.4102 11.8594 10.9977 11.8594Z"
-                            fill=""
-                          />
-                        </g>
-                      </svg>
-                    </span>
+                      <span className="absolute right-4 top-4">
+                        <svg
+                          className="fill-current"
+                          width="22"
+                          height="22"
+                          viewBox="0 0 22 22"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g opacity="0.5">
+                            <path
+                              d="M16.1547 6.80626V5.91251C16.1547 3.16251 14.0922 0.825009 11.4797 0.618759C10.0359 0.481259 8.59219 0.996884 7.52656 1.95938C6.46094 2.92188 5.84219 4.29688 5.84219 5.70626V6.80626C3.84844 7.18438 2.33594 8.93751 2.33594 11.0688V17.2906C2.33594 19.5594 4.19219 21.3813 6.42656 21.3813H15.5016C17.7703 21.3813 19.6266 19.525 19.6266 17.2563V11C19.6609 8.93751 18.1484 7.21876 16.1547 6.80626ZM8.55781 3.09376C9.31406 2.40626 10.3109 2.06251 11.3422 2.16563C13.1641 2.33751 14.6078 3.98751 14.6078 5.91251V6.70313H7.38906V5.67188C7.38906 4.70938 7.80156 3.78126 8.55781 3.09376ZM18.1141 17.2906C18.1141 18.7 16.9453 19.8688 15.5359 19.8688H6.46094C5.05156 19.8688 3.91719 18.7344 3.91719 17.325V11.0688C3.91719 9.52189 5.15469 8.28438 6.70156 8.28438H15.2953C16.8422 8.28438 18.1141 9.52188 18.1141 11V17.2906Z"
+                              fill=""
+                            />
+                            <path
+                              d="M10.9977 11.8594C10.5852 11.8594 10.207 12.2031 10.207 12.65V16.2594C10.207 16.6719 10.5508 17.05 10.9977 17.05C11.4102 17.05 11.7883 16.7063 11.7883 16.2594V12.6156C11.7883 12.2031 11.4102 11.8594 10.9977 11.8594Z"
+                              fill=""
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                    </div>
                   </div>
-                </div>
 
+                  <div className="flex justify-center">
+                    {passwordErrorState ===
+                      passwordErrorStatus.DifferentPasswords ||
+                    passwordErrorState ===
+                      passwordErrorStatus.PasswordRegExpFail ? (
+                      <p className="inline-block mb-5 text-danger font-bold text-xs md:text-base text-center max-w-[400px]">
+                        {passwordErrorState ===
+                        passwordErrorStatus.PasswordRegExpFail
+                          ? 'Hasło powinno mieć minimum 8 znaków. Powinno zawierać przynajmniej: jedną wielką literę, jedną małą literę, jedną cyfrę, jeden znak specjalny.'
+                          : 'Hasła nie mogą się od siebie różnić!'}
+                      </p>
+                    ) : (
+                      <></>
+                    )}
+                  </div>
 
-                <div className='flex justify-center'>
-                {passwordErrorState === passwordErrorStatus.DifferentPasswords || passwordErrorState === passwordErrorStatus.PasswordRegExpFail ? <p className="inline-block mb-5 text-danger font-bold text-xs md:text-base text-center max-w-[400px]">{passwordErrorState === passwordErrorStatus.PasswordRegExpFail ? 'Hasło powinno mieć minimum 8 znaków. Powinno zawierać przynajmniej: jedną wielką literę, jedną małą literę, jedną cyfrę, jeden znak specjalny.' : 'Hasła nie mogą się od siebie różnić!'}</p> : <></>}
-                </div>
+                  <div className="mb-5"></div>
+                  <div className="mb-5">
+                    <button
+                      type="submit"
+                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:cursor-not-allowed"
+                      disabled={buttonDisabled}
+                    >
+                      Zmień hasło do konta
+                    </button>
+                  </div>
 
-
-                <div className="mb-5">
-
-                </div>
-                <div className="mb-5">
-                  <button
-                    type="submit"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:cursor-not-allowed"
-                    disabled={buttonDisabled}
-                  >
-                    Zmień hasło do konta
-                  </button>
-                </div>
-                
-
-            
-
-
-                <div className="mt-6 text-center">
-                  <p>
-                    Nie chcesz zmieniać hasła?{' '}
-                    <Link to="/auth/signin" className="text-primary">
-                      Zaloguj się
-                    </Link>
-                  </p>
-                </div>
-
-
-            </form>
-            :
-            pageState === FormPageStatus.FormWasSentCorrectly ?
-            <>
-            <OperationResult status={'success'} title={'Pomyślnie dokonano zmiany hasła 👍'} description={'Zmiany zostały wprowadzone.'} showButton={false} buttonText={'Dalej'}/>
-            <div className="mt-6 text-center">
-              <p>
-                Chcesz się zalogować?{' '}
-                <Link to="/auth/signin" className="text-primary">
-                  Kliknij tutaj
-                </Link>
-              </p>
-            </div>
-            </>
-            :
-            pageState === FormPageStatus.ErrorWithSendingForm ?
-            <OperationResult status={'error'} title={'Wystąpił błąd podczas zmiany hasła 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
-            :
-            pageState === FormPageStatus.FailOnSendingForm ?
-            <OperationResult status={'warning'} title={'Wystąpiły błędy podczas zmiany hasła 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
-            :
-            <></>
-            }
-              
+                  <div className="mt-6 text-center">
+                    <p>
+                      Nie chcesz zmieniać hasła?{' '}
+                      <Link to="/auth/signin" className="text-primary">
+                        Zaloguj się
+                      </Link>
+                    </p>
+                  </div>
+                </form>
+              ) : pageState === FormPageStatus.FormWasSentCorrectly ? (
+                <>
+                  <OperationResult
+                    status={'success'}
+                    title={'Pomyślnie dokonano zmiany hasła 👍'}
+                    description={'Zmiany zostały wprowadzone.'}
+                    showButton={false}
+                    buttonText={'Dalej'}
+                  />
+                  <div className="mt-6 text-center">
+                    <p>
+                      Chcesz się zalogować?{' '}
+                      <Link to="/auth/signin" className="text-primary">
+                        Kliknij tutaj
+                      </Link>
+                    </p>
+                  </div>
+                </>
+              ) : pageState === FormPageStatus.ErrorWithSendingForm ? (
+                <OperationResult
+                  status={'error'}
+                  title={'Wystąpił błąd podczas zmiany hasła 😭'}
+                  description={
+                    'Spróbuj ponownie później lub skontaktuj się z administratorem.'
+                  }
+                  showButton={true}
+                  buttonText={'Spróbuj ponownie'}
+                  onClick={() => setPageState(FormPageStatus.FillingTheForm)}
+                />
+              ) : pageState === FormPageStatus.FailOnSendingForm ? (
+                <OperationResult
+                  status={'warning'}
+                  title={'Wystąpiły błędy podczas zmiany hasła 🤯'}
+                  warnings={warnings}
+                  showButton={true}
+                  buttonText={'Spróbuj ponownie'}
+                  onClick={() => setPageState(FormPageStatus.FillingTheForm)}
+                />
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>
+      </div>
+      <div className="mb-3">
+        <Author />
       </div>
     </>
   );

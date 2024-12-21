@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import Logo from '../images/logo/logo.png';
-import LogoAuthor from '../images/logo/stickysoft-long.png';
 import SidebarLinkGroup from './SidebarLinkGroup';
 import useAuth from '../hooks/useAuth';
+import Author from './general/Author';
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -1127,11 +1127,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
         </div>
       </div>
       {/* <!-- Author --> */}
-      <div className="flex justify-center items-center">
-        <a href="https://www.stickysoft.pl/" className="py-1 px-2">
-          <img src={LogoAuthor} alt="Logo autora" className="max-w-30" />
-        </a>
-      </div>
+      <Author />
       {/* <!-- Author End --> */}
     </aside>
   );

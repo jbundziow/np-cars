@@ -6,75 +6,62 @@ import OperationResult from '../../components/general/OperationResult';
 import { FormPageStatus } from '../../types/enums';
 import { BACKEND_URL } from '../../utilities/domainName';
 import { warnings } from '../../types/common';
-
-
-
-
-
+import Author from '../../components/general/Author';
 
 const PasswordResetRequestPage = () => {
-  useEffect(() => {document.title = `Zmiana hasła | NP-CARS`}, []);
+  useEffect(() => {
+    document.title = `Zmiana hasła | NP-CARS`;
+  }, []);
 
-
-
-
-
-
-
-
-  const [email, setEmail] = useState<string>('')
+  const [email, setEmail] = useState<string>('');
   const [buttonDisabled, setButtonDisabled] = useState<boolean>(false);
 
-
-
-  const [pageState, setPageState] = useState<FormPageStatus>(FormPageStatus.FillingTheForm)
-  const [warnings, setWarnings] = useState<warnings[]>([{en: 'Reason unknown. Unable to load error codes from server.', pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.'}])
-
-
-
-
-
+  const [pageState, setPageState] = useState<FormPageStatus>(
+    FormPageStatus.FillingTheForm,
+  );
+  const [warnings, setWarnings] = useState<warnings[]>([
+    {
+      en: 'Reason unknown. Unable to load error codes from server.',
+      pl: 'Powód nieznany. Nie udało się wczytać kodów błędów z serwera.',
+    },
+  ]);
 
   const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setButtonDisabled(true);
 
-      try {
-        const response = await fetch(`${BACKEND_URL}/auth/password_reset_request`, {
+    try {
+      const response = await fetch(
+        `${BACKEND_URL}/auth/password_reset_request`,
+        {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json; charset=utf-8',
           },
           credentials: 'include',
-          body: JSON.stringify({email}),
-        });
-        if (response.ok) {
-          setPageState(FormPageStatus.FormWasSentCorrectly);
-  
+          body: JSON.stringify({ email }),
+        },
+      );
+      if (response.ok) {
+        setPageState(FormPageStatus.FormWasSentCorrectly);
+      } else {
+        setButtonDisabled(false);
+        const responseJSON = await response.json();
+        if (responseJSON.status === 'fail') {
+          setPageState(FormPageStatus.FailOnSendingForm);
+          setWarnings(responseJSON.data);
         } else {
-          setButtonDisabled(false);
-          const responseJSON = await response.json();
-          if(responseJSON.status === 'fail') {
-            setPageState(FormPageStatus.FailOnSendingForm);
-            setWarnings(responseJSON.data);
-          }
-          else {
           setPageState(FormPageStatus.ErrorWithSendingForm);
-          }
         }
       }
-      catch (error) {
-        setPageState(FormPageStatus.ErrorWithSendingForm);
-      }
-  
-}
-
-  
-
+    } catch (error) {
+      setPageState(FormPageStatus.ErrorWithSendingForm);
+    }
+  };
 
   return (
     <>
-       <div className="max-w-[1400px] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
+      <div className="max-w-[1400px] rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark my-20 mx-3">
         <div className="flex flex-wrap items-center">
           <div className="hidden w-full xl:block xl:w-2/5">
             <div className="py-17.5 px-26 text-center">
@@ -207,110 +194,127 @@ const PasswordResetRequestPage = () => {
               </span>
             </div>
           </div>
-          
+
           <div className="w-full border-stroke dark:border-strokedark xl:w-3/5 xl:border-l-2">
             <div className="w-full p-4 sm:p-12.5 xl:p-17.5">
-              
-              {pageState === FormPageStatus.FillingTheForm ?
-              <form onSubmit={submitHandler}>
+              {pageState === FormPageStatus.FillingTheForm ? (
+                <form onSubmit={submitHandler}>
+                  <span className="mb-1.5 block font-medium">
+                    Czasami tak się zdarza...
+                  </span>
+                  <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
+                    Zapomniałeś hasła?
+                  </h2>
 
-                <span className="mb-1.5 block font-medium">Czasami tak się zdarza...</span>
-                <h2 className="mb-9 text-2xl font-bold text-black dark:text-white sm:text-title-xl2">
-                Zapomniałeś hasła?
-                </h2>
-              
-            
-              <div className="mb-4">
-                  <label className="mb-2.5 block font-medium text-black dark:text-white">
-                    <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
-                    Wpisz adres email przypisany do Twojego konta
-                    </span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="email"
-                      placeholder="Wpisz swój adres email"
-                      className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
-                      value={email}
-                      onChange={e => {setEmail(e.target.value); setButtonDisabled(false);}}
-                      required
-                    />
+                  <div className="mb-4">
+                    <label className="mb-2.5 block font-medium text-black dark:text-white">
+                      <span className="after:content-['*'] after:ml-0.5 after:text-red-500">
+                        Wpisz adres email przypisany do Twojego konta
+                      </span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type="email"
+                        placeholder="Wpisz swój adres email"
+                        className="w-full rounded-lg border border-stroke bg-transparent py-4 pl-6 pr-10 outline-none focus:border-primary focus-visible:shadow-none dark:border-form-strokedark dark:bg-form-input dark:focus:border-primary"
+                        value={email}
+                        onChange={(e) => {
+                          setEmail(e.target.value);
+                          setButtonDisabled(false);
+                        }}
+                        required
+                      />
 
-                    <span className="absolute right-4 top-4">
-                      <svg
-                        className="fill-current"
-                        width="22"
-                        height="22"
-                        viewBox="0 0 22 22"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <g opacity="0.5">
-                          <path
-                            d="M19.2516 3.30005H2.75156C1.58281 3.30005 0.585938 4.26255 0.585938 5.46567V16.6032C0.585938 17.7719 1.54844 18.7688 2.75156 18.7688H19.2516C20.4203 18.7688 21.4172 17.8063 21.4172 16.6032V5.4313C21.4172 4.26255 20.4203 3.30005 19.2516 3.30005ZM19.2516 4.84692C19.2859 4.84692 19.3203 4.84692 19.3547 4.84692L11.0016 10.2094L2.64844 4.84692C2.68281 4.84692 2.71719 4.84692 2.75156 4.84692H19.2516ZM19.2516 17.1532H2.75156C2.40781 17.1532 2.13281 16.8782 2.13281 16.5344V6.35942L10.1766 11.5157C10.4172 11.6875 10.6922 11.7563 10.9672 11.7563C11.2422 11.7563 11.5172 11.6875 11.7578 11.5157L19.8016 6.35942V16.5688C19.8703 16.9125 19.5953 17.1532 19.2516 17.1532Z"
-                            fill=""
-                          />
-                        </g>
-                      </svg>
-                    </span>
+                      <span className="absolute right-4 top-4">
+                        <svg
+                          className="fill-current"
+                          width="22"
+                          height="22"
+                          viewBox="0 0 22 22"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <g opacity="0.5">
+                            <path
+                              d="M19.2516 3.30005H2.75156C1.58281 3.30005 0.585938 4.26255 0.585938 5.46567V16.6032C0.585938 17.7719 1.54844 18.7688 2.75156 18.7688H19.2516C20.4203 18.7688 21.4172 17.8063 21.4172 16.6032V5.4313C21.4172 4.26255 20.4203 3.30005 19.2516 3.30005ZM19.2516 4.84692C19.2859 4.84692 19.3203 4.84692 19.3547 4.84692L11.0016 10.2094L2.64844 4.84692C2.68281 4.84692 2.71719 4.84692 2.75156 4.84692H19.2516ZM19.2516 17.1532H2.75156C2.40781 17.1532 2.13281 16.8782 2.13281 16.5344V6.35942L10.1766 11.5157C10.4172 11.6875 10.6922 11.7563 10.9672 11.7563C11.2422 11.7563 11.5172 11.6875 11.7578 11.5157L19.8016 6.35942V16.5688C19.8703 16.9125 19.5953 17.1532 19.2516 17.1532Z"
+                              fill=""
+                            />
+                          </g>
+                        </svg>
+                      </span>
+                    </div>
                   </div>
-                </div>
 
+                  <div className="mb-5"></div>
+                  <div className="mb-5">
+                    <button
+                      type="submit"
+                      className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:cursor-not-allowed"
+                      disabled={buttonDisabled}
+                    >
+                      Wyślij link do zmiany hasła
+                    </button>
+                  </div>
 
-                <div className="mb-5">
-
-                </div>
-                <div className="mb-5">
-                  <button
-                    type="submit"
-                    className="w-full cursor-pointer rounded-lg border border-primary bg-primary p-4 text-white transition hover:bg-opacity-90 disabled:cursor-not-allowed"
-                    disabled={buttonDisabled}
-                  >
-                    Wyślij link do zmiany hasła
-                  </button>
-                </div>
-                
-
-            
-
-
-                <div className="mt-6 text-center">
-                  <p>
-                    Nie chcesz zmieniać hasła?{' '}
-                    <Link to="/auth/signin" className="text-primary">
-                      Zaloguj się
-                    </Link>
-                  </p>
-                </div>
-
-
-            </form>
-            :
-            pageState === FormPageStatus.FormWasSentCorrectly ?
-            <>
-            <OperationResult status={'success'} title={'Wysłano link do zmiany hasła 👍'} description={`Na podany adres email ${email} wysłaliśmy link do zmiany hasła. Jest on ważny przez najbliższe 24 godziny. Jeżeli link nie dotarł, to sprawdź zakładkę SPAM lub spróbuj ponownie za kilka minut.`} showButton={false}/>
-            <div className="mt-6 text-center">
-              <p>
-                Chcesz się zalogować?{' '}
-                <Link to="/auth/signin" className="text-primary">
-                  Kliknij tutaj
-                </Link>
-              </p>
-            </div>
-            </>
-            :
-            pageState === FormPageStatus.ErrorWithSendingForm ?
-            <OperationResult status={'error'} title={'Wystąpił błąd podczas wysyłania prośby o zmianę hasła 😭'} description={'Spróbuj ponownie później lub skontaktuj się z administratorem.'} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
-            :
-            pageState === FormPageStatus.FailOnSendingForm ?
-            <OperationResult status={'warning'} title={'Wystąpiły błędy podczas wysyłania prośby o zmianę hasła 🤯'} warnings={warnings} showButton={true} buttonText={'Spróbuj ponownie'} onClick={()=> setPageState(FormPageStatus.FillingTheForm)}/>
-            :
-            <></>
-            }
-              
+                  <div className="mt-6 text-center">
+                    <p>
+                      Nie chcesz zmieniać hasła?{' '}
+                      <Link to="/auth/signin" className="text-primary">
+                        Zaloguj się
+                      </Link>
+                    </p>
+                  </div>
+                </form>
+              ) : pageState === FormPageStatus.FormWasSentCorrectly ? (
+                <>
+                  <OperationResult
+                    status={'success'}
+                    title={'Wysłano link do zmiany hasła 👍'}
+                    description={`Na podany adres email ${email} wysłaliśmy link do zmiany hasła. Jest on ważny przez najbliższe 24 godziny. Jeżeli link nie dotarł, to sprawdź zakładkę SPAM lub spróbuj ponownie za kilka minut.`}
+                    showButton={false}
+                  />
+                  <div className="mt-6 text-center">
+                    <p>
+                      Chcesz się zalogować?{' '}
+                      <Link to="/auth/signin" className="text-primary">
+                        Kliknij tutaj
+                      </Link>
+                    </p>
+                  </div>
+                </>
+              ) : pageState === FormPageStatus.ErrorWithSendingForm ? (
+                <OperationResult
+                  status={'error'}
+                  title={
+                    'Wystąpił błąd podczas wysyłania prośby o zmianę hasła 😭'
+                  }
+                  description={
+                    'Spróbuj ponownie później lub skontaktuj się z administratorem.'
+                  }
+                  showButton={true}
+                  buttonText={'Spróbuj ponownie'}
+                  onClick={() => setPageState(FormPageStatus.FillingTheForm)}
+                />
+              ) : pageState === FormPageStatus.FailOnSendingForm ? (
+                <OperationResult
+                  status={'warning'}
+                  title={
+                    'Wystąpiły błędy podczas wysyłania prośby o zmianę hasła 🤯'
+                  }
+                  warnings={warnings}
+                  showButton={true}
+                  buttonText={'Spróbuj ponownie'}
+                  onClick={() => setPageState(FormPageStatus.FillingTheForm)}
+                />
+              ) : (
+                <></>
+              )}
             </div>
           </div>
         </div>
+      </div>
+      <div className="mb-3">
+        <Author />
       </div>
     </>
   );
