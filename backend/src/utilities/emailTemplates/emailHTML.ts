@@ -1,8 +1,10 @@
-const emailHTML = (emailTitle: string, emailContentText: string, buttonText: string, linkTo: string): string => {
-
-
-
-    return `
+const emailHTML = (
+  emailTitle: string,
+  emailContentText: string,
+  buttonText: string,
+  linkTo: string
+): string => {
+  return `
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional //EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
@@ -415,7 +417,7 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
       <td style="overflow-wrap:break-word;word-break:break-word;padding:0px 40px 30px 20px;font-family:'Lato',sans-serif;" align="left">
         
   <div style="font-size: 14px; line-height: 140%; text-align: left; word-wrap: break-word;">
-    <p style="line-height: 140%; text-align: right;"><a href="https://github.com/jbundziow/">https://github.com/jbundziow/</a></p>
+    <p style="line-height: 140%; text-align: right;"><a href="https://www.stickysoft.pl">www.stickysoft.pl</a></p>
   </div>
 
       </td>
@@ -444,10 +446,7 @@ table, td { color: #000000; } #u_body a { color: #161a39; text-decoration: under
 </body>
 
 </html>
-`
-    
-}
-
-
+`;
+};
 
 export default emailHTML;
