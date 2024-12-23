@@ -7,6 +7,7 @@ import Refueling from '../../models/Refueling';
 import Fault from '../../models/Fault';
 import removeFile from '../../utilities/fileUpload/removeFile';
 import path from 'path'
+import identifyUserId from '../../utilities/functions/JWT/identifyUserId';
 
 
 
@@ -35,6 +36,12 @@ export const editOneUser_PUT_admin = async (req: Request, res: Response, next: N
         const isUserExist = await User.fetchOne(Number(req.params.userid), true)
         if(!isUserExist) {
             res.status(400).json({status: 'fail', data: [{en: `The user of id: ${Number(req.params.userid)} does not exist in the database.`, pl: `Użytkownik o ID: ${Number(req.params.userid)} nie istnieje w bazie danych.`}]})
+            return;
+        }
+
+        const {id: userID} = await identifyUserId(req.cookies.jwt);
+        if(Number(req.params.userid) === 9999 && userID !== 9999) {
+            res.status(400).json({status: 'fail', data: [{en: 'You are not allowed to edit data of Super Admin account.', pl: 'Nie możesz edytować danych konta Super Admin.'}]})
             return;
         }
 
@@ -75,6 +82,11 @@ export const deleteOneUser_DELETE_admin = async (req: Request, res: Response, ne
 
     if (!req.params.userid || isNaN(Number(req.params.userid))) {
         res.status(400).json({status: 'fail', data: [{en: 'You have passed a wrong user ID.', pl: 'Podano złe ID użytkownika.'}]})
+        return;
+    }
+
+    if(Number(req.params.userid) === 9999) {
+        res.status(400).json({status: 'fail', data: [{en: 'You are not allowed to delete Super Admin account.', pl: 'Nie możesz usunąć konta Super Admin.'}]})
         return;
     }
 

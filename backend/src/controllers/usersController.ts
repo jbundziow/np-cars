@@ -154,6 +154,11 @@ export const changeUserAvatar_PUT_user = async (req: Request, res: Response, nex
             return;
         }
 
+        if (Number(req.params.userid) === 9999 && userID !== 9999) {
+            res.status(400).json({status: 'fail', data: [{en: 'You are not allowed to edit photo of Super Admin account.', pl: 'Nie możesz edytować zdjęcia konta Super Admin.'}]})
+            return;
+        }
+
 
 
         if(!req.file) {
@@ -232,6 +237,11 @@ export const deleteUserAvatar_DELETE_user = async (req: Request, res: Response, 
         const {id: userID, role: userRole} = await identifyUserId(req.cookies.jwt);
         if((userID !== Number(req.params.userid)) && userRole !== 'admin') {
             res.status(400).json({status: 'fail', data: [{en: `You cannot delete other user's avatar when you are not administrator.`, pl: `Nie możesz usunąć avataru innego użytkownika nie będąc administratorem.`}]})
+            return;
+        }
+
+        if (Number(req.params.userid) === 9999 && userID !== 9999) {
+            res.status(400).json({status: 'fail', data: [{en: 'You are not allowed to delete photo of Super Admin account.', pl: 'Nie możesz usunąć zdjęcia konta Super Admin.'}]})
             return;
         }
 
